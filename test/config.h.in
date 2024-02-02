@@ -1,0 +1,4 @@
+
+#pragma once
+
+#define TEST_DATA "${PROJECT_SOURCE_DIR}/test"
