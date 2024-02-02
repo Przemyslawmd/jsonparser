@@ -16,8 +16,8 @@ public:
 
 private:
 
-    void parseNumber();
-    void parseString();
+    int parseNumber(const std::string& json, int index);
+    int parseString(const std::string& json, int index);
 
     std::map<char, TokenType> tokensMap;
     std::unique_ptr<std::vector<Token>> tokens;

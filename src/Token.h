@@ -10,6 +10,6 @@ class Token
 public:
    
     TokenType type;
-    std::variant<std::string, int, float, bool> data;
+    std::variant<std::string, int, float, bool, nullptr_t> data;
 };
 
