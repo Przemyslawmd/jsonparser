@@ -12,6 +12,7 @@ enum class TokenType
     SQUARE_CLOSE,
 
     COLON,
+    COMMA,
 
     DATA_STR,
     DATA_BOOL,

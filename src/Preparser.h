@@ -1,4 +1,5 @@
 
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -18,6 +19,7 @@ private:
     void parseNumber();
     void parseString();
 
+    std::map<char, TokenType> tokensMap;
     std::unique_ptr<std::vector<Token>> tokens;
 };
 
