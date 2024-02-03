@@ -6,34 +6,34 @@ Preparser::Preparser()
 {
     tokens = std::make_unique<std::vector<Token>>();
     tokensMap = {
-        {'{', TokenType::CURLY_OPEN},
-        {'}', TokenType::CURLY_CLOSE},
-        {'[', TokenType::SQUARE_OPEN},
-        {']', TokenType::SQUARE_CLOSE},
-        {':', TokenType::COLON},
-        {',', TokenType::COMMA},
+        { '{', TokenType::CURLY_OPEN },
+        { '}', TokenType::CURLY_CLOSE },
+        { '[', TokenType::SQUARE_OPEN },
+        { ']', TokenType::SQUARE_CLOSE },
+        { ':', TokenType::COLON },
+        { ',', TokenType::COMMA },
     };
 }
 
 
 std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json)
 {
-    int shift = 0;
-    for (int i = 0; i < json.length(); i++)
+    for (size_t i = 0; i < json.length(); i++)
     {
-        if (json[i] == '\'' || json[i] == '\"') {
-            shift = parseString(json, i);
-            i += shift;
+        char symbol = json[i];
+        if (symbol == ' ') {
+            continue;
         }
-        if (isdigit(json[i])) {
-            shift = parseNumber(json, i);
-            i += shift;
+        if (symbol == '\'' || symbol == '\"') {
+            i += parseString(json, i);
+            continue;
         }
-        if (tokensMap.count(json[i])) {
-            Token token;
-            token.type = tokensMap.at(json[i]);
-            token.data = nullptr;
-            tokens->push_back(token);
+        if (isdigit(symbol)) {
+            i += parseNumber(json, i);
+            continue;
+        }
+        if (tokensMap.count(symbol)) {
+            tokens->push_back(Token{ tokensMap.at(symbol), nullptr });
         }
     }
     return std::move(tokens);
@@ -43,29 +43,23 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
 int Preparser::parseNumber(const std::string& json, int index)
 {
     int number = json[index] - '0';
-    int shift = 1;
+    size_t shift = 1;
     while (index + shift < json.length() && isdigit(json[shift + index])) {
         number = number * 10 + json[shift + index] - '0';
         shift += 1;
     }
-    Token token;
-    token.type = TokenType::DATA_INT;
-    token.data = number;
-    tokens->push_back(token);
-    return shift;    
+    tokens->push_back(Token{ TokenType::DATA_INT, number });
+    return shift - 1;    
 }
 
 
 int Preparser::parseString(const std::string& json, int index)
 {
-    int shift = 1;
+    size_t shift = 1;
     while (index + shift < json.length()) {
         if (json[index + shift] == '\"') {
-                Token token;
-                token.type = TokenType::DATA_STR;
-                token.data = json.substr(index + 1, shift - 1);
-                tokens->push_back(token);
-                return shift + 1;
+            tokens->emplace_back(Token{ TokenType::DATA_STR, json.substr(index + 1, shift - 1) });
+            return shift;
         }
         shift += 1;
     }
