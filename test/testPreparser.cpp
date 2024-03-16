@@ -71,7 +71,7 @@ TEST(PreparserTest, SecondTest)
     std::string filePath = std::string(TEST_DATA) + "/test_2.json";
     std::ifstream jsonFile(filePath);
     std::string jsonStr((std::istreambuf_iterator<char>(jsonFile)),
-        std::istreambuf_iterator<char>());
+    std::istreambuf_iterator<char>());
 
     auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonStr);
@@ -122,7 +122,6 @@ TEST(PreparserTest, SecondTest)
        { TokenType::COLON, nullptr },
        { TokenType::DATA_INT, 12345},
 
-
        { TokenType::CURLY_CLOSE, nullptr },
        { TokenType::COMMA },
 
@@ -134,10 +133,7 @@ TEST(PreparserTest, SecondTest)
        { TokenType::COLON, nullptr },
        { TokenType::DATA_STR, std::string{ "John Smith" }},
        { TokenType::COMMA },
-       
-       
 
-       
        { TokenType::DATA_STR, std::string{ "address" }},
        { TokenType::COLON, nullptr },
        { TokenType::DATA_STR, std::string{ "123 Maple Street" }},
@@ -162,5 +158,35 @@ TEST(PreparserTest, SecondTest)
     };
 
     checkTokens(std::move(tokens), testData);
+}
+
+
+TEST(PreparserTest, FirstImproperDataTest)
+{
+    std::string filePath = std::string(TEST_DATA_IMPROPER) + "/test_string_not_ended_1.json";
+    std::ifstream jsonFile(filePath);
+    std::string jsonStr((std::istreambuf_iterator<char>(jsonFile)),
+    std::istreambuf_iterator<char>());
+
+    auto preparser = std::make_unique<Preparser>();
+    auto tokens = preparser->parseJSON(jsonStr);
+
+    ASSERT_EQ(tokens, nullptr);
+    ASSERT_EQ(preparser->getError(), ParseError::STRING_NOT_ENDED);
+}
+
+
+TEST(PreparserTest, SecondImproperDataTest)
+{
+    std::string filePath = std::string(TEST_DATA_IMPROPER) + "/test_string_not_ended_2.json";
+    std::ifstream jsonFile(filePath);
+    std::string jsonStr((std::istreambuf_iterator<char>(jsonFile)),
+        std::istreambuf_iterator<char>());
+
+    auto preparser = std::make_unique<Preparser>();
+    auto tokens = preparser->parseJSON(jsonStr);
+
+    ASSERT_EQ(tokens, nullptr);
+    ASSERT_EQ(preparser->getError(), ParseError::STRING_NOT_ENDED);
 }
 

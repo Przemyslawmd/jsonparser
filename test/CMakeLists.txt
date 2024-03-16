@@ -16,9 +16,13 @@ enable_testing()
 
 add_executable(
   jsoncpptests
-  "testPreparser.cpp"
-  "../src/Preparser.cpp"
-  )
+  testPreparser.cpp
+  testParser.cpp
+  testValidator.cpp
+  ../src/Preparser.cpp
+  ../src/Parser.cpp
+  ../src/Validator.cpp
+)
 
 target_compile_features(jsoncpptests PRIVATE cxx_std_17)
 

@@ -20,5 +20,16 @@ enum class TokenType
     DATA_FLOAT,
 };
 
+
+enum class ParseError
+{
+    NOT_ERROR,
+
+    FIRST_CHAR_NOT_CURLY_OPEN,
+    LAST_CHAR_NOT_CURLY_CLOSE,
+
+    STRING_NOT_ENDED,
+};
+
 #endif
 

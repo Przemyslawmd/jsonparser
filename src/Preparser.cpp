@@ -20,18 +20,23 @@ Preparser::Preparser()
 
 std::unique_ptr<std::vector<PreToken>> Preparser::parseJSON(const std::string& json)
 {
-    for (size_t i = 0; i < json.length(); i++)
+    error = ParseError::NOT_ERROR;
+
+    for (size_t index = 0; index < json.length(); index++)
     {
-        char symbol = json[i];
+        char symbol = json[index];
         if (symbol == ' ') {
             continue;
         }
         if (symbol == '\'' || symbol == '\"') {
-            i += parseString(json, i);
+            index += parseString(json, index);
+            if (error != ParseError::NOT_ERROR) {
+                return nullptr;
+            }
             continue;
         }
         if (isdigit(symbol)) {
-            i += parseNumber(json, i);
+            index += parseNumber(json, index);
             continue;
         }
         if (tokensMap.count(symbol)) {
@@ -51,7 +56,7 @@ int Preparser::parseNumber(const std::string& json, int index)
         shift += 1;
     }
     tokens->push_back(PreToken{ TokenType::DATA_INT, number });
-    return shift - 1;    
+    return shift - 1;
 }
 
 
@@ -65,6 +70,13 @@ int Preparser::parseString(const std::string& json, int index)
         }
         shift += 1;
     }
-    return -1;
+    error = ParseError::STRING_NOT_ENDED;
+    return 0;
+}
+
+
+ParseError Preparser::getError()
+{
+    return error;
 }
 
