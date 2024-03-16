@@ -1,4 +1,7 @@
 
+#ifndef JSONCPP_PRETOKEN_H
+#define JSONCPP_PRETOKEN_H
+
 #include <string>
 #include <variant>
 
@@ -13,3 +16,4 @@ public:
     std::variant<std::string, int, nullptr_t> data;
 };
 
+#endif
