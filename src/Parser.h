@@ -7,14 +7,14 @@
 #include <vector>
 
 #include "PreToken.h"
-#include "TokenValue.h"
+#include "NodeValue.h"
 
 
 class Parser
 {
 public:
    
-    std::unique_ptr<std::map<std::string, TokenValue>> parseInitialTokens(std::vector<PreToken>& initialTokens);
+    std::unique_ptr<std::map<std::string, NodeValue>> parseInitialTokens(std::vector<PreToken>& initialTokens);
 };
 
 #endif

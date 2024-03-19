@@ -1,7 +1,7 @@
 
 #include "../src/Parser.h"
 #include "../src/Preparser.h"
-#include "../src/TokenValue.h"
+#include "../src/NodeValue.h"
 #include "config.h"
 
 #include <fstream>
@@ -24,7 +24,7 @@ TEST(ParserTest, FirstTest)
 
     ASSERT_TRUE(root->find("person") != root->end());
 
-    auto* nodePerson = std::get_if<std::map<std::string, TokenValue>>(&(root->at("person").value));
+    auto* nodePerson = std::get_if<std::map<std::string, NodeValue>>(&(root->at("person").value));
     ASSERT_TRUE(nodePerson != nullptr);
 
     ASSERT_TRUE(nodePerson->find("name") != nodePerson->end());
