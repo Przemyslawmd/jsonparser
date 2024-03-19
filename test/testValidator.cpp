@@ -31,7 +31,7 @@ TEST(ValidatorTest, SecondTest)
     std::string jsonStr((std::istreambuf_iterator<char>(jsonFile)),
         std::istreambuf_iterator<char>());
 
-    auto preparser = std::make_unique<Preparser>();
+     auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonStr);
     auto error = Validator().validate(tokens.get());
 

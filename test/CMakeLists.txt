@@ -24,7 +24,7 @@ add_executable(
   ../src/Validator.cpp
 )
 
-target_compile_features(jsoncpptests PRIVATE cxx_std_17)
+target_compile_features(jsoncpptests PRIVATE cxx_std_20)
 
 target_include_directories(
   jsoncpptests 

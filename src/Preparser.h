@@ -1,4 +1,7 @@
 
+#ifndef JSONCPP_PREPARSER_H
+#define JSONCPP_PREPARSER_H
+
 #include <map>
 #include <memory>
 #include <vector>
@@ -24,3 +27,5 @@ private:
 
     ParseError error;
 };
+
+#endif

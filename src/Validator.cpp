@@ -16,7 +16,7 @@ ParseError Validator::validate(std::vector<PreToken>* tokens)
         return ParseError::FIRST_CHAR_NOT_CURLY_OPEN;
     }
 
-    if (tokens->at(tokens->size() - 1).type != TokenType::CURLY_CLOSE) {
+     if (tokens->at(tokens->size() - 1).type != TokenType::CURLY_CLOSE) {
         return ParseError::LAST_CHAR_NOT_CURLY_CLOSE;
     }
     
