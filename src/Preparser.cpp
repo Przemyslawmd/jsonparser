@@ -6,7 +6,7 @@
 
 Preparser::Preparser()
 {
-    tokens = std::make_unique<std::vector<PreToken>>();
+    tokens = std::make_unique<std::vector<Token>>();
     tokensMap = {
         { '{', TokenType::CURLY_OPEN },
         { '}', TokenType::CURLY_CLOSE },
@@ -18,7 +18,7 @@ Preparser::Preparser()
 }
 
 
-std::unique_ptr<std::vector<PreToken>> Preparser::parseJSON(const std::string& json)
+std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json)
 {
     error = ParseError::NOT_ERROR;
 
@@ -40,7 +40,7 @@ std::unique_ptr<std::vector<PreToken>> Preparser::parseJSON(const std::string& j
             continue;
         }
         if (tokensMap.count(symbol)) {
-            tokens->push_back(PreToken{ tokensMap.at(symbol), nullptr });
+            tokens->push_back(Token{ tokensMap.at(symbol), nullptr });
         }
     }
     return std::move(tokens);
@@ -55,7 +55,7 @@ int Preparser::parseNumber(const std::string& json, int index)
         number = number * 10 + json[shift + index] - '0';
         shift += 1;
     }
-    tokens->push_back(PreToken{ TokenType::DATA_INT, number });
+    tokens->push_back(Token{ TokenType::DATA_INT, number });
     return shift - 1;
 }
 
@@ -65,7 +65,7 @@ int Preparser::parseString(const std::string& json, int index)
     size_t shift = 1;
     while (index + shift < json.length()) {
         if (json[index + shift] == '\"') {
-            tokens->emplace_back(PreToken{ TokenType::DATA_STR, json.substr(index + 1, shift - 1) });
+            tokens->emplace_back(Token{ TokenType::DATA_STR, json.substr(index + 1, shift - 1) });
             return shift;
         }
         shift += 1;

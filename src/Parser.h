@@ -6,7 +6,7 @@
 #include <memory>
 #include <vector>
 
-#include "PreToken.h"
+#include "Token.h"
 #include "NodeValue.h"
 
 
@@ -14,7 +14,7 @@ class Parser
 {
 public:
    
-    std::unique_ptr<std::map<std::string, NodeValue>> parseInitialTokens(std::vector<PreToken>& initialTokens);
+    std::unique_ptr<std::map<std::string, NodeValue>> parseInitialTokens(std::vector<Token>& initialTokens);
 };
 
 #endif

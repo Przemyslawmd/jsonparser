@@ -1,4 +1,7 @@
 
+#ifndef JSONCPP_TOKEN_H
+#define JSONCPP_TOKEN_H
+
 #include <string>
 #include <variant>
 
@@ -8,8 +11,9 @@
 class Token
 {
 public:
-   
+
     TokenType type;
-    std::variant<std::string, int, float, bool, nullptr_t> data;
+    std::variant<std::string, int, nullptr_t> data;
 };
 
+#endif

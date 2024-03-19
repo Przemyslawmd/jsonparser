@@ -2,17 +2,17 @@
 #include <vector>
 
 #include "defines.h"
-#include "PreToken.h"
+#include "Token.h"
 
 
 class Validator
 {
     public:
 
-        ParseError validate(std::vector<PreToken>* tokens);
+        ParseError validate(std::vector<Token>* tokens);
 
     private:
 
-        ParseError validateBrackets(std::vector<PreToken>* tokens);
+        ParseError validateBrackets(std::vector<Token>* tokens);
 };
 

@@ -8,7 +8,7 @@
 // after curly_open must be string
 
 
-ParseError Validator::validate(std::vector<PreToken>* tokens)
+ParseError Validator::validate(std::vector<Token>* tokens)
 {
     ParseError error;
 
@@ -28,7 +28,7 @@ ParseError Validator::validate(std::vector<PreToken>* tokens)
 }
 
 
-ParseError Validator::validateBrackets(std::vector<PreToken>* tokens)
+ParseError Validator::validateBrackets(std::vector<Token>* tokens)
 {
     size_t curlyCounter = 0;
     size_t squareCounter = 0;

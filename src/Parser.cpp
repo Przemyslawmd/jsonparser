@@ -7,7 +7,7 @@
 #include <variant>
 
 
-std::unique_ptr<std::map<std::string, NodeValue>> Parser::parseInitialTokens(std::vector<PreToken>& initialTokens)
+std::unique_ptr<std::map<std::string, NodeValue>> Parser::parseInitialTokens(std::vector<Token>& initialTokens)
 {
     bool isKeyParsing = true;
     std::string key;

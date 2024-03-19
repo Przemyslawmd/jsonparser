@@ -16,7 +16,7 @@ struct TestData
 };
 
 
-void checkTokens(std::unique_ptr<std::vector<PreToken>> tokens, std::vector<TestData>& testData)
+void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestData>& testData)
 {
     ASSERT_EQ(tokens->size(), testData.size());
     
