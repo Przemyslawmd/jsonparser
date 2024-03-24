@@ -14,10 +14,15 @@ std::unique_ptr<std::map<std::string, NodeValue>> Parser::parseInitialTokens(std
 
     auto nodes = std::make_unique<std::map<std::string, NodeValue>>();
     std::map<std::string, NodeValue>* currentNode = nodes.get();
-    
+    std::stack<std::map<std::string, NodeValue>*> nodesPointer;
+
     for (auto token : tokens | std::views::drop(1)) {
         
         if (token.type == TokenType::CURLY_CLOSE) {
+            if (nodesPointer.empty() == false) {
+                currentNode = nodesPointer.top();
+                nodesPointer.pop();
+            }
             continue;
         }
         
@@ -47,6 +52,7 @@ std::unique_ptr<std::map<std::string, NodeValue>> Parser::parseInitialTokens(std
         if (isKeyParsing == false && token.type == TokenType::CURLY_OPEN) {
             auto map = std::map<std::string, NodeValue>();
             nodes->emplace(std::make_pair(key, map));
+            nodesPointer.push(currentNode);
             currentNode = &(std::get<std::map<std::string, NodeValue>>(currentNode->at(key).value));
             isKeyParsing = true;
             continue;

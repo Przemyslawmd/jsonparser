@@ -106,7 +106,6 @@ bool Preparser::checkQuotation(const std::string& jsonStr)
             quotationCount++;
         }
     }
-    std::cout << quotationCount << std::endl;
     return quotationCount % 2 == 0;
 }
 
