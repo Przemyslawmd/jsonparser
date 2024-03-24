@@ -1,0 +1,9 @@
+{
+  "person": {
+    "name": "John",
+    "age": 39,
+    "country": "Poland",
+  },
+  "company": "abc",
+  "city":  "Cracow",
+}
