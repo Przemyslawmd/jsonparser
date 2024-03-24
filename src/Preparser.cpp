@@ -18,30 +18,30 @@ Preparser::Preparser()
 }
 
 
-std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& jsonStr)
+std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json)
 {
     error = ParseError::NOT_ERROR;
 
-    if (checkQuotation(jsonStr) == false) {
+    if (checkQuotation(json) == false) {
         error = ParseError::STRING_NOT_ENDED;
         return nullptr;
     }
 
-    for (size_t index = 0; index < jsonStr.length(); index++)
+    for (size_t index = 0; index < json.length(); index++)
     {
-        char symbol = jsonStr[index];
+        char symbol = json[index];
         if (symbol == ' ') {
             continue;
         }
         if (symbol == '\"') {
-            index += parseString(jsonStr, index);
+            index += parseString(json, index);
             if (error != ParseError::NOT_ERROR) {
                 return nullptr;
             }
             continue;
         }
         if (isdigit(symbol)) {
-            index += parseNumber(jsonStr, index);
+            index += parseNumber(json, index);
             continue;
         }
         if (tokensMap.count(symbol)) {
@@ -49,7 +49,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             continue;
         }
         if (symbol == 'f') {
-            if (jsonStr.length() - index > 5 && (jsonStr.compare(index, 5, "false") == 0)) {
+            if (json.length() - index > 5 && (json.compare(index, 5, "false") == 0)) {
                 tokens->push_back(Token{ TokenType::DATA_BOOL, false });
                 continue;
             }
@@ -57,14 +57,13 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             return nullptr;
         }
         if (symbol == 't') {
-            if (jsonStr.length() - index > 4 && (jsonStr.compare(index, 4, "true") == 0)) {
+            if (json.length() - index > 4 && (json.compare(index, 4, "true") == 0)) {
                 tokens->push_back(Token{ TokenType::DATA_BOOL, true });
                 continue;
             }
             error = ParseError::UNKNOWN_SYMBOL;
             return nullptr;
         }
-
     }
     return std::move(tokens);
 }
