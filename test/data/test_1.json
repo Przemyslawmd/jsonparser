@@ -2,6 +2,8 @@
     "person": {
         "name": "John",
         "age": 39,
-        "country": "Poland"
+        "country": "Poland",
+        "employed": true,
+        "restricted": false
     }
 }

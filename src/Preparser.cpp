@@ -18,36 +18,59 @@ Preparser::Preparser()
 }
 
 
-std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json)
+std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& jsonStr)
 {
     error = ParseError::NOT_ERROR;
 
-    for (size_t index = 0; index < json.length(); index++)
+    if (checkQuotation(jsonStr) == false) {
+        error = ParseError::STRING_NOT_ENDED;
+        return nullptr;
+    }
+
+    for (size_t index = 0; index < jsonStr.length(); index++)
     {
-        char symbol = json[index];
+        char symbol = jsonStr[index];
         if (symbol == ' ') {
             continue;
         }
-        if (symbol == '\'' || symbol == '\"') {
-            index += parseString(json, index);
+        if (symbol == '\"') {
+            index += parseString(jsonStr, index);
             if (error != ParseError::NOT_ERROR) {
                 return nullptr;
             }
             continue;
         }
         if (isdigit(symbol)) {
-            index += parseNumber(json, index);
+            index += parseNumber(jsonStr, index);
             continue;
         }
         if (tokensMap.count(symbol)) {
             tokens->push_back(Token{ tokensMap.at(symbol), nullptr });
+            continue;
         }
+        if (symbol == 'f') {
+            if (jsonStr.length() - index > 5 && (jsonStr.compare(index, 5, "false") == 0)) {
+                tokens->push_back(Token{ TokenType::DATA_BOOL, false });
+                continue;
+            }
+            error = ParseError::UNKNOWN_SYMBOL;
+            return nullptr;
+        }
+        if (symbol == 't') {
+            if (jsonStr.length() - index > 4 && (jsonStr.compare(index, 4, "true") == 0)) {
+                tokens->push_back(Token{ TokenType::DATA_BOOL, true });
+                continue;
+            }
+            error = ParseError::UNKNOWN_SYMBOL;
+            return nullptr;
+        }
+
     }
     return std::move(tokens);
 }
 
 
-int Preparser::parseNumber(const std::string& json, int index)
+size_t Preparser::parseNumber(const std::string& json, size_t index)
 {
     int number = json[index] - '0';
     size_t shift = 1;
@@ -60,7 +83,7 @@ int Preparser::parseNumber(const std::string& json, int index)
 }
 
 
-int Preparser::parseString(const std::string& json, int index)
+size_t Preparser::parseString(const std::string& json, size_t index)
 {
     size_t shift = 1;
     while (index + shift < json.length()) {
@@ -72,6 +95,20 @@ int Preparser::parseString(const std::string& json, int index)
     }
     error = ParseError::STRING_NOT_ENDED;
     return 0;
+}
+
+
+bool Preparser::checkQuotation(const std::string& jsonStr)
+{
+    size_t quotationCount = 0;
+
+    for (size_t index = 0; index < jsonStr.length(); index++) {
+        if (jsonStr[index] == '\"' && index > 0 && jsonStr[index - 1] != '\\') {
+            quotationCount++;
+        }
+    }
+    std::cout << quotationCount << std::endl;
+    return quotationCount % 2 == 0;
 }
 
 

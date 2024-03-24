@@ -19,8 +19,11 @@ public:
     ParseError getError();
 
 private:
-    int parseNumber(const std::string& json, int index);
-    int parseString(const std::string& json, int index);
+    size_t parseNumber(const std::string& json, size_t index);
+    size_t parseString(const std::string& json, size_t index);
+    size_t parseBoolean(const std::string& json, size_t index);
+
+    bool checkQuotation(const std::string& json);
 
     std::map<char, TokenType> tokensMap;
     std::unique_ptr<std::vector<Token>> tokens;

@@ -38,7 +38,12 @@ std::unique_ptr<std::map<std::string, NodeValue>> Parser::parseInitialTokens(std
             currentNode->emplace(std::make_pair(key, std::get<std::string>(initToken.data)));
             isKeyParsing = true;
             continue;
-        } 
+        }
+        if (isKeyParsing == false && initToken.type == TokenType::DATA_BOOL) {
+            currentNode->emplace(std::make_pair(key, std::get<bool>(initToken.data)));
+            isKeyParsing = true;
+            continue;
+        }
         if (isKeyParsing == false && initToken.type == TokenType::CURLY_OPEN) {
             auto map = std::map<std::string, NodeValue>();
             tokens->emplace(std::make_pair(key, map));

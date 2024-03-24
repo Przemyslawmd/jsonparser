@@ -13,7 +13,7 @@ class Token
 public:
 
     TokenType type;
-    std::variant<std::string, int, nullptr_t> data;
+    std::variant<std::string, int, bool, nullptr_t> data;
 };
 
 #endif

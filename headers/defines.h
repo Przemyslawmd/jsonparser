@@ -32,6 +32,8 @@ enum class ParseError
     SQUARE_BRACKET_ERROR,
 
     STRING_NOT_ENDED,
+
+    UNKNOWN_SYMBOL,
 };
 
 #endif

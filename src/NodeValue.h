@@ -4,7 +4,7 @@
 
 struct NodeValue
 {
-    using Value = std::variant<std::string, int, std::map<std::string, NodeValue>>;
+    using Value = std::variant<std::string, int, bool, std::map<std::string, NodeValue>>;
     Value value;
 };
 
