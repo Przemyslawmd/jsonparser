@@ -9,10 +9,11 @@ class Validator
 {
     public:
 
-        ParseError validate(std::vector<Token>* tokens);
+        ParseError validate(const std::vector<Token>& tokens);
 
     private:
 
-        ParseError validateBrackets(std::vector<Token>* tokens);
+        ParseError validateBrackets(const std::vector<Token>& tokens);
+        ParseError checkRequirements(const std::vector<Token>& tokens);
 };
 

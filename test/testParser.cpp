@@ -2,6 +2,7 @@
 #include "../src/Parser.h"
 #include "../src/Preparser.h"
 #include "../src/NodeValue.h"
+#include "../src/Validator.h"
 #include "config.h"
 
 #include <fstream>
@@ -44,8 +45,13 @@ std::unique_ptr<std::map<std::string, Node>> parseJSON(const std::string& jsonFi
 
     const auto preparser = std::make_unique<Preparser>();
     const auto tokens = preparser->parseJSON(jsonString);
+
+    const auto validator = std::make_unique<Validator>();
+    ParseError error = validator->validate(*tokens);
+    EXPECT_EQ(error, ParseError::NOT_ERROR);
+
     const auto parser = std::make_unique<Parser>();
-    return parser->parseTokens(*(tokens.get()));
+    return parser->parseTokens(*tokens);
 }
 
 
