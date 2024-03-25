@@ -4,10 +4,6 @@
 #include <defines.h>
 
 
-// Rules 
-// after curly_open must be string
-
-
 ParseError Validator::validate(std::vector<Token>* tokens)
 {
     ParseError error;

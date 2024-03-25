@@ -45,12 +45,12 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             continue;
         }
         if (tokensMap.count(symbol)) {
-            tokens->push_back(Token{ tokensMap.at(symbol), nullptr });
+            tokens->emplace_back( Token{ tokensMap.at(symbol), nullptr });
             continue;
         }
         if (symbol == 'f') {
             if (json.length() - index > 5 && (json.compare(index, 5, "false") == 0)) {
-                tokens->push_back(Token{ TokenType::DATA_BOOL, false });
+                tokens->emplace_back(Token{ TokenType::DATA_BOOL, false });
                 continue;
             }
             error = ParseError::UNKNOWN_SYMBOL;
@@ -58,7 +58,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
         }
         if (symbol == 't') {
             if (json.length() - index > 4 && (json.compare(index, 4, "true") == 0)) {
-                tokens->push_back(Token{ TokenType::DATA_BOOL, true });
+                tokens->emplace_back(Token{ TokenType::DATA_BOOL, true });
                 continue;
             }
             error = ParseError::UNKNOWN_SYMBOL;
@@ -77,7 +77,7 @@ size_t Preparser::parseNumber(const std::string& json, size_t index)
         number = number * 10 + json[shift + index] - '0';
         shift += 1;
     }
-    tokens->push_back(Token{ TokenType::DATA_INT, number });
+    tokens->emplace_back(Token{ TokenType::DATA_INT, number });
     return shift - 1;
 }
 
