@@ -7,7 +7,7 @@
 #include <variant>
 
 
-std::unique_ptr<std::map<std::string, Node>> Parser::parseTokens(std::vector<Token>& tokens)
+std::unique_ptr<std::map<std::string, Node>> Parser::parseTokens(const std::vector<Token>& tokens)
 {
     bool isKeyParsing = true;
     std::string key;
@@ -28,34 +28,28 @@ std::unique_ptr<std::map<std::string, Node>> Parser::parseTokens(std::vector<Tok
         if (token.type == TokenType::COLON || token.type == TokenType::COMMA) {
             continue;
         }
+
         if (isKeyParsing) {
             key = std::get<std::string>(token.data);
             isKeyParsing = false;
             continue;
         }
-        if (isKeyParsing == false && token.type == TokenType::DATA_INT) {
+
+        if (token.type == TokenType::DATA_INT) {
             currentNode->emplace(std::make_pair(key, std::get<int>(token.data)));
-            isKeyParsing = true;
-            continue;
         }
-        if (isKeyParsing == false && token.type == TokenType::DATA_STR) {
+        else if (token.type == TokenType::DATA_STR) {
             currentNode->emplace(std::make_pair(key, std::get<std::string>(token.data)));
-            isKeyParsing = true;
-            continue;
         }
-        if (isKeyParsing == false && token.type == TokenType::DATA_BOOL) {
+        else if (token.type == TokenType::DATA_BOOL) {
             currentNode->emplace(std::make_pair(key, std::get<bool>(token.data)));
-            isKeyParsing = true;
-            continue;
         }
-        if (isKeyParsing == false && token.type == TokenType::CURLY_OPEN) {
-            auto map = std::map<std::string, Node>();
-            currentNode->emplace(std::make_pair(key, map));
+        else if (token.type == TokenType::CURLY_OPEN) {
+            currentNode->emplace(std::make_pair(key, std::map<std::string, Node>()));
             nodesPointer.push(currentNode);
             currentNode = &(std::get<std::map<std::string, Node>>(currentNode->at(key).value));
-            isKeyParsing = true;
-            continue;
         }
+        isKeyParsing = true;
     }
     return nodes;
 }

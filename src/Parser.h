@@ -14,7 +14,7 @@ class Parser
 {
 public:
    
-    std::unique_ptr<std::map<std::string, Node>> parseTokens(std::vector<Token>& tokens);
+    std::unique_ptr<std::map<std::string, Node>> parseTokens(const std::vector<Token>& tokens);
 };
 
 #endif
