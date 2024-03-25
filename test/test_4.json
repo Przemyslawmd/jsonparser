@@ -1,0 +1,24 @@
+{
+    "timestamp": 1536731522,
+    "event_type": "jump-to-menu-activation",
+    "measures": {
+        "filter_count": 77,
+        "result_count": 25,
+        "display_count": 7
+    },
+    "dimensions": {
+        "query": "test",
+        "actor_id": 73585,
+        "session_id": "b5c50e56-75ce-50cb-9d44-7cbba93b00e5",
+        "display_set": [
+            [
+                "Repository",
+                106327483
+            ],
+            [
+                "Repository",
+                42456996
+            ]
+        ]
+    }
+}

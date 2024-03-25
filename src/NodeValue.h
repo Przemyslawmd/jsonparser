@@ -1,10 +1,10 @@
 
-#ifndef JSONCPP_NODEVALUE_H
-#define JSONCPP_NODEVALUE_H
+#ifndef JSONCPP_NODE_H
+#define JSONCPP_NODE_H
 
-struct NodeValue
+struct Node
 {
-    using Value = std::variant<std::string, int, bool, std::map<std::string, NodeValue>>;
+    using Value = std::variant<std::string, int, bool, std::map<std::string, Node>>;
     Value value;
 };
 

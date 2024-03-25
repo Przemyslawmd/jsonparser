@@ -7,17 +7,16 @@
 #include <variant>
 
 
-std::unique_ptr<std::map<std::string, NodeValue>> Parser::parseInitialTokens(std::vector<Token>& tokens)
+std::unique_ptr<std::map<std::string, Node>> Parser::parseTokens(std::vector<Token>& tokens)
 {
     bool isKeyParsing = true;
     std::string key;
 
-    auto nodes = std::make_unique<std::map<std::string, NodeValue>>();
-    std::map<std::string, NodeValue>* currentNode = nodes.get();
-    std::stack<std::map<std::string, NodeValue>*> nodesPointer;
+    auto nodes = std::make_unique<std::map<std::string, Node>>();
+    std::map<std::string, Node>* currentNode = nodes.get();
+    std::stack<std::map<std::string, Node>*> nodesPointer;
 
     for (auto token : tokens | std::views::drop(1)) {
-        
         if (token.type == TokenType::CURLY_CLOSE) {
             if (nodesPointer.empty() == false) {
                 currentNode = nodesPointer.top();
@@ -50,10 +49,10 @@ std::unique_ptr<std::map<std::string, NodeValue>> Parser::parseInitialTokens(std
             continue;
         }
         if (isKeyParsing == false && token.type == TokenType::CURLY_OPEN) {
-            auto map = std::map<std::string, NodeValue>();
-            nodes->emplace(std::make_pair(key, map));
+            auto map = std::map<std::string, Node>();
+            currentNode->emplace(std::make_pair(key, map));
             nodesPointer.push(currentNode);
-            currentNode = &(std::get<std::map<std::string, NodeValue>>(currentNode->at(key).value));
+            currentNode = &(std::get<std::map<std::string, Node>>(currentNode->at(key).value));
             isKeyParsing = true;
             continue;
         }

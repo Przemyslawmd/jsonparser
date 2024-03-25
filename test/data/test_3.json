@@ -2,8 +2,8 @@
   "person": {
     "name": "John",
     "age": 39,
-    "country": "Poland",
+    "country": "Poland"
   },
   "company": "abc",
-  "city":  "Cracow",
+  "city":  "Cracow"
 }
