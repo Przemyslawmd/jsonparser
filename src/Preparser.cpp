@@ -30,7 +30,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
     for (size_t index = 0; index < json.length(); index++)
     {
         char symbol = json[index];
-        if (symbol == ' ') {
+        if (symbol == ' ' || symbol == '\n') {
             continue;
         }
         if (symbol == '\"') {
@@ -51,6 +51,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
         if (symbol == 'f') {
             if (json.length() - index > 5 && (json.compare(index, 5, "false") == 0)) {
                 tokens->emplace_back(Token{ TokenType::DATA_BOOL, false });
+                index += 4;
                 continue;
             }
             error = ParseError::UNKNOWN_SYMBOL;
@@ -59,11 +60,14 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
         if (symbol == 't') {
             if (json.length() - index > 4 && (json.compare(index, 4, "true") == 0)) {
                 tokens->emplace_back(Token{ TokenType::DATA_BOOL, true });
+                index += 3;
                 continue;
             }
             error = ParseError::UNKNOWN_SYMBOL;
             return nullptr;
         }
+        error = ParseError::UNKNOWN_SYMBOL;
+        return nullptr;
     }
     return std::move(tokens);
 }
@@ -101,7 +105,11 @@ bool Preparser::checkQuotation(const std::string& jsonStr)
 {
     size_t quotationCount = 0;
 
-    for (size_t index = 0; index < jsonStr.length(); index++) {
+    if (jsonStr[0] == '\"') {
+        return false;
+    }
+
+    for (size_t index = 1; index < jsonStr.length(); index++) {
         if (jsonStr[index] == '\"' && index > 0 && jsonStr[index - 1] != '\\') {
             quotationCount++;
         }
