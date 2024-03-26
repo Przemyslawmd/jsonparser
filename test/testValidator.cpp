@@ -47,6 +47,7 @@ TEST(ValidatorTest, ImproperTokenAfterString)
     ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_STRING);
 }
 
+
 TEST(ValidatorTest, ImproperTokenAfterColon)
 {
     ParseError error = getValidatorError("not_allowed_after_colon.json");

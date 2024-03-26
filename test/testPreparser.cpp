@@ -12,8 +12,19 @@
 struct TestData 
 {
     TokenType type;
-    std::variant<std::string, int, nullptr_t> data;
+    std::variant<std::string, int, bool, nullptr_t> data;
 };
+
+
+std::unique_ptr<std::vector<Token>> getTokens(const std::string& filePath, ParseError* error)
+{
+    std::ifstream jsonStream(filePath);
+    std::string jsonString((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
+    auto preparser = std::make_unique<Preparser>();
+    auto tokens = preparser->parseJSON(jsonString);
+    *error = preparser->getError();
+    return tokens;
+}
 
 
 void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestData>& testData)
@@ -28,19 +39,17 @@ void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestDat
         else if (tokens->at(i).type == TokenType::DATA_STR) {
             ASSERT_EQ(std::get<std::string>(tokens->at(i).data), std::get<std::string>(testData[i].data));
         }
+        else if (tokens->at(i).type == TokenType::DATA_BOOL) {
+            ASSERT_EQ(std::get<bool>(tokens->at(i).data), std::get<bool>(testData[i].data));
+        }
     }
 }
 
 
 TEST (PreparserTest, FirstTest)
 {
-    std::string filePath = std::string(TEST_DATA) + "/test_1.json";
-    std::ifstream jsonFile(filePath);
-    std::string jsonStr((std::istreambuf_iterator<char>(jsonFile)),
-    std::istreambuf_iterator<char>());
-
-    auto preparser = std::make_unique<Preparser>();
-    auto tokens = preparser->parseJSON(jsonStr);
+    ParseError error;
+    auto tokens = getTokens(std::string(TEST_DATA) + "test_1.json", &error);
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN, nullptr },
@@ -69,20 +78,14 @@ TEST (PreparserTest, FirstTest)
        { TokenType::CURLY_CLOSE },
        { TokenType::CURLY_CLOSE },
     };
-
     checkTokens(std::move(tokens), testData);
 }
 
 
 TEST(PreparserTest, SecondTest)
 {
-    std::string filePath = std::string(TEST_DATA) + "/test_2.json";
-    std::ifstream jsonFile(filePath);
-    std::string jsonStr((std::istreambuf_iterator<char>(jsonFile)),
-    std::istreambuf_iterator<char>());
-
-    auto preparser = std::make_unique<Preparser>();
-    auto tokens = preparser->parseJSON(jsonStr);
+    ParseError error;
+    auto tokens = getTokens(std::string(TEST_DATA) + "test_2.json", &error);
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN, nullptr },
@@ -90,7 +93,7 @@ TEST(PreparserTest, SecondTest)
        { TokenType::DATA_STR, std::string{ "name" }},
        { TokenType::COLON, nullptr },
        { TokenType::DATA_STR, std::string{ "John Smith" }},
-       { TokenType::COMMA }, //5
+       { TokenType::COMMA },
        
        { TokenType::DATA_STR, std::string{ "value" }},
        { TokenType::COLON, nullptr },
@@ -164,37 +167,26 @@ TEST(PreparserTest, SecondTest)
        { TokenType::CURLY_CLOSE, nullptr },
        { TokenType::CURLY_CLOSE, nullptr },
     };
-
     checkTokens(std::move(tokens), testData);
 }
 
 
 TEST(PreparserTest, FirstImproperDataTest)
 {
-    std::string filePath = std::string(TEST_DATA_IMPROPER) + "/test_string_not_ended_1.json";
-    std::ifstream jsonFile(filePath);
-    std::string jsonStr((std::istreambuf_iterator<char>(jsonFile)),
-    std::istreambuf_iterator<char>());
-
-    auto preparser = std::make_unique<Preparser>();
-    auto tokens = preparser->parseJSON(jsonStr);
+    ParseError error = ParseError::NOT_ERROR;
+    auto tokens = getTokens(std::string(TEST_DATA_IMPROPER) + "string_not_ended_1.json", &error);
 
     ASSERT_EQ(tokens, nullptr);
-    ASSERT_EQ(preparser->getError(), ParseError::STRING_NOT_ENDED);
+    ASSERT_EQ(error, ParseError::STRING_NOT_ENDED);
 }
 
 
 TEST(PreparserTest, SecondImproperDataTest)
 {
-    std::string filePath = std::string(TEST_DATA_IMPROPER) + "/test_string_not_ended_2.json";
-    std::ifstream jsonFile(filePath);
-    std::string jsonStr((std::istreambuf_iterator<char>(jsonFile)),
-        std::istreambuf_iterator<char>());
-
-    auto preparser = std::make_unique<Preparser>();
-    auto tokens = preparser->parseJSON(jsonStr);
+    ParseError error = ParseError::NOT_ERROR;
+    auto tokens = getTokens(std::string(TEST_DATA_IMPROPER) + "string_not_ended_2.json", &error);
 
     ASSERT_EQ(tokens, nullptr);
-    ASSERT_EQ(preparser->getError(), ParseError::STRING_NOT_ENDED);
+    ASSERT_EQ(error, ParseError::STRING_NOT_ENDED);
 }
 

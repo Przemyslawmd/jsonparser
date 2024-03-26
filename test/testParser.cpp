@@ -57,7 +57,7 @@ std::unique_ptr<std::map<std::string, Node>> parseJSON(const std::string& jsonFi
 
 TEST(ParserTest, FirstTest)
 {
-    auto root = parseJSON("/test_1.json");
+    auto root = parseJSON("test_1.json");
 
     ASSERT_TRUE(root->find("person") != root->end());
 
@@ -80,7 +80,7 @@ TEST(ParserTest, FirstTest)
 
 TEST(ParserTest, SecondTest)
 {
-    auto root = parseJSON("/test_3.json");
+    auto root = parseJSON("test_3.json");
 
     ASSERT_TRUE(root->find("person") != root->end());
 
@@ -105,7 +105,7 @@ TEST(ParserTest, SecondTest)
 
 TEST(ParserTest, ThirdTest)
 {
-    auto root = parseJSON("/test_4.json");
+    auto root = parseJSON("test_4.json");
 
     ASSERT_TRUE(root->find("person") != root->end());
 
