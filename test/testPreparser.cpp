@@ -52,16 +52,16 @@ TEST (PreparserTest, FirstTest)
     auto tokens = getTokens(std::string(TEST_DATA) + "test_1.json", &error);
 
     std::vector<TestData> testData = {
-       { TokenType::CURLY_OPEN, nullptr },
+       { TokenType::CURLY_OPEN },
        { TokenType::DATA_STR, std::string{ "person" }},
-       { TokenType::COLON, nullptr } ,
-       { TokenType::CURLY_OPEN, nullptr }, 
+       { TokenType::COLON } ,
+       { TokenType::CURLY_OPEN }, 
        { TokenType::DATA_STR, std::string{ "name" }},
        { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "John" }},
        { TokenType::COMMA },
        { TokenType::DATA_STR, std::string{ "age" }},
-       { TokenType::COLON} ,
+       { TokenType::COLON } ,
        { TokenType::DATA_INT, 39 },
        { TokenType::COMMA },
        { TokenType::DATA_STR, std::string{ "country" }},
@@ -88,84 +88,84 @@ TEST(PreparserTest, SecondTest)
     auto tokens = getTokens(std::string(TEST_DATA) + "test_2.json", &error);
 
     std::vector<TestData> testData = {
-       { TokenType::CURLY_OPEN, nullptr },
+       { TokenType::CURLY_OPEN },
        
        { TokenType::DATA_STR, std::string{ "name" }},
-       { TokenType::COLON, nullptr },
+       { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "John Smith" }},
        { TokenType::COMMA },
        
        { TokenType::DATA_STR, std::string{ "value" }},
-       { TokenType::COLON, nullptr },
+       { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "20223" }},
        { TokenType::COMMA },
 
        { TokenType::DATA_STR, std::string{ "price" }},
-       { TokenType::COLON, nullptr },
+       { TokenType::COLON },
        { TokenType::DATA_INT, 2224 },
        { TokenType::COMMA },
 
        { TokenType::DATA_STR, std::string{ "shipTo" }},
-       { TokenType::COLON, nullptr },
-       { TokenType::CURLY_OPEN, nullptr },
+       { TokenType::COLON },
+       { TokenType::CURLY_OPEN },
 
        { TokenType::DATA_STR, std::string{ "name" }},
-       { TokenType::COLON, nullptr },
+       { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "Jane Smith" }},
        { TokenType::COMMA },
 
        { TokenType::DATA_STR, std::string{ "address" }},
-       { TokenType::COLON, nullptr },
+       { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "123 Maple Street" }},
        { TokenType::COMMA },
 
        { TokenType::DATA_STR, std::string{ "city" }},
-       { TokenType::COLON, nullptr },
+       { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "Pretendville" }},
        { TokenType::COMMA },
 
        { TokenType::DATA_STR, std::string{ "state" }},
-       { TokenType::COLON, nullptr },
+       { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "NY" }},
        { TokenType::COMMA },
 
        { TokenType::DATA_STR, std::string{ "zip" }},
-       { TokenType::COLON, nullptr },
-       { TokenType::DATA_INT, 12345},
+       { TokenType::COLON },
+       { TokenType::DATA_INT, -12345 },
 
-       { TokenType::CURLY_CLOSE, nullptr },
+       { TokenType::CURLY_CLOSE },
        { TokenType::COMMA },
 
        { TokenType::DATA_STR, std::string{ "billTo" }},
-       { TokenType::COLON, nullptr },
-       { TokenType::CURLY_OPEN, nullptr },
+       { TokenType::COLON },
+       { TokenType::CURLY_OPEN },
 
        { TokenType::DATA_STR, std::string{ "name" }},
-       { TokenType::COLON, nullptr },
+       { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "John Smith" }},
        { TokenType::COMMA },
 
        { TokenType::DATA_STR, std::string{ "address" }},
-       { TokenType::COLON, nullptr },
+       { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "123 Maple Street" }},
        { TokenType::COMMA },
 
        { TokenType::DATA_STR, std::string{ "city" }},
-       { TokenType::COLON, nullptr },
+       { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "Pretendville" }},
        { TokenType::COMMA },
 
        { TokenType::DATA_STR, std::string{ "state" }},
-       { TokenType::COLON, nullptr },
+       { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "NY" }},
        { TokenType::COMMA },
 
        { TokenType::DATA_STR, std::string{ "zip" }},
-       { TokenType::COLON, nullptr },
-       { TokenType::DATA_INT, 12345},
+       { TokenType::COLON },
+       { TokenType::DATA_INT, 12345 },
 
-       { TokenType::CURLY_CLOSE, nullptr },
-       { TokenType::CURLY_CLOSE, nullptr },
+       { TokenType::CURLY_CLOSE },
+       { TokenType::CURLY_CLOSE },
     };
     checkTokens(std::move(tokens), testData);
 }

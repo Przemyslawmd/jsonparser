@@ -40,7 +40,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             }
             continue;
         }
-        if (isdigit(symbol)) {
+        if (isdigit(symbol) || symbol == '-') {
             index += parseNumber(json, index);
             continue;
         }
@@ -75,13 +75,20 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
 
 size_t Preparser::parseNumber(const std::string& json, size_t index)
 {
-    int number = json[index] - '0';
+    int number = 0;
+    bool isMinus = false;
+    if (isdigit(json[index])) {
+        number = json[index] - '0';
+    }
+    else {
+        isMinus = true;
+    }
     size_t shift = 1;
     while (index + shift < json.length() && isdigit(json[shift + index])) {
         number = number * 10 + json[shift + index] - '0';
         shift += 1;
     }
-    tokens->emplace_back(Token{ TokenType::DATA_INT, number });
+    tokens->emplace_back(Token{ TokenType::DATA_INT, isMinus ? number * -1 : number });
     return shift - 1;
 }
 
