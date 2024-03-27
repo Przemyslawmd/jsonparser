@@ -17,7 +17,7 @@ enum class TokenType
     DATA_STR,
     DATA_BOOL,
     DATA_INT,
-    DATA_FLOAT,
+    DATA_DOUBLE,
 };
 
 

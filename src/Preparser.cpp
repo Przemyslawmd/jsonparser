@@ -76,6 +76,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
 size_t Preparser::parseNumber(const std::string& json, size_t index)
 {
     int number = 0;
+    size_t shift = 1;
     bool isMinus = false;
     if (isdigit(json[index])) {
         number = json[index] - '0';
@@ -83,12 +84,24 @@ size_t Preparser::parseNumber(const std::string& json, size_t index)
     else {
         isMinus = true;
     }
-    size_t shift = 1;
     while (index + shift < json.length() && isdigit(json[shift + index])) {
         number = number * 10 + json[shift + index] - '0';
         shift += 1;
     }
-    tokens->emplace_back(Token{ TokenType::DATA_INT, isMinus ? number * -1 : number });
+    if (json[index + shift] != '.') {
+        tokens->emplace_back(Token{ TokenType::DATA_INT, isMinus ? number * -1 : number });
+        return shift - 1;
+    }
+
+    shift++;
+    size_t divider = 1;
+    while (index + shift < json.length() && isdigit(json[shift + index])) {
+        number = number * 10 + (json[shift + index] - '0');
+        shift += 1;
+        divider *= 10;
+    }
+    double numberFloat = (double) number / divider;
+    tokens->emplace_back(Token{ TokenType::DATA_DOUBLE, isMinus ? numberFloat * -1.0 : numberFloat });
     return shift - 1;
 }
 

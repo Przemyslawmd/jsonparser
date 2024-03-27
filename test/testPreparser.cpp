@@ -3,6 +3,7 @@
 #include "config.h"
 
 #include <fstream>
+#include <limits>
 #include <memory>
 #include <vector>
 
@@ -12,7 +13,7 @@
 struct TestData 
 {
     TokenType type;
-    std::variant<std::string, int, bool, nullptr_t> data;
+    std::variant<std::string, int, double, bool, nullptr_t> data;
 };
 
 
@@ -41,6 +42,9 @@ void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestDat
         }
         else if (tokens->at(i).type == TokenType::DATA_BOOL) {
             ASSERT_EQ(std::get<bool>(tokens->at(i).data), std::get<bool>(testData[i].data));
+        }
+        else if (tokens->at(i).type == TokenType::DATA_DOUBLE) {
+            ASSERT_TRUE((std::get<double>(tokens->at(i).data) - std::get<double>(testData[i].data)) <= DBL_EPSILON);
         }
     }
 }
@@ -132,6 +136,11 @@ TEST(PreparserTest, SecondTest)
        { TokenType::DATA_STR, std::string{ "zip" }},
        { TokenType::COLON },
        { TokenType::DATA_INT, -12345 },
+       { TokenType::COMMA },
+
+       { TokenType::DATA_STR, std::string{ "weight" }},
+       { TokenType::COLON },
+       { TokenType::DATA_DOUBLE, 12.34 },
 
        { TokenType::CURLY_CLOSE },
        { TokenType::COMMA },
@@ -163,6 +172,11 @@ TEST(PreparserTest, SecondTest)
        { TokenType::DATA_STR, std::string{ "zip" }},
        { TokenType::COLON },
        { TokenType::DATA_INT, 12345 },
+       { TokenType::COMMA },
+
+       { TokenType::DATA_STR, std::string{ "minusWeight" }},
+       { TokenType::COLON },
+       { TokenType::DATA_DOUBLE, -0.2456 },
 
        { TokenType::CURLY_CLOSE },
        { TokenType::CURLY_CLOSE },

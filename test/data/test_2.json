@@ -7,13 +7,15 @@
         "address": "123 Maple Street",
         "city": "Pretendville",
         "state": "NY",
-        "zip": -12345
+        "zip": -12345,
+        "weight": 12.34
     },
     "billTo": {
         "name": "John Smith",
         "address": "123 Maple Street",
         "city": "Pretendville",
         "state": "NY",
-        "zip": 12345
+        "zip": 12345,
+        "minusWeight": -0.24567
     }
 }
