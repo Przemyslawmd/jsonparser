@@ -82,11 +82,11 @@ ParseError Validator::checkRequirements(const std::vector<Token>& tokens)
         TokenType::COMMA, 
         TokenType::CURLY_CLOSE };
 
-    for (size_t i = 0; i < tokens.size(); i++) {
+    for (size_t i = 1; i < tokens.size() - 1; i++) {
         if (tokens[i].type == TokenType::CURLY_OPEN && tokens[i + 1].type != TokenType::DATA_STR) {
             return ParseError::IMPROPER_TOKEN_AFTER_CURLY_OPEN;
         }
-        if (tokens[i].type == TokenType::CURLY_CLOSE && i < (tokens.size() - 1) && afterCurlyClose.count(tokens[i + 1].type) == 0) {
+        if (tokens[i].type == TokenType::CURLY_CLOSE && afterCurlyClose.count(tokens[i + 1].type) == 0) {
             return ParseError::IMPROPER_TOKEN_AFTER_CURLY_CLOSE;
         }
         if (tokens[i].type == TokenType::COMMA && tokens[i + 1].type != TokenType::DATA_STR) {

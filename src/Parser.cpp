@@ -12,10 +12,10 @@ std::unique_ptr<std::map<std::string, Node>> Parser::parseTokens(const std::vect
     std::string key;
 
     auto nodes = std::make_unique<std::map<std::string, Node>>();
-    std::map<std::string, Node>* currentNode = nodes.get();
+    auto* currentNode = nodes.get();
     std::stack<std::map<std::string, Node>*> nodesPointer;
 
-    for (auto token : tokens | std::views::drop(1)) {
+    for (const auto& token : tokens | std::views::drop(1)) {
         if (token.type == TokenType::CURLY_CLOSE) {
             if (nodesPointer.empty() == false) {
                 currentNode = nodesPointer.top();
