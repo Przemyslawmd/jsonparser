@@ -37,6 +37,9 @@ std::unique_ptr<std::map<std::string, Node>> Parser::parseTokens(const std::vect
         if (token.type == TokenType::DATA_INT) {
             currentNode->emplace(std::make_pair(key, std::get<int>(token.data)));
         }
+        else if (token.type == TokenType::DATA_DOUBLE) {
+            currentNode->emplace(std::make_pair(key, std::get<double>(token.data)));
+        }
         else if (token.type == TokenType::DATA_STR) {
             currentNode->emplace(std::make_pair(key, std::get<std::string>(token.data)));
         }
