@@ -21,7 +21,6 @@ public:
 private:
     size_t parseNumber(const std::string& json, size_t index);
     size_t parseString(const std::string& json, size_t index);
-    size_t parseBoolean(const std::string& json, size_t index);
 
     bool checkQuotation(const std::string& json);
 

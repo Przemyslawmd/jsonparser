@@ -34,10 +34,17 @@ TEST(ValidatorTest, ImproperEnd)
 }
 
 
-TEST(ValidatorTest, NotStringAfterCurlyOpen)
+TEST(ValidatorTest, ImproperTokenAfterCurlyOpen)
 {
     ParseError error = getValidatorError("not_allowed_after_curly_open.json");
     ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_CURLY_OPEN);
+}
+
+
+TEST(ValidatorTest, ImproperTokenAfterCurlyClose)
+{
+    ParseError error = getValidatorError("not_allowed_after_curly_close.json");
+    ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_CURLY_CLOSE);
 }
 
 
@@ -48,9 +55,37 @@ TEST(ValidatorTest, ImproperTokenAfterString)
 }
 
 
+TEST(ValidatorTest, ImproperTokenAfterInt)
+{
+    ParseError error = getValidatorError("not_allowed_after_int.json");
+    ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_DATA_INT);
+}
+
+
+TEST(ValidatorTest, ImproperTokenAfterDouble)
+{
+    ParseError error = getValidatorError("not_allowed_after_double.json");
+    ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_DATA_DOUBLE);
+}
+
+
+TEST(ValidatorTest, ImproperTokenAfterBool)
+{
+    ParseError error = getValidatorError("not_allowed_after_bool.json");
+    ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_DATA_BOOL);
+}
+
+
 TEST(ValidatorTest, ImproperTokenAfterColon)
 {
     ParseError error = getValidatorError("not_allowed_after_colon.json");
     ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_COLON);
+}
+
+
+TEST(ValidatorTest, ImproperTokenAfterComma)
+{
+    ParseError error = getValidatorError("not_allowed_after_comma.json");
+    ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_COMMA);
 }
 

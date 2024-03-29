@@ -1,0 +1,10 @@
+{
+  "person": {
+    "name": "John",
+    "age": 39,
+    "country": "Poland",
+    "employed": true,
+    "restricted": false
+  }
+  "name": "Maria"
+}

@@ -17,7 +17,7 @@ ParseError Validator::validate(const std::vector<Token>& tokens)
     if (tokens.at(tokens.size() - 1).type != TokenType::CURLY_CLOSE) {
         return ParseError::LAST_CHAR_NOT_CURLY_CLOSE;
     }
-    
+
     error = validateBrackets(tokens);
     if (error != ParseError::NOT_ERROR) {
         return error;
@@ -31,7 +31,7 @@ ParseError Validator::validateBrackets(const std::vector<Token>& tokens)
     size_t curlyCounter = 0;
     size_t squareCounter = 0;
 
-    for (const auto& token: tokens) {
+    for (const auto& token : tokens) {
         if (token.type == TokenType::CURLY_OPEN) {
             curlyCounter++;
         }
@@ -65,21 +65,49 @@ ParseError Validator::validateBrackets(const std::vector<Token>& tokens)
 
 ParseError Validator::checkRequirements(const std::vector<Token>& tokens)
 {
-    const std::set<TokenType> allowedAfterString { TokenType::COLON, TokenType::COMMA, TokenType::CURLY_CLOSE };
-    const std::set<TokenType> allowedAfterColon { TokenType::DATA_STR, TokenType::DATA_INT, TokenType::DATA_BOOL, TokenType::CURLY_OPEN };
-    
-    for (size_t index = 0; index < tokens.size(); index++) {
-        if (tokens[index].type == TokenType::CURLY_OPEN && tokens[index + 1].type != TokenType::DATA_STR) {
+    const std::set<TokenType> afterString { 
+        TokenType::COLON, 
+        TokenType::COMMA, 
+        TokenType::CURLY_CLOSE };
+    const std::set<TokenType> afterData { 
+        TokenType::COMMA, 
+        TokenType::CURLY_CLOSE };
+    const std::set<TokenType> afterColon { 
+        TokenType::DATA_STR, 
+        TokenType::DATA_INT, 
+        TokenType::DATA_DOUBLE, 
+        TokenType::DATA_BOOL, 
+        TokenType::CURLY_OPEN };
+    const std::set<TokenType> afterCurlyClose { 
+        TokenType::COMMA, 
+        TokenType::CURLY_CLOSE };
+
+    for (size_t i = 0; i < tokens.size(); i++) {
+        if (tokens[i].type == TokenType::CURLY_OPEN && tokens[i + 1].type != TokenType::DATA_STR) {
             return ParseError::IMPROPER_TOKEN_AFTER_CURLY_OPEN;
         }
-        if (tokens[index].type == TokenType::DATA_STR && allowedAfterString.count(tokens[index + 1].type) == 0) {
+        if (tokens[i].type == TokenType::CURLY_CLOSE && i < (tokens.size() - 1) && afterCurlyClose.count(tokens[i + 1].type) == 0) {
+            return ParseError::IMPROPER_TOKEN_AFTER_CURLY_CLOSE;
+        }
+        if (tokens[i].type == TokenType::COMMA && tokens[i + 1].type != TokenType::DATA_STR) {
+            return ParseError::IMPROPER_TOKEN_AFTER_COMMA;
+        }
+        if (tokens[i].type == TokenType::COLON && afterColon.count(tokens[i + 1].type) == 0) {
+            return ParseError::IMPROPER_TOKEN_AFTER_COLON;
+        }
+        if (tokens[i].type == TokenType::DATA_STR && afterString.count(tokens[i + 1].type) == 0) {
             return ParseError::IMPROPER_TOKEN_AFTER_STRING;
         }
-        if (tokens[index].type == TokenType::COLON && allowedAfterColon.count(tokens[index + 1].type) == 0) {
-            return ParseError::IMPROPER_TOKEN_AFTER_COLON;
+        if (tokens[i].type == TokenType::DATA_INT && afterData.count(tokens[i + 1].type) == 0) {
+            return ParseError::IMPROPER_TOKEN_AFTER_DATA_INT;
+        }
+        if (tokens[i].type == TokenType::DATA_DOUBLE && afterData.count(tokens[i + 1].type) == 0) {
+            return ParseError::IMPROPER_TOKEN_AFTER_DATA_DOUBLE;
+        }
+        if (tokens[i].type == TokenType::DATA_BOOL && afterData.count(tokens[i + 1].type) == 0) {
+            return ParseError::IMPROPER_TOKEN_AFTER_DATA_BOOL;
         }
     }
     return ParseError::NOT_ERROR;
 }
-
 
