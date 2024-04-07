@@ -7,14 +7,6 @@
 Preparser::Preparser()
 {
     tokens = std::make_unique<std::vector<Token>>();
-    tokensMap = {
-        { '{', TokenType::CURLY_OPEN },
-        { '}', TokenType::CURLY_CLOSE },
-        { '[', TokenType::SQUARE_OPEN },
-        { ']', TokenType::SQUARE_CLOSE },
-        { ':', TokenType::COLON },
-        { ',', TokenType::COMMA },
-    };
 }
 
 
@@ -78,12 +70,14 @@ size_t Preparser::parseNumber(const std::string& json, size_t index)
     int number = 0;
     size_t shift = 1;
     bool isMinus = false;
+
     if (isdigit(json[index])) {
         number = json[index] - '0';
     }
     else {
         isMinus = true;
     }
+
     while (index + shift < json.length() && isdigit(json[shift + index])) {
         number = number * 10 + json[shift + index] - '0';
         shift += 1;
