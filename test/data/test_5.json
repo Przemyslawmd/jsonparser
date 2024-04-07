@@ -5,9 +5,9 @@
     "country": "Poland",
     "values": {
       "ab": -12.67,
-      "cd":  43.001
+      "cd": 43.001
     }
   },
   "company": "abc",
-  "city":  "Cracow"
+  "city": "Cracow"
 }

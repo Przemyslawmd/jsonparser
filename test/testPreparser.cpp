@@ -191,10 +191,10 @@ TEST(PreparserTest, Test_File_2)
 }
 
 
-TEST(PreparserTest, Test_File_5)
+TEST(PreparserTest, Test_File_6)
 {
     ParseError error;
-    auto tokens = getTokens(std::string(TEST_DATA) + "test_5.json", &error);
+    auto tokens = getTokens(std::string(TEST_DATA) + "test_6.json", &error);
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
