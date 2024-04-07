@@ -50,7 +50,7 @@ void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestDat
 }
 
 
-TEST (PreparserTest, FirstTest)
+TEST (PreparserTest, Test_File_1)
 {
     ParseError error;
     auto tokens = getTokens(std::string(TEST_DATA) + "test_1.json", &error);
@@ -86,7 +86,7 @@ TEST (PreparserTest, FirstTest)
 }
 
 
-TEST(PreparserTest, SecondTest)
+TEST(PreparserTest, Test_File_2)
 {
     ParseError error;
     auto tokens = getTokens(std::string(TEST_DATA) + "test_2.json", &error);
@@ -123,9 +123,15 @@ TEST(PreparserTest, SecondTest)
        { TokenType::DATA_STR, std::string{ "123 Maple Street" }},
        { TokenType::COMMA },
 
-       { TokenType::DATA_STR, std::string{ "city" }},
+       { TokenType::DATA_STR, std::string{ "cities" }},
        { TokenType::COLON },
+       { TokenType::SQUARE_OPEN },
        { TokenType::DATA_STR, std::string{ "Pretendville" }},
+       { TokenType::COMMA },
+       { TokenType::DATA_STR, std::string{ "New York" }},
+       { TokenType::COMMA },
+       { TokenType::DATA_STR, std::string{ "Chicago" }},
+       { TokenType::SQUARE_CLOSE },
        { TokenType::COMMA },
 
        { TokenType::DATA_STR, std::string{ "state" }},
@@ -179,6 +185,83 @@ TEST(PreparserTest, SecondTest)
        { TokenType::DATA_DOUBLE, -0.2456 },
 
        { TokenType::CURLY_CLOSE },
+       { TokenType::CURLY_CLOSE },
+    };
+    checkTokens(std::move(tokens), testData);
+}
+
+
+TEST(PreparserTest, Test_File_5)
+{
+    ParseError error;
+    auto tokens = getTokens(std::string(TEST_DATA) + "test_5.json", &error);
+
+    std::vector<TestData> testData = {
+       { TokenType::CURLY_OPEN },
+       { TokenType::DATA_STR, std::string{ "employees" }},
+       { TokenType::COLON } ,
+       { TokenType::SQUARE_OPEN },
+       { TokenType::CURLY_OPEN },
+       
+       { TokenType::DATA_STR, std::string{ "name" }},
+       { TokenType::COLON },
+       { TokenType::DATA_STR, std::string{ "Jacek" }},
+       { TokenType::COMMA },
+       { TokenType::DATA_STR, std::string{ "email" }},
+       { TokenType::COLON } ,
+       { TokenType::DATA_STR, std::string{ "jacek@gmail.com" }},
+       { TokenType::COMMA },
+       { TokenType::DATA_STR, std::string{ "age" }},
+       { TokenType::COLON },
+       { TokenType::DATA_INT, 23 },
+       { TokenType::CURLY_CLOSE },
+       { TokenType::COMMA },
+       
+       { TokenType::CURLY_OPEN },
+       { TokenType::DATA_STR, std::string{ "name" }},
+       { TokenType::COLON },
+       { TokenType::DATA_STR, std::string{ "Marek" }},
+       { TokenType::COMMA },
+       { TokenType::DATA_STR, std::string{ "email" }},
+       { TokenType::COLON } ,
+       { TokenType::DATA_STR, std::string{ "marek@gmail.com" }},
+       { TokenType::COMMA },
+       { TokenType::DATA_STR, std::string{ "age" }},
+       { TokenType::COLON },
+       { TokenType::DATA_INT, 28 },
+       { TokenType::CURLY_CLOSE },
+       { TokenType::COMMA },
+
+       { TokenType::CURLY_OPEN },
+       { TokenType::DATA_STR, std::string{ "name" }},
+       { TokenType::COLON },
+       { TokenType::DATA_STR, std::string{ "Agata" }},
+       { TokenType::COMMA },
+       { TokenType::DATA_STR, std::string{ "email" }},
+       { TokenType::COLON } ,
+       { TokenType::DATA_STR, std::string{ "agata@gmail.com" }},
+       { TokenType::COMMA },
+       { TokenType::DATA_STR, std::string{ "age" }},
+       { TokenType::COLON },
+       { TokenType::DATA_INT, 33 },
+       { TokenType::CURLY_CLOSE },
+       { TokenType::COMMA },
+
+       { TokenType::CURLY_OPEN },
+       { TokenType::DATA_STR, std::string{ "name" }},
+       { TokenType::COLON },
+       { TokenType::DATA_STR, std::string{ "Anna" }},
+       { TokenType::COMMA },
+       { TokenType::DATA_STR, std::string{ "email" }},
+       { TokenType::COLON } ,
+       { TokenType::DATA_STR, std::string{ "anna@gmail.com" }},
+       { TokenType::COMMA },
+       { TokenType::DATA_STR, std::string{ "age" }},
+       { TokenType::COLON },
+       { TokenType::DATA_INT, 31 },
+
+       { TokenType::CURLY_CLOSE },
+       { TokenType::SQUARE_CLOSE },
        { TokenType::CURLY_CLOSE },
     };
     checkTokens(std::move(tokens), testData);
