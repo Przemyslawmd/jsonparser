@@ -38,16 +38,16 @@ std::unique_ptr<std::map<std::string, Node>> Parser::parseTokens(const std::vect
         }
 
         if (token.type == TokenType::DATA_INT) {
-            processInteger(key, token);
+            processData<int>(key, token);
         }
         else if (token.type == TokenType::DATA_DOUBLE) {
-            processDouble(key, token);
+            processData<double>(key, token);
         }
         else if (token.type == TokenType::DATA_STR) {
-            processString(key, token);
+            processData<std::string>(key, token);
         }
         else if (token.type == TokenType::DATA_BOOL) {
-            processBoolean(key, token);
+            processData<bool>(key, token);
         }
         else if (token.type == TokenType::CURLY_OPEN) {
             pushObjectOnStack(key);
@@ -85,38 +85,14 @@ void Parser::pushArrayOnStack(const std::string& key)
 }
 
 
-void Parser::processInteger(const std::string& key, const Token& token)
+template<class T>
+void Parser::processData(const std::string& key, const Token& token)
 {
     if (state == State::OBJECT_PARSING) {
-        std::get<ObjectNode*>(currentNode)->emplace(std::make_pair(key, std::get<int>(token.data)));
-    }
-}
-
-
-void Parser::processDouble(const std::string& key, const Token& token)
-{
-    if (state == State::OBJECT_PARSING) {
-        std::get<ObjectNode*>(currentNode)->emplace(std::make_pair(key, std::get<double>(token.data)));
-    }
-
-}
-
-
-void Parser::processString(const std::string& key, const Token& token)
-{
-    if (state == State::OBJECT_PARSING) {
-        std::get<ObjectNode*>(currentNode)->emplace(std::make_pair(key, std::get<std::string>(token.data)));
+        std::get<ObjectNode*>(currentNode)->emplace(std::make_pair(key, std::get<T>(token.data)));
     }
     else {
-        std::get<ArrayNode*>(currentNode)->emplace_back(std::get<std::string>(token.data));
-    }
-}
-
-
-void Parser::processBoolean(const std::string& key, const Token& token)
-{
-    if (state == State::OBJECT_PARSING) {
-        std::get<ObjectNode*>(currentNode)->emplace(std::make_pair(key, std::get<bool>(token.data)));
+        std::get<ArrayNode*>(currentNode)->emplace_back(std::get<T>(token.data));
     }
 }
 

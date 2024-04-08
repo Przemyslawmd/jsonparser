@@ -35,10 +35,7 @@ class Parser
         void pushObjectOnStack(const std::string& key);
         void pushArrayOnStack(const std::string& key);
         
-        void processInteger(const std::string& key, const Token& token);
-        void processDouble(const std::string& key, const Token& token);
-        void processString(const std::string& key, const Token& token);
-        void processBoolean(const std::string& key, const Token& token);
+        template<class T> void processData(const std::string& key, const Token& token);
 };
 
 #endif
