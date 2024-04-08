@@ -68,7 +68,8 @@ ParseError Validator::checkRequirements(const std::vector<Token>& tokens)
     const std::set<TokenType> afterString { 
         TokenType::COLON, 
         TokenType::COMMA, 
-        TokenType::CURLY_CLOSE };
+        TokenType::CURLY_CLOSE,
+        TokenType::SQUARE_CLOSE };
     const std::set<TokenType> afterData { 
         TokenType::COMMA, 
         TokenType::CURLY_CLOSE };
@@ -77,7 +78,8 @@ ParseError Validator::checkRequirements(const std::vector<Token>& tokens)
         TokenType::DATA_INT, 
         TokenType::DATA_DOUBLE, 
         TokenType::DATA_BOOL, 
-        TokenType::CURLY_OPEN };
+        TokenType::CURLY_OPEN,
+        TokenType::SQUARE_OPEN };
     const std::set<TokenType> afterCurlyClose { 
         TokenType::COMMA, 
         TokenType::CURLY_CLOSE };

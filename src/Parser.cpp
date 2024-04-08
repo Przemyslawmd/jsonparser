@@ -12,14 +12,13 @@ std::unique_ptr<std::map<std::string, Node>> Parser::parseTokens(const std::vect
     std::string key;
 
     auto nodes = std::make_unique<std::map<std::string, Node>>();
-    auto* currentNode = nodes.get();
-    std::stack<std::map<std::string, Node>*> nodesPointer;
+    currentObject = nodes.get();
 
     for (const auto& token : tokens | std::views::drop(1)) {
         if (token.type == TokenType::CURLY_CLOSE) {
-            if (nodesPointer.empty() == false) {
-                currentNode = nodesPointer.top();
-                nodesPointer.pop();
+            if (stackObjects.empty() == false) {
+                currentObject = stackObjects.top();
+                stackObjects.pop();
             }
             continue;
         }
@@ -35,24 +34,30 @@ std::unique_ptr<std::map<std::string, Node>> Parser::parseTokens(const std::vect
         }
 
         if (token.type == TokenType::DATA_INT) {
-            currentNode->emplace(std::make_pair(key, std::get<int>(token.data)));
+            currentObject->emplace(std::make_pair(key, std::get<int>(token.data)));
         }
         else if (token.type == TokenType::DATA_DOUBLE) {
-            currentNode->emplace(std::make_pair(key, std::get<double>(token.data)));
+            currentObject->emplace(std::make_pair(key, std::get<double>(token.data)));
         }
         else if (token.type == TokenType::DATA_STR) {
-            currentNode->emplace(std::make_pair(key, std::get<std::string>(token.data)));
+            currentObject->emplace(std::make_pair(key, std::get<std::string>(token.data)));
         }
         else if (token.type == TokenType::DATA_BOOL) {
-            currentNode->emplace(std::make_pair(key, std::get<bool>(token.data)));
+            currentObject->emplace(std::make_pair(key, std::get<bool>(token.data)));
         }
         else if (token.type == TokenType::CURLY_OPEN) {
-            currentNode->emplace(std::make_pair(key, std::map<std::string, Node>()));
-            nodesPointer.push(currentNode);
-            currentNode = &(std::get<std::map<std::string, Node>>(currentNode->at(key).value));
+            pushObject(key);
         }
         isKeyParsing = true;
     }
     return nodes;
+}
+
+
+void Parser::pushObject(std::string& key)
+{
+    currentObject->emplace(std::make_pair(key, std::map<std::string, Node>()));
+    stackObjects.push(currentObject);
+    currentObject = &(std::get<std::map<std::string, Node>>(currentObject->at(key).value));
 }
 

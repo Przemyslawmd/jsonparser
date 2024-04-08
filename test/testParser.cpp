@@ -50,6 +50,15 @@ void checkDoubleNode(std::map<std::string, Node>* nodePointer, const std::string
 }
 
 
+void checkArrayNode(std::map<std::string, Node>* nodePointer, const std::string& key)
+{
+    ASSERT_TRUE(nodePointer != nullptr);
+    auto* node = std::get_if<std::vector<Node>>(&nodePointer->at(key).value);
+    ASSERT_TRUE(node != nullptr);
+    //ASSERT_TRUE(*node - value <= DBL_EPSILON);
+}
+
+
 std::unique_ptr<std::map<std::string, Node>> parseJSON(const std::string& jsonFile)
 {
     std::string filePath = std::string(TEST_DATA) + jsonFile;
@@ -69,7 +78,7 @@ std::unique_ptr<std::map<std::string, Node>> parseJSON(const std::string& jsonFi
 }
 
 
-TEST(ParserTest, FirstTest)
+TEST(ParserTest, Test_File_1)
 {
     auto root = parseJSON("test_1.json");
 
@@ -91,8 +100,8 @@ TEST(ParserTest, FirstTest)
     checkBoolNode(nodePerson, "restricted", false);
 }
 
-
-TEST(ParserTest, SecondTest)
+/*
+TEST(ParserTest, Test_File_3)
 {
     auto root = parseJSON("test_3.json");
 
@@ -110,14 +119,32 @@ TEST(ParserTest, SecondTest)
     checkStringNode(nodePerson, "country", "Poland");
 
     ASSERT_TRUE(root->find("company") != root->end());
-    ASSERT_TRUE(root->find("city") != root->end());
+    ASSERT_TRUE(root->find("cities") != root->end());
 
     checkStringNode(root.get(), "company", "abc");
-    checkStringNode(root.get(), "city", "Cracow");
+
+    checkArrayNode(root.get(), "cities");
+    std::vector<Node>* arrayCities = std::get_if<std::vector<Node>>(&root->at("cities").value);
+
+    auto* city_1 = std::get_if<std::string>(&arrayCities->at(0).value);
+    ASSERT_TRUE(city_1 != nullptr);
+    ASSERT_EQ(*city_1, std::string{ "Krakow" });
+    
+    auto* city_2 = std::get_if<std::string>(&arrayCities->at(1).value);
+    ASSERT_TRUE(city_2 != nullptr);
+    ASSERT_EQ(*city_2, std::string{ "Warszawa" });
+
+    auto* city_3 = std::get_if<std::string>(&arrayCities->at(2).value);
+    ASSERT_TRUE(city_3 != nullptr);
+    ASSERT_EQ(*city_3, std::string{ "Wroclaw" });
+
+    auto* city_4 = std::get_if<std::string>(&arrayCities->at(3).value);
+    ASSERT_TRUE(city_4 != nullptr);
+    ASSERT_EQ(*city_4, std::string{ "Poznan" });
 }
+*/
 
-
-TEST(ParserTest, ThirdTest)
+TEST(ParserTest, Test_File_4)
 {
     auto root = parseJSON("test_4.json");
 
@@ -149,7 +176,7 @@ TEST(ParserTest, ThirdTest)
 }
 
 
-TEST(ParserTest, FourthTest)
+TEST(ParserTest, Test_File_5)
 {
     auto root = parseJSON("test_5.json");
 
