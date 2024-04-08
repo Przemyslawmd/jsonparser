@@ -17,8 +17,8 @@ enum class State {
 };
 
 
-using ObjectPointer = std::map<std::string, Node>*;
-using ArrayPointer = std::vector<Node>*;
+using ObjectNode = std::map<std::string, Node>;
+using ArrayNode = std::vector<Node>;
 
 
 class Parser
@@ -27,17 +27,18 @@ class Parser
         std::unique_ptr<std::map<std::string, Node>> parseTokens(const std::vector<Token>& tokens);
 
     private:
-        std::variant<ObjectPointer, ArrayPointer> currentNode;
-        std::stack<std::variant<ObjectPointer, ArrayPointer>> stackNodes;
+        std::variant<ObjectNode*, ArrayNode*> currentNode;
+        std::stack<std::variant<ObjectNode*, ArrayNode*>> stackNodes;
 
         State state;
 
-        void pushObjectOnStack(std::string& key);
+        void pushObjectOnStack(const std::string& key);
+        void pushArrayOnStack(const std::string& key);
         
-        void processInteger(std::string& key, const Token& token);
-        void processDouble(std::string& key, const Token& token);
-        void processString(std::string& key, const Token& token);
-        void processBoolean(std::string& key, const Token& token);
+        void processInteger(const std::string& key, const Token& token);
+        void processDouble(const std::string& key, const Token& token);
+        void processString(const std::string& key, const Token& token);
+        void processBoolean(const std::string& key, const Token& token);
 };
 
 #endif

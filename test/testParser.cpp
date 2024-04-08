@@ -100,7 +100,7 @@ TEST(ParserTest, Test_File_1)
     checkBoolNode(nodePerson, "restricted", false);
 }
 
-/*
+
 TEST(ParserTest, Test_File_3)
 {
     auto root = parseJSON("test_3.json");
@@ -142,7 +142,7 @@ TEST(ParserTest, Test_File_3)
     ASSERT_TRUE(city_4 != nullptr);
     ASSERT_EQ(*city_4, std::string{ "Poznan" });
 }
-*/
+
 
 TEST(ParserTest, Test_File_4)
 {
@@ -204,5 +204,4 @@ TEST(ParserTest, Test_File_5)
     checkStringNode(root.get(), "company", "abc");
     checkStringNode(root.get(), "city", "Cracow");
 }
-
 
