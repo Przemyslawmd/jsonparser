@@ -11,19 +11,33 @@
 #include "NodeValue.h"
 
 
+enum class State {
+    OBJECT_PARSING,
+    ARRAY_PARSING
+};
+
+
+using ObjectPointer = std::map<std::string, Node>*;
+using ArrayPointer = std::vector<Node>*;
+
+
 class Parser
 {
     public:
         std::unique_ptr<std::map<std::string, Node>> parseTokens(const std::vector<Token>& tokens);
 
     private:
-        std::stack<std::map<std::string, Node>*> stackObjects;
-        std::map<std::string, Node>* currentObject;
+        std::variant<ObjectPointer, ArrayPointer> currentNode;
+        std::stack<std::variant<ObjectPointer, ArrayPointer>> stackNodes;
 
-        std::stack<std::vector<Node>*> stackArrays;
-        std::vector<Node>* currentArray;
+        State state;
 
-        void pushObject(std::string& key);
+        void pushObjectOnStack(std::string& key);
+        
+        void processInteger(std::string& key, const Token& token);
+        void processDouble(std::string& key, const Token& token);
+        void processString(std::string& key, const Token& token);
+        void processBoolean(std::string& key, const Token& token);
 };
 
 #endif
