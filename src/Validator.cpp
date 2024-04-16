@@ -123,7 +123,7 @@ ParseError Validator::checkRequirements(const std::vector<Token>& tokens)
             states.pop();
         }
         else if (it->type == TokenType::SQUARE_CLOSE) {
-           states.pop();
+            states.pop();
         }
         else  if (it->type == TokenType::COMMA && afterComma.count((it + 1)->type) == 0) {
             return ParseError::IMPROPER_TOKEN_AFTER_COMMA;
