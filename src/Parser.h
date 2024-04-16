@@ -19,6 +19,8 @@ using ArrayNode = std::vector<Node>;
 class Parser
 {
     public:
+        Parser() = default;
+
         std::unique_ptr<std::map<std::string, Node>> parseTokens(const std::vector<Token>& tokens);
 
     private:
