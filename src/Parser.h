@@ -24,12 +24,11 @@ class Parser
     private:
         std::variant<ObjectNode*, ArrayNode*> currentNode;
         std::stack<std::variant<ObjectNode*, ArrayNode*>> stackNodes;
-
-        State state;
+        std::stack<State> states;
 
         void pushObjectOnStack(const std::string& key);
         void pushArrayOnStack(const std::string& key);
-        
+
         template<class T> void processData(const std::string& key, const Token& token);
 };
 

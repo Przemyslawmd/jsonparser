@@ -213,29 +213,27 @@ TEST(ParserTest, Test_File_5)
 TEST(ParserTest, Test_File_6)
 {
     auto root = parseJSON("test_6.json");
-
     ASSERT_TRUE(root->find("employees") != root->end());
 
-    //auto* nodePerson = std::get_if<std::map<std::string, Node>>(&root->at("person").value);
-    //ASSERT_TRUE(nodePerson != nullptr);
+    std::vector<Node>* employees = std::get_if<std::vector<Node>>(&root->at("employees").value);
+    ASSERT_TRUE(employees != nullptr);
+    
+    ASSERT_TRUE(employees->size() == 2);
+    auto* person1 = std::get_if<std::map<std::string, Node>>(&employees->at(0).value);
+    auto* person2 = std::get_if<std::map<std::string, Node>>(&employees->at(1).value);
+    
+    ASSERT_TRUE(person1->find("name") != person1->end());
+    checkStringNode(person1, "name", "Agata");
+    ASSERT_TRUE(person1->find("email") != person1->end());
+    checkStringNode(person1, "email", "agata@gmail.com");
+    ASSERT_TRUE(person1->find("age") != person1->end());
+    checkIntNode(person1, "age", 33);
 
-    //ASSERT_TRUE(nodePerson->find("name") != nodePerson->end());
-    //ASSERT_TRUE(nodePerson->find("age") != nodePerson->end());
-    //ASSERT_TRUE(nodePerson->find("country") != nodePerson->end());
-
-    //checkStringNode(nodePerson, "name", "John");
-    //checkIntNode(nodePerson, "age", 39);
-    //checkStringNode(nodePerson, "country", "Poland");
-
-    //ASSERT_TRUE(nodePerson->find("values") != nodePerson->end());
-    //auto* nodeValues = std::get_if<std::map<std::string, Node>>(&nodePerson->at("values").value);
-    //checkDoubleNode(nodeValues, "ab", -12.67);
-    //checkDoubleNode(nodeValues, "cd", 43.001);
-
-    //ASSERT_TRUE(root->find("company") != root->end());
-    //ASSERT_TRUE(root->find("city") != root->end());
-
-    //checkStringNode(root.get(), "company", "abc");
-    //checkStringNode(root.get(), "city", "Cracow");
+    ASSERT_TRUE(person2->find("name") != person2->end());
+    checkStringNode(person2, "name", "Anna");
+    ASSERT_TRUE(person2->find("email") != person2->end());
+    checkStringNode(person2, "email", "anna@gmail.com");
+    ASSERT_TRUE(person2->find("age") != person2->end());
+    checkIntNode(person2, "age", 31);
 }
 
