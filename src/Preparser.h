@@ -16,12 +16,15 @@ public:
     Preparser();
 
     std::unique_ptr<std::vector<Token>> parseJSON(const std::string& json);
+    std::unique_ptr<std::vector<Token>> parseJSON_(const std::string& json);
     ParseError getError();
 
 private:
     size_t parseNumber(const std::string& json, size_t index);
     size_t parseString(const std::string& json, size_t index);
+
     bool checkQuotation(const std::string& json);
+    void createKeyTokens();
 
     std::unique_ptr<std::vector<Token>> tokens;
     ParseError error;

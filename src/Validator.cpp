@@ -70,28 +70,39 @@ ParseError Validator::checkRequirements(const std::vector<Token>& tokens)
         TokenType::COMMA, 
         TokenType::CURLY_CLOSE,
         TokenType::SQUARE_CLOSE };
+    const std::set<TokenType> afterColon {
+        TokenType::DATA_STR,
+        TokenType::DATA_INT,
+        TokenType::DATA_DOUBLE,
+        TokenType::DATA_BOOL,
+        TokenType::CURLY_OPEN,
+        TokenType::SQUARE_OPEN };
+    const std::set<TokenType> afterComma {
+        TokenType::CURLY_OPEN,
+        TokenType::DATA_STR,
+        TokenType::KEY };
     const std::set<TokenType> afterData { 
         TokenType::COMMA, 
         TokenType::CURLY_CLOSE };
-    const std::set<TokenType> afterColon { 
-        TokenType::DATA_STR, 
-        TokenType::DATA_INT, 
-        TokenType::DATA_DOUBLE, 
-        TokenType::DATA_BOOL, 
-        TokenType::CURLY_OPEN,
-        TokenType::SQUARE_OPEN };
+
+    const std::set<TokenType> afterCurlyOpen {
+        TokenType::SQUARE_OPEN,
+        TokenType::DATA_STR,
+        TokenType::KEY };
+
     const std::set<TokenType> afterCurlyClose { 
         TokenType::COMMA, 
-        TokenType::CURLY_CLOSE };
+        TokenType::CURLY_CLOSE,
+        TokenType::SQUARE_CLOSE };
 
     for (size_t i = 1; i < tokens.size() - 1; i++) {
-        if (tokens[i].type == TokenType::CURLY_OPEN && tokens[i + 1].type != TokenType::DATA_STR) {
+        if (tokens[i].type == TokenType::CURLY_OPEN && afterCurlyOpen.count(tokens[i + 1].type) == 0) {
             return ParseError::IMPROPER_TOKEN_AFTER_CURLY_OPEN;
         }
         if (tokens[i].type == TokenType::CURLY_CLOSE && afterCurlyClose.count(tokens[i + 1].type) == 0) {
             return ParseError::IMPROPER_TOKEN_AFTER_CURLY_CLOSE;
         }
-        if (tokens[i].type == TokenType::COMMA && tokens[i + 1].type != TokenType::DATA_STR) {
+        if (tokens[i].type == TokenType::COMMA && afterComma.count(tokens[i + 1].type) == 0) {
             return ParseError::IMPROPER_TOKEN_AFTER_COMMA;
         }
         if (tokens[i].type == TokenType::COLON && afterColon.count(tokens[i + 1].type) == 0) {

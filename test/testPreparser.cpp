@@ -22,7 +22,7 @@ std::unique_ptr<std::vector<Token>> getTokens(const std::string& filePath, Parse
     std::ifstream jsonStream(filePath);
     std::string jsonString((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
     auto preparser = std::make_unique<Preparser>();
-    auto tokens = preparser->parseJSON(jsonString);
+    auto tokens = preparser->parseJSON_(jsonString);
     *error = preparser->getError();
     return tokens;
 }
@@ -37,7 +37,7 @@ void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestDat
         if (tokens->at(i).type == TokenType::DATA_INT) {
             ASSERT_EQ(std::get<int>(tokens->at(i).data), std::get<int>(testData[i].data));
         }
-        else if (tokens->at(i).type == TokenType::DATA_STR) {
+        else if (tokens->at(i).type == TokenType::DATA_STR || tokens->at(i).type == TokenType::KEY) {
             ASSERT_EQ(std::get<std::string>(tokens->at(i).data), std::get<std::string>(testData[i].data));
         }
         else if (tokens->at(i).type == TokenType::DATA_BOOL) {
@@ -57,26 +57,26 @@ TEST (PreparserTest, Test_File_1)
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
-       { TokenType::DATA_STR, std::string{ "person" }},
+       { TokenType::KEY, std::string{ "person" }},
        { TokenType::COLON } ,
        { TokenType::CURLY_OPEN }, 
-       { TokenType::DATA_STR, std::string{ "name" }},
+       { TokenType::KEY, std::string{ "name" }},
        { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "John" }},
        { TokenType::COMMA },
-       { TokenType::DATA_STR, std::string{ "age" }},
+       { TokenType::KEY, std::string{ "age" }},
        { TokenType::COLON } ,
        { TokenType::DATA_INT, 39 },
        { TokenType::COMMA },
-       { TokenType::DATA_STR, std::string{ "country" }},
+       { TokenType::KEY, std::string{ "country" }},
        { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "Poland" }},
        { TokenType::COMMA },
-       { TokenType::DATA_STR, std::string{ "employed" }},
+       { TokenType::KEY, std::string{ "employed" }},
        { TokenType::COLON },
        { TokenType::DATA_BOOL, true },
        { TokenType::COMMA },
-       { TokenType::DATA_STR, std::string{ "restricted" }},
+       { TokenType::KEY, std::string{ "restricted" }},
        { TokenType::COLON },
        { TokenType::DATA_BOOL, false },
        { TokenType::CURLY_CLOSE },
@@ -94,36 +94,36 @@ TEST(PreparserTest, Test_File_2)
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
        
-       { TokenType::DATA_STR, std::string{ "name" }},
+       { TokenType::KEY, std::string{ "name" }},
        { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "John Smith" }},
        { TokenType::COMMA },
        
-       { TokenType::DATA_STR, std::string{ "value" }},
+       { TokenType::KEY, std::string{ "value" }},
        { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "20223" }},
        { TokenType::COMMA },
 
-       { TokenType::DATA_STR, std::string{ "price" }},
+       { TokenType::KEY, std::string{ "price" }},
        { TokenType::COLON },
        { TokenType::DATA_INT, 2224 },
        { TokenType::COMMA },
 
-       { TokenType::DATA_STR, std::string{ "shipTo" }},
+       { TokenType::KEY, std::string{ "shipTo" }},
        { TokenType::COLON },
        { TokenType::CURLY_OPEN },
 
-       { TokenType::DATA_STR, std::string{ "name" }},
+       { TokenType::KEY, std::string{ "name" }},
        { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "Jane Smith" }},
        { TokenType::COMMA },
 
-       { TokenType::DATA_STR, std::string{ "address" }},
+       { TokenType::KEY, std::string{ "address" }},
        { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "123 Maple Street" }},
        { TokenType::COMMA },
 
-       { TokenType::DATA_STR, std::string{ "cities" }},
+       { TokenType::KEY, std::string{ "cities" }},
        { TokenType::COLON },
        { TokenType::SQUARE_OPEN },
        { TokenType::DATA_STR, std::string{ "Pretendville" }},
@@ -134,53 +134,53 @@ TEST(PreparserTest, Test_File_2)
        { TokenType::SQUARE_CLOSE },
        { TokenType::COMMA },
 
-       { TokenType::DATA_STR, std::string{ "state" }},
+       { TokenType::KEY, std::string{ "state" }},
        { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "NY" }},
        { TokenType::COMMA },
 
-       { TokenType::DATA_STR, std::string{ "zip" }},
+       { TokenType::KEY, std::string{ "zip" }},
        { TokenType::COLON },
        { TokenType::DATA_INT, -12345 },
        { TokenType::COMMA },
 
-       { TokenType::DATA_STR, std::string{ "weight" }},
+       { TokenType::KEY, std::string{ "weight" }},
        { TokenType::COLON },
        { TokenType::DATA_DOUBLE, 12.34 },
 
        { TokenType::CURLY_CLOSE },
        { TokenType::COMMA },
 
-       { TokenType::DATA_STR, std::string{ "billTo" }},
+       { TokenType::KEY, std::string{ "billTo" }},
        { TokenType::COLON },
        { TokenType::CURLY_OPEN },
 
-       { TokenType::DATA_STR, std::string{ "name" }},
+       { TokenType::KEY, std::string{ "name" }},
        { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "John Smith" }},
        { TokenType::COMMA },
 
-       { TokenType::DATA_STR, std::string{ "address" }},
+       { TokenType::KEY, std::string{ "address" }},
        { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "123 Maple Street" }},
        { TokenType::COMMA },
 
-       { TokenType::DATA_STR, std::string{ "city" }},
+       { TokenType::KEY, std::string{ "city" }},
        { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "Pretendville" }},
        { TokenType::COMMA },
 
-       { TokenType::DATA_STR, std::string{ "state" }},
+       { TokenType::KEY, std::string{ "state" }},
        { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "NY" }},
        { TokenType::COMMA },
 
-       { TokenType::DATA_STR, std::string{ "zip" }},
+       { TokenType::KEY, std::string{ "zip" }},
        { TokenType::COLON },
        { TokenType::DATA_INT, 12345 },
        { TokenType::COMMA },
 
-       { TokenType::DATA_STR, std::string{ "minusWeight" }},
+       { TokenType::KEY, std::string{ "minusWeight" }},
        { TokenType::COLON },
        { TokenType::DATA_DOUBLE, -0.2456 },
 
@@ -198,65 +198,35 @@ TEST(PreparserTest, Test_File_6)
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
-       { TokenType::DATA_STR, std::string{ "employees" }},
+       { TokenType::KEY, std::string{ "employees" }},
        { TokenType::COLON } ,
        { TokenType::SQUARE_OPEN },
-       { TokenType::CURLY_OPEN },
-       
-       { TokenType::DATA_STR, std::string{ "name" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "Jacek" }},
-       { TokenType::COMMA },
-       { TokenType::DATA_STR, std::string{ "email" }},
-       { TokenType::COLON } ,
-       { TokenType::DATA_STR, std::string{ "jacek@gmail.com" }},
-       { TokenType::COMMA },
-       { TokenType::DATA_STR, std::string{ "age" }},
-       { TokenType::COLON },
-       { TokenType::DATA_INT, 23 },
-       { TokenType::CURLY_CLOSE },
-       { TokenType::COMMA },
-       
-       { TokenType::CURLY_OPEN },
-       { TokenType::DATA_STR, std::string{ "name" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "Marek" }},
-       { TokenType::COMMA },
-       { TokenType::DATA_STR, std::string{ "email" }},
-       { TokenType::COLON } ,
-       { TokenType::DATA_STR, std::string{ "marek@gmail.com" }},
-       { TokenType::COMMA },
-       { TokenType::DATA_STR, std::string{ "age" }},
-       { TokenType::COLON },
-       { TokenType::DATA_INT, 28 },
-       { TokenType::CURLY_CLOSE },
-       { TokenType::COMMA },
 
        { TokenType::CURLY_OPEN },
-       { TokenType::DATA_STR, std::string{ "name" }},
+       { TokenType::KEY, std::string{ "name" }},
        { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "Agata" }},
        { TokenType::COMMA },
-       { TokenType::DATA_STR, std::string{ "email" }},
+       { TokenType::KEY, std::string{ "email" }},
        { TokenType::COLON } ,
        { TokenType::DATA_STR, std::string{ "agata@gmail.com" }},
        { TokenType::COMMA },
-       { TokenType::DATA_STR, std::string{ "age" }},
+       { TokenType::KEY, std::string{ "age" }},
        { TokenType::COLON },
        { TokenType::DATA_INT, 33 },
        { TokenType::CURLY_CLOSE },
        { TokenType::COMMA },
 
        { TokenType::CURLY_OPEN },
-       { TokenType::DATA_STR, std::string{ "name" }},
+       { TokenType::KEY, std::string{ "name" }},
        { TokenType::COLON },
        { TokenType::DATA_STR, std::string{ "Anna" }},
        { TokenType::COMMA },
-       { TokenType::DATA_STR, std::string{ "email" }},
+       { TokenType::KEY, std::string{ "email" }},
        { TokenType::COLON } ,
        { TokenType::DATA_STR, std::string{ "anna@gmail.com" }},
        { TokenType::COMMA },
-       { TokenType::DATA_STR, std::string{ "age" }},
+       { TokenType::KEY, std::string{ "age" }},
        { TokenType::COLON },
        { TokenType::DATA_INT, 31 },
 
