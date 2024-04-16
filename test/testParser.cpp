@@ -1,5 +1,6 @@
 
 #include "../src/Parser.h"
+#include "../src/ParserKey.h"
 #include "../src/Preparser.h"
 #include "../src/NodeValue.h"
 #include "../src/Validator.h"
@@ -66,12 +67,15 @@ std::unique_ptr<std::map<std::string, Node>> parseJSON(const std::string& jsonFi
     std::string jsonString((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
 
     const auto preparser = std::make_unique<Preparser>();
-    const auto tokens = preparser->parseJSON(jsonString);
+    auto tokens = preparser->parseJSON(jsonString);
     EXPECT_TRUE(tokens != nullptr);
 
     const auto validator = std::make_unique<Validator>();
     ParseError error = validator->validate(*tokens);
     EXPECT_EQ(error, ParseError::NOT_ERROR);
+
+    const auto parserKey = std::make_unique<ParserKey>();
+    tokens = parserKey->createKeyTokens(std::move(tokens));
 
     const auto parser = std::make_unique<Parser>();
     return parser->parseTokens(*tokens);
@@ -203,5 +207,35 @@ TEST(ParserTest, Test_File_5)
 
     checkStringNode(root.get(), "company", "abc");
     checkStringNode(root.get(), "city", "Cracow");
+}
+
+
+TEST(ParserTest, Test_File_6)
+{
+    auto root = parseJSON("test_6.json");
+
+    ASSERT_TRUE(root->find("employees") != root->end());
+
+    //auto* nodePerson = std::get_if<std::map<std::string, Node>>(&root->at("person").value);
+    //ASSERT_TRUE(nodePerson != nullptr);
+
+    //ASSERT_TRUE(nodePerson->find("name") != nodePerson->end());
+    //ASSERT_TRUE(nodePerson->find("age") != nodePerson->end());
+    //ASSERT_TRUE(nodePerson->find("country") != nodePerson->end());
+
+    //checkStringNode(nodePerson, "name", "John");
+    //checkIntNode(nodePerson, "age", 39);
+    //checkStringNode(nodePerson, "country", "Poland");
+
+    //ASSERT_TRUE(nodePerson->find("values") != nodePerson->end());
+    //auto* nodeValues = std::get_if<std::map<std::string, Node>>(&nodePerson->at("values").value);
+    //checkDoubleNode(nodeValues, "ab", -12.67);
+    //checkDoubleNode(nodeValues, "cd", 43.001);
+
+    //ASSERT_TRUE(root->find("company") != root->end());
+    //ASSERT_TRUE(root->find("city") != root->end());
+
+    //checkStringNode(root.get(), "company", "abc");
+    //checkStringNode(root.get(), "city", "Cracow");
 }
 

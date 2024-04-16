@@ -7,14 +7,9 @@
 #include <stack>
 #include <vector>
 
+#include "defines.h"
 #include "Token.h"
 #include "NodeValue.h"
-
-
-enum class State {
-    OBJECT_PARSING,
-    ARRAY_PARSING
-};
 
 
 using ObjectNode = std::map<std::string, Node>;

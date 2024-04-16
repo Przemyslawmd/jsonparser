@@ -21,6 +21,7 @@ add_executable(
   testValidator.cpp
   ../src/Preparser.cpp
   ../src/Parser.cpp
+  ../src/ParserKey.cpp
   ../src/Validator.cpp
 )
 

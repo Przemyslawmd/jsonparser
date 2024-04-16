@@ -1,4 +1,5 @@
 
+#include "../src/ParserKey.h"
 #include "../src/Preparser.h"
 #include "config.h"
 
@@ -22,8 +23,13 @@ std::unique_ptr<std::vector<Token>> getTokens(const std::string& filePath, Parse
     std::ifstream jsonStream(filePath);
     std::string jsonString((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
     auto preparser = std::make_unique<Preparser>();
-    auto tokens = preparser->parseJSON_(jsonString);
+    auto tokens = preparser->parseJSON(jsonString);
     *error = preparser->getError();
+    auto parserKey = std::make_unique<ParserKey>();
+    if (tokens == nullptr) {
+        return nullptr;
+    }
+    tokens = parserKey->createKeyTokens(std::move(tokens));
     return tokens;
 }
 

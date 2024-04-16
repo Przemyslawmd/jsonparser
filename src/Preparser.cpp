@@ -66,64 +66,6 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
 }
 
 
-std::unique_ptr<std::vector<Token>> Preparser::parseJSON_(const std::string& json)
-{
-    error = ParseError::NOT_ERROR;
-
-    if (checkQuotation(json) == false) {
-        error = ParseError::STRING_NOT_ENDED;
-        return nullptr;
-    }
-
-    for (size_t index = 0; index < json.length(); index++)
-    {
-        char symbol = json[index];
-        if (symbol == ' ' || symbol == '\n') {
-            continue;
-        }
-        if (symbol == '\"') {
-            index += parseString(json, index);
-            if (error != ParseError::NOT_ERROR) {
-                return nullptr;
-            }
-            continue;
-        }
-        if (isdigit(symbol) || symbol == '-') {
-            index += parseNumber(json, index);
-            continue;
-        }
-        if (tokensMap.count(symbol)) {
-            tokens->emplace_back(Token{ tokensMap.at(symbol), nullptr });
-            continue;
-        }
-        if (symbol == 'f') {
-            if (json.length() - index > 5 && (json.compare(index, 5, "false") == 0)) {
-                tokens->emplace_back(Token{ TokenType::DATA_BOOL, false });
-                index += 4;
-                continue;
-            }
-            error = ParseError::UNKNOWN_SYMBOL;
-            return nullptr;
-        }
-        if (symbol == 't') {
-            if (json.length() - index > 4 && (json.compare(index, 4, "true") == 0)) {
-                tokens->emplace_back(Token{ TokenType::DATA_BOOL, true });
-                index += 3;
-                continue;
-            }
-            error = ParseError::UNKNOWN_SYMBOL;
-            return nullptr;
-        }
-        error = ParseError::UNKNOWN_SYMBOL;
-        return nullptr;
-    }
-
-    createKeyTokens();
-
-    return std::move(tokens);
-}
-
-
 size_t Preparser::parseNumber(const std::string& json, size_t index)
 {
     int number = 0;
@@ -171,29 +113,6 @@ size_t Preparser::parseString(const std::string& json, size_t index)
     }
     error = ParseError::STRING_NOT_ENDED;
     return 0;
-}
-
-
-void Preparser::createKeyTokens()
-{
-    std::stack<State> states;
-
-    for (size_t index = 0; index < tokens->size(); index++) {
-        if (tokens->at(index).type == TokenType::CURLY_OPEN) {
-            states.emplace(State::OBJECT_PARSING);
-        }
-        else if (tokens->at(index).type == TokenType::SQUARE_OPEN) {
-            states.emplace(State::ARRAY_PARSING);
-        }
-        else if (tokens->at(index).type == TokenType::CURLY_CLOSE || tokens->at(index).type == TokenType::SQUARE_CLOSE) {
-            states.pop();
-        }
-        else if ((tokens->at(index).type == TokenType::DATA_STR) && 
-            states.top() == State::OBJECT_PARSING && 
-            (tokens->at(index - 1).type == TokenType::CURLY_OPEN || tokens->at(index - 1).type == TokenType::COMMA)) {
-            tokens->at(index).type = TokenType::KEY;
-        }
-    }
 }
 
 
