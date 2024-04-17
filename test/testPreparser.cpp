@@ -244,6 +244,70 @@ TEST(PreparserTest, Test_File_6)
 }
 
 
+TEST(PreparserTest, Test_File_7)
+{
+    ParseError error;
+    auto tokens = getTokens(std::string(TEST_DATA) + "test_7.json", &error);
+
+    std::vector<TestData> testData = {
+       { TokenType::CURLY_OPEN },
+       { TokenType::KEY, std::string{ "employees" }},
+       { TokenType::COLON },
+       { TokenType::SQUARE_OPEN },
+
+       { TokenType::CURLY_OPEN },
+       { TokenType::KEY, std::string{ "name" }},
+       { TokenType::COLON },
+       { TokenType::DATA_STR, std::string{ "Agata" }},
+       { TokenType::COMMA },
+       { TokenType::KEY, std::string{ "data" }},
+       { TokenType::COLON },
+       { TokenType::SQUARE_OPEN },
+       { TokenType::SQUARE_OPEN },
+       { TokenType::DATA_INT, 1 },
+       { TokenType::COMMA },
+       { TokenType::DATA_INT, 2 },
+       { TokenType::COMMA },
+       { TokenType::DATA_INT, 3 },
+       { TokenType::SQUARE_CLOSE },
+       { TokenType::COMMA },
+       { TokenType::SQUARE_OPEN },
+       { TokenType::DATA_INT, 4 },
+       { TokenType::COMMA },
+       { TokenType::DATA_INT, 5 },
+       { TokenType::COMMA },
+       { TokenType::DATA_INT, 6 },
+       { TokenType::SQUARE_CLOSE },
+       { TokenType::SQUARE_CLOSE },
+       { TokenType::CURLY_CLOSE },
+       { TokenType::COMMA },
+
+       { TokenType::CURLY_OPEN },
+       { TokenType::KEY, std::string{ "name" }},
+       { TokenType::COLON },
+       { TokenType::DATA_STR, std::string{ "Anna" }},
+       { TokenType::COMMA },
+       { TokenType::KEY, std::string{ "data" }},
+       { TokenType::COLON },
+       { TokenType::SQUARE_OPEN },
+       { TokenType::SQUARE_OPEN },
+       { TokenType::DATA_STR, "a" },
+       { TokenType::COMMA },
+       { TokenType::DATA_STR, "b" },
+       { TokenType::SQUARE_CLOSE },
+       { TokenType::COMMA },
+       { TokenType::SQUARE_OPEN },
+       { TokenType::DATA_STR, "c d e" },
+       { TokenType::SQUARE_CLOSE },
+       { TokenType::SQUARE_CLOSE },
+       { TokenType::CURLY_CLOSE },
+       { TokenType::SQUARE_CLOSE },
+       { TokenType::CURLY_CLOSE },
+    };
+    checkTokens(std::move(tokens), testData);
+}
+
+
 TEST(PreparserTest, FirstImproperDataTest)
 {
     ParseError error = ParseError::NOT_ERROR;
