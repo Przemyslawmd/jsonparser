@@ -94,11 +94,14 @@ ParseError Validator::checkRequirements(const std::vector<Token>& tokens)
         TokenType::SQUARE_OPEN
     };
 
-    const std::set<TokenType> afterComma {
-        TokenType::CURLY_OPEN,
-        TokenType::SQUARE_OPEN,
-        TokenType::DATA_INT,
-        TokenType::DATA_STR
+    const std::map<State, std::set<TokenType>> afterComma {
+        { State::OBJECT_PARSING, { TokenType::CURLY_OPEN, TokenType::SQUARE_OPEN, TokenType::DATA_STR }},
+        { State::ARRAY_PARSING,  { TokenType::CURLY_OPEN, 
+                                   TokenType::SQUARE_OPEN, 
+                                   TokenType::DATA_STR, 
+                                   TokenType::DATA_BOOL, 
+                                   TokenType::DATA_INT, 
+                                   TokenType::DATA_DOUBLE }}
     };
 
     const std::set<TokenType> afterData { 
@@ -128,7 +131,7 @@ ParseError Validator::checkRequirements(const std::vector<Token>& tokens)
         else if (it->type == TokenType::SQUARE_CLOSE) {
             states.pop();
         }
-        else  if (it->type == TokenType::COMMA && afterComma.count((it + 1)->type) == 0) {
+        else  if (it->type == TokenType::COMMA && afterComma.at(states.top()).count((it + 1)->type) == 0) {
             return ParseError::IMPROPER_TOKEN_AFTER_COMMA;
         }
         else if (it->type == TokenType::COLON && afterColon.count((it + 1)->type) == 0) {
