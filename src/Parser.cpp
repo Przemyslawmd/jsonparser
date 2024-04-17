@@ -1,7 +1,6 @@
 
 #include "Parser.h"
 
-#include <ranges>
 #include <stack>
 #include <variant>
 
@@ -66,7 +65,9 @@ void Parser::pushArrayOnStack(const std::string& key)
         pushDataOnStack(currentNode, State::ARRAY_PARSING);
     }
     else {
-        // TODO
+        std::get<ArrayNode*>(nodesStack.top())->emplace_back(ArrayNode());
+        auto currentNode = &(std::get<ArrayNode>(std::get<ArrayNode*>(nodesStack.top())->back().value));
+        pushDataOnStack(currentNode, State::ARRAY_PARSING);
     }
 }
 

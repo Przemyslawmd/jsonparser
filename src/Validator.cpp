@@ -94,14 +94,17 @@ ParseError Validator::checkRequirements(const std::vector<Token>& tokens)
         TokenType::SQUARE_OPEN
     };
 
-    const std::set<TokenType> afterComma{
+    const std::set<TokenType> afterComma {
         TokenType::CURLY_OPEN,
+        TokenType::SQUARE_OPEN,
+        TokenType::DATA_INT,
         TokenType::DATA_STR
     };
 
     const std::set<TokenType> afterData { 
         TokenType::COMMA, 
-        TokenType::CURLY_CLOSE
+        TokenType::CURLY_CLOSE,
+        TokenType::SQUARE_CLOSE
     };
 
     states.push(State::OBJECT_PARSING);

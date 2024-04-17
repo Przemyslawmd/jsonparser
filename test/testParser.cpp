@@ -56,7 +56,6 @@ void checkArrayNode(std::map<std::string, Node>* nodePointer, const std::string&
     ASSERT_TRUE(nodePointer != nullptr);
     auto* node = std::get_if<std::vector<Node>>(&nodePointer->at(key).value);
     ASSERT_TRUE(node != nullptr);
-    //ASSERT_TRUE(*node - value <= DBL_EPSILON);
 }
 
 
@@ -235,5 +234,60 @@ TEST(ParserTest, Test_File_6)
     checkStringNode(person2, "email", "anna@gmail.com");
     ASSERT_TRUE(person2->find("age") != person2->end());
     checkIntNode(person2, "age", 31);
+}
+
+
+TEST(ParserTest, Test_File_7)
+{
+    auto root = parseJSON("test_7.json");
+    ASSERT_TRUE(root->find("employees") != root->end());
+    std::vector<Node>* employees = std::get_if<std::vector<Node>>(&root->at("employees").value);
+    ASSERT_TRUE(employees != nullptr);
+    ASSERT_TRUE(employees->size() == 2);
+
+    auto* Agata = std::get_if<std::map<std::string, Node>>(&employees->at(0).value);
+    auto* Anna = std::get_if<std::map<std::string, Node>>(&employees->at(1).value);
+
+    ASSERT_TRUE(Agata->find("name") != Agata->end());
+    checkStringNode(Agata, "name", "Agata");
+    ASSERT_TRUE(Agata->find("data") != Agata->end());
+    auto* dataAgata = std::get_if<std::vector<Node>>(&Agata->at("data").value);
+    ASSERT_TRUE(dataAgata != nullptr);
+    ASSERT_TRUE(dataAgata->size() == 2);
+
+    auto* dataAgata_1 = std::get_if<std::vector<Node>>(&dataAgata->at(0).value);
+    ASSERT_TRUE(dataAgata_1 != nullptr);
+    ASSERT_TRUE(dataAgata_1->size() == 3);
+    
+    ASSERT_EQ(*(std::get_if<int>(&dataAgata_1->at(0).value)), 1);
+    ASSERT_EQ(*(std::get_if<int>(&dataAgata_1->at(1).value)), 2);
+    ASSERT_EQ(*(std::get_if<int>(&dataAgata_1->at(2).value)), 3);
+
+    auto* dataAgata_2 = std::get_if<std::vector<Node>>(&dataAgata->at(1).value);
+    ASSERT_TRUE(dataAgata_2 != nullptr);
+    ASSERT_TRUE(dataAgata_2->size() == 3);
+
+    ASSERT_EQ(*(std::get_if<int>(&dataAgata_2->at(0).value)), 4);
+    ASSERT_EQ(*(std::get_if<int>(&dataAgata_2->at(1).value)), 5);
+    ASSERT_EQ(*(std::get_if<int>(&dataAgata_2->at(2).value)), 6);
+
+    ASSERT_TRUE(Anna->find("name") != Anna->end());
+    checkStringNode(Anna, "name", "Anna");
+    ASSERT_TRUE(Anna->find("data") != Anna->end());
+    auto* dataAnna = std::get_if<std::vector<Node>>(&Anna->at("data").value);
+    ASSERT_TRUE(dataAnna != nullptr);
+    ASSERT_TRUE(dataAnna->size() == 2);
+
+    auto* dataAnna_1 = std::get_if<std::vector<Node>>(&dataAnna->at(0).value);
+    ASSERT_TRUE(dataAnna_1 != nullptr);
+    ASSERT_TRUE(dataAnna_1->size() == 2);
+
+    ASSERT_EQ(*(std::get_if<std::string>(&dataAnna_1->at(0).value)), "a");
+    ASSERT_EQ(*(std::get_if<std::string>(&dataAnna_1->at(1).value)), "b");
+
+    auto* dataAnna_2 = std::get_if<std::vector<Node>>(&dataAnna->at(1).value);
+    ASSERT_TRUE(dataAnna_2 != nullptr);
+    ASSERT_TRUE(dataAnna_2->size() == 1);
+    ASSERT_EQ(*(std::get_if<std::string>(&dataAnna_2->at(0).value)), "c d e");
 }
 
