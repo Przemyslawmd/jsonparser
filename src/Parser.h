@@ -24,7 +24,6 @@ class Parser
         std::unique_ptr<std::map<std::string, Node>> parseTokens(const std::vector<Token>& tokens);
 
     private:
-        std::variant<ObjectNode*, ArrayNode*> currentNode;
         std::stack<std::variant<ObjectNode*, ArrayNode*>> nodesStack;
         std::stack<State> statesStack;
 

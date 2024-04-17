@@ -10,26 +10,16 @@ std::unique_ptr<std::map<std::string, Node>> Parser::parseTokens(const std::vect
 {
     std::string key;
     auto nodes = std::make_unique<std::map<std::string, Node>>();
-    currentNode = nodes.get();
-    statesStack.push(State::OBJECT_PARSING);
+    pushDataOnStack(nodes.get(), State::OBJECT_PARSING);
 
     for (auto it = tokens.begin() + 1; it != tokens.end() - 1; it++) {
         if (it->type == TokenType::CURLY_CLOSE || it->type == TokenType::SQUARE_CLOSE) {
-            currentNode = nodesStack.top();
             popDataFromStack();
-            continue;
         }
-
-        if (it->type == TokenType::COLON || it->type == TokenType::COMMA) {
-            continue;
-        }
-
-        if (it->type == TokenType::KEY) {
+        else if (it->type == TokenType::KEY) {
             key = std::get<std::string>(it->data);
-            continue;
         }
-
-        if (it->type == TokenType::DATA_INT) {
+        else if (it->type == TokenType::DATA_INT) {
             processData<int>(key, *it);
         }
         else if (it->type == TokenType::DATA_DOUBLE) {
@@ -55,15 +45,15 @@ std::unique_ptr<std::map<std::string, Node>> Parser::parseTokens(const std::vect
 void Parser::pushObjectOnStack(const std::string& key)
 {
     if (statesStack.top() == State::OBJECT_PARSING) {
-        std::get<ObjectNode*>(currentNode)->emplace(std::make_pair(key, ObjectNode()));
+        std::get<ObjectNode*>(nodesStack.top())->emplace(std::make_pair(key, ObjectNode()));
+        auto currentNode = &(std::get<ObjectNode>(std::get<ObjectNode*>(nodesStack.top())->at(key).value));
         pushDataOnStack(currentNode, State::OBJECT_PARSING);
-        currentNode = &(std::get<ObjectNode>(std::get<ObjectNode*>(currentNode)->at(key).value));
     }
     else {
         ObjectNode obj;
-        std::get<ArrayNode*>(currentNode)->emplace_back(obj);
+        std::get<ArrayNode*>(nodesStack.top())->emplace_back(obj);
+        auto currentNode = &(std::get<ObjectNode>(std::get<ArrayNode*>(nodesStack.top())->back().value));
         pushDataOnStack(currentNode, State::OBJECT_PARSING);
-        currentNode = &(std::get<ObjectNode>(std::get<ArrayNode*>(currentNode)->back().value));
     }
 }
 
@@ -71,11 +61,12 @@ void Parser::pushObjectOnStack(const std::string& key)
 void Parser::pushArrayOnStack(const std::string& key)
 {
     if (statesStack.top() == State::OBJECT_PARSING) {
-        std::get<ObjectNode*>(currentNode)->emplace(std::make_pair(key, ArrayNode()));
+        std::get<ObjectNode*>(nodesStack.top())->emplace(std::make_pair(key, ArrayNode()));
+        auto currentNode = &(std::get<ArrayNode>(std::get<ObjectNode*>(nodesStack.top())->at(key).value));
         pushDataOnStack(currentNode, State::ARRAY_PARSING);
-        currentNode = &(std::get<ArrayNode>(std::get<ObjectNode*>(currentNode)->at(key).value));
     }
     else {
+        // TODO
     }
 }
 
@@ -84,10 +75,10 @@ template<class T>
 void Parser::processData(const std::string& key, const Token& token)
 {
     if (statesStack.top() == State::OBJECT_PARSING) {
-        std::get<ObjectNode*>(currentNode)->emplace(std::make_pair(key, std::get<T>(token.data)));
+        std::get<ObjectNode*>(nodesStack.top())->emplace(std::make_pair(key, std::get<T>(token.data)));
     }
     else {
-        std::get<ArrayNode*>(currentNode)->emplace_back(std::get<T>(token.data));
+        std::get<ArrayNode*>(nodesStack.top())->emplace_back(std::get<T>(token.data));
     }
 }
 
@@ -104,3 +95,4 @@ void Parser::popDataFromStack()
     nodesStack.pop();
     statesStack.pop();
 }
+
