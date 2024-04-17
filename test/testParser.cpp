@@ -59,6 +59,18 @@ void checkArrayNode(std::map<std::string, Node>* nodePointer, const std::string&
 }
 
 
+template<class T>
+void checkArrayValue(std::vector<Node>* arrayPointer, size_t index, T dataExpected)
+{
+    try {
+        T data = std::get<T>(arrayPointer->at(index).value);
+        ASSERT_EQ(data, dataExpected);
+    }
+    catch (const std::exception& ex) {
+        ASSERT_TRUE(false);
+    }
+}
+
 std::unique_ptr<std::map<std::string, Node>> parseJSON(const std::string& jsonFile)
 {
     std::string filePath = std::string(TEST_DATA) + jsonFile;
@@ -129,21 +141,10 @@ TEST(ParserTest, Test_File_3)
     checkArrayNode(root.get(), "cities");
     std::vector<Node>* arrayCities = std::get_if<std::vector<Node>>(&root->at("cities").value);
 
-    auto* city_1 = std::get_if<std::string>(&arrayCities->at(0).value);
-    ASSERT_TRUE(city_1 != nullptr);
-    ASSERT_EQ(*city_1, std::string{ "Krakow" });
-    
-    auto* city_2 = std::get_if<std::string>(&arrayCities->at(1).value);
-    ASSERT_TRUE(city_2 != nullptr);
-    ASSERT_EQ(*city_2, std::string{ "Warszawa" });
-
-    auto* city_3 = std::get_if<std::string>(&arrayCities->at(2).value);
-    ASSERT_TRUE(city_3 != nullptr);
-    ASSERT_EQ(*city_3, std::string{ "Wroclaw" });
-
-    auto* city_4 = std::get_if<std::string>(&arrayCities->at(3).value);
-    ASSERT_TRUE(city_4 != nullptr);
-    ASSERT_EQ(*city_4, std::string{ "Poznan" });
+    checkArrayValue<std::string>(arrayCities, 0, std::string{ "Krakow" });
+    checkArrayValue<std::string>(arrayCities, 1, std::string{ "Warszawa" });
+    checkArrayValue<std::string>(arrayCities, 2, std::string{ "Wroclaw" });
+    checkArrayValue<std::string>(arrayCities, 3, std::string{ "Poznan" });
 }
 
 
@@ -258,18 +259,18 @@ TEST(ParserTest, Test_File_7)
     auto* dataAgata_1 = std::get_if<std::vector<Node>>(&dataAgata->at(0).value);
     ASSERT_TRUE(dataAgata_1 != nullptr);
     ASSERT_TRUE(dataAgata_1->size() == 3);
-    
-    ASSERT_EQ(*(std::get_if<int>(&dataAgata_1->at(0).value)), 1);
-    ASSERT_EQ(*(std::get_if<int>(&dataAgata_1->at(1).value)), 2);
-    ASSERT_EQ(*(std::get_if<int>(&dataAgata_1->at(2).value)), 3);
+
+    checkArrayValue<int>(dataAgata_1, 0, 1);
+    checkArrayValue<int>(dataAgata_1, 1, 2);
+    checkArrayValue<int>(dataAgata_1, 2, 3);
 
     auto* dataAgata_2 = std::get_if<std::vector<Node>>(&dataAgata->at(1).value);
     ASSERT_TRUE(dataAgata_2 != nullptr);
     ASSERT_TRUE(dataAgata_2->size() == 3);
 
-    ASSERT_EQ(*(std::get_if<int>(&dataAgata_2->at(0).value)), 4);
-    ASSERT_EQ(*(std::get_if<int>(&dataAgata_2->at(1).value)), 5);
-    ASSERT_EQ(*(std::get_if<int>(&dataAgata_2->at(2).value)), 6);
+    checkArrayValue<int>(dataAgata_2, 0, 4);
+    checkArrayValue<int>(dataAgata_2, 1, 5);
+    checkArrayValue<int>(dataAgata_2, 2, 6);
 
     ASSERT_TRUE(Anna->find("name") != Anna->end());
     checkStringNode(Anna, "name", "Anna");
@@ -282,12 +283,12 @@ TEST(ParserTest, Test_File_7)
     ASSERT_TRUE(dataAnna_1 != nullptr);
     ASSERT_TRUE(dataAnna_1->size() == 2);
 
-    ASSERT_EQ(*(std::get_if<std::string>(&dataAnna_1->at(0).value)), "a");
-    ASSERT_EQ(*(std::get_if<std::string>(&dataAnna_1->at(1).value)), "b");
+    checkArrayValue<std::string>(dataAnna_1, 0, "a");
+    checkArrayValue<std::string>(dataAnna_1, 1, "b");
 
     auto* dataAnna_2 = std::get_if<std::vector<Node>>(&dataAnna->at(1).value);
     ASSERT_TRUE(dataAnna_2 != nullptr);
     ASSERT_TRUE(dataAnna_2->size() == 1);
-    ASSERT_EQ(*(std::get_if<std::string>(&dataAnna_2->at(0).value)), "c d e");
+    checkArrayValue<std::string>(dataAnna_2, 0, "c d e");
 }
 
