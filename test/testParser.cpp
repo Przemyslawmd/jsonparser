@@ -15,30 +15,14 @@
 #include <gtest/gtest.h>
 
 
-void checkStringNode(std::map<std::string, Node>* nodePointer, const std::string& key, const std::string& value)
-{ 
-    ASSERT_TRUE(nodePointer != nullptr);
-    auto* node = std::get_if<std::string>(&nodePointer->at(key).value);
-    ASSERT_TRUE(node != nullptr);
-    ASSERT_EQ(*node, value);
-}
-
-
-void checkIntNode(std::map<std::string, Node>* nodePointer, const std::string& key, int value)
+template <class T>
+void checkNode(std::map<std::string, Node>* nodePointer, const std::string& key, T expectedValue)
 {
     ASSERT_TRUE(nodePointer != nullptr);
-    auto* node = std::get_if<int>(&nodePointer->at(key).value);
-    ASSERT_TRUE(node != nullptr);
-    ASSERT_EQ(*node, value);
-}
-
-
-void checkBoolNode(std::map<std::string, Node>* nodePointer, const std::string& key, bool value)
-{
-    ASSERT_TRUE(nodePointer != nullptr);
-    auto* node = std::get_if<bool>(&nodePointer->at(key).value);
-    ASSERT_TRUE(node != nullptr);
-    ASSERT_EQ(*node, value);
+    ASSERT_TRUE(nodePointer->find(key) != nodePointer->end());
+    auto* nodeValue = std::get_if<T>(&nodePointer->at(key).value);
+    ASSERT_TRUE(nodeValue != nullptr);
+    ASSERT_EQ(*nodeValue, expectedValue);
 }
 
 
@@ -71,6 +55,7 @@ void checkArrayValue(std::vector<Node>* arrayPointer, size_t index, T dataExpect
     }
 }
 
+
 std::unique_ptr<std::map<std::string, Node>> parseJSON(const std::string& jsonFile)
 {
     std::string filePath = std::string(TEST_DATA) + jsonFile;
@@ -102,17 +87,11 @@ TEST(ParserTest, Test_File_1)
     auto* nodePerson = std::get_if<std::map<std::string, Node>>(&root->at("person").value);
     ASSERT_TRUE(nodePerson != nullptr);
 
-    ASSERT_TRUE(nodePerson->find("name") != nodePerson->end());
-    ASSERT_TRUE(nodePerson->find("age") != nodePerson->end());
-    ASSERT_TRUE(nodePerson->find("country") != nodePerson->end());
-    ASSERT_TRUE(nodePerson->find("employed") != nodePerson->end());
-    ASSERT_TRUE(nodePerson->find("restricted") != nodePerson->end());
-
-    checkStringNode(nodePerson, "name", "John");
-    checkIntNode(nodePerson, "age", 39);
-    checkStringNode(nodePerson, "country", "Poland");
-    checkBoolNode(nodePerson, "employed", true);
-    checkBoolNode(nodePerson, "restricted", false);
+    checkNode<std::string>(nodePerson, "name", "John");
+    checkNode<int>(nodePerson, "age", 39);
+    checkNode<std::string>(nodePerson, "country", "Poland");
+    checkNode<bool>(nodePerson, "employed", true);
+    checkNode<bool>(nodePerson, "restricted", false);
 }
 
 
@@ -125,19 +104,13 @@ TEST(ParserTest, Test_File_3)
     auto* nodePerson = std::get_if<std::map<std::string, Node>>(&root->at("person").value);
     ASSERT_TRUE(nodePerson != nullptr);
 
-    ASSERT_TRUE(nodePerson->find("name") != nodePerson->end());
-    ASSERT_TRUE(nodePerson->find("age") != nodePerson->end());
-    ASSERT_TRUE(nodePerson->find("country") != nodePerson->end());
+    checkNode<std::string>(nodePerson, "name", "John");
+    checkNode<int>(nodePerson, "age", 39);
+    checkNode<std::string>(nodePerson, "country", "Poland");
 
-    checkStringNode(nodePerson, "name", "John");
-    checkIntNode(nodePerson, "age", 39);
-    checkStringNode(nodePerson, "country", "Poland");
+    checkNode<std::string>(root.get(), "company", "abc");
 
-    ASSERT_TRUE(root->find("company") != root->end());
     ASSERT_TRUE(root->find("cities") != root->end());
-
-    checkStringNode(root.get(), "company", "abc");
-
     checkArrayNode(root.get(), "cities");
     std::vector<Node>* arrayCities = std::get_if<std::vector<Node>>(&root->at("cities").value);
 
@@ -157,26 +130,23 @@ TEST(ParserTest, Test_File_4)
     auto* nodePerson = std::get_if<std::map<std::string, Node>>(&root->at("person").value);
     ASSERT_TRUE(nodePerson != nullptr);
 
-    ASSERT_TRUE(nodePerson->find("name") != nodePerson->end());
-    ASSERT_TRUE(nodePerson->find("country") != nodePerson->end());
-
-    checkStringNode(nodePerson, "name", "John");
-    checkStringNode(nodePerson, "country", "Poland");
+    checkNode<std::string>(nodePerson, "name", "John");
+    checkNode<std::string>(nodePerson, "country", "Poland");
 
     ASSERT_TRUE(root->find("person2") != root->end());
     auto* nodePerson2 = std::get_if<std::map<std::string, Node>>(&root->at("person2").value);
 
-    checkStringNode(nodePerson2, "name", "John");
+    checkNode<std::string>(nodePerson2, "name", "John");
 
     ASSERT_TRUE(nodePerson2->find("address") != nodePerson2->end());
     auto* nodePerson2_Address = std::get_if<std::map<std::string, Node>>(&nodePerson2->at("address").value);
 
-    checkStringNode(nodePerson2_Address, "city", "Cracow");
-    checkStringNode(nodePerson2_Address, "street", "Kanonicza");
-    checkIntNode(nodePerson2_Address, "number", 12);
+    checkNode<std::string>(nodePerson2_Address, "city", "Cracow");
+    checkNode<std::string>(nodePerson2_Address, "street", "Kanonicza");
+    checkNode<int>(nodePerson2_Address, "number", 12);
 
     auto* nodeCompany = std::get_if<std::map<std::string, Node>>(&root->at("company").value);
-    checkStringNode(nodeCompany, "name", "abc");
+    checkNode<std::string>(nodeCompany, "name", "abc");
 }
 
 
@@ -189,24 +159,17 @@ TEST(ParserTest, Test_File_5)
     auto* nodePerson = std::get_if<std::map<std::string, Node>>(&root->at("person").value);
     ASSERT_TRUE(nodePerson != nullptr);
 
-    ASSERT_TRUE(nodePerson->find("name") != nodePerson->end());
-    ASSERT_TRUE(nodePerson->find("age") != nodePerson->end());
-    ASSERT_TRUE(nodePerson->find("country") != nodePerson->end());
-
-    checkStringNode(nodePerson, "name", "John");
-    checkIntNode(nodePerson, "age", 39);
-    checkStringNode(nodePerson, "country", "Poland");
+    checkNode<std::string>(nodePerson, "name", "John");
+    checkNode<int>(nodePerson, "age", 39);
+    checkNode<std::string>(nodePerson, "country", "Poland");
 
     ASSERT_TRUE(nodePerson->find("values") != nodePerson->end());
     auto* nodeValues = std::get_if<std::map<std::string, Node>>(&nodePerson->at("values").value);
     checkDoubleNode(nodeValues, "ab", -12.67);
     checkDoubleNode(nodeValues, "cd", 43.001);
 
-    ASSERT_TRUE(root->find("company") != root->end());
-    ASSERT_TRUE(root->find("city") != root->end());
-
-    checkStringNode(root.get(), "company", "abc");
-    checkStringNode(root.get(), "city", "Cracow");
+    checkNode<std::string>(root.get(), "company", "abc");
+    checkNode<std::string>(root.get(), "city", "Cracow");
 }
 
 
@@ -222,19 +185,13 @@ TEST(ParserTest, Test_File_6)
     auto* person1 = std::get_if<std::map<std::string, Node>>(&employees->at(0).value);
     auto* person2 = std::get_if<std::map<std::string, Node>>(&employees->at(1).value);
     
-    ASSERT_TRUE(person1->find("name") != person1->end());
-    checkStringNode(person1, "name", "Agata");
-    ASSERT_TRUE(person1->find("email") != person1->end());
-    checkStringNode(person1, "email", "agata@gmail.com");
-    ASSERT_TRUE(person1->find("age") != person1->end());
-    checkIntNode(person1, "age", 33);
+    checkNode<std::string>(person1, "name", "Agata");
+    checkNode<std::string>(person1, "email", "agata@gmail.com");
+    checkNode<int>(person1, "age", 33);
 
-    ASSERT_TRUE(person2->find("name") != person2->end());
-    checkStringNode(person2, "name", "Anna");
-    ASSERT_TRUE(person2->find("email") != person2->end());
-    checkStringNode(person2, "email", "anna@gmail.com");
-    ASSERT_TRUE(person2->find("age") != person2->end());
-    checkIntNode(person2, "age", 31);
+    checkNode<std::string>(person2, "name", "Anna");
+    checkNode<std::string>(person2, "email", "anna@gmail.com");
+    checkNode<int>(person2, "age", 31);
 }
 
 
@@ -249,8 +206,7 @@ TEST(ParserTest, Test_File_7)
     auto* Agata = std::get_if<std::map<std::string, Node>>(&employees->at(0).value);
     auto* Anna = std::get_if<std::map<std::string, Node>>(&employees->at(1).value);
 
-    ASSERT_TRUE(Agata->find("name") != Agata->end());
-    checkStringNode(Agata, "name", "Agata");
+    checkNode<std::string>(Agata, "name", "Agata");
     ASSERT_TRUE(Agata->find("data") != Agata->end());
     auto* dataAgata = std::get_if<std::vector<Node>>(&Agata->at("data").value);
     ASSERT_TRUE(dataAgata != nullptr);
@@ -272,8 +228,7 @@ TEST(ParserTest, Test_File_7)
     checkArrayValue<int>(dataAgata_2, 1, 5);
     checkArrayValue<int>(dataAgata_2, 2, 6);
 
-    ASSERT_TRUE(Anna->find("name") != Anna->end());
-    checkStringNode(Anna, "name", "Anna");
+    checkNode<std::string>(Anna, "name", "Anna");
     ASSERT_TRUE(Anna->find("data") != Anna->end());
     auto* dataAnna = std::get_if<std::vector<Node>>(&Anna->at("data").value);
     ASSERT_TRUE(dataAnna != nullptr);
