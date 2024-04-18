@@ -1,6 +1,6 @@
 
-#ifndef JSONCPP_NODE_H
-#define JSONCPP_NODE_H
+#ifndef JSONPARSER_NODE_H
+#define JSONPARSER_NODE_H
 
 struct Node
 {

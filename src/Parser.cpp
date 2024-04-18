@@ -49,8 +49,7 @@ void Parser::pushObjectOnStack(const std::string& key)
         pushDataOnStack(currentNode, State::OBJECT_PARSING);
     }
     else {
-        ObjectNode obj;
-        std::get<ArrayNode*>(nodesStack.top())->emplace_back(obj);
+        std::get<ArrayNode*>(nodesStack.top())->emplace_back(ObjectNode());
         auto currentNode = &(std::get<ObjectNode>(std::get<ArrayNode*>(nodesStack.top())->back().value));
         pushDataOnStack(currentNode, State::OBJECT_PARSING);
     }

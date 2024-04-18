@@ -1,6 +1,6 @@
 
-#ifndef JSONCPP_PARSER_H
-#define JSONCPP_PARSER_H
+#ifndef JSONPARSER_PARSER_H
+#define JSONPARSER_PARSER_H
 
 #include <map>
 #include <memory>

@@ -1,6 +1,6 @@
 
-#ifndef JSONCPP_PARSERKEY_H
-#define JSONCPP_PARSERKEY_H
+#ifndef JSONPARSER_PARSERKEY_H
+#define JSONPARSER_PARSERKEY_H
 
 #include <memory>
 #include <vector>

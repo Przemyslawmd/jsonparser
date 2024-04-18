@@ -1,6 +1,6 @@
 
-#ifndef JSONCPP_TOKEN_H
-#define JSONCPP_TOKEN_H
+#ifndef JSONPARSER_TOKEN_H
+#define JSONPARSER_TOKEN_H
 
 #include <string>
 #include <variant>

@@ -1,4 +1,7 @@
 
+#ifndef JSONPARSER_VALIDATOR_H
+#define JSONPARSER_VALIDATOR_H
+
 #include <vector>
 
 #include "defines.h"
@@ -14,4 +17,6 @@ class Validator
         ParseError validateBrackets(const std::vector<Token>& tokens);
         ParseError checkRequirements(const std::vector<Token>& tokens);
 };
+
+#endif
 
