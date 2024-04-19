@@ -21,7 +21,7 @@ class Parser
     public:
         Parser() = default;
 
-        std::unique_ptr<std::map<std::string, Node>> parseTokens(const std::vector<Token>& tokens);
+        std::unique_ptr<ObjectNode> parseTokens(const std::vector<Token>& tokens);
 
     private:
         std::stack<std::variant<ObjectNode*, ArrayNode*>> nodesStack;

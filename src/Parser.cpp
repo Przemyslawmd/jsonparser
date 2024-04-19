@@ -5,10 +5,10 @@
 #include <variant>
 
 
-std::unique_ptr<std::map<std::string, Node>> Parser::parseTokens(const std::vector<Token>& tokens)
+std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens)
 {
     std::string key;
-    auto nodes = std::make_unique<std::map<std::string, Node>>();
+    auto nodes = std::make_unique<ObjectNode>();
     pushDataOnStack(nodes.get(), State::OBJECT_PARSING);
 
     for (auto it = tokens.begin() + 1; it != tokens.end() - 1; it++) {
