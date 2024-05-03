@@ -6,47 +6,86 @@
 
 std::string Writer::createJsonString(ObjectNode* object)
 {
-    parseObject(object);
-    json = stream.str();
-    return json;
+    processObject(object);
+    return stream.str();
 }
 
 
-void Writer::parseObject(ObjectNode* jsonObject)
+void Writer::processObject(const ObjectNode* jsonObject)
 {    
     stream << "{";
-    margin += 2;
+    marginIncrease();
     for (auto const& [key, val] : *jsonObject) {
         stream << std::endl;
         stream.width(margin);
         stream.fill(' ');
         stream << "\"" << key << "\"" << ": ";
-        if (std::holds_alternative<std::string>(val.value)) {
-            stream << "\"" << std::get<std::string>(val.value) << "\"" << ",";
-        }
-        else if (std::holds_alternative<int>(val.value)) {
-            stream << std::to_string(std::get<int>(val.value)) << ",";
-        }
-        else if (std::holds_alternative<double>(val.value)) {
-            stream << std::to_string(std::get<double>(val.value)) << ",";
-        }
-        else if (std::holds_alternative<bool>(val.value)) {           
-            if (std::get<bool>(val.value) == true) {
-                stream << "true" << ",";
-            }
-            else {
-                stream << "false" << ",";
-            }
-        }
-        else if (std::holds_alternative<ObjectNode>(val.value)) {   
-            const ObjectNode* obj = std::get_if<ObjectNode>(&val.value);
-            parseObject((ObjectNode*) obj);
-        }
+        parseData(val);
+    }
+    if (stream.str().back() == ',') {
+        size_t pos = stream.tellp();
+        stream.seekp(pos - 1);
     }
     stream << std::endl;
-    margin -= 2;   
+    marginDecrease();
     stream.width(margin);
     stream.fill(' ');
     stream << "}";    
+}
+
+
+void Writer::processArray(const ArrayNode* jsonArray)
+{
+    stream << "[";
+    for (auto const& val : *jsonArray) {
+        parseData(val);        
+    }
+    if (stream.str().back() == ',') {
+        size_t pos = stream.tellp();
+        stream.seekp(pos - 1);
+    }
+    stream << "]";
+}
+
+
+void Writer::parseData(const Node& node)
+{
+    if (std::holds_alternative<std::string>(node.value)) {
+        stream << "\"" << std::get<std::string>(node.value) << "\"" << ",";
+    }
+    else if (std::holds_alternative<int>(node.value)) {
+        stream << std::get<int>(node.value) << ",";
+    }
+    else if (std::holds_alternative<double>(node.value)) {
+        stream << std::get<double>(node.value) << ",";
+    }
+    else if (std::holds_alternative<bool>(node.value)) {
+        if (std::get<bool>(node.value) == true) {
+            stream << "true" << ",";
+        }
+        else {
+            stream << "false" << ",";
+        }        
+    }
+    else if (std::holds_alternative<ObjectNode>(node.value)) {
+        const ObjectNode* jsonObject = std::get_if<ObjectNode>(&node.value);
+        processObject(jsonObject);
+    }
+    else if (std::holds_alternative<ArrayNode>(node.value)) {
+        const ArrayNode* jsonArray = std::get_if<ArrayNode>(&node.value);
+        processArray(jsonArray);
+    }
+}
+
+
+void Writer::marginIncrease()
+{
+    margin += 2;
+}
+
+
+void Writer::marginDecrease()
+{
+    margin -= 2;
 }
 

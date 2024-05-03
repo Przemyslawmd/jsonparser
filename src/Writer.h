@@ -24,9 +24,13 @@ public:
 
 private:
 
-    void parseObject(ObjectNode* jsonObject);
+    void processObject(const ObjectNode* jsonObject);
+    void processArray(const ArrayNode* jsonArray);
+    void parseData(const Node& node);
 
-    std::string json;
+    void marginIncrease();
+    void marginDecrease();
+    
     std::ostringstream stream;
     size_t margin = 0;
 };
