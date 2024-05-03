@@ -28,11 +28,12 @@ private:
     void processArray(const ArrayNode* jsonArray);
     void parseData(const Node& node);
 
-    void marginIncrease();
-    void marginDecrease();
+    void incMargin();
+    void decMargin();
     
     std::ostringstream stream;
     size_t margin = 0;
 };
 
 #endif
+

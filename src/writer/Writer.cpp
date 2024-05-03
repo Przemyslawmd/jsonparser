@@ -12,13 +12,12 @@ std::string Writer::createJsonString(ObjectNode* object)
 
 
 void Writer::processObject(const ObjectNode* jsonObject)
-{    
+{
     stream << "{";
-    marginIncrease();
+    incMargin();
     for (auto const& [key, val] : *jsonObject) {
-        stream << std::endl;
-        stream.width(margin);
-        stream.fill(' ');
+        stream << '\n';
+        std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
         stream << "\"" << key << "\"" << ": ";
         parseData(val);
     }
@@ -26,11 +25,11 @@ void Writer::processObject(const ObjectNode* jsonObject)
         size_t pos = stream.tellp();
         stream.seekp(pos - 1);
     }
-    stream << std::endl;
-    marginDecrease();
-    stream.width(margin);
-    stream.fill(' ');
-    stream << "}";    
+    
+    stream << '\n';
+    decMargin();
+    std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
+    stream << "},";  
 }
 
 
@@ -68,23 +67,21 @@ void Writer::parseData(const Node& node)
         }        
     }
     else if (std::holds_alternative<ObjectNode>(node.value)) {
-        const ObjectNode* jsonObject = std::get_if<ObjectNode>(&node.value);
-        processObject(jsonObject);
+        processObject(std::get_if<ObjectNode>(&node.value));
     }
     else if (std::holds_alternative<ArrayNode>(node.value)) {
-        const ArrayNode* jsonArray = std::get_if<ArrayNode>(&node.value);
-        processArray(jsonArray);
+        processArray(std::get_if<ArrayNode>(&node.value));
     }
 }
 
 
-void Writer::marginIncrease()
+void Writer::incMargin()
 {
     margin += 2;
 }
 
 
-void Writer::marginDecrease()
+void Writer::decMargin()
 {
     margin -= 2;
 }
