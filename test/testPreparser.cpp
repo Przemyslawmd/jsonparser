@@ -1,6 +1,6 @@
 
-#include "../src/ParserKey.h"
-#include "../src/Preparser.h"
+#include "../src/reader/ParserKey.h"
+#include "../src/reader/Preparser.h"
 #include "config.h"
 
 #include <fstream>

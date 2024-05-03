@@ -20,11 +20,11 @@ add_executable(
   testParser.cpp
   testValidator.cpp
   testWriter.cpp
-  ../src/Preparser.cpp
-  ../src/Parser.cpp
-  ../src/ParserKey.cpp
-  ../src/Validator.cpp
-  ../src/Writer.cpp
+  ../src/reader/Preparser.cpp
+  ../src/reader/Parser.cpp
+  ../src/reader/ParserKey.cpp
+  ../src/reader/Validator.cpp
+  ../src/writer/Writer.cpp
  )
 
 target_compile_features(jsoncpptests PRIVATE cxx_std_20)

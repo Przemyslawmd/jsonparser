@@ -9,7 +9,7 @@
 
 #include "defines.h"
 #include "Token.h"
-#include "NodeValue.h"
+#include "../NodeValue.h"
 
 
 using ObjectNode = std::map<std::string, Node>;

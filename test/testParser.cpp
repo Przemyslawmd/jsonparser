@@ -1,9 +1,9 @@
 
-#include "../src/Parser.h"
-#include "../src/ParserKey.h"
-#include "../src/Preparser.h"
+#include "../src/reader/Parser.h"
+#include "../src/reader/ParserKey.h"
+#include "../src/reader/Preparser.h"
 #include "../src/NodeValue.h"
-#include "../src/Validator.h"
+#include "../src/reader/Validator.h"
 #include "config.h"
 
 #include <fstream>
