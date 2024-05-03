@@ -19,11 +19,13 @@ add_executable(
   testPreparser.cpp
   testParser.cpp
   testValidator.cpp
+  testWriter.cpp
   ../src/Preparser.cpp
   ../src/Parser.cpp
   ../src/ParserKey.cpp
   ../src/Validator.cpp
-)
+  ../src/Writer.cpp
+ )
 
 target_compile_features(jsoncpptests PRIVATE cxx_std_20)
 

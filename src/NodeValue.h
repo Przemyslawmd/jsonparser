@@ -2,6 +2,12 @@
 #ifndef JSONPARSER_NODE_H
 #define JSONPARSER_NODE_H
 
+#include <map>
+#include <string>
+#include <vector>
+#include <variant>
+
+
 struct Node
 {
     using Value = std::variant<std::string, int, double, bool, std::map<std::string, Node>, std::vector<Node>>;
