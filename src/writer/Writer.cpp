@@ -4,6 +4,9 @@
 #include <variant>
 
 
+constexpr std::string_view dataEnd = ",\n";
+
+
 std::string Writer::createJsonString(ObjectNode* object)
 {
     processObject(object);
@@ -17,7 +20,7 @@ void Writer::processObject(const ObjectNode* jsonObject)
     incMargin();
     for (auto const& [key, val] : *jsonObject) {
         std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
-        stream << "\"" << key << "\"" << ": ";
+        stream << "\"" << key << "\": ";
         parseData(val);
     }
     size_t pos = stream.tellp();
@@ -56,20 +59,20 @@ void Writer::processArray(const ArrayNode* jsonArray)
 void Writer::parseData(const Node& node)
 {
     if (std::holds_alternative<std::string>(node.value)) {
-        stream << "\"" << std::get<std::string>(node.value) << "\"" << "," << "\n";
+        stream << "\"" << std::get<std::string>(node.value) << "\"" << dataEnd;
     }
     else if (std::holds_alternative<int>(node.value)) {
-        stream << std::get<int>(node.value) << "," << "\n";;
+        stream << std::get<int>(node.value) << dataEnd;
     }
     else if (std::holds_alternative<double>(node.value)) {
-        stream << std::get<double>(node.value) << "," << "\n";
+        stream << std::get<double>(node.value) << dataEnd;
     }
     else if (std::holds_alternative<bool>(node.value)) {
         if (std::get<bool>(node.value) == true) {
-            stream << "true" << "," << "\n";;
+            stream << "true" << dataEnd;
         }
         else {
-            stream << "false" << "," << "\n";;
+            stream << "false" << dataEnd;
         }        
     }
     else if (std::holds_alternative<ObjectNode>(node.value)) {
