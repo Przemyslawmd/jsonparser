@@ -13,62 +13,63 @@ std::string Writer::createJsonString(ObjectNode* object)
 
 void Writer::processObject(const ObjectNode* jsonObject)
 {
-    stream << "{";
+    stream << "{\n";
     incMargin();
     for (auto const& [key, val] : *jsonObject) {
-        stream << '\n';
         std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
         stream << "\"" << key << "\"" << ": ";
         parseData(val);
     }
-
-    if (stream.str().back() == ',') {
-        size_t pos = stream.tellp();
-        stream.seekp(pos - 1);
-    }
+    size_t pos = stream.tellp();
+    stream.seekp(pos - 2);
+    stream << "\n";
     
-    stream << '\n';
     decMargin();
     if (margin == 0) {
         stream << '}';
         return;
     }
     std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
-    stream << "},";  
+    stream << "},\n"; 
 }
 
 
 void Writer::processArray(const ArrayNode* jsonArray)
 {
-    stream << "[";
+    stream << "[\n";
+    incMargin();
+    
     for (auto const& val : *jsonArray) {
+        std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
         parseData(val);
-    }
-    if (stream.str().back() == ',') {
-        size_t pos = stream.tellp();
-        stream.seekp(pos - 1);
-    }
-    stream << "]";
+    }    
+    size_t pos = stream.tellp();
+    stream.seekp(pos - 2);
+    stream << "\n";
+    
+    decMargin();
+    std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
+    stream << "],\n";
 }
 
 
 void Writer::parseData(const Node& node)
 {
     if (std::holds_alternative<std::string>(node.value)) {
-        stream << "\"" << std::get<std::string>(node.value) << "\"" << ",";
+        stream << "\"" << std::get<std::string>(node.value) << "\"" << "," << "\n";
     }
     else if (std::holds_alternative<int>(node.value)) {
-        stream << std::get<int>(node.value) << ",";
+        stream << std::get<int>(node.value) << "," << "\n";;
     }
     else if (std::holds_alternative<double>(node.value)) {
-        stream << std::get<double>(node.value) << ",";
+        stream << std::get<double>(node.value) << "," << "\n";
     }
     else if (std::holds_alternative<bool>(node.value)) {
         if (std::get<bool>(node.value) == true) {
-            stream << "true" << ",";
+            stream << "true" << "," << "\n";;
         }
         else {
-            stream << "false" << ",";
+            stream << "false" << "," << "\n";;
         }        
     }
     else if (std::holds_alternative<ObjectNode>(node.value)) {
