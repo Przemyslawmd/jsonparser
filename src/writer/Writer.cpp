@@ -21,6 +21,7 @@ void Writer::processObject(const ObjectNode* jsonObject)
         stream << "\"" << key << "\"" << ": ";
         parseData(val);
     }
+
     if (stream.str().back() == ',') {
         size_t pos = stream.tellp();
         stream.seekp(pos - 1);
@@ -28,6 +29,10 @@ void Writer::processObject(const ObjectNode* jsonObject)
     
     stream << '\n';
     decMargin();
+    if (margin == 0) {
+        stream << '}';
+        return;
+    }
     std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
     stream << "},";  
 }
@@ -37,7 +42,7 @@ void Writer::processArray(const ArrayNode* jsonArray)
 {
     stream << "[";
     for (auto const& val : *jsonArray) {
-        parseData(val);        
+        parseData(val);
     }
     if (stream.str().back() == ',') {
         size_t pos = stream.tellp();
