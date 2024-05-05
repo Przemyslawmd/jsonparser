@@ -15,22 +15,7 @@
 #include <gtest/gtest.h>
 
 
-constexpr std::string_view separator = "\n\n--------------------------------------------------------------------------\n\n";
-
-
-class TestWriter : public ::testing::Test {
-public:
-
-    static void SetUpTestSuite() 
-    {
-        std::ofstream ofs;
-        ofs.open(std::string(TEST_DATA) + "output.txt", std::ofstream::out | std::ofstream::trunc);
-        ofs.close();
-    }
-};
-
-
-std::unique_ptr<ObjectNode> parseJSON_(const std::string& jsonFile)
+std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile)
 {
     std::string filePath = std::string(TEST_DATA) + jsonFile;
     std::ifstream jsonStream(filePath);
@@ -48,80 +33,58 @@ std::unique_ptr<ObjectNode> parseJSON_(const std::string& jsonFile)
 }
 
 
-TEST_F(TestWriter, Test_File_1)
+void testJsonString(const std::string& file)
 {
-    auto root = parseJSON_("test_1.json");
+    auto root = writerParseJSON(file);
     Writer writer;
     std::string json = writer.createJsonString(root.get());
-    std::ofstream out(std::string(TEST_DATA) + "output.txt", std::ios_base::app);
-    out << json << separator;
-    out.close();
 
+    std::string filePath = std::string(TEST_DATA) + "writer/" + file;
+    std::ifstream jsonStream(filePath);
+    std::string jsonExpected((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
+
+    ASSERT_EQ(json, jsonExpected);
 }
 
 
-TEST_F(TestWriter, Test_File_2)
+TEST(TestWriter, Test_File_1)
 {
-    auto root = parseJSON_("test_2.json");
-    Writer writer;
-    std::string json = writer.createJsonString(root.get());
-    std::ofstream out(std::string(TEST_DATA) + "output.txt", std::ios_base::app);
-    out << json << separator;
-    out.close();
+    testJsonString("test_1.json");
 }
 
 
-TEST_F(TestWriter, Test_File_3)
+TEST(TestWriter, Test_File_2)
 {
-    auto root = parseJSON_("test_3.json");
-    Writer writer;
-    std::string json = writer.createJsonString(root.get());
-    std::ofstream out(std::string(TEST_DATA) + "output.txt", std::ios_base::app);
-    out << json << separator;
-    out.close();
+    testJsonString("test_2.json");
 }
 
 
-TEST_F(TestWriter, Test_File_4)
+TEST(TestWriter, Test_File_3)
 {
-    auto root = parseJSON_("test_4.json");
-    Writer writer;
-    std::string json = writer.createJsonString(root.get());
-    std::ofstream out(std::string(TEST_DATA) + "output.txt", std::ios_base::app);
-    out << json << separator;
-    out.close();
+    testJsonString("test_3.json");
 }
 
 
-TEST_F(TestWriter, Test_File_5)
+TEST(TestWriter, Test_File_4)
 {
-    auto root = parseJSON_("test_5.json");
-    Writer writer;
-    std::string json = writer.createJsonString(root.get());
-    std::ofstream out(std::string(TEST_DATA) + "output.txt", std::ios_base::app);
-    out << json << separator;
-    out.close();
+    testJsonString("test_4.json");
 }
 
 
-TEST_F(TestWriter, Test_File_6)
+TEST(TestWriter, Test_File_5)
 {
-    auto root = parseJSON_("test_6.json");
-    Writer writer;
-    std::string json = writer.createJsonString(root.get());
-    std::ofstream out(std::string(TEST_DATA) + "output.txt", std::ios_base::app);
-    out << json << separator;
-    out.close();
+    testJsonString("test_5.json");
 }
 
 
-TEST_F(TestWriter, Test_File_7)
+TEST(TestWriter, Test_File_6)
 {
-    auto root = parseJSON_("test_7.json");
-    Writer writer;
-    std::string json = writer.createJsonString(root.get());
-    std::ofstream out(std::string(TEST_DATA) + "output.txt", std::ios_base::app);
-    out << json << separator;
-    out.close();
+    testJsonString("test_6.json");
+}
+
+
+TEST(TestWriter, Test_File_7)
+{
+    testJsonString("test_7.json");
 }
 

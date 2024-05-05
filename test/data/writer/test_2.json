@@ -1,0 +1,25 @@
+{
+  "billTo": {
+    "address": "123 Maple Street",
+    "city": "Pretendville",
+    "minusWeight": -0.24567,
+    "name": "John Smith",
+    "state": "NY",
+    "zip": 12345
+  },
+  "name": "John Smith",
+  "price": 2224,
+  "shipTo": {
+    "address": "123 Maple Street",
+    "cities": [
+      "Pretendville",
+      "New York",
+      "Chicago"
+    ],
+    "name": "Jane Smith",
+    "state": "NY",
+    "weight": 12.34,
+    "zip": -12345
+  },
+  "value": "20223"
+}

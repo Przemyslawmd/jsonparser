@@ -1,0 +1,14 @@
+{
+  "cities": [
+    "Krakow",
+    "Warszawa",
+    "Wroclaw",
+    "Poznan"
+  ],
+  "company": "abc",
+  "person": {
+    "age": 39,
+    "country": "Poland",
+    "name": "John"
+  }
+}
