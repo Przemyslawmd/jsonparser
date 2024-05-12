@@ -1,6 +1,6 @@
 
 #pragma once
 
-#define TEST_DATA "${PROJECT_SOURCE_DIR}/test/data/"
-#define TEST_DATA_IMPROPER "${PROJECT_SOURCE_DIR}/test/dataImproper/"
+#define TEST_DATA "${PROJECT_SOURCE_DIR}/data/"
+#define TEST_DATA_IMPROPER "${PROJECT_SOURCE_DIR}/dataImproper/"
 

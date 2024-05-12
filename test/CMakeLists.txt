@@ -1,4 +1,6 @@
 
+project(jsonParserTest)
+
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 set(HEADERS "../headers")
 
@@ -10,12 +12,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-configure_file(${PROJECT_SOURCE_DIR}/test/config.h.in ${PROJECT_SOURCE_DIR}/test/config.h)
-
-enable_testing()
+configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/config.h)
 
 add_executable(
-  jsoncpptests
+  jsonParserTest
   testPreparser.cpp
   testParser.cpp
   testValidator.cpp
@@ -27,20 +27,21 @@ add_executable(
   ../src/writer/Writer.cpp
  )
 
-target_compile_features(jsoncpptests PRIVATE cxx_std_20)
+target_compile_features(jsonParserTest PRIVATE cxx_std_20)
 
 target_include_directories(
-  jsoncpptests 
+  jsonParserTest 
   PRIVATE 
   googletest/include 
   ${HEADERS}
 )
 
 target_link_libraries(
-  jsoncpptests
+  jsonParserTest
   GTest::gtest_main  
 )
 
+enable_testing()
 include(GoogleTest)
-gtest_discover_tests(jsoncpptests)
+gtest_discover_tests(jsonParserTest)
 
