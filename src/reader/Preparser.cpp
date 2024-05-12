@@ -13,10 +13,10 @@ Preparser::Preparser()
 
 std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json)
 {
-    error = ParseError::NOT_ERROR;
+    error = Result::OK;
 
     if (checkQuotation(json) == false) {
-        error = ParseError::STRING_NOT_ENDED;
+        error = Result::PREPARSER_STRING_ERROR;
         return nullptr;
     }
 
@@ -28,7 +28,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
         }
         if (symbol == '\"') {
             index += parseString(json, index);
-            if (error != ParseError::NOT_ERROR) {
+            if (error != Result::OK) {
                 return nullptr;
             }
             continue;
@@ -47,7 +47,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
                 index += 4;
                 continue;
             }
-            error = ParseError::UNKNOWN_SYMBOL;
+            error = Result::PREPARSER_UNKNOWN_SYMBOL;
             return nullptr;
         }
         if (symbol == 't') {
@@ -56,10 +56,10 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
                 index += 3;
                 continue;
             }
-            error = ParseError::UNKNOWN_SYMBOL;
+            error = Result::PREPARSER_UNKNOWN_SYMBOL;
             return nullptr;
         }
-        error = ParseError::UNKNOWN_SYMBOL;
+        error = Result::PREPARSER_UNKNOWN_SYMBOL;
         return nullptr;
     }
     return std::move(tokens);
@@ -111,7 +111,7 @@ size_t Preparser::parseString(const std::string& json, size_t index)
         }
         shift += 1;
     }
-    error = ParseError::STRING_NOT_ENDED;
+    error = Result::PREPARSER_STRING_ERROR;
     return 0;
 }
 
@@ -133,7 +133,7 @@ bool Preparser::checkQuotation(const std::string& jsonStr)
 }
 
 
-ParseError Preparser::getError()
+Result Preparser::getError()
 {
     return error;
 }

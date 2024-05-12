@@ -1,14 +1,14 @@
 
 #include <fstream>
 
+#include <gtest/gtest.h>
+
 #include "../src/reader/Preparser.h"
 #include "../src/reader/Validator.h"
 #include "config.h"
 
-#include <gtest/gtest.h>
 
-
-ParseError getValidatorError(const std::string& jsonFile)
+Result getValidatorError(const std::string& jsonFile)
 {
     std::string filePath = std::string(TEST_DATA_IMPROPER) + jsonFile;
     std::ifstream jsonStream(filePath);
@@ -22,70 +22,70 @@ ParseError getValidatorError(const std::string& jsonFile)
 
 TEST(ValidatorTest, ImproperBegin)
 {
-    ParseError error = getValidatorError("improper_begin.json");
-    ASSERT_EQ(error, ParseError::FIRST_CHAR_NOT_CURLY_OPEN);
+    Result error = getValidatorError("improper_begin.json");
+    ASSERT_EQ(error, Result::VALIDATOR_IMPROPER_BEGINNING);
 }
 
 
 TEST(ValidatorTest, ImproperEnd)
 {
-    ParseError error = getValidatorError("improper_end.json");
-    ASSERT_EQ(error, ParseError::LAST_CHAR_NOT_CURLY_CLOSE);
+    Result error = getValidatorError("improper_end.json");
+    ASSERT_EQ(error, Result::VALIDATOR_IMPROPER_END);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterCurlyOpen)
 {
-    ParseError error = getValidatorError("not_allowed_after_curly_open.json");
-    ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_CURLY_OPEN);
+    Result error = getValidatorError("not_allowed_after_curly_open.json");
+    ASSERT_EQ(error, Result::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_OPEN);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterCurlyClose)
 {
-    ParseError error = getValidatorError("not_allowed_after_curly_close.json");
-    ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_CURLY_CLOSE);
+    Result error = getValidatorError("not_allowed_after_curly_close.json");
+    ASSERT_EQ(error, Result::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_CLOSE);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterString)
 {
-    ParseError error = getValidatorError("not_allowed_after_string.json");
-    ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_STRING);
+    Result error = getValidatorError("not_allowed_after_string.json");
+    ASSERT_EQ(error, Result::VALIDATOR_IMPROPER_TOKEN_AFTER_STRING);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterInt)
 {
-    ParseError error = getValidatorError("not_allowed_after_int.json");
-    ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_DATA_INT);
+    Result error = getValidatorError("not_allowed_after_int.json");
+    ASSERT_EQ(error, Result::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_INT);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterDouble)
 {
-    ParseError error = getValidatorError("not_allowed_after_double.json");
-    ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_DATA_DOUBLE);
+    Result error = getValidatorError("not_allowed_after_double.json");
+    ASSERT_EQ(error, Result::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_DOUBLE);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterBool)
 {
-    ParseError error = getValidatorError("not_allowed_after_bool.json");
-    ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_DATA_BOOL);
+    Result error = getValidatorError("not_allowed_after_bool.json");
+    ASSERT_EQ(error, Result::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_BOOL);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterColon)
 {
-    ParseError error = getValidatorError("not_allowed_after_colon.json");
-    ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_COLON);
+    Result error = getValidatorError("not_allowed_after_colon.json");
+    ASSERT_EQ(error, Result::VALIDATOR_IMPROPER_TOKEN_AFTER_COLON);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterComma)
 {
-    ParseError error = getValidatorError("not_allowed_after_comma.json");
-    ASSERT_EQ(error, ParseError::IMPROPER_TOKEN_AFTER_COMMA);
+    Result error = getValidatorError("not_allowed_after_comma.json");
+    ASSERT_EQ(error, Result::VALIDATOR_IMPROPER_TOKEN_AFTER_COMMA);
 }
 

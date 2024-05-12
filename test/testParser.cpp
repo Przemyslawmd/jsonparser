@@ -1,11 +1,4 @@
 
-#include "../src/reader/Parser.h"
-#include "../src/reader/ParserKey.h"
-#include "../src/reader/Preparser.h"
-#include "../src/NodeValue.h"
-#include "../src/reader/Validator.h"
-#include "config.h"
-
 #include <fstream>
 #include <limits>
 #include <memory>
@@ -13,6 +6,13 @@
 #include <variant>
 
 #include <gtest/gtest.h>
+
+#include "../src/reader/Parser.h"
+#include "../src/reader/ParserKey.h"
+#include "../src/reader/Preparser.h"
+#include "../src/NodeValue.h"
+#include "../src/reader/Validator.h"
+#include "config.h"
 
 
 template <class T>
@@ -67,8 +67,8 @@ std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
     EXPECT_TRUE(tokens != nullptr);
 
     const auto validator = std::make_unique<Validator>();
-    ParseError error = validator->validate(*tokens);
-    EXPECT_EQ(error, ParseError::NOT_ERROR);
+    Result error = validator->validate(*tokens);
+    EXPECT_EQ(error, Result::OK);
 
     const auto parserKey = std::make_unique<ParserKey>();
     tokens = parserKey->createKeyTokens(std::move(tokens));

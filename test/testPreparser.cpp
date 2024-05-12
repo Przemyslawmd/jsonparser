@@ -1,14 +1,14 @@
 
-#include "../src/reader/ParserKey.h"
-#include "../src/reader/Preparser.h"
-#include "config.h"
-
 #include <fstream>
 #include <limits>
 #include <memory>
 #include <vector>
 
 #include <gtest/gtest.h>
+
+#include "../src/reader/ParserKey.h"
+#include "../src/reader/Preparser.h"
+#include "config.h"
 
 
 struct TestData 
@@ -18,7 +18,7 @@ struct TestData
 };
 
 
-std::unique_ptr<std::vector<Token>> getTokens(const std::string& filePath, ParseError* error)
+std::unique_ptr<std::vector<Token>> getTokens(const std::string& filePath, Result* error)
 {
     std::ifstream jsonStream(filePath);
     std::string jsonString((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
@@ -58,7 +58,7 @@ void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestDat
 
 TEST (PreparserTest, Test_File_1)
 {
-    ParseError error;
+    Result error;
     auto tokens = getTokens(std::string(TEST_DATA) + "test_1.json", &error);
 
     std::vector<TestData> testData = {
@@ -94,7 +94,7 @@ TEST (PreparserTest, Test_File_1)
 
 TEST(PreparserTest, Test_File_2)
 {
-    ParseError error;
+    Result error;
     auto tokens = getTokens(std::string(TEST_DATA) + "test_2.json", &error);
 
     std::vector<TestData> testData = {
@@ -199,7 +199,7 @@ TEST(PreparserTest, Test_File_2)
 
 TEST(PreparserTest, Test_File_6)
 {
-    ParseError error;
+    Result error;
     auto tokens = getTokens(std::string(TEST_DATA) + "test_6.json", &error);
 
     std::vector<TestData> testData = {
@@ -246,7 +246,7 @@ TEST(PreparserTest, Test_File_6)
 
 TEST(PreparserTest, Test_File_7)
 {
-    ParseError error;
+    Result error;
     auto tokens = getTokens(std::string(TEST_DATA) + "test_7.json", &error);
 
     std::vector<TestData> testData = {
@@ -310,20 +310,20 @@ TEST(PreparserTest, Test_File_7)
 
 TEST(PreparserTest, FirstImproperDataTest)
 {
-    ParseError error = ParseError::NOT_ERROR;
+    Result error = Result::OK;
     auto tokens = getTokens(std::string(TEST_DATA_IMPROPER) + "string_not_ended_1.json", &error);
 
     ASSERT_EQ(tokens, nullptr);
-    ASSERT_EQ(error, ParseError::STRING_NOT_ENDED);
+    ASSERT_EQ(error, Result::PREPARSER_STRING_ERROR);
 }
 
 
 TEST(PreparserTest, SecondImproperDataTest)
 {
-    ParseError error = ParseError::NOT_ERROR;
+    Result error = Result::OK;
     auto tokens = getTokens(std::string(TEST_DATA_IMPROPER) + "string_not_ended_2.json", &error);
 
     ASSERT_EQ(tokens, nullptr);
-    ASSERT_EQ(error, ParseError::STRING_NOT_ENDED);
+    ASSERT_EQ(error, Result::PREPARSER_STRING_ERROR);
 }
 

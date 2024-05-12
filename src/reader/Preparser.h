@@ -16,7 +16,7 @@ public:
     Preparser();
 
     std::unique_ptr<std::vector<Token>> parseJSON(const std::string& json);
-    ParseError getError();
+    Result getError();
 
 private:
     size_t parseNumber(const std::string& json, size_t index);
@@ -25,9 +25,9 @@ private:
     bool checkQuotation(const std::string& json);
 
     std::unique_ptr<std::vector<Token>> tokens;
-    ParseError error;
+    Result error;
 
-    const std::map<char, TokenType> tokensMap{
+    const std::map<char, TokenType> tokensMap {
         { '{', TokenType::CURLY_OPEN },
         { '}', TokenType::CURLY_CLOSE },
         { '[', TokenType::SQUARE_OPEN },

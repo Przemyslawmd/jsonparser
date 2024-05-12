@@ -8,27 +8,27 @@
 #include <defines.h>
 
 
-ParseError Validator::validate(const std::vector<Token>& tokens)
+Result Validator::validate(const std::vector<Token>& tokens)
 {
-    ParseError error;
+    Result error;
 
     if (tokens.at(0).type != TokenType::CURLY_OPEN) {
-        return ParseError::FIRST_CHAR_NOT_CURLY_OPEN;
+        return Result::VALIDATOR_IMPROPER_BEGINNING;
     }
 
     if (tokens.at(tokens.size() - 1).type != TokenType::CURLY_CLOSE) {
-        return ParseError::LAST_CHAR_NOT_CURLY_CLOSE;
+        return Result::VALIDATOR_IMPROPER_END;
     }
 
     error = validateBrackets(tokens);
-    if (error != ParseError::NOT_ERROR) {
+    if (error != Result::OK) {
         return error;
     }
     return checkRequirements(tokens);
 }
 
 
-ParseError Validator::validateBrackets(const std::vector<Token>& tokens)
+Result Validator::validateBrackets(const std::vector<Token>& tokens)
 {
     size_t curlyCounter = 0;
     size_t squareCounter = 0;
@@ -48,24 +48,24 @@ ParseError Validator::validateBrackets(const std::vector<Token>& tokens)
         }
 
         if (curlyCounter < 0) {
-            return ParseError::BRACKET_CURLY_ERROR;
+            return Result::VALIDATOR_BRACKET_CURLY_ERROR;
         }
         if (squareCounter < 0) {
-            return ParseError::BRACKET_SQUARE_ERROR;
+            return Result::VALIDATOR_BRACKET_SQUARE_ERROR;
         }
     }
 
     if (curlyCounter != 0) {
-        return ParseError::BRACKET_CURLY_ERROR;
+        return Result::VALIDATOR_BRACKET_CURLY_ERROR;
     }
     if (squareCounter != 0) {
-        return ParseError::BRACKET_SQUARE_ERROR;
+        return Result::VALIDATOR_BRACKET_SQUARE_ERROR;
     }
-    return ParseError::NOT_ERROR;
+    return Result::OK;
 }
 
 
-ParseError Validator::checkRequirements(const std::vector<Token>& tokens)
+Result Validator::checkRequirements(const std::vector<Token>& tokens)
 {
     std::stack<State> states;
 
@@ -115,7 +115,7 @@ ParseError Validator::checkRequirements(const std::vector<Token>& tokens)
     for (auto it = tokens.begin() + 1; it != tokens.end() - 1; it++) {
         if (it->type == TokenType::CURLY_OPEN) {
             if (afterCurlyOpen.count((it + 1)->type) == 0) {
-                return ParseError::IMPROPER_TOKEN_AFTER_CURLY_OPEN;
+                return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_OPEN;
             }
             states.push(State::OBJECT_PARSING);
         }
@@ -124,7 +124,7 @@ ParseError Validator::checkRequirements(const std::vector<Token>& tokens)
         }
         else if (it->type == TokenType::CURLY_CLOSE) {
             if (afterCurlyClose.count((it + 1)->type) == 0) {
-                return ParseError::IMPROPER_TOKEN_AFTER_CURLY_CLOSE;
+                return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_CLOSE;
             }
             states.pop();
         }
@@ -132,24 +132,24 @@ ParseError Validator::checkRequirements(const std::vector<Token>& tokens)
             states.pop();
         }
         else  if (it->type == TokenType::COMMA && afterComma.at(states.top()).count((it + 1)->type) == 0) {
-            return ParseError::IMPROPER_TOKEN_AFTER_COMMA;
+            return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_COMMA;
         }
         else if (it->type == TokenType::COLON && afterColon.count((it + 1)->type) == 0) {
-            return ParseError::IMPROPER_TOKEN_AFTER_COLON;
+            return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_COLON;
         }
         else if (it->type == TokenType::DATA_STR && afterString.at(states.top()).count((it + 1)->type) == 0) {
-            return ParseError::IMPROPER_TOKEN_AFTER_STRING;
+            return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_STRING;
         }
         else if (it->type == TokenType::DATA_INT && afterData.count((it + 1)->type) == 0) {
-            return ParseError::IMPROPER_TOKEN_AFTER_DATA_INT;
+            return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_INT;
         }
         else if (it->type == TokenType::DATA_DOUBLE && afterData.count((it + 1)->type) == 0) {
-            return ParseError::IMPROPER_TOKEN_AFTER_DATA_DOUBLE;
+            return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_DOUBLE;
         }
         else if (it->type == TokenType::DATA_BOOL && afterData.count((it + 1)->type) == 0) {
-            return ParseError::IMPROPER_TOKEN_AFTER_DATA_BOOL;
+            return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_BOOL;
         }
     }
-    return ParseError::NOT_ERROR;
+    return Result::OK;
 }
 
