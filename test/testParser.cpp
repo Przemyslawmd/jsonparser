@@ -10,9 +10,9 @@
 #include "../src/reader/Parser.h"
 #include "../src/reader/ParserKey.h"
 #include "../src/reader/Preparser.h"
-#include "../src/NodeValue.h"
 #include "../src/reader/Validator.h"
 #include "config.h"
+#include <NodeValue.h>
 
 
 template <class T>

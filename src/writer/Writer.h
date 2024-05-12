@@ -7,7 +7,7 @@
 #include <string>
 #include <variant>
 
-#include "../NodeValue.h"
+#include <NodeValue.h>
 
 
 using ObjectNode = std::map<std::string, Node>;

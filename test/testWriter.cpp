@@ -1,11 +1,4 @@
 
-#include "../src/reader/Parser.h"
-#include "../src/reader/ParserKey.h"
-#include "../src/reader/Preparser.h"
-#include "../src/NodeValue.h"
-#include "../src/writer/Writer.h"
-#include "config.h"
-
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -13,6 +6,13 @@
 #include <variant>
 
 #include <gtest/gtest.h>
+
+#include <NodeValue.h>
+#include "../src/reader/Parser.h"
+#include "../src/reader/ParserKey.h"
+#include "../src/reader/Preparser.h"
+#include "../src/writer/Writer.h"
+#include "config.h"
 
 
 std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile)
