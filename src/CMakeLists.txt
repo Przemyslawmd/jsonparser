@@ -2,11 +2,18 @@
 project(jsonParserLib)
 
 set(HEADERS "../headers")
+set(READER "reader/")
+set(WRITER "writer/")
 
 add_library(
     jsonParserLib 
     STATIC
-    jsonApi.cpp)
+    jsonApi.cpp
+    ${READER}Parser.cpp
+    ${READER}ParserKey.cpp
+    ${READER}Preparser.cpp
+    ${READER}Validator.cpp
+    ${WRITER}Writer.cpp)
 
 target_include_directories(jsonParserLib PUBLIC ${HEADERS}) 
 
