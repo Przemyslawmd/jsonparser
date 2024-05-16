@@ -10,6 +10,13 @@
 #include "../src/writer/Writer.h"
 
 
+enum class InnerNodeType
+{
+    OBJECT,
+    ARRAY
+};
+
+
 bool jsonApi::parseJsonString(const std::string& jsonString)
 {
     const auto preparser = std::make_unique<Preparser>();
@@ -57,26 +64,31 @@ std::string jsonApi::getNodeType(std::vector<indicator> keys)
 InnerNodePtr jsonApi::getNode(const std::vector<indicator>& indicators)
 {
     InnerNodePtr nodePtr = root.get();
+    InnerNodeType lastType = InnerNodeType::OBJECT;
 
     for (const auto& indicator : indicators) {
-        if (std::holds_alternative<ObjectNode*>(nodePtr) && std::holds_alternative<std::string>(indicator)) {
+        if (lastType == InnerNodeType::OBJECT && std::holds_alternative<std::string>(indicator)) {
             ObjectNode* obj = std::get<ObjectNode*>(nodePtr);
             const auto& key = std::get<std::string>(indicator);
             if (std::holds_alternative<ObjectNode>(obj->at(key).value)) {
                 nodePtr = std::get_if<ObjectNode>(&obj->at(key).value);
+                lastType = InnerNodeType::OBJECT;
             } 
             else if (std::holds_alternative<ArrayNode>(obj->at(key).value)) {
                 nodePtr = std::get_if<ArrayNode>(&obj->at(key).value);
+                lastType = InnerNodeType::ARRAY;
             }
         }
-        else if (std::holds_alternative<ArrayNode*>(nodePtr) && std::holds_alternative<int>(indicator)) {
+        else if (lastType == InnerNodeType::ARRAY && std::holds_alternative<int>(indicator)) {
             ArrayNode* arr = std::get<ArrayNode*>(nodePtr);
             int index = std::get<int>(indicator);
             if (std::holds_alternative<ObjectNode>(arr->at(index).value)) {
                 nodePtr = std::get_if<ObjectNode>(&arr->at(index).value);
+                InnerNodeType::OBJECT;
             }
             else if (std::holds_alternative<ArrayNode>(arr->at(index).value)) {
                 nodePtr = std::get_if<ArrayNode>(&arr->at(index).value);
+                lastType = InnerNodeType::ARRAY;
             }
         }
         else {
