@@ -1,4 +1,5 @@
 
+#include <chrono>
 #include <fstream>
 #include <limits>
 #include <memory>
@@ -9,6 +10,9 @@
 #include "../src/reader/ParserKey.h"
 #include "../src/reader/Preparser.h"
 #include "config.h"
+
+
+constexpr bool measurement = true;
 
 
 struct TestData 
@@ -59,6 +63,8 @@ void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestDat
 TEST (PreparserTest, Test_File_1)
 {
     Result error;
+
+    auto begin = std::chrono::high_resolution_clock::now();
     auto tokens = getTokens(std::string(TEST_DATA) + "test_1.json", &error);
 
     std::vector<TestData> testData = {
@@ -88,6 +94,12 @@ TEST (PreparserTest, Test_File_1)
        { TokenType::CURLY_CLOSE },
        { TokenType::CURLY_CLOSE },
     };
+
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << " PreparserTest : Test_File_1 : time in microseconds : " << elapsed.count() << std::endl;
+    }
     checkTokens(std::move(tokens), testData);
 }
 
@@ -95,6 +107,7 @@ TEST (PreparserTest, Test_File_1)
 TEST(PreparserTest, Test_File_2)
 {
     Result error;
+    auto begin = std::chrono::high_resolution_clock::now();
     auto tokens = getTokens(std::string(TEST_DATA) + "test_2.json", &error);
 
     std::vector<TestData> testData = {
@@ -193,6 +206,12 @@ TEST(PreparserTest, Test_File_2)
        { TokenType::CURLY_CLOSE },
        { TokenType::CURLY_CLOSE },
     };
+
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << " PreparserTest : Test_File_2 : time in microseconds : " << elapsed.count() << std::endl;
+    }
     checkTokens(std::move(tokens), testData);
 }
 
@@ -247,6 +266,7 @@ TEST(PreparserTest, Test_File_6)
 TEST(PreparserTest, Test_File_7)
 {
     Result error;
+    auto begin = std::chrono::high_resolution_clock::now();
     auto tokens = getTokens(std::string(TEST_DATA) + "test_7.json", &error);
 
     std::vector<TestData> testData = {
@@ -304,6 +324,12 @@ TEST(PreparserTest, Test_File_7)
        { TokenType::SQUARE_CLOSE },
        { TokenType::CURLY_CLOSE },
     };
+
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << " PreparserTest : Test_File_7 : time in microseconds : " << elapsed.count() << std::endl;
+    }
     checkTokens(std::move(tokens), testData);
 }
 

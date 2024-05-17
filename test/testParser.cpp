@@ -15,7 +15,10 @@
 #include <NodeValue.h>
 
 
-template <class T>
+constexpr bool measurement = true;
+
+
+template <typename T>
 void checkNode(ObjectNode* nodePointer, const std::string& key, T expectedValue)
 {
     ASSERT_TRUE(nodePointer != nullptr);
@@ -43,7 +46,7 @@ void checkArrayNode(ObjectNode* nodePointer, const std::string& key)
 }
 
 
-template<class T>
+template <typename T>
 void checkArrayValue(ArrayNode* arrayPointer, size_t index, T dataExpected)
 {
     try {
@@ -62,6 +65,7 @@ std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
     std::ifstream jsonStream(filePath);
     std::string jsonString((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
 
+    auto begin = std::chrono::high_resolution_clock::now();
     const auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
     EXPECT_TRUE(tokens != nullptr);
@@ -74,7 +78,14 @@ std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
     tokens = parserKey->createKeyTokens(std::move(tokens));
 
     const auto parser = std::make_unique<Parser>();
-    return parser->parseTokens(*tokens);
+    std::unique_ptr<ObjectNode> jsonObj = parser->parseTokens(*tokens);
+
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << " ParserTest : " << jsonFile << ": time in microseconds : " << elapsed.count() << std::endl;
+    }
+    return jsonObj;
 }
 
 
@@ -123,6 +134,7 @@ TEST(ParserTest, Test_File_3)
 
 TEST(ParserTest, Test_File_4)
 {
+    auto begin = std::chrono::high_resolution_clock::now();
     auto root = parseJSON("test_4.json");
 
     ASSERT_TRUE(root->find("person") != root->end());
@@ -197,6 +209,7 @@ TEST(ParserTest, Test_File_6)
 
 TEST(ParserTest, Test_File_7)
 {
+    auto begin = std::chrono::high_resolution_clock::now();
     auto root = parseJSON("test_7.json");
     ASSERT_TRUE(root->find("employees") != root->end());
     std::vector<Node>* employees = std::get_if<ArrayNode>(&root->at("employees").value);

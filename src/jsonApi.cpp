@@ -44,8 +44,7 @@ bool jsonApi::parseJsonString(const std::string& jsonString)
 std::string jsonApi::parseObjectToJsonString(ObjectNode* node)
 {
     auto writer = std::make_unique<Writer>();
-    std::string jsonString = writer->createJsonString(node);
-    return jsonString;
+    return { writer->createJsonString(node) };
 }
 
 
