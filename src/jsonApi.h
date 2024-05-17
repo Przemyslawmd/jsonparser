@@ -15,7 +15,7 @@ using ArrayNode = std::vector<Node>;
 using InnerNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 
 /* Indicator is a key for map or index for an array */
-using indicator = std::variant<std::string, int>;
+using indicator = std::variant<std::string, size_t>;
 
 
 class jsonApi

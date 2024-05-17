@@ -34,6 +34,9 @@ enum class Result
 {
     OK,
 
+    API_NOT_KEY_IN_MAP,
+    API_INDEX_OUT_OF_ARRAY,
+
     PREPARSER_STRING_ERROR,
     PREPARSER_UNKNOWN_SYMBOL,
 
