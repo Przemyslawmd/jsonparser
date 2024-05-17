@@ -54,13 +54,13 @@ ObjectNode* jsonApi::getRoot()
 }
 
 
-std::string jsonApi::getNodeType(std::vector<indicator> keys)
+std::string jsonApi::getNodeType(const std::vector<Indicator>& keys)
 {
     return "Test";
 }
 
 
-InnerNodePtr jsonApi::getNode(const std::vector<indicator>& indicators)
+InnerNodePtr jsonApi::getNode(const std::vector<Indicator>& indicators)
 {
     InnerNodePtr nodePtr = root.get();
     InnerNodeType lastType = InnerNodeType::OBJECT;
@@ -111,9 +111,9 @@ InnerNodePtr jsonApi::getNode(const std::vector<indicator>& indicators)
 }
 
 
-bool jsonApi::changeNodeValue(const std::vector<indicator>& keys, Node node)
+bool jsonApi::changeNodeValue(const std::vector<Indicator>& keys, Node node)
 {
-    std::vector<indicator> keysToGetNode{ keys };
+    std::vector<Indicator> keysToGetNode{ keys };
     keysToGetNode.pop_back();
     InnerNodePtr innerNodePtr = getNode(keysToGetNode);
 
@@ -121,7 +121,7 @@ bool jsonApi::changeNodeValue(const std::vector<indicator>& keys, Node node)
         return false;
     }
 
-    indicator lastKey = keys.back();
+    Indicator lastKey = keys.back();
     if (std::holds_alternative<ObjectNode*>(innerNodePtr) && std::holds_alternative<std::string>(lastKey)) {
         ObjectNode* obj = std::get<ObjectNode*>(innerNodePtr);
         const auto& key = std::get<std::string>(lastKey);
