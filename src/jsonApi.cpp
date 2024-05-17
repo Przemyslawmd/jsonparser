@@ -60,12 +60,22 @@ std::string jsonApi::getNodeType(std::vector<indicator> keys)
 }
 
 
-#include <iostream>
-
 InnerNodePtr jsonApi::getNode(const std::vector<indicator>& indicators)
 {
     InnerNodePtr nodePtr = root.get();
     InnerNodeType lastType = InnerNodeType::OBJECT;
+
+    const auto getNextNode = [](InnerNodePtr* nodePtr, Node* node, InnerNodeType& lastType) 
+    {
+        if (std::holds_alternative<ObjectNode>(node->value)) {
+            *nodePtr = std::get_if<ObjectNode>(&node->value);
+            lastType = InnerNodeType::OBJECT;
+        }
+        else if (std::holds_alternative<ArrayNode>(node->value)) {
+            *nodePtr = std::get_if<ArrayNode>(&node->value);
+            lastType = InnerNodeType::ARRAY;
+        }
+    };
 
     for (const auto& indicator : indicators) {
         if (lastType == InnerNodeType::OBJECT && std::holds_alternative<std::string>(indicator)) {
@@ -78,15 +88,8 @@ InnerNodePtr jsonApi::getNode(const std::vector<indicator>& indicators)
             }
 
             Node* node = &obj->at(key);
-            if (std::holds_alternative<ObjectNode>(node->value)) {
-                nodePtr = std::get_if<ObjectNode>(&node->value);
-                lastType = InnerNodeType::OBJECT;
-            }
-            else if (std::holds_alternative<ArrayNode>(node->value)) {
-                nodePtr = std::get_if<ArrayNode>(&node->value);
-                lastType = InnerNodeType::ARRAY;
-            }
-        }
+            getNextNode(&nodePtr, node, lastType);
+       }
         else if (lastType == InnerNodeType::ARRAY && std::holds_alternative<size_t>(indicator)) {
             ArrayNode* arr = std::get<ArrayNode*>(nodePtr);
 
@@ -97,14 +100,7 @@ InnerNodePtr jsonApi::getNode(const std::vector<indicator>& indicators)
             }
 
             Node* node = &arr->at(index);
-            if (std::holds_alternative<ObjectNode>(node->value)) {
-                nodePtr = std::get_if<ObjectNode>(&node->value);
-                InnerNodeType::OBJECT;
-            }
-            else if (std::holds_alternative<ArrayNode>(node->value)) {
-                nodePtr = std::get_if<ArrayNode>(&node->value);
-                lastType = InnerNodeType::ARRAY;
-            }
+            getNextNode(&nodePtr, node, lastType);
         }
         else {
              return nullptr;
@@ -124,14 +120,26 @@ bool jsonApi::changeNodeValue(const std::vector<indicator>& keys, Node node)
         return false;
     }
 
-    if (std::holds_alternative<ObjectNode*>(innerNodePtr)) {
-        std::get<ObjectNode*>(innerNodePtr)->at(std::get<std::string>(keys.back())) = node;
+    indicator lastKey = keys.back();
+    if (std::holds_alternative<ObjectNode*>(innerNodePtr) && std::holds_alternative<std::string>(lastKey)) {
+        ObjectNode* obj = std::get<ObjectNode*>(innerNodePtr);
+        const auto& key = std::get<std::string>(lastKey);
+        if (obj->contains(key) == false) {
+            result = Result::API_NOT_KEY_IN_MAP;
+            return false;
+        }
+        obj->at(key) = node;
     }
-    else if (std::holds_alternative<ArrayNode*>(innerNodePtr)) {
-        std::get<ArrayNode*>(innerNodePtr)->at(std::get<size_t>(keys.back())) = node;
+    else if (std::holds_alternative<ArrayNode*>(innerNodePtr) && std::holds_alternative<size_t>(lastKey)) {
+        ArrayNode* arr = std::get<ArrayNode*>(innerNodePtr);
+        size_t index = std::get<size_t>(lastKey);
+        if (index >= arr->size()) {
+            result = Result::API_INDEX_OUT_OF_ARRAY;
+            return false;
+        }
+        arr->at(index) = node;
     }
     return true;
-
 }
 
 
