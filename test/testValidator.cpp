@@ -6,13 +6,13 @@
 #include "../src/reader/Preparser.h"
 #include "../src/reader/Validator.h"
 #include "config.h"
+#include "utils.h"
 
 
 Result getValidatorError(const std::string& jsonFile)
 {
-    std::string filePath = std::string(TEST_DATA_IMPROPER) + jsonFile;
-    std::ifstream jsonStream(filePath);
-    std::string jsonString((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
+    Utils utils;
+    std::string jsonString = utils.getJsonFromFile(std::string(TEST_DATA_IMPROPER), jsonFile);
 
     auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);

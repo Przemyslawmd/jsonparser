@@ -13,13 +13,13 @@
 #include "../src/reader/Preparser.h"
 #include "../src/writer/Writer.h"
 #include "config.h"
+#include "utils.h"
 
 
 std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile)
 {
-    std::string filePath = std::string(TEST_DATA) + jsonFile;
-    std::ifstream jsonStream(filePath);
-    std::string jsonString((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
+    Utils utils;
+    std::string jsonString = utils.getJsonFromFile(std::string(TEST_DATA), jsonFile);
 
     const auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);

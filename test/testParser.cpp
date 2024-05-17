@@ -13,6 +13,7 @@
 #include "../src/reader/Validator.h"
 #include "config.h"
 #include <NodeValue.h>
+#include "utils.h"
 
 
 constexpr bool measurement = true;
@@ -61,9 +62,8 @@ void checkArrayValue(ArrayNode* arrayPointer, size_t index, T dataExpected)
 
 std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
 {
-    std::string filePath = std::string(TEST_DATA) + jsonFile;
-    std::ifstream jsonStream(filePath);
-    std::string jsonString((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
+    Utils utils;
+    std::string jsonString = utils.getJsonFromFile(std::string(TEST_DATA), jsonFile);
 
     auto begin = std::chrono::high_resolution_clock::now();
     const auto preparser = std::make_unique<Preparser>();
