@@ -103,7 +103,8 @@ InnerNodePtr jsonApi::getNode(const std::vector<indicator>& indicators)
             getNextNode(&nodePtr, node, lastType);
         }
         else {
-             return nullptr;
+            result = Result::API_INCONSISTENT_DATA;
+            return nullptr;
         }
     }
     return nodePtr;
@@ -138,6 +139,10 @@ bool jsonApi::changeNodeValue(const std::vector<indicator>& keys, Node node)
             return false;
         }
         arr->at(index) = node;
+    }
+    else {
+        result = Result::API_INCONSISTENT_DATA;
+        return false;
     }
     return true;
 }

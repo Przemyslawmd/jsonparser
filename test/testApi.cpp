@@ -64,8 +64,7 @@ TEST_F(ApiTest, ChangeValue)
     bool result = api.parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
-    Node newNode;
-    newNode.value = "Spain";
+    Node newNode{ .value = "Spain" };
     result = api.changeNodeValue({ "person", "country" }, newNode);
     ASSERT_TRUE(result);
 
