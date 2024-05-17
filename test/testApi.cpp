@@ -9,11 +9,18 @@
 #include <NodeValue.h>
 
 
-TEST(ApiTest, InsertValue)
+class ApiTest : public testing::Test
 {
+protected:
+
     Utils utils;
+};
+
+
+TEST_F(ApiTest, InsertValue)
+{
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_1.json");
-    
+
     jsonApi api;
     bool result = api.parseJsonString(jsonString);
     ASSERT_TRUE(result);
@@ -30,9 +37,8 @@ TEST(ApiTest, InsertValue)
 }
 
 
-TEST(ApiTest, InsertValue2)
+TEST_F(ApiTest, InsertValue2)
 {
-    Utils utils;
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_2.json");
 
     jsonApi api;
@@ -50,9 +56,8 @@ TEST(ApiTest, InsertValue2)
 }
 
 
-TEST(ApiTest, ChangeValue)
+TEST_F(ApiTest, ChangeValue)
 {
-    Utils utils;
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_3.json");
 
     jsonApi api;

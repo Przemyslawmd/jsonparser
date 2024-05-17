@@ -11,7 +11,6 @@ public:
     {
         std::string filePath = path + file;
         std::ifstream jsonStream(filePath);
-        std::string jsonString((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
-        return jsonString;
+        return { (std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>() };
     }
 };
