@@ -21,7 +21,7 @@ TEST_F(ApiTest, InsertValue)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_1.json");
 
-    jsonApi api;
+    JsonApi api;
     bool result = api.parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
@@ -41,7 +41,7 @@ TEST_F(ApiTest, InsertValue2)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_2.json");
 
-    jsonApi api;
+    JsonApi api;
     bool result = api.parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
@@ -60,7 +60,7 @@ TEST_F(ApiTest, ChangeValue)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_3.json");
 
-    jsonApi api;
+    JsonApi api;
     bool result = api.parseJsonString(jsonString);
     ASSERT_TRUE(result);
 

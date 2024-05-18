@@ -21,7 +21,7 @@ TEST_F(ApiTestError, ImproperKeyInnerNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
 
-    jsonApi api;
+    JsonApi api;
     bool result = api.parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
@@ -36,7 +36,7 @@ TEST_F(ApiTestError, OutOfIndexInnerNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_7.json");
 
-    jsonApi api;
+    JsonApi api;
     bool result = api.parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
@@ -52,7 +52,7 @@ TEST_F(ApiTestError, inconsistentDataInnerNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
 
-    jsonApi api;
+    JsonApi api;
     bool result = api.parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
@@ -67,7 +67,7 @@ TEST_F(ApiTestError, ImproperKeyOuterNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
 
-    jsonApi api;
+    JsonApi api;
     bool result = api.parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
@@ -82,7 +82,7 @@ TEST_F(ApiTestError, OutOfIndexOuterNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_7.json");
 
-    jsonApi api;
+    JsonApi api;
     bool result = api.parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
@@ -98,7 +98,7 @@ TEST_F(ApiTestError, inconsistentDataOuterNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
 
-    jsonApi api;
+    JsonApi api;
     bool result = api.parseJsonString(jsonString);
     ASSERT_TRUE(result);
 

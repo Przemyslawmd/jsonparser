@@ -18,11 +18,11 @@ using InnerNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 using Indicator = std::variant<std::string, size_t>;
 
 
-class jsonApi
+class JsonApi
 {
 public:
 
-    jsonApi() = default;
+    JsonApi() = default;
 
     bool parseJsonString(const std::string& file);
     std::string parseObjectToJsonString(ObjectNode* node);

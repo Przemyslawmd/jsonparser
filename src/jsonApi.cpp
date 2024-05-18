@@ -17,7 +17,7 @@ enum class InnerNodeType
 };
 
 
-bool jsonApi::parseJsonString(const std::string& jsonString)
+bool JsonApi::parseJsonString(const std::string& jsonString)
 {
     const auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
@@ -41,26 +41,26 @@ bool jsonApi::parseJsonString(const std::string& jsonString)
 }
 
 
-std::string jsonApi::parseObjectToJsonString(ObjectNode* node)
+std::string JsonApi::parseObjectToJsonString(ObjectNode* node)
 {
     auto writer = std::make_unique<Writer>();
     return { writer->createJsonString(node) };
 }
 
 
-ObjectNode* jsonApi::getRoot()
+ObjectNode* JsonApi::getRoot()
 {
     return root.get();
 }
 
 
-std::string jsonApi::getNodeType(const std::vector<Indicator>& keys)
+std::string JsonApi::getNodeType(const std::vector<Indicator>& keys)
 {
     return "Test";
 }
 
 
-InnerNodePtr jsonApi::getNode(const std::vector<Indicator>& indicators)
+InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
 {
     InnerNodePtr nodePtr = root.get();
     InnerNodeType lastType = InnerNodeType::OBJECT;
@@ -111,7 +111,7 @@ InnerNodePtr jsonApi::getNode(const std::vector<Indicator>& indicators)
 }
 
 
-bool jsonApi::changeNodeValue(const std::vector<Indicator>& keys, Node node)
+bool JsonApi::changeNodeValue(const std::vector<Indicator>& keys, Node node)
 {
     std::vector<Indicator> keysToGetNode{ keys };
     keysToGetNode.pop_back();
@@ -148,7 +148,7 @@ bool jsonApi::changeNodeValue(const std::vector<Indicator>& keys, Node node)
 }
 
 
-Result jsonApi::getLastError()
+Result JsonApi::getLastError()
 {
     return result;
 }
