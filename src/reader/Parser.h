@@ -27,13 +27,14 @@ class Parser
         std::stack<std::variant<ObjectNode*, ArrayNode*>> nodeStack;
         std::stack<State> stateStack;
 
-        void pushObjectOnStack(const std::string& key);
-        void pushArrayOnStack(const std::string& key);
-
         void pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> nodeStack, State state);
         void popDataFromStack();
 
-        template<class T> void processData(const std::string& key, const Token& token);
+        template <typename T>
+        void pushInnerNodeOnStack(const std::string& key, State state);
+        
+        template <typename T>
+        void processData(const std::string& key, const Token& token);
 };
 
 #endif

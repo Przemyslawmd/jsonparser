@@ -31,47 +31,35 @@ std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens
             processData<bool>(key, *it);
         }
         else if (it->type == TokenType::CURLY_OPEN) {
-            pushObjectOnStack(key);
+            pushInnerNodeOnStack<ObjectNode>(key, State::OBJECT_PARSING);
         }
         else if (it->type == TokenType::SQUARE_OPEN) {
-            pushArrayOnStack(key);
+            pushInnerNodeOnStack<ArrayNode>(key, State::ARRAY_PARSING);
         }
     }
     return nodes;
 }
 
 
-void Parser::pushObjectOnStack(const std::string& key)
+template <typename T>
+void Parser::pushInnerNodeOnStack(const std::string& key, State state)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
-        std::get<ObjectNode*>(nodeStack.top())->emplace(std::make_pair(key, ObjectNode()));
-        auto currentNode = &(std::get<ObjectNode>(std::get<ObjectNode*>(nodeStack.top())->at(key).value));
-        pushDataOnStack(currentNode, State::OBJECT_PARSING);
+        ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
+        obj->emplace(std::make_pair(key, T()));
+        auto* currentNode = &(std::get<T>(obj->at(key).value));
+        pushDataOnStack(currentNode, state);
     }
     else {
-        std::get<ArrayNode*>(nodeStack.top())->emplace_back(ObjectNode());
-        auto currentNode = &(std::get<ObjectNode>(std::get<ArrayNode*>(nodeStack.top())->back().value));
-        pushDataOnStack(currentNode, State::OBJECT_PARSING);
+        ArrayNode* arr = std::get<ArrayNode*>(nodeStack.top());
+        arr->emplace_back(T());
+        auto* currentNode = &(std::get<T>(arr->back().value));
+        pushDataOnStack(currentNode, state);
     }
 }
 
 
-void Parser::pushArrayOnStack(const std::string& key)
-{
-    if (stateStack.top() == State::OBJECT_PARSING) {
-        std::get<ObjectNode*>(nodeStack.top())->emplace(std::make_pair(key, ArrayNode()));
-        auto currentNode = &(std::get<ArrayNode>(std::get<ObjectNode*>(nodeStack.top())->at(key).value));
-        pushDataOnStack(currentNode, State::ARRAY_PARSING);
-    }
-    else {
-        std::get<ArrayNode*>(nodeStack.top())->emplace_back(ArrayNode());
-        auto currentNode = &(std::get<ArrayNode>(std::get<ArrayNode*>(nodeStack.top())->back().value));
-        pushDataOnStack(currentNode, State::ARRAY_PARSING);
-    }
-}
-
-
-template<class T>
+template <typename T>
 void Parser::processData(const std::string& key, const Token& token)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
