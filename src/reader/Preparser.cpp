@@ -5,6 +5,10 @@
 #include <stack>
 
 
+constexpr size_t lettersInFalse = 5;
+constexpr size_t lettersInTrue = 4;
+
+
 Preparser::Preparser()
 {
     tokens = std::make_unique<std::vector<Token>>();
@@ -42,18 +46,18 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             continue;
         }
         if (symbol == 'f') {
-            if (json.length() - index > 5 && (json.compare(index, 5, "false") == 0)) {
+            if (json.length() - index > lettersInFalse && (json.compare(index, lettersInFalse, "false") == 0)) {
                 tokens->emplace_back(Token{ TokenType::DATA_BOOL, false });
-                index += 4;
+                index += (lettersInFalse - 1);
                 continue;
             }
             error = Result::PREPARSER_UNKNOWN_SYMBOL;
             return nullptr;
         }
         if (symbol == 't') {
-            if (json.length() - index > 4 && (json.compare(index, 4, "true") == 0)) {
+            if (json.length() - index > lettersInTrue && (json.compare(index, lettersInTrue, "true") == 0)) {
                 tokens->emplace_back(Token{ TokenType::DATA_BOOL, true });
-                index += 3;
+                index += (lettersInTrue -1);
                 continue;
             }
             error = Result::PREPARSER_UNKNOWN_SYMBOL;
