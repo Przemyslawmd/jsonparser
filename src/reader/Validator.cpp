@@ -30,8 +30,8 @@ Result Validator::validate(const std::vector<Token>& tokens)
 
 Result Validator::validateBrackets(const std::vector<Token>& tokens)
 {
-    size_t curlyCounter = 0;
-    size_t squareCounter = 0;
+    int curlyCounter = 0;
+    int squareCounter = 0;
 
     for (const auto& token : tokens) {
         if (token.type == TokenType::CURLY_OPEN) {
@@ -95,7 +95,9 @@ Result Validator::checkRequirements(const std::vector<Token>& tokens)
     };
 
     const std::map<State, std::set<TokenType>> afterComma {
-        { State::OBJECT_PARSING, { TokenType::CURLY_OPEN, TokenType::SQUARE_OPEN, TokenType::DATA_STR }},
+        { State::OBJECT_PARSING, { TokenType::CURLY_OPEN, 
+                                   TokenType::SQUARE_OPEN,
+                                   TokenType::DATA_STR }},
         { State::ARRAY_PARSING,  { TokenType::CURLY_OPEN, 
                                    TokenType::SQUARE_OPEN, 
                                    TokenType::DATA_STR, 
