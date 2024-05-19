@@ -80,7 +80,7 @@ Result Validator::checkRequirements(const std::vector<Token>& tokens)
         TokenType::SQUARE_OPEN,
     };
 
-    const std::set<TokenType> afterCurlyClose {
+    const std::set<TokenType> afterClose {
         TokenType::COMMA,
         TokenType::CURLY_CLOSE,
         TokenType::SQUARE_CLOSE
@@ -138,13 +138,16 @@ Result Validator::checkRequirements(const std::vector<Token>& tokens)
             }
         }
         else if (it->type == TokenType::CURLY_CLOSE) {
-            if (afterCurlyClose.count((it + 1)->type) == 0) {
+            states.pop();
+            if (afterClose.count((it + 1)->type) == 0) {
                 return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_CLOSE;
             }
-            states.pop();
         }
         else if (it->type == TokenType::SQUARE_CLOSE) {
             states.pop();
+            if (afterClose.count((it + 1)->type) == 0) {
+                return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_SQUARE_CLOSE;
+            }
         }
         else if (it->type == TokenType::COMMA && afterComma.at(state).count((it + 1)->type) == 0) {
             return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_COMMA;
