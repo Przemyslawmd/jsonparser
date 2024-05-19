@@ -22,10 +22,12 @@ struct TestData
 };
 
 
-std::unique_ptr<std::vector<Token>> getTokens(const std::string& filePath, Result* error)
+std::unique_ptr<std::vector<Token>> getTokens(const std::string& path, const std::string& file, Result* error)
 {
-    std::ifstream jsonStream(filePath);
+    std::ifstream jsonStream(path + file);
     std::string jsonString((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
+
+    auto begin = std::chrono::high_resolution_clock::now();
     auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
     *error = preparser->getError();
@@ -34,6 +36,12 @@ std::unique_ptr<std::vector<Token>> getTokens(const std::string& filePath, Resul
         return nullptr;
     }
     tokens = parserKey->createKeyTokens(std::move(tokens));
+
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             # microseconds: " << elapsed.count() << std::endl;
+    }
     return tokens;
 }
 
@@ -63,9 +71,7 @@ void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestDat
 TEST (PreparserTest, Test_File_1)
 {
     Result error;
-
-    auto begin = std::chrono::high_resolution_clock::now();
-    auto tokens = getTokens(std::string(TEST_DATA) + "test_1.json", &error);
+    auto tokens = getTokens(std::string(TEST_DATA), "test_1.json", &error);
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
@@ -94,12 +100,6 @@ TEST (PreparserTest, Test_File_1)
        { TokenType::CURLY_CLOSE },
        { TokenType::CURLY_CLOSE },
     };
-
-    if (measurement) {
-        auto end = std::chrono::high_resolution_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::cout << " PreparserTest : Test_File_1 : time in microseconds : " << elapsed.count() << std::endl;
-    }
     checkTokens(std::move(tokens), testData);
 }
 
@@ -107,8 +107,7 @@ TEST (PreparserTest, Test_File_1)
 TEST(PreparserTest, Test_File_2)
 {
     Result error;
-    auto begin = std::chrono::high_resolution_clock::now();
-    auto tokens = getTokens(std::string(TEST_DATA) + "test_2.json", &error);
+    auto tokens = getTokens(std::string(TEST_DATA), "test_2.json", &error);
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
@@ -206,12 +205,6 @@ TEST(PreparserTest, Test_File_2)
        { TokenType::CURLY_CLOSE },
        { TokenType::CURLY_CLOSE },
     };
-
-    if (measurement) {
-        auto end = std::chrono::high_resolution_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::cout << " PreparserTest : Test_File_2 : time in microseconds : " << elapsed.count() << std::endl;
-    }
     checkTokens(std::move(tokens), testData);
 }
 
@@ -219,7 +212,7 @@ TEST(PreparserTest, Test_File_2)
 TEST(PreparserTest, Test_File_6)
 {
     Result error;
-    auto tokens = getTokens(std::string(TEST_DATA) + "test_6.json", &error);
+    auto tokens = getTokens(std::string(TEST_DATA), "test_6.json", &error);
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
@@ -266,8 +259,7 @@ TEST(PreparserTest, Test_File_6)
 TEST(PreparserTest, Test_File_7)
 {
     Result error;
-    auto begin = std::chrono::high_resolution_clock::now();
-    auto tokens = getTokens(std::string(TEST_DATA) + "test_7.json", &error);
+    auto tokens = getTokens(std::string(TEST_DATA), "test_7.json", &error);
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
@@ -324,20 +316,22 @@ TEST(PreparserTest, Test_File_7)
        { TokenType::SQUARE_CLOSE },
        { TokenType::CURLY_CLOSE },
     };
-
-    if (measurement) {
-        auto end = std::chrono::high_resolution_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::cout << " PreparserTest : Test_File_7 : time in microseconds : " << elapsed.count() << std::endl;
-    }
     checkTokens(std::move(tokens), testData);
+}
+
+
+TEST(PreparserTest, Test_File_8)
+{
+    Result error;
+    auto tokens = getTokens(std::string(TEST_DATA), "test_8_complex.json", &error);
+    ASSERT_TRUE(tokens != nullptr);
 }
 
 
 TEST(PreparserTest, FirstImproperDataTest)
 {
     Result error = Result::OK;
-    auto tokens = getTokens(std::string(TEST_DATA_IMPROPER) + "string_not_ended_1.json", &error);
+    auto tokens = getTokens(std::string(TEST_DATA_IMPROPER), "string_not_ended_1.json", &error);
 
     ASSERT_EQ(tokens, nullptr);
     ASSERT_EQ(error, Result::PREPARSER_STRING_ERROR);
@@ -347,7 +341,7 @@ TEST(PreparserTest, FirstImproperDataTest)
 TEST(PreparserTest, SecondImproperDataTest)
 {
     Result error = Result::OK;
-    auto tokens = getTokens(std::string(TEST_DATA_IMPROPER) + "string_not_ended_2.json", &error);
+    auto tokens = getTokens(std::string(TEST_DATA_IMPROPER), "string_not_ended_2.json", &error);
 
     ASSERT_EQ(tokens, nullptr);
     ASSERT_EQ(error, Result::PREPARSER_STRING_ERROR);
