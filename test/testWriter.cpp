@@ -51,9 +51,8 @@ void testJsonString(const std::string& file)
         std::cout << "             # microseconds: " << elapsed.count() << std::endl;
     }
 
-    std::string filePath = std::string(TEST_DATA) + "writer/" + file;
-    std::ifstream jsonStream(filePath);
-    std::string jsonExpected((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
+    Utils utils;
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "writer/", file);
     ASSERT_EQ(json, jsonExpected);
 }
 

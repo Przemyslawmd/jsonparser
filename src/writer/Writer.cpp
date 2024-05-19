@@ -14,6 +14,14 @@ std::string Writer::createJsonString(ObjectNode* object)
 }
 
 
+void Writer::setMarginStep(size_t marginStep)
+{
+    this->marginStep = marginStep;
+}
+
+/*******************************************************************/
+/* PRIVATE *********************************************************/
+
 void Writer::processObject(const ObjectNode* jsonObject)
 {
     stream << "{\n";
@@ -86,12 +94,12 @@ void Writer::parseData(const Node& node)
 
 void Writer::incMargin()
 {
-    margin += 2;
+    margin += marginStep;
 }
 
 
 void Writer::decMargin()
 {
-    margin -= 2;
+    margin -= marginStep;
 }
 

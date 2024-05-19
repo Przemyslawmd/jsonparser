@@ -20,19 +20,23 @@ public:
 
     Writer() = default;
 
-    std::string createJsonString(ObjectNode* jsonObject);
+    std::string createJsonString(ObjectNode*);
+
+    void setMarginStep(size_t);
 
 private:
 
-    void processObject(const ObjectNode* jsonObject);
-    void processArray(const ArrayNode* jsonArray);
-    void parseData(const Node& node);
+    void processObject(const ObjectNode*);
+    void processArray(const ArrayNode*);
+    void parseData(const Node&);
 
     void incMargin();
     void decMargin();
     
     std::ostringstream stream;
+
     size_t margin = 0;
+    size_t marginStep = 2;
 };
 
 #endif
