@@ -65,7 +65,6 @@ std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
     Utils utils;
     std::string jsonString = utils.getJsonFromFile(std::string(TEST_DATA), jsonFile);
 
-    auto begin = std::chrono::high_resolution_clock::now();
     const auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
     EXPECT_TRUE(tokens != nullptr);
@@ -77,13 +76,14 @@ std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
     const auto parserKey = std::make_unique<ParserKey>();
     tokens = parserKey->createKeyTokens(std::move(tokens));
 
+    auto begin = std::chrono::high_resolution_clock::now();
     const auto parser = std::make_unique<Parser>();
     std::unique_ptr<ObjectNode> jsonObj = parser->parseTokens(*tokens);
 
     if (measurement) {
         auto end = std::chrono::high_resolution_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::cout << " ParserTest : " << jsonFile << ": time in microseconds : " << elapsed.count() << std::endl;
+        std::cout << "             # microseconds: " << elapsed.count() << std::endl;
     }
     return jsonObj;
 }
@@ -258,5 +258,11 @@ TEST(ParserTest, Test_File_7)
     ASSERT_TRUE(dataAnna_2 != nullptr);
     ASSERT_TRUE(dataAnna_2->size() == 1);
     checkArrayValue<std::string>(dataAnna_2, 0, "c d e");
+}
+
+
+TEST(ParserTest, Test_File_8)
+{
+    auto root = parseJSON("test_8_complex.json");
 }
 
