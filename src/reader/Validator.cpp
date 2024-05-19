@@ -70,6 +70,16 @@ Result Validator::checkRequirements(const std::vector<Token>& tokens)
         TokenType::DATA_STR
     };
 
+    const std::set<TokenType> afterSquareOpen {
+        TokenType::COLON,
+        TokenType::CURLY_OPEN,
+        TokenType::DATA_BOOL,
+        TokenType::DATA_DOUBLE,
+        TokenType::DATA_INT,
+        TokenType::DATA_STR,
+        TokenType::SQUARE_OPEN,
+    };
+
     const std::set<TokenType> afterCurlyClose {
         TokenType::COMMA,
         TokenType::CURLY_CLOSE,
@@ -116,13 +126,16 @@ Result Validator::checkRequirements(const std::vector<Token>& tokens)
         State state = states.top();
 
         if (it->type == TokenType::CURLY_OPEN) {
+            states.push(State::OBJECT_PARSING);
             if (afterCurlyOpen.count((it + 1)->type) == 0) {
                 return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_OPEN;
             }
-            states.push(State::OBJECT_PARSING);
         }
         else if (it->type == TokenType::SQUARE_OPEN) {
             states.push(State::ARRAY_PARSING);
+            if (afterSquareOpen.count((it + 1)->type) == 0) {
+                return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_SQUARE_OPEN;
+            }
         }
         else if (it->type == TokenType::CURLY_CLOSE) {
             if (afterCurlyClose.count((it + 1)->type) == 0) {
