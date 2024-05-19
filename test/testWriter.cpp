@@ -54,7 +54,6 @@ void testJsonString(const std::string& file)
     std::string filePath = std::string(TEST_DATA) + "writer/" + file;
     std::ifstream jsonStream(filePath);
     std::string jsonExpected((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
-
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -98,5 +97,11 @@ TEST(TestWriter, Test_File_6)
 TEST(TestWriter, Test_File_7)
 {
     testJsonString("test_7.json");
+}
+
+
+TEST(TestWriter, Test_File_8)
+{
+    testJsonString("test_8_complex.json");
 }
 
