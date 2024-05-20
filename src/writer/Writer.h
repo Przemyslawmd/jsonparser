@@ -32,7 +32,9 @@ private:
 
     void incMargin();
     void decMargin();
-    
+
+    void deleteLastChars(std::ostringstream& stream);
+
     std::ostringstream stream;
 
     size_t margin = 0;

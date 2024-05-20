@@ -26,15 +26,14 @@ void Writer::processObject(const ObjectNode* jsonObject)
 {
     stream << "{\n";
     incMargin();
+
     for (auto const& [key, val] : *jsonObject) {
         std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
         stream << "\"" << key << "\": ";
         parseData(val);
     }
-    size_t pos = stream.tellp();
-    stream.seekp(pos - 2);
-    stream << "\n";
-    
+    deleteLastChars(stream);
+
     decMargin();
     if (margin == 0) {
         stream << '}';
@@ -54,10 +53,8 @@ void Writer::processArray(const ArrayNode* jsonArray)
         std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
         parseData(val);
     }    
-    size_t pos = stream.tellp();
-    stream.seekp(pos - 2);
-    stream << "\n";
-    
+    deleteLastChars(stream);
+
     decMargin();
     std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
     stream << "],\n";
@@ -76,12 +73,7 @@ void Writer::parseData(const Node& node)
         stream << std::get<double>(node.value) << dataEnd;
     }
     else if (std::holds_alternative<bool>(node.value)) {
-        if (std::get<bool>(node.value) == true) {
-            stream << "true" << dataEnd;
-        }
-        else {
-            stream << "false" << dataEnd;
-        }        
+        stream << (std::get<bool>(node.value) == true ? "true" : "false") << dataEnd;
     }
     else if (std::holds_alternative<ObjectNode>(node.value)) {
         processObject(std::get_if<ObjectNode>(&node.value));
@@ -89,6 +81,14 @@ void Writer::parseData(const Node& node)
     else if (std::holds_alternative<ArrayNode>(node.value)) {
         processArray(std::get_if<ArrayNode>(&node.value));
     }
+}
+
+
+void Writer::deleteLastChars(std::ostringstream& stream)
+{
+    size_t pos = stream.tellp();
+    stream.seekp(pos - 2);
+    stream << "\n";
 }
 
 
