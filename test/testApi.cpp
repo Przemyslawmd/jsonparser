@@ -64,12 +64,34 @@ TEST_F(ApiTest, ChangeValue)
     bool result = api.parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
-    Node newNode{ .value = "Spain" };
-    result = api.changeNodeValue({ "person", "country" }, newNode);
+    result = api.changeNodeValue({ "person", "country" }, Node{ .value = "Spain" });
     ASSERT_TRUE(result);
 
     std::string json = api.parseObjectToJsonString(api.getRoot());
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_3.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, ChangeValueComplex)
+{
+    std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_8_complex.json");
+
+    JsonApi api;
+    bool result = api.parseJsonString(jsonString);
+    ASSERT_TRUE(result);
+
+    result = api.changeNodeValue({ "employees", (size_t) 0, "data", (size_t) 1, (size_t) 2 }, Node{ .value = 10 });
+    ASSERT_TRUE(result);
+
+    result = api.changeNodeValue({ "employees", (size_t) 1, "employees", (size_t) 0, "name"}, Node{ .value = "Maria" });
+    ASSERT_TRUE(result);
+
+    result = api.changeNodeValue({ "employees", (size_t) 1, "data", (size_t) 2, (size_t) 0, "numbers", (size_t) 0 }, Node{ .value = 0.12 });
+    ASSERT_TRUE(result);
+
+    std::string json = api.parseObjectToJsonString(api.getRoot());
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_8_complex.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
