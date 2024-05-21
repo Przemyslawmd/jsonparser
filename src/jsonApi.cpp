@@ -155,7 +155,7 @@ bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, Node node, c
     if (std::holds_alternative<nullptr_t>(innerNodePtr)) {
         return false;
     }
-    if (std::holds_alternative<ObjectNode*>(innerNodePtr)) {
+    if (std::holds_alternative<ObjectNode*>(innerNodePtr) == false) {
         result = Result::API_INNER_NODE_NOT_OBJECT;
         return false;
     }
