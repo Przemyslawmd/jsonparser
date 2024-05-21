@@ -148,6 +148,51 @@ bool JsonApi::changeNodeValue(const std::vector<Indicator>& keys, Node node)
 }
 
 
+bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, Node node, const std::string& key)
+{
+    InnerNodePtr innerNodePtr = getNode(keys);
+
+    if (std::holds_alternative<nullptr_t>(innerNodePtr)) {
+        return false;
+    }
+    if (std::holds_alternative<ObjectNode*>(innerNodePtr)) {
+        result = Result::API_INNER_NODE_NOT_OBJECT;
+        return false;
+    }
+
+    ObjectNode* obj = std::get<ObjectNode*>(innerNodePtr);
+    obj->emplace(std::make_pair(key, node));
+    return true;
+}
+
+
+bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node node, int index)
+{
+    InnerNodePtr innerNodePtr = getNode(keys);
+
+    if (std::holds_alternative<nullptr_t>(innerNodePtr)) {
+        return false;
+    }
+    if (std::holds_alternative<ArrayNode*>(innerNodePtr) == false) {
+        result = Result::API_INNER_NODE_NOT_ARRAY;
+        return false;
+    }
+
+    ArrayNode* arr = std::get<ArrayNode*>(innerNodePtr);
+
+    if (index < 0) {
+        arr->emplace_back(node);
+        return true;
+    }
+    if (index > arr->size()) {
+        result = Result::API_INDEX_OUT_OF_ARRAY;
+        return false;
+    }
+    arr->insert(arr->begin() + index, node);
+    return true;
+}
+
+
 Result JsonApi::getLastError()
 {
     return result;

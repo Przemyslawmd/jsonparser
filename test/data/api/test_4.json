@@ -1,0 +1,18 @@
+{
+  "company": {
+    "name": "abc"
+  },
+  "person": {
+    "country": "Poland",
+    "name": "John"
+  },
+  "person2": {
+    "address": {
+      "city": "Cracow",
+      "number": 12,
+      "post": "Cracow",
+      "street": "Kanonicza"
+    },
+    "name": "John"
+  }
+}

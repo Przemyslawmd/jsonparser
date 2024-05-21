@@ -26,12 +26,16 @@ public:
 
     bool parseJsonString(const std::string& file);
     std::string parseObjectToJsonString(ObjectNode* node);
-
+      
     ObjectNode* getRoot();
 
     std::string getNodeType(const std::vector<Indicator>& keys);
     InnerNodePtr getNode(const std::vector<Indicator>& keys);
+
     bool changeNodeValue(const std::vector<Indicator>& keys, Node node);
+
+    bool addNodeIntoObject(const std::vector<Indicator>& keys, Node node, const std::string& key);
+    bool addNodeIntoArray(const std::vector<Indicator>& keys, Node node, int index = -1);
 
     Result getLastError();
 
