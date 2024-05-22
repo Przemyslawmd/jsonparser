@@ -32,7 +32,7 @@ TEST_F(ApiTest, AddIntValueToObjectDirectly)
     nodePerson->insert(std::pair<std::string, int>("newValue", 23));
 
     std::string json = api.parseObjectToJsonString(root);
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_1.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -51,7 +51,7 @@ TEST_F(ApiTest, AddBoolValueToObjectDirectly_2)
     (std::get<ObjectNode*>(node))->insert(std::pair<std::string, bool>("boolValue", true));
 
     std::string json = api.parseObjectToJsonString(api.getRoot());
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_2.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -70,7 +70,7 @@ TEST_F(ApiTest, AddNestedObjectDirectly)
     (std::get<ObjectNode*>(node))->insert(std::pair<std::string, bool>("boolValue", true));
 
     std::string json = api.parseObjectToJsonString(api.getRoot());
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_2.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -87,7 +87,7 @@ TEST_F(ApiTest, ChangeNodeValueApi)
     ASSERT_TRUE(result);
 
     std::string json = api.parseObjectToJsonString(api.getRoot());
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_3.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -110,7 +110,7 @@ TEST_F(ApiTest, ChangeValueComplexJsonApi)
     ASSERT_TRUE(result);
 
     std::string json = api.parseObjectToJsonString(api.getRoot());
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_8_complex.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_8_complex.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -127,7 +127,7 @@ TEST_F(ApiTest, AddSimpleNodeIntoObjectApi)
     ASSERT_TRUE(result);
 
     std::string json = api.parseObjectToJsonString(api.getRoot());
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_4.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_4_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -147,7 +147,7 @@ TEST_F(ApiTest, AddSimpleNodeIntoArrayApi)
     ASSERT_TRUE(result);
 
     std::string json = api.parseObjectToJsonString(api.getRoot());
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_7.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_7_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -189,7 +189,7 @@ TEST_F(ApiTest, AddObjectNodeIntoArrayApi)
     ASSERT_TRUE(result);
 
     std::string json = api.parseObjectToJsonString(api.getRoot());
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_7.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_7_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -207,7 +207,7 @@ TEST_F(ApiTest, AddArrayNodeIntoObjectApi)
     ASSERT_TRUE(result);
 
     std::string json = api.parseObjectToJsonString(api.getRoot());
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_4.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_4_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -228,7 +228,7 @@ TEST_F(ApiTest, AddArrayNodeIntoArrayApi)
     ASSERT_TRUE(result);
 
     std::string json = api.parseObjectToJsonString(api.getRoot());
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_7_2.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_7_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
