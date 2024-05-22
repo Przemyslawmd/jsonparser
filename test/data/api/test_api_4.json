@@ -1,0 +1,23 @@
+{
+  "company": {
+    "name": "abc"
+  },
+  "person": {
+    "country": "Poland",
+    "name": "John"
+  },
+  "person2": {
+    "address": {
+      "city": "Cracow",
+      "dataArray": [
+        232,
+        234234,
+        0,
+        100
+      ],
+      "number": 12,
+      "street": "Kanonicza"
+    },
+    "name": "John"
+  }
+}

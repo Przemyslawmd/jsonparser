@@ -152,7 +152,7 @@ TEST_F(ApiTest, AddSimpleNodeIntoArrayApi)
 }
 
 
-TEST_F(ApiTest, AddComplexNodeIntoObjectApi)
+TEST_F(ApiTest, AddObjectNodeIntoObjectApi)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_5.json");
 
@@ -173,7 +173,7 @@ TEST_F(ApiTest, AddComplexNodeIntoObjectApi)
 }
 
 
-TEST_F(ApiTest, AddComplexNodeIntoArrayApi)
+TEST_F(ApiTest, AddObjectNodeIntoArrayApi)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_7.json");
 
@@ -193,3 +193,43 @@ TEST_F(ApiTest, AddComplexNodeIntoArrayApi)
     ASSERT_EQ(json, jsonExpected);
 }
 
+
+TEST_F(ApiTest, AddArrayNodeIntoObjectApi)
+{
+    std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
+
+    JsonApi api;
+    bool result = api.parseJsonString(jsonString);
+    ASSERT_TRUE(result);
+
+    std::vector<Node> newArray{ { 232 }, { 234234 }, { 0 }, { 100 }};
+    result = api.addNodeIntoObject({ "person2", "address"}, { newArray }, "dataArray");
+    ASSERT_TRUE(result);
+
+    std::string json = api.parseObjectToJsonString(api.getRoot());
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_4.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, AddArrayNodeIntoArrayApi)
+{
+    std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_7.json");
+
+    JsonApi api;
+    bool result = api.parseJsonString(jsonString);
+    ASSERT_TRUE(result);
+
+    std::vector<Node> arr1{{ 1 }, { 2 }, { 3 }};
+    std::vector<Node> arr2{{ "aa" }, { "b" }};
+    std::vector<Node> arr3{{ true }, { false }};
+    std::vector<Node> newArray{{ arr1 }, { arr2 }, { arr3 }};
+    result = api.addNodeIntoArray({ "employees", size_t(1), "data" }, { newArray }, {-1});
+    ASSERT_TRUE(result);
+
+    std::string json = api.parseObjectToJsonString(api.getRoot());
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_7_2.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+ 
