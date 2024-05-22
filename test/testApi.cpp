@@ -37,7 +37,7 @@ TEST_F(ApiTest, AddIntValueToObjectDirectly)
     ObjectNode* nodePerson = std::get_if<ObjectNode>(&(node->value));
     nodePerson->insert(std::pair<std::string, int>("newValue", 23));
 
-    std::string json = api->parseObjectToJsonString(root);
+    std::string json = api->parseObjectToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -51,7 +51,7 @@ TEST_F(ApiTest, AddBoolValueToObjectDirectly_2)
 
     (std::get<ObjectNode*>(node))->insert(std::pair<std::string, bool>("boolValue", true));
 
-    std::string json = api->parseObjectToJsonString(api->getRoot());
+    std::string json = api->parseObjectToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -65,7 +65,7 @@ TEST_F(ApiTest, AddNestedObjectDirectly)
 
     (std::get<ObjectNode*>(node))->insert(std::pair<std::string, bool>("boolValue", true));
 
-    std::string json = api->parseObjectToJsonString(api->getRoot());
+    std::string json = api->parseObjectToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -77,7 +77,7 @@ TEST_F(ApiTest, ChangeNodeValueApi)
     bool result = api->changeNodeValue({ "person", "country" }, Node{ .value = "Spain" });
     ASSERT_TRUE(result);
 
-    std::string json = api->parseObjectToJsonString(api->getRoot());
+    std::string json = api->parseObjectToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -96,7 +96,7 @@ TEST_F(ApiTest, ChangeValueComplexJsonApi)
     result = api->changeNodeValue({ "employees", size_t(1), "data", size_t(2), size_t(0), "numbers", size_t(0) }, Node{ .value = 0.12 });
     ASSERT_TRUE(result);
 
-    std::string json = api->parseObjectToJsonString(api->getRoot());
+    std::string json = api->parseObjectToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_8_complex.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -108,7 +108,7 @@ TEST_F(ApiTest, AddSimpleNodeIntoObjectApi)
     bool result = api->addNodeIntoObject({ "person2", "address" }, Node{ .value = "Cracow" }, "post" );
     ASSERT_TRUE(result);
 
-    std::string json = api->parseObjectToJsonString(api->getRoot());
+    std::string json = api->parseObjectToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_4_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -124,7 +124,7 @@ TEST_F(ApiTest, AddSimpleNodeIntoArrayApi)
     result = api->addNodeIntoArray({ "employees", size_t(1), "data", size_t(0) }, Node{ .value = "c c"}, 1);
     ASSERT_TRUE(result);
 
-    std::string json = api->parseObjectToJsonString(api->getRoot());
+    std::string json = api->parseObjectToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_7_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -141,7 +141,7 @@ TEST_F(ApiTest, AddObjectNodeIntoObjectApi)
     bool result = api->addNodeIntoObject({ "person" }, { newObject }, "newValues");
     ASSERT_TRUE(result);
 
-    std::string json = api->parseObjectToJsonString(api->getRoot());
+    std::string json = api->parseObjectToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -158,7 +158,7 @@ TEST_F(ApiTest, AddObjectNodeIntoArrayApi)
     bool result = api->addNodeIntoArray({ "employees" , size_t(1), "data", size_t(0), size_t(0) }, { newObject }, { 1 });
     ASSERT_TRUE(result);
 
-    std::string json = api->parseObjectToJsonString(api->getRoot());
+    std::string json = api->parseObjectToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_7_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -172,7 +172,7 @@ TEST_F(ApiTest, AddArrayNodeIntoObjectApi)
     bool result = api->addNodeIntoObject({ "person2", "address"}, { newArray }, "dataArray");
     ASSERT_TRUE(result);
 
-    std::string json = api->parseObjectToJsonString(api->getRoot());
+    std::string json = api->parseObjectToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_4_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -189,7 +189,7 @@ TEST_F(ApiTest, AddArrayNodeIntoArrayApi)
     bool result = api->addNodeIntoArray({ "employees", size_t(1), "data" }, { newArray }, {-1});
     ASSERT_TRUE(result);
 
-    std::string json = api->parseObjectToJsonString(api->getRoot());
+    std::string json = api->parseObjectToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_7_3.json");
     ASSERT_EQ(json, jsonExpected);
 }

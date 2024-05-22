@@ -34,6 +34,7 @@ enum class Result
 {
     OK,
 
+    API_EMPTY,
     API_NOT_KEY_IN_MAP,
     API_INCONSISTENT_DATA,
     API_INDEX_OUT_OF_ARRAY,

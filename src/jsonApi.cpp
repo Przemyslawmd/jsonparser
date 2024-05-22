@@ -41,10 +41,14 @@ bool JsonApi::parseJsonString(const std::string& jsonString)
 }
 
 
-std::string JsonApi::parseObjectToJsonString(ObjectNode* node)
+std::string JsonApi::parseObjectToJsonString()
 {
+    if (root == nullptr) {
+        result = Result::API_EMPTY;
+        return {};
+    }
     auto writer = std::make_unique<Writer>();
-    return { writer->createJsonString(node) };
+    return { writer->createJsonString(root.get()) };
 }
 
 
@@ -62,6 +66,11 @@ std::string JsonApi::getNodeType(const std::vector<Indicator>& keys)
 
 InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
 {
+    if (root == nullptr) {
+        result = Result::API_EMPTY;
+        return nullptr;
+    }
+
     InnerNodePtr nodePtr = root.get();
     InnerNodeType lastType = InnerNodeType::OBJECT;
 
@@ -113,6 +122,11 @@ InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
 
 bool JsonApi::changeNodeValue(const std::vector<Indicator>& keys, Node node)
 {
+    if (root == nullptr) {
+        result = Result::API_EMPTY;
+        return false;
+    }
+
     std::vector<Indicator> keysToGetNode{ keys };
     keysToGetNode.pop_back();
     InnerNodePtr innerNodePtr = getNode(keysToGetNode);
@@ -150,6 +164,11 @@ bool JsonApi::changeNodeValue(const std::vector<Indicator>& keys, Node node)
 
 bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, Node node, const std::string& key)
 {
+    if (root == nullptr) {
+        result = Result::API_EMPTY;
+        return {};
+    }
+
     InnerNodePtr innerNodePtr = getNode(keys);
 
     if (std::holds_alternative<nullptr_t>(innerNodePtr)) {
@@ -168,6 +187,11 @@ bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, Node node, c
 
 bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node node, int index)
 {
+    if (root == nullptr) {
+        result = Result::API_EMPTY;
+        return {};
+    }
+
     InnerNodePtr innerNodePtr = getNode(keys);
 
     if (std::holds_alternative<nullptr_t>(innerNodePtr)) {

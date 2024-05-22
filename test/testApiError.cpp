@@ -107,3 +107,23 @@ TEST_F(ApiTestError, inconsistentDataOuterNode)
     ASSERT_FALSE(result);
     ASSERT_EQ(api.getLastError(), Result::API_INCONSISTENT_DATA);
 }
+
+
+TEST_F(ApiTestError, emptyApi_1)
+{
+    JsonApi api;
+    Node newNode{ .value = "ABC" };
+    bool result = api.changeNodeValue({ "person2", "address", size_t(1) }, newNode);
+    ASSERT_FALSE(result);
+    ASSERT_EQ(api.getLastError(), Result::API_EMPTY);
+}
+
+
+TEST_F(ApiTestError, emptyApi_2)
+{
+    JsonApi api;
+    std::string json = api.parseObjectToJsonString();
+    ASSERT_TRUE(json.empty());
+    ASSERT_EQ(api.getLastError(), Result::API_EMPTY);
+}
+

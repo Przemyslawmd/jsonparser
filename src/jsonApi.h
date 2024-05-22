@@ -25,8 +25,8 @@ public:
     JsonApi() = default;
 
     bool parseJsonString(const std::string& file);
-    std::string parseObjectToJsonString(ObjectNode* node);
-      
+    std::string parseObjectToJsonString();
+
     ObjectNode* getRoot();
 
     std::string getNodeType(const std::vector<Indicator>& keys);
