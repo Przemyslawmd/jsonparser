@@ -1,0 +1,21 @@
+{
+  "city": "Cracow",
+  "company": "abc",
+  "person": {
+    "age": 39,
+    "country": "Poland",
+    "name": "John",
+    "newValues": {
+      "a": [
+        0,
+        100,
+        200
+      ],
+      "b": true
+    },
+    "values": {
+      "ab": -12.67,
+      "cd": 43.001
+    }
+  }
+}
