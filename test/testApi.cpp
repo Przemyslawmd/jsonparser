@@ -147,7 +147,29 @@ TEST_F(ApiTest, AddSimpleNodeIntoArrayApi)
     ASSERT_TRUE(result);
 
     std::string json = api.parseObjectToJsonString(api.getRoot());
+    
+    
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
+
+TEST_F(ApiTest, AddComplexNodeIntoObjectApi)
+{
+    std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_5.json");
+
+    JsonApi api;
+    bool result = api.parseJsonString(jsonString);
+    ASSERT_TRUE(result);
+
+    std::map<std::string, Node> newObject;
+    newObject.emplace(std::make_pair("b", true));
+    newObject.emplace(std::make_pair("a", std::vector<Node>{{ 0 }, { 100 }, { 200 }}));
+
+    result = api.addNodeIntoObject({ "person" }, { newObject }, "newValues");
+    ASSERT_TRUE(result);
+    
+    std::string json = api.parseObjectToJsonString(api.getRoot());
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_5.json");
+    ASSERT_EQ(json, jsonExpected);
+}
