@@ -28,8 +28,6 @@ public:
     std::string parseObjectToJsonString();
 
     ObjectNode* getRoot();
-
-    std::string getNodeType(const std::vector<Indicator>& keys);
     InnerNodePtr getNode(const std::vector<Indicator>& keys);
 
     bool changeNodeValue(const std::vector<Indicator>& keys, Node node);

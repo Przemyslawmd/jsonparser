@@ -51,22 +51,6 @@ std::string JsonApi::parseObjectToJsonString()
 }
 
 
-ObjectNode* JsonApi::getRoot()
-{
-    return root.get();
-}
-
-
-std::string JsonApi::getNodeType(const std::vector<Indicator>& keys)
-{
-    if (isRootEmpty()) {
-        return {};
-    }
-
-
-}
-
-
 InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
 {
     if (isRootEmpty()) {
@@ -100,7 +84,7 @@ InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
 
             Node* node = &obj->at(key);
             getNextNode(&nodePtr, node, lastType);
-       }
+        }
         else if (lastType == InnerNodeType::ARRAY && std::holds_alternative<size_t>(indicator)) {
             ArrayNode* arr = std::get<ArrayNode*>(nodePtr);
 
@@ -264,6 +248,12 @@ bool JsonApi::removeNodeFromArray(const std::vector<Indicator>& keys, int index)
 
     arr->erase(arr->begin() + index);
     return true;
+}
+
+
+ObjectNode* JsonApi::getRoot()
+{
+    return root.get();
 }
 
 
