@@ -35,10 +35,11 @@ public:
     bool changeNodeValue(const std::vector<Indicator>& keys, Node node);
 
     bool addNodeIntoObject(const std::vector<Indicator>& keys, Node node, const std::string& key);
-    bool addNodeIntoArray(const std::vector<Indicator>& keys, Node node, int index = -1);
+    bool addNodeIntoArray(const std::vector<Indicator>& keys, Node node);
+    bool insertNodeIntoArray(const std::vector<Indicator>& keys, Node node, int index);
 
     bool removeNodeFromObject(const std::vector<Indicator>& keys, const std::string& key);
-    bool removeNodeFromArray(const std::vector<Indicator>& keys, int index = -1);
+    bool removeNodeFromArray(const std::vector<Indicator>& keys, int index);
 
     Result getLastError();
 
@@ -49,7 +50,7 @@ private:
     template <typename T>
     bool validateNodeType(InnerNodePtr, Result potentialError);
 
-    Result result;
+    Result result = Result::OK;
     std::unique_ptr<ObjectNode> root;
 };
 

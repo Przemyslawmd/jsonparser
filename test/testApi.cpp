@@ -43,7 +43,7 @@ TEST_F(ApiTest, AddIntValueToObjectDirectly)
 }
 
 
-TEST_F(ApiTest, AddBoolValueToObjectDirectly_2)
+TEST_F(ApiTest, AddBoolValueToObjectDirectly)
 {
     auto api = prepareApi("test_2.json");
     InnerNodePtr node = api->getNode({ "shipTo", "name" });
@@ -71,7 +71,7 @@ TEST_F(ApiTest, AddNestedObjectDirectly)
 }
 
 
-TEST_F(ApiTest, ChangeNodeValueApi)
+TEST_F(ApiTest, ChangeNodeValue)
 {
     auto api = prepareApi("test_3.json");
     bool result = api->changeNodeValue({ "person", "country" }, Node{ .value = "Spain" });
@@ -83,7 +83,7 @@ TEST_F(ApiTest, ChangeNodeValueApi)
 }
 
 
-TEST_F(ApiTest, ChangeValueComplexJsonApi)
+TEST_F(ApiTest, ChangeValueComplexJson)
 {
     auto api = prepareApi("test_8_complex.json");
 
@@ -102,7 +102,7 @@ TEST_F(ApiTest, ChangeValueComplexJsonApi)
 }
 
 
-TEST_F(ApiTest, AddSimpleNodeIntoObjectApi)
+TEST_F(ApiTest, AddSimpleNodeIntoObject)
 {
     auto api = prepareApi("test_4.json");
     bool result = api->addNodeIntoObject({ "person2", "address" }, Node{ .value = "Cracow" }, "post" );
@@ -114,14 +114,14 @@ TEST_F(ApiTest, AddSimpleNodeIntoObjectApi)
 }
 
 
-TEST_F(ApiTest, AddSimpleNodeIntoArrayApi)
+TEST_F(ApiTest, AddSimpleNodeIntoArray)
 {
     auto api = prepareApi("test_7.json");
 
     bool result = api->addNodeIntoArray({ "employees", size_t(0), "data", size_t(0) }, Node{.value = 4 });
     ASSERT_TRUE(result);
 
-    result = api->addNodeIntoArray({ "employees", size_t(1), "data", size_t(0) }, Node{ .value = "c c"}, 1);
+    result = api->insertNodeIntoArray({ "employees", size_t(1), "data", size_t(0) }, Node{ .value = "c c"}, 1);
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
@@ -130,7 +130,7 @@ TEST_F(ApiTest, AddSimpleNodeIntoArrayApi)
 }
 
 
-TEST_F(ApiTest, AddObjectNodeIntoObjectApi)
+TEST_F(ApiTest, AddObjectNodeIntoObject)
 {
     auto api = prepareApi("test_5.json");
 
@@ -155,7 +155,7 @@ TEST_F(ApiTest, AddObjectNodeIntoArray)
     newObject.emplace(std::make_pair("aa", "bb"));
     newObject.emplace(std::make_pair("cc", 12));
 
-    bool result = api->addNodeIntoArray({ "employees" , size_t(1), "data", size_t(0), size_t(0) }, { newObject }, { 1 });
+    bool result = api->insertNodeIntoArray({ "employees" , size_t(1), "data", size_t(0), size_t(0) }, { newObject }, { 1 });
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
@@ -186,7 +186,7 @@ TEST_F(ApiTest, AddArrayNodeIntoArray)
     std::vector<Node> arr2{{ "aa" }, { "b" }};
     std::vector<Node> arr3{{ true }, { false }};
     std::vector<Node> newArray{{ arr1 }, { arr2 }, { arr3 }};
-    bool result = api->addNodeIntoArray({ "employees", size_t(1), "data" }, { newArray }, {-1});
+    bool result = api->addNodeIntoArray({ "employees", size_t(1), "data" }, { newArray });
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();

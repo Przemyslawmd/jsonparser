@@ -59,7 +59,11 @@ ObjectNode* JsonApi::getRoot()
 
 std::string JsonApi::getNodeType(const std::vector<Indicator>& keys)
 {
-    return "Test";
+    if (isRootEmpty()) {
+        return {};
+    }
+
+
 }
 
 
@@ -176,7 +180,7 @@ bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, Node node, c
 }
 
 
-bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node node, int index)
+bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node node)
 {
     if (isRootEmpty()) {
         return false;
@@ -188,11 +192,28 @@ bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node node, in
     }
 
     ArrayNode* arr = std::get<ArrayNode*>(innerNodePtr);
+    arr->emplace_back(node);
+    return true;
+}
 
+
+bool JsonApi::insertNodeIntoArray(const std::vector<Indicator>& keys, Node node, int index)
+{
+    if (isRootEmpty()) {
+        return false;
+    }
     if (index < 0) {
-        arr->emplace_back(node);
+        result = Result::API_INDEX_OUT_OF_ARRAY;
         return true;
     }
+
+    InnerNodePtr innerNodePtr = getNode(keys);
+    if (validateNodeType<ArrayNode*>(innerNodePtr, Result::API_INNER_NODE_NOT_ARRAY) == false) {
+        return false;
+    }
+
+    ArrayNode* arr = std::get<ArrayNode*>(innerNodePtr);
+
     if (index > arr->size()) {
         result = Result::API_INDEX_OUT_OF_ARRAY;
         return false;
