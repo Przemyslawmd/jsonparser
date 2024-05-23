@@ -46,6 +46,9 @@ private:
 
     bool isRootEmpty();
 
+    template <typename T>
+    bool validateNodeType(InnerNodePtr, Result potentialError);
+
     Result result;
     std::unique_ptr<ObjectNode> root;
 };

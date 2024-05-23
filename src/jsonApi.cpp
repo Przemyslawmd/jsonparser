@@ -166,11 +166,7 @@ bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, Node node, c
     }
 
     InnerNodePtr innerNodePtr = getNode(keys);
-    if (std::holds_alternative<nullptr_t>(innerNodePtr)) {
-        return false;
-    }
-    if (std::holds_alternative<ObjectNode*>(innerNodePtr) == false) {
-        result = Result::API_INNER_NODE_NOT_OBJECT;
+    if (validateNodeType<ObjectNode*>(innerNodePtr, Result::API_INNER_NODE_NOT_OBJECT) == false) {
         return false;
     }
 
@@ -187,12 +183,7 @@ bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node node, in
     }
 
     InnerNodePtr innerNodePtr = getNode(keys);
-
-    if (std::holds_alternative<nullptr_t>(innerNodePtr)) {
-        return false;
-    }
-    if (std::holds_alternative<ArrayNode*>(innerNodePtr) == false) {
-        result = Result::API_INNER_NODE_NOT_ARRAY;
+    if (validateNodeType<ArrayNode*>(innerNodePtr, Result::API_INNER_NODE_NOT_ARRAY) == false) {
         return false;
     }
 
@@ -218,11 +209,7 @@ bool JsonApi::removeNodeFromObject(const std::vector<Indicator>& keys, const std
     }
 
     InnerNodePtr innerNodePtr = getNode(keys);
-    if (std::holds_alternative<nullptr_t>(innerNodePtr)) {
-        return false;
-    }
-    if (std::holds_alternative<ObjectNode*>(innerNodePtr) == false) {
-        result = Result::API_INNER_NODE_NOT_OBJECT;
+    if (validateNodeType<ObjectNode*>(innerNodePtr, Result::API_INNER_NODE_NOT_OBJECT) == false) {
         return false;
     }
 
@@ -244,11 +231,7 @@ bool JsonApi::removeNodeFromArray(const std::vector<Indicator>& keys, int index)
     }
 
     InnerNodePtr innerNodePtr = getNode(keys);
-    if (std::holds_alternative<nullptr_t>(innerNodePtr)) {
-        return false;
-    }
-    if (std::holds_alternative<ArrayNode*>(innerNodePtr) == false) {
-        result = Result::API_INNER_NODE_NOT_ARRAY;
+    if (validateNodeType<ArrayNode*>(innerNodePtr, Result::API_INNER_NODE_NOT_ARRAY) == false) {
         return false;
     }
 
@@ -278,4 +261,18 @@ bool JsonApi::isRootEmpty()
         return true;
     }
     return false;
+}
+
+
+template <typename T>
+bool JsonApi::validateNodeType(InnerNodePtr node, Result potentialError)
+{
+    if (std::holds_alternative<nullptr_t>(node)) {
+        return false;
+    }
+    if (std::holds_alternative<T>(node) == false) {
+        result = potentialError;
+        return false;
+    }
+    return true;
 }
