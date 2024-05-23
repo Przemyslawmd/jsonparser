@@ -43,8 +43,7 @@ bool JsonApi::parseJsonString(const std::string& jsonString)
 
 std::string JsonApi::parseObjectToJsonString()
 {
-    if (root == nullptr) {
-        result = Result::API_EMPTY;
+    if (isRootEmpty()) {
         return {};
     }
     auto writer = std::make_unique<Writer>();
@@ -66,8 +65,7 @@ std::string JsonApi::getNodeType(const std::vector<Indicator>& keys)
 
 InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
 {
-    if (root == nullptr) {
-        result = Result::API_EMPTY;
+    if (isRootEmpty()) {
         return nullptr;
     }
 
@@ -122,8 +120,7 @@ InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
 
 bool JsonApi::changeNodeValue(const std::vector<Indicator>& keys, Node node)
 {
-    if (root == nullptr) {
-        result = Result::API_EMPTY;
+    if (isRootEmpty()) {
         return false;
     }
 
@@ -164,13 +161,11 @@ bool JsonApi::changeNodeValue(const std::vector<Indicator>& keys, Node node)
 
 bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, Node node, const std::string& key)
 {
-    if (root == nullptr) {
-        result = Result::API_EMPTY;
-        return {};
+    if (isRootEmpty()) {
+        return false;
     }
 
     InnerNodePtr innerNodePtr = getNode(keys);
-
     if (std::holds_alternative<nullptr_t>(innerNodePtr)) {
         return false;
     }
@@ -187,9 +182,8 @@ bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, Node node, c
 
 bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node node, int index)
 {
-    if (root == nullptr) {
-        result = Result::API_EMPTY;
-        return {};
+    if (isRootEmpty()) {
+        return false;
     }
 
     InnerNodePtr innerNodePtr = getNode(keys);
@@ -217,8 +211,71 @@ bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node node, in
 }
 
 
+bool JsonApi::removeNodeFromObject(const std::vector<Indicator>& keys, const std::string& key)
+{
+    if (isRootEmpty()) {
+        return false;
+    }
+
+    InnerNodePtr innerNodePtr = getNode(keys);
+    if (std::holds_alternative<nullptr_t>(innerNodePtr)) {
+        return false;
+    }
+    if (std::holds_alternative<ObjectNode*>(innerNodePtr) == false) {
+        result = Result::API_INNER_NODE_NOT_OBJECT;
+        return false;
+    }
+
+    ObjectNode* obj = std::get<ObjectNode*>(innerNodePtr);
+    if (obj->contains(key) == false) {
+        result = Result::API_NOT_KEY_IN_MAP;
+        return false;
+    }
+
+    obj->erase(key);
+    return true;
+}
+
+
+bool JsonApi::removeNodeFromArray(const std::vector<Indicator>& keys, int index)
+{
+    if (isRootEmpty()) {
+        return false;
+    }
+
+    InnerNodePtr innerNodePtr = getNode(keys);
+    if (std::holds_alternative<nullptr_t>(innerNodePtr)) {
+        return false;
+    }
+    if (std::holds_alternative<ArrayNode*>(innerNodePtr) == false) {
+        result = Result::API_INNER_NODE_NOT_ARRAY;
+        return false;
+    }
+
+    ArrayNode* arr = std::get<ArrayNode*>(innerNodePtr);
+    if (index < 0 || index > arr->size()) {
+        result = Result::API_INDEX_OUT_OF_ARRAY;
+        return false;
+    }
+
+    arr->erase(arr->begin() + index);
+    return true;
+}
+
+
 Result JsonApi::getLastError()
 {
     return result;
 }
 
+/*******************************************************************/
+/* PRIVATE *********************************************************/
+
+bool JsonApi::isRootEmpty()
+{
+    if (root == nullptr) {
+        result = Result::API_EMPTY;
+        return true;
+    }
+    return false;
+}

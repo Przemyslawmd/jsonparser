@@ -37,9 +37,14 @@ public:
     bool addNodeIntoObject(const std::vector<Indicator>& keys, Node node, const std::string& key);
     bool addNodeIntoArray(const std::vector<Indicator>& keys, Node node, int index = -1);
 
+    bool removeNodeFromObject(const std::vector<Indicator>& keys, const std::string& key);
+    bool removeNodeFromArray(const std::vector<Indicator>& keys, int index = -1);
+
     Result getLastError();
 
 private:
+
+    bool isRootEmpty();
 
     Result result;
     std::unique_ptr<ObjectNode> root;

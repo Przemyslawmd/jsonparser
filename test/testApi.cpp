@@ -52,7 +52,7 @@ TEST_F(ApiTest, AddBoolValueToObjectDirectly_2)
     (std::get<ObjectNode*>(node))->insert(std::pair<std::string, bool>("boolValue", true));
 
     std::string json = api->parseObjectToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_2.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_2_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -66,7 +66,7 @@ TEST_F(ApiTest, AddNestedObjectDirectly)
     (std::get<ObjectNode*>(node))->insert(std::pair<std::string, bool>("boolValue", true));
 
     std::string json = api->parseObjectToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_2.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_2_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -147,7 +147,7 @@ TEST_F(ApiTest, AddObjectNodeIntoObjectApi)
 }
 
 
-TEST_F(ApiTest, AddObjectNodeIntoArrayApi)
+TEST_F(ApiTest, AddObjectNodeIntoArray)
 {
     auto api = prepareApi("test_7.json");
 
@@ -164,7 +164,7 @@ TEST_F(ApiTest, AddObjectNodeIntoArrayApi)
 }
 
 
-TEST_F(ApiTest, AddArrayNodeIntoObjectApi)
+TEST_F(ApiTest, AddArrayNodeIntoObject)
 {
     auto api = prepareApi("test_4.json");
 
@@ -178,7 +178,7 @@ TEST_F(ApiTest, AddArrayNodeIntoObjectApi)
 }
 
 
-TEST_F(ApiTest, AddArrayNodeIntoArrayApi)
+TEST_F(ApiTest, AddArrayNodeIntoArray)
 {
     auto api = prepareApi("test_7.json");
 
@@ -191,6 +191,44 @@ TEST_F(ApiTest, AddArrayNodeIntoArrayApi)
 
     std::string json = api->parseObjectToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_7_3.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, RemoveNodeFromObject)
+{
+    auto api = prepareApi("test_2.json");
+
+    bool result = api->removeNodeFromObject({ "billTo" }, "name");
+    ASSERT_TRUE(result);
+
+    result = api->removeNodeFromObject({ "shipTo", "address" }, "cities");
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectToJsonString();
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_2_2.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, RemoveNodeFromArray)
+{
+    auto api = prepareApi("test_7.json");
+
+    bool result = api->removeNodeFromArray({ "employees", size_t(0), "data", size_t(0) }, 1);
+    ASSERT_TRUE(result);
+
+    result = api->removeNodeFromArray({ "employees", size_t(0), "data", size_t(1) }, 0);
+    ASSERT_TRUE(result);
+
+    result = api->removeNodeFromArray({ "employees", size_t(1), "data", size_t(0) }, 1);
+    ASSERT_TRUE(result);
+
+    result = api->removeNodeFromArray({ "employees", size_t(1), "data" }, 1);
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectToJsonString();
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_7_4.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
