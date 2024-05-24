@@ -137,7 +137,7 @@ bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, const std::s
     }
 
     InnerNodePtr node = getNode(keys);
-    if (validateNodeType<ObjectNode*>(node, Result::API_INNER_NODE_NOT_OBJECT) == false) {
+    if (validateNodeType<ObjectNode*>(node, Result::API_NODE_NOT_OBJECT) == false) {
         return false;
     }
 
@@ -147,19 +147,19 @@ bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, const std::s
 }
 
 
-bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node node)
+bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node newNode)
 {
     if (isRootEmpty()) {
         return false;
     }
 
-    InnerNodePtr innerNodePtr = getNode(keys);
-    if (validateNodeType<ArrayNode*>(innerNodePtr, Result::API_INNER_NODE_NOT_ARRAY) == false) {
+    InnerNodePtr node = getNode(keys);
+    if (validateNodeType<ArrayNode*>(node, Result::API_NODE_NOT_ARRAY) == false) {
         return false;
     }
 
-    ArrayNode* arr = std::get<ArrayNode*>(innerNodePtr);
-    arr->emplace_back(node);
+    ArrayNode* arr = std::get<ArrayNode*>(node);
+    arr->emplace_back(newNode);
     return true;
 }
 
@@ -250,7 +250,7 @@ ArrayNode* JsonApi::getArrayNodeAndCheckIndex(const std::vector<Indicator>& keys
     }
 
     InnerNodePtr node = getNode(keys);
-    if (validateNodeType<ArrayNode*>(node, Result::API_INNER_NODE_NOT_ARRAY) == false) {
+    if (validateNodeType<ArrayNode*>(node, Result::API_NODE_NOT_ARRAY) == false) {
         return nullptr;
     }
 
@@ -269,12 +269,12 @@ ObjectNode* JsonApi::getObjectNodeAndCheckKey(const std::vector<Indicator>& keys
         return nullptr;
     }
 
-    InnerNodePtr innerNodePtr = getNode(keys);
-    if (validateNodeType<ObjectNode*>(innerNodePtr, Result::API_INNER_NODE_NOT_OBJECT) == false) {
+    InnerNodePtr node = getNode(keys);
+    if (validateNodeType<ObjectNode*>(node, Result::API_NODE_NOT_OBJECT) == false) {
         return nullptr;
     }
 
-    ObjectNode* obj = std::get<ObjectNode*>(innerNodePtr);
+    ObjectNode* obj = std::get<ObjectNode*>(node);
     if (obj->contains(key) == false) {
         result = Result::API_NOT_KEY_IN_MAP;
         return nullptr;

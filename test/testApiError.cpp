@@ -105,7 +105,7 @@ TEST_F(ApiTestError, inconsistentDataOuterNode)
     Node newNode{ .value = "ABC" };
     result = api.changeNodeInArray({ "person2", "address" }, 1, newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api.getLastError(), Result::API_INNER_NODE_NOT_ARRAY);
+    ASSERT_EQ(api.getLastError(), Result::API_NODE_NOT_ARRAY);
 }
 
 
