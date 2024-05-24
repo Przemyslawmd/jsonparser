@@ -74,7 +74,7 @@ TEST_F(ApiTest, AddNestedObjectDirectly)
 TEST_F(ApiTest, ChangeNodeValue)
 {
     auto api = prepareApi("test_3.json");
-    bool result = api->changeNodeValueInObject({ "person" }, Node{ .value = "Spain" }, "country");
+    bool result = api->changeNodeInObject({ "person" }, "country", Node{ .value = "Spain" });
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
@@ -87,13 +87,13 @@ TEST_F(ApiTest, ChangeValueComplexJson)
 {
     auto api = prepareApi("test_8_complex.json");
 
-    bool result = api->changeNodeValueInArray({ "employees", size_t(0), "data", size_t(1) }, Node{ .value = 10 }, 2);
+    bool result = api->changeNodeInArray({ "employees", size_t(0), "data", size_t(1) }, 2, Node{ .value = 10 });
     ASSERT_TRUE(result);
 
-    result = api->changeNodeValueInObject({ "employees", size_t(1), "employees", size_t(0) }, Node{ .value = "Maria" }, "name");
+    result = api->changeNodeInObject({ "employees", size_t(1), "employees", size_t(0) }, "name", Node{.value = "Maria"});
     ASSERT_TRUE(result);
 
-    result = api->changeNodeValueInArray({ "employees", size_t(1), "data", size_t(2), size_t(0), "numbers" }, Node{ .value = 0.12 }, 0);
+    result = api->changeNodeInArray({ "employees", size_t(1), "data", size_t(2), size_t(0), "numbers" }, 0, Node{ .value = 0.12 });
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
@@ -105,7 +105,7 @@ TEST_F(ApiTest, ChangeValueComplexJson)
 TEST_F(ApiTest, AddSimpleNodeIntoObject)
 {
     auto api = prepareApi("test_4.json");
-    bool result = api->addNodeIntoObject({ "person2", "address" }, Node{ .value = "Cracow" }, "post" );
+    bool result = api->addNodeIntoObject({ "person2", "address" }, "post", Node{.value = "Cracow"});
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
@@ -121,7 +121,7 @@ TEST_F(ApiTest, AddSimpleNodeIntoArray)
     bool result = api->addNodeIntoArray({ "employees", size_t(0), "data", size_t(0) }, Node{.value = 4 });
     ASSERT_TRUE(result);
 
-    result = api->insertNodeIntoArray({ "employees", size_t(1), "data", size_t(0) }, Node{ .value = "c c"}, 1);
+    result = api->insertNodeIntoArray({ "employees", size_t(1), "data", size_t(0) }, 1, Node{ .value = "c c"});
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
@@ -138,7 +138,7 @@ TEST_F(ApiTest, AddObjectNodeIntoObject)
     newObject.emplace(std::make_pair("b", true));
     newObject.emplace(std::make_pair("a", std::vector<Node>{{ 0 }, { 100 }, { 200 }}));
 
-    bool result = api->addNodeIntoObject({ "person" }, { newObject }, "newValues");
+    bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
@@ -155,7 +155,7 @@ TEST_F(ApiTest, AddObjectNodeIntoArray)
     newObject.emplace(std::make_pair("aa", "bb"));
     newObject.emplace(std::make_pair("cc", 12));
 
-    bool result = api->insertNodeIntoArray({ "employees" , size_t(1), "data", size_t(0), size_t(0) }, { newObject }, { 1 });
+    bool result = api->insertNodeIntoArray({ "employees" , size_t(1), "data", size_t(0), size_t(0) }, 1, { newObject });
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
@@ -169,7 +169,7 @@ TEST_F(ApiTest, AddArrayNodeIntoObject)
     auto api = prepareApi("test_4.json");
 
     std::vector<Node> newArray{ { 232 }, { 234234 }, { 0 }, { 100 }};
-    bool result = api->addNodeIntoObject({ "person2", "address"}, { newArray }, "dataArray");
+    bool result = api->addNodeIntoObject({ "person2", "address"}, "dataArray", { newArray });
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();

@@ -26,7 +26,7 @@ TEST_F(ApiTestError, ImproperKeyInnerNode)
     ASSERT_TRUE(result);
 
     Node newNode{ .value = "Cracow" };
-    result = api.changeNodeValue({ "person2", "street", "address" }, newNode);
+    result = api.changeNodeInObject({ "person2", "street" }, "address", newNode);
     ASSERT_FALSE(result);
     ASSERT_EQ(api.getLastError(), Result::API_NOT_KEY_IN_MAP);
 }
@@ -41,7 +41,7 @@ TEST_F(ApiTestError, OutOfIndexInnerNode)
     ASSERT_TRUE(result);
 
     Node newNode{ .value = "Spain" };
-    result = api.changeNodeValue({ "employees", size_t(3), "data", size_t(3), size_t(2) }, newNode);
+    result = api.changeNodeInArray({ "employees", size_t(3), "data", size_t(3) }, 2, newNode);
     ASSERT_FALSE(result);
     Result s = api.getLastError();
     ASSERT_EQ(api.getLastError(), Result::API_INDEX_OUT_OF_ARRAY);
@@ -57,9 +57,9 @@ TEST_F(ApiTestError, inconsistentDataInnerNode)
     ASSERT_TRUE(result);
 
     Node newNode{ .value = 12 };
-    result = api.changeNodeValue({ "person2", size_t(0), "city" }, newNode);
+    result = api.changeNodeInObject({ "person2", size_t(0) }, "city", newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api.getLastError(), Result::API_INCONSISTENT_DATA );
+    ASSERT_EQ(api.getLastError(), Result::API_INCONSISTENT_DATA);
 }
 
 
@@ -72,7 +72,7 @@ TEST_F(ApiTestError, ImproperKeyOuterNode)
     ASSERT_TRUE(result);
 
     Node newNode{ .value = false };
-    result = api.changeNodeValue({ "person2", "address", "bbb" }, newNode);
+    result = api.changeNodeInObject({ "person2", "address" }, "bbb", newNode);
     ASSERT_FALSE(result);
     ASSERT_EQ(api.getLastError(), Result::API_NOT_KEY_IN_MAP);
 }
@@ -87,7 +87,7 @@ TEST_F(ApiTestError, OutOfIndexOuterNode)
     ASSERT_TRUE(result);
 
     Node newNode{ .value = 23.45 };
-    result = api.changeNodeValue({ "employees", size_t(0), "data", size_t(1), size_t(4) }, newNode);
+    result = api.changeNodeInArray({ "employees", size_t(0), "data", size_t(1) }, 4, newNode);
     ASSERT_FALSE(result);
     Result s = api.getLastError();
     ASSERT_EQ(api.getLastError(), Result::API_INDEX_OUT_OF_ARRAY);
@@ -103,9 +103,9 @@ TEST_F(ApiTestError, inconsistentDataOuterNode)
     ASSERT_TRUE(result);
 
     Node newNode{ .value = "ABC" };
-    result = api.changeNodeValue({ "person2", "address", size_t(1) }, newNode);
+    result = api.changeNodeInArray({ "person2", "address" }, 1, newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api.getLastError(), Result::API_INCONSISTENT_DATA);
+    ASSERT_EQ(api.getLastError(), Result::API_INNER_NODE_NOT_ARRAY);
 }
 
 
@@ -113,7 +113,7 @@ TEST_F(ApiTestError, emptyApi_1)
 {
     JsonApi api;
     Node newNode{ .value = "ABC" };
-    bool result = api.changeNodeValue({ "person2", "address", size_t(1) }, newNode);
+    bool result = api.changeNodeInArray({ "person2", "address" }, 1, newNode);
     ASSERT_FALSE(result);
     ASSERT_EQ(api.getLastError(), Result::API_EMPTY);
 }

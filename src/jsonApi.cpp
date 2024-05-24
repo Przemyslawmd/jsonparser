@@ -106,7 +106,7 @@ InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
 }
 
 
-bool JsonApi::changeNodeValueInObject(const std::vector<Indicator>& keys, Node node, const std::string& key)
+bool JsonApi::changeNodeInObject(const std::vector<Indicator>& keys, const std::string& key, Node node)
 {
     if (isRootEmpty()) {
         return false;
@@ -127,7 +127,7 @@ bool JsonApi::changeNodeValueInObject(const std::vector<Indicator>& keys, Node n
 }
 
 
-bool JsonApi::changeNodeValueInArray(const std::vector<Indicator>& keys, Node node, int index)
+bool JsonApi::changeNodeInArray(const std::vector<Indicator>& keys, int index, Node node)
 {
     if (isRootEmpty()) {
         return false;
@@ -149,7 +149,7 @@ bool JsonApi::changeNodeValueInArray(const std::vector<Indicator>& keys, Node no
 }
 
 
-bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, Node node, const std::string& key)
+bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, const std::string& key, Node node)
 {
     if (isRootEmpty()) {
         return false;
@@ -183,7 +183,7 @@ bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node node)
 }
 
 
-bool JsonApi::insertNodeIntoArray(const std::vector<Indicator>& keys, Node node, int index)
+bool JsonApi::insertNodeIntoArray(const std::vector<Indicator>& keys, int index, Node node)
 {
     if (isRootEmpty()) {
         return false;
