@@ -46,6 +46,8 @@ private:
 
     bool isRootEmpty();
 
+    ArrayNode* getArrayNode(const std::vector<Indicator>& keys, int index);
+
     template <typename T>
     bool validateNodeType(InnerNodePtr, Result potentialError);
 
