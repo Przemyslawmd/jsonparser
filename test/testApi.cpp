@@ -9,6 +9,9 @@
 #include <NodeValue.h>
 
 
+constexpr bool measurement = true;
+
+
 class ApiTest : public testing::Test
 {
 protected:
@@ -85,6 +88,7 @@ TEST_F(ApiTest, ChangeNodeValue)
 
 TEST_F(ApiTest, ChangeValueComplexJson)
 {
+    auto begin = std::chrono::high_resolution_clock::now();
     auto api = prepareApi("test_8_complex.json");
 
     bool result = api->changeNodeInArray({ "employees", size_t(0), "data", size_t(1) }, 2, Node{ .value = 10 });
@@ -97,6 +101,12 @@ TEST_F(ApiTest, ChangeValueComplexJson)
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+    }
+
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_8_complex.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -132,6 +142,7 @@ TEST_F(ApiTest, AddSimpleNodeIntoArray)
 
 TEST_F(ApiTest, AddObjectNodeIntoObject)
 {
+    auto begin = std::chrono::high_resolution_clock::now();
     auto api = prepareApi("test_5.json");
 
     std::map<std::string, Node> newObject;
@@ -142,6 +153,12 @@ TEST_F(ApiTest, AddObjectNodeIntoObject)
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+    }
+
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -166,6 +183,7 @@ TEST_F(ApiTest, AddObjectNodeIntoArray)
 
 TEST_F(ApiTest, AddArrayNodeIntoObject)
 {
+    auto begin = std::chrono::high_resolution_clock::now();
     auto api = prepareApi("test_4.json");
 
     std::vector<Node> newArray{ { 232 }, { 234234 }, { 0 }, { 100 }};
@@ -173,6 +191,12 @@ TEST_F(ApiTest, AddArrayNodeIntoObject)
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+    }
+
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_4_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -197,6 +221,7 @@ TEST_F(ApiTest, AddArrayNodeIntoArray)
 
 TEST_F(ApiTest, RemoveNodeFromObject)
 {
+    auto begin = std::chrono::high_resolution_clock::now();
     auto api = prepareApi("test_2.json");
 
     bool result = api->removeNodeFromObject({ "billTo" }, "name");
@@ -206,6 +231,12 @@ TEST_F(ApiTest, RemoveNodeFromObject)
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+    }
+
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_2_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
