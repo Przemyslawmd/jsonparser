@@ -106,7 +106,6 @@ TEST_F(ApiTest, ChangeValueComplexJson)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_8_complex.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -158,7 +157,6 @@ TEST_F(ApiTest, AddObjectNodeIntoObject)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -196,7 +194,6 @@ TEST_F(ApiTest, AddArrayNodeIntoObject)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_4_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -236,7 +233,6 @@ TEST_F(ApiTest, RemoveNodeFromObject)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "api/", "test_api_2_2.json");
     ASSERT_EQ(json, jsonExpected);
 }

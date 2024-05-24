@@ -40,6 +40,8 @@ std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens
     return nodes;
 }
 
+/*******************************************************************/
+/* PRIVATE *********************************************************/
 
 template <typename T>
 void Parser::pushInnerNodeOnStack(const std::string& key, State state)

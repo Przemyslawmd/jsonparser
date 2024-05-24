@@ -32,7 +32,7 @@ class Parser
 
         template <typename T>
         void pushInnerNodeOnStack(const std::string& key, State state);
-        
+
         template <typename T>
         void processData(const std::string& key, const Token& token);
 };

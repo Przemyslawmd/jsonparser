@@ -27,6 +27,8 @@ Result Validator::validate(const std::vector<Token>& tokens)
     return checkRequirements(tokens);
 }
 
+/*******************************************************************/
+/* PRIVATE *********************************************************/
 
 Result Validator::validateBrackets(const std::vector<Token>& tokens)
 {

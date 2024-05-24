@@ -70,6 +70,14 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
 }
 
 
+Result Preparser::getError()
+{
+    return error;
+}
+
+/*******************************************************************/
+/* PRIVATE *********************************************************/
+
 size_t Preparser::parseNumber(const std::string& json, size_t index)
 {
     int number = 0;
@@ -134,11 +142,5 @@ bool Preparser::checkQuotation(const std::string& jsonStr)
         }
     }
     return quotationCount % 2 == 0;
-}
-
-
-Result Preparser::getError()
-{
-    return error;
 }
 
