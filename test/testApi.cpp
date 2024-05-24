@@ -74,7 +74,7 @@ TEST_F(ApiTest, AddNestedObjectDirectly)
 TEST_F(ApiTest, ChangeNodeValue)
 {
     auto api = prepareApi("test_3.json");
-    bool result = api->changeNodeValue({ "person", "country" }, Node{ .value = "Spain" });
+    bool result = api->changeNodeValueInObject({ "person" }, Node{ .value = "Spain" }, "country");
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
@@ -87,13 +87,13 @@ TEST_F(ApiTest, ChangeValueComplexJson)
 {
     auto api = prepareApi("test_8_complex.json");
 
-    bool result = api->changeNodeValue({ "employees", size_t(0), "data", size_t(1), size_t(2) }, Node{ .value = 10 });
+    bool result = api->changeNodeValueInArray({ "employees", size_t(0), "data", size_t(1) }, Node{ .value = 10 }, 2);
     ASSERT_TRUE(result);
 
-    result = api->changeNodeValue({ "employees", size_t(1), "employees", size_t(0), "name"}, Node{ .value = "Maria" });
+    result = api->changeNodeValueInObject({ "employees", size_t(1), "employees", size_t(0) }, Node{ .value = "Maria" }, "name");
     ASSERT_TRUE(result);
 
-    result = api->changeNodeValue({ "employees", size_t(1), "data", size_t(2), size_t(0), "numbers", size_t(0) }, Node{ .value = 0.12 });
+    result = api->changeNodeValueInArray({ "employees", size_t(1), "data", size_t(2), size_t(0), "numbers" }, Node{ .value = 0.12 }, 0);
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();

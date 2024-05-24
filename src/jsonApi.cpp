@@ -106,43 +106,45 @@ InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
 }
 
 
-bool JsonApi::changeNodeValue(const std::vector<Indicator>& keys, Node node)
+bool JsonApi::changeNodeValueInObject(const std::vector<Indicator>& keys, Node node, const std::string& key)
 {
     if (isRootEmpty()) {
         return false;
     }
 
-    std::vector<Indicator> keysToGetNode{ keys };
-    keysToGetNode.pop_back();
-    InnerNodePtr innerNodePtr = getNode(keysToGetNode);
+    InnerNodePtr innerNodePtr = getNode(keys);
+    if (validateNodeType<ObjectNode*>(innerNodePtr, Result::API_INNER_NODE_NOT_OBJECT) == false) {
+        return false;
+    }
+    
+    ObjectNode* obj = std::get<ObjectNode*>(innerNodePtr);
+    if (obj->contains(key) == false) {
+        result = Result::API_NOT_KEY_IN_MAP;
+        return false;
+    }
+    obj->at(key) = node;
+    return true;
+}
 
-    if (std::holds_alternative<nullptr_t>(innerNodePtr)) {
+
+bool JsonApi::changeNodeValueInArray(const std::vector<Indicator>& keys, Node node, int index)
+{
+    if (isRootEmpty()) {
         return false;
     }
 
-    Indicator lastKey = keys.back();
-    if (std::holds_alternative<ObjectNode*>(innerNodePtr) && std::holds_alternative<std::string>(lastKey)) {
-        ObjectNode* obj = std::get<ObjectNode*>(innerNodePtr);
-        const auto& key = std::get<std::string>(lastKey);
-        if (obj->contains(key) == false) {
-            result = Result::API_NOT_KEY_IN_MAP;
-            return false;
-        }
-        obj->at(key) = node;
-    }
-    else if (std::holds_alternative<ArrayNode*>(innerNodePtr) && std::holds_alternative<size_t>(lastKey)) {
-        ArrayNode* arr = std::get<ArrayNode*>(innerNodePtr);
-        size_t index = std::get<size_t>(lastKey);
-        if (index >= arr->size()) {
-            result = Result::API_INDEX_OUT_OF_ARRAY;
-            return false;
-        }
-        arr->at(index) = node;
-    }
-    else {
-        result = Result::API_INCONSISTENT_DATA;
+    InnerNodePtr innerNodePtr = getNode(keys);
+    if (validateNodeType<ArrayNode*>(innerNodePtr, Result::API_INNER_NODE_NOT_ARRAY) == false) {
         return false;
     }
+
+    ArrayNode* arr = std::get<ArrayNode*>(innerNodePtr);
+    if (index < 0 || index > arr->size()) {
+        result = Result::API_INDEX_OUT_OF_ARRAY;
+        return false;
+    }
+
+    arr->at(index) = node;
     return true;
 }
 
@@ -287,3 +289,4 @@ bool JsonApi::validateNodeType(InnerNodePtr node, Result potentialError)
     }
     return true;
 }
+

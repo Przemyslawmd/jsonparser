@@ -30,7 +30,8 @@ public:
     ObjectNode* getRoot();
     InnerNodePtr getNode(const std::vector<Indicator>& keys);
 
-    bool changeNodeValue(const std::vector<Indicator>& keys, Node node);
+    bool changeNodeValueInObject(const std::vector<Indicator>& keys, Node node, const std::string& key);
+    bool changeNodeValueInArray(const std::vector<Indicator>& keys, Node node, int index);
 
     bool addNodeIntoObject(const std::vector<Indicator>& keys, Node node, const std::string& key);
     bool addNodeIntoArray(const std::vector<Indicator>& keys, Node node);
