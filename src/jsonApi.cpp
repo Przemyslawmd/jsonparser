@@ -130,23 +130,19 @@ bool JsonApi::changeNodeInArray(const std::vector<Indicator>& keys, int index, N
 }
 
 
-bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, const std::string& key, Node node)
+bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, const std::string& key, Node newNode)
 {
     if (isRootEmpty()) {
         return false;
     }
 
-    InnerNodePtr innerNodePtr = getNode(keys);
-    if (validateNodeType<ObjectNode*>(innerNodePtr, Result::API_INNER_NODE_NOT_OBJECT) == false) {
+    InnerNodePtr node = getNode(keys);
+    if (validateNodeType<ObjectNode*>(node, Result::API_INNER_NODE_NOT_OBJECT) == false) {
         return false;
     }
 
-    ObjectNode* obj = std::get<ObjectNode*>(innerNodePtr);
-    if (obj == nullptr) {
-        return false;
-    }
-
-    obj->emplace(std::make_pair(key, node));
+    ObjectNode* obj = std::get<ObjectNode*>(node);
+    obj->emplace(std::make_pair(key, newNode));
     return true;
 }
 
