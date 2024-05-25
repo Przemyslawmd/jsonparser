@@ -108,7 +108,7 @@ InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
 
 bool JsonApi::changeNodeInObject(const std::vector<Indicator>& keys, const std::string& key, Node node)
 {
-    ObjectNode* obj = getObjectNodeAndCheckKey(keys, key);
+    ObjectNode* obj = getObjectAndCheckKey(keys, key);
     if (obj == nullptr) {
         return false;
     }
@@ -120,7 +120,7 @@ bool JsonApi::changeNodeInObject(const std::vector<Indicator>& keys, const std::
 
 bool JsonApi::changeNodeInArray(const std::vector<Indicator>& keys, int index, Node node)
 {
-    ArrayNode* arr = getArrayNodeAndCheckIndex(keys, index);
+    ArrayNode* arr = getArrayAndCheckIndex(keys, index);
     if (arr == nullptr) {
         return false;
     }
@@ -166,7 +166,7 @@ bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node newNode)
 
 bool JsonApi::insertNodeIntoArray(const std::vector<Indicator>& keys, int index   , Node node)
 {
-    ArrayNode* arr = getArrayNodeAndCheckIndex(keys, index);
+    ArrayNode* arr = getArrayAndCheckIndex(keys, index);
     if (arr == nullptr) {
         return false;
     }
@@ -178,7 +178,7 @@ bool JsonApi::insertNodeIntoArray(const std::vector<Indicator>& keys, int index 
 
 bool JsonApi::removeNodeFromObject(const std::vector<Indicator>& keys, const std::string& key)
 {
-    ObjectNode* obj = getObjectNodeAndCheckKey(keys, key);
+    ObjectNode* obj = getObjectAndCheckKey(keys, key);
     if (obj == nullptr) {
         return false;
     }
@@ -190,7 +190,7 @@ bool JsonApi::removeNodeFromObject(const std::vector<Indicator>& keys, const std
 
 bool JsonApi::removeNodeFromArray(const std::vector<Indicator>& keys, int index)
 {
-    ArrayNode* arr = getArrayNodeAndCheckIndex(keys, index);
+    ArrayNode* arr = getArrayAndCheckIndex(keys, index);
     if (arr == nullptr) {
         return false;
     }
@@ -238,7 +238,7 @@ bool JsonApi::validateNodeType(InnerNodePtr node, Result potentialError)
 }
 
 
-ArrayNode* JsonApi::getArrayNodeAndCheckIndex(const std::vector<Indicator>& keys, int index)
+ArrayNode* JsonApi::getArrayAndCheckIndex(const std::vector<Indicator>& keys, int index)
 {
     if (index < 0) {
         result = Result::API_INDEX_NEGATIVE;
@@ -263,7 +263,7 @@ ArrayNode* JsonApi::getArrayNodeAndCheckIndex(const std::vector<Indicator>& keys
 }
 
 
-ObjectNode* JsonApi::getObjectNodeAndCheckKey(const std::vector<Indicator>& keys, const std::string& key)
+ObjectNode* JsonApi::getObjectAndCheckKey(const std::vector<Indicator>& keys, const std::string& key)
 {
     if (isRootEmpty()) {
         return nullptr;
