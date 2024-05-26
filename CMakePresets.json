@@ -11,6 +11,11 @@
             "displayName": "Windows debug",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
             "architecture": {
                 "value": "x64",
                 "strategy": "external"
@@ -25,6 +30,11 @@
             "displayName": "Windows release",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
             "architecture": {
                 "value": "x64",
                 "strategy": "external"
