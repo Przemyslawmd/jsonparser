@@ -7,7 +7,7 @@ set(WRITER "writer/")
 
 add_library(
     jsonParser 
-    STATIC
+    SHARED
     jsonApi.cpp
     ${READER}Parser.cpp
     ${READER}ParserKey.cpp
