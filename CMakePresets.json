@@ -48,6 +48,11 @@
             "name": "Linux-debug",
             "displayName": "Linux debug GCC",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
                 "CMAKE_C_COMPILER": "/usr/bin/gcc",
@@ -59,6 +64,11 @@
             "name": "Linux-release",
             "displayName": "Linux release GCC",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "condition": {
+              "type": "equals",
+              "lhs": "${hostSystemName}",
+              "rhs": "Linux"
+            },
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
                 "CMAKE_C_COMPILER": "/usr/bin/gcc",
