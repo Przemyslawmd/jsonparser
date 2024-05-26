@@ -7,28 +7,41 @@
     },
     "configurePresets": [
         {
-            "name": "Windows-debug",
+            "name": "WindowsDebug",
             "displayName": "Windows debug",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Windows"
-            },
-            "architecture": {
-                "value": "x64",
-                "strategy": "external"
-            },
+            "inherits": "WindowsBase",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
-            "name": "Windows-release",
+            "name": "WindowsRelease",
             "displayName": "Windows release",
+            "inherits": "WindowsBase",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "LinuxDebug",
+            "displayName": "Linux debug GCC",
+            "inherits": "LinuxBase",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "LinuxRelease",
+            "displayName": "Linux release GCC",
+            "inherits": "LinuxBase",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "WindowsBase",
             "generator": "Ninja",
+            "hidden": true,
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "condition": {
                 "type": "equals",
@@ -40,14 +53,13 @@
                 "strategy": "external"
             },
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
             }
         },
         {
-            "name": "Linux-debug",
-            "displayName": "Linux debug GCC",
+            "name": "LinuxBase",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "hidden": true,
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
@@ -56,24 +68,7 @@
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
                 "CMAKE_C_COMPILER": "/usr/bin/gcc",
-                "CMAKE_CXX_COMPILER": "/usr/bin/g++",
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
-        },
-        {
-            "name": "Linux-release",
-            "displayName": "Linux release GCC",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "condition": {
-              "type": "equals",
-              "lhs": "${hostSystemName}",
-              "rhs": "Linux"
-            },
-            "cacheVariables": {
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CMAKE_C_COMPILER": "/usr/bin/gcc",
-                "CMAKE_CXX_COMPILER": "/usr/bin/g++",
-                "CMAKE_BUILD_TYPE": "Release"
+                "CMAKE_CXX_COMPILER": "/usr/bin/g++"
             }
         }
     ]
