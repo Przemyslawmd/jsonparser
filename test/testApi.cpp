@@ -307,7 +307,7 @@ TEST_F(ApiTest, ChangeJSONForTheSameAPI)
     ASSERT_TRUE(result);
 
     json = api->parseObjectToJsonString();
-        if (measurement) {
+    if (measurement) {
         auto end = std::chrono::high_resolution_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
