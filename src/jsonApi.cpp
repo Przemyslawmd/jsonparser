@@ -19,6 +19,11 @@ enum class InnerNodeType
 
 bool JsonApi::parseJsonString(const std::string& jsonString)
 {
+    if (root != nullptr) {
+        result = Result::API_NOT_EMPTY;
+        return false;
+    }
+
     const auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
     if (tokens == nullptr) {
@@ -48,6 +53,14 @@ std::string JsonApi::parseObjectToJsonString()
     }
     auto writer = std::make_unique<Writer>();
     return { writer->createJsonString(root.get()) };
+}
+
+
+void JsonApi::clear()
+{
+    if (root != nullptr) {
+        root.reset();
+    }
 }
 
 

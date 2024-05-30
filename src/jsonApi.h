@@ -27,6 +27,8 @@ public:
     bool parseJsonString(const std::string& file);
     std::string parseObjectToJsonString();
 
+    void clear();
+
     ObjectNode* getRoot();
     InnerNodePtr getNode(const std::vector<Indicator>& keys);
 
