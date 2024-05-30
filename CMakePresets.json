@@ -44,7 +44,7 @@
             "inherits": "LinuxBase",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_CXX_FLAGS" :"-fsanitize=address"
+                "CMAKE_CXX_FLAGS" :"-fsanitize=address -fsanitize=undefined"
             }            
         },        
         {
