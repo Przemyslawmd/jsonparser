@@ -235,6 +235,13 @@ Result JsonApi::getLastError()
     return result;
 }
 
+
+const std::string& JsonApi::getLastErrorMessage()
+{
+    return message->getMessage(result);
+}
+
+
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 

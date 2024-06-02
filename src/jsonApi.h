@@ -6,6 +6,7 @@
 
 #include <defines.h>
 #include <NodeValue.h>
+#include "message.h"
 
 
 using ObjectNode = std::map<std::string, Node>;
@@ -45,6 +46,7 @@ public:
     bool removeNodeFromArray(const std::vector<Indicator>&, size_t index);
 
     Result getLastError();
+    const std::string& getLastErrorMessage();
 
 private:
 
@@ -58,5 +60,6 @@ private:
 
     Result result = Result::OK;
     std::unique_ptr<ObjectNode> root;
+    const std::unique_ptr<Message> message = std::make_unique<Message>();
 };
 
