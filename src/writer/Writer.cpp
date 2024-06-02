@@ -1,6 +1,7 @@
 
 #include "Writer.h"
 
+#include <iterator>
 #include <variant>
 
 
