@@ -56,6 +56,17 @@ std::string JsonApi::parseObjectToJsonString()
 }
 
 
+bool JsonApi::loadObject(std::unique_ptr<ObjectNode> objectNode)
+{
+    if (root != nullptr) {
+        result = Result::API_NOT_EMPTY;
+        return false;
+    }
+    root = std::move(objectNode);
+    return true;
+}
+
+
 void JsonApi::clear()
 {
     if (root != nullptr) {

@@ -316,3 +316,81 @@ TEST_F(ApiTest, ChangeJSONForTheSameAPI)
     ASSERT_EQ(json, jsonExpected);
 }
 
+
+TEST_F(ApiTest, LoadJsonObject_1)
+{
+    std::unique_ptr<ObjectNode> obj = std::make_unique<ObjectNode>();
+    obj->insert(std::make_pair<std::string, ObjectNode>("person", { ObjectNode() }));
+
+    ObjectNode* personObj = std::get_if<ObjectNode>(&obj->at("person").value);
+    personObj->insert(std::make_pair("age", 39));
+    personObj->insert(std::make_pair("country", "Poland"));
+    personObj->insert(std::make_pair("employed", true));
+    personObj->insert(std::make_pair("name", "John"));
+    personObj->insert(std::make_pair("restricted", false));
+
+    auto api = std::make_unique<JsonApi>();
+    api->loadObject(std::move(obj));
+
+    std::string json = api->parseObjectToJsonString();
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_WRITER), "test_1.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, LoadJsonObject_2)
+{
+    std::unique_ptr<ObjectNode> obj = std::make_unique<ObjectNode>();
+    obj->insert(std::make_pair<std::string, ObjectNode>("person", { ObjectNode() }));
+    obj->insert(std::make_pair<std::string, std::string>("company", "abc"));
+    obj->insert(std::make_pair<std::string, ArrayNode>("cities", { ArrayNode() }));
+
+    ObjectNode* personObj = std::get_if<ObjectNode>(&obj->at("person").value);
+    personObj->insert(std::make_pair("age", 39));
+    personObj->insert(std::make_pair("country", "Poland"));
+    personObj->insert(std::make_pair("name", "John"));
+
+    ArrayNode* citiesArr = std::get_if<ArrayNode>(&obj->at("cities").value);
+    citiesArr->emplace_back("Krakow");
+    citiesArr->emplace_back("Warszawa");
+    citiesArr->emplace_back("Wroclaw");
+    citiesArr->emplace_back("Poznan");
+
+    auto api = std::make_unique<JsonApi>();
+    api->loadObject(std::move(obj));
+
+    std::string json = api->parseObjectToJsonString();
+    std::cout << json << std::endl;
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_WRITER), "test_3.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, LoadJsonObject_3)
+{
+    std::unique_ptr<ObjectNode> obj = std::make_unique<ObjectNode>();
+    obj->insert(std::make_pair<std::string, ArrayNode>("employees", { ArrayNode() }));
+
+    ArrayNode* employeesArr = std::get_if<ArrayNode>(&obj->at("employees").value);
+
+    ObjectNode objAgata;
+    objAgata.insert(std::make_pair<std::string, int>("age", 33));
+    objAgata.insert(std::make_pair<std::string, std::string>("email", "agata@gmail.com"));
+    objAgata.insert(std::make_pair<std::string, std::string>("name", "Agata"));
+    employeesArr->emplace_back(objAgata);
+
+    ObjectNode objAnna;
+    objAnna.insert(std::make_pair<std::string, int>("age", 31));
+    objAnna.insert(std::make_pair<std::string, std::string>("email", "anna@gmail.com"));
+    objAnna.insert(std::make_pair<std::string, std::string>("name", "Anna"));
+    employeesArr->emplace_back(objAnna);
+
+    auto api = std::make_unique<JsonApi>();
+    api->loadObject(std::move(obj));
+
+    std::string json = api->parseObjectToJsonString();
+    std::cout << json << std::endl;
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_WRITER), "test_6.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+

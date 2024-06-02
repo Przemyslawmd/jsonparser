@@ -27,6 +27,8 @@ public:
     bool parseJsonString(const std::string& file);
     std::string parseObjectToJsonString();
 
+    bool loadObject(std::unique_ptr<ObjectNode>);
+
     void clear();
 
     ObjectNode* getRoot();

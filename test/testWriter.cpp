@@ -52,7 +52,7 @@ void testJsonString(const std::string& file)
     }
 
     Utils utils;
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA) + "writer/", file);
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_WRITER), file);
     ASSERT_EQ(json, jsonExpected);
 }
 
