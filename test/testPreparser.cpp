@@ -18,7 +18,7 @@ constexpr bool measurement = true;
 struct TestData 
 {
     TokenType type;
-    std::variant<std::string, int, double, bool, nullptr_t> data;
+    std::variant<std::string, int64_t, double, bool, nullptr_t> data;
 };
 
 
@@ -53,7 +53,7 @@ void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestDat
     for (int i = 0; i < tokens->size(); i++) {
         ASSERT_EQ(tokens->at(i).type, testData[i].type );
         if (tokens->at(i).type == TokenType::DATA_INT) {
-            ASSERT_EQ(std::get<int>(tokens->at(i).data), std::get<int>(testData[i].data));
+            ASSERT_EQ(std::get<int64_t>(tokens->at(i).data), std::get<int64_t>(testData[i].data));
         }
         else if (tokens->at(i).type == TokenType::DATA_STR || tokens->at(i).type == TokenType::KEY) {
             ASSERT_EQ(std::get<std::string>(tokens->at(i).data), std::get<std::string>(testData[i].data));
@@ -195,7 +195,7 @@ TEST(PreparserTest, Test_File_2)
 
        { TokenType::KEY, std::string{ "zip" }},
        { TokenType::COLON },
-       { TokenType::DATA_INT, 12345 },
+       { TokenType::DATA_INT, 26111474836476 },
        { TokenType::COMMA },
 
        { TokenType::KEY, std::string{ "minusWeight" }},

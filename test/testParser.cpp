@@ -99,7 +99,7 @@ TEST(ParserTest, Test_File_1)
     ASSERT_TRUE(nodePerson != nullptr);
 
     checkNode<std::string>(nodePerson, "name", "John");
-    checkNode<int>(nodePerson, "age", 39);
+    checkNode<int64_t>(nodePerson, "age", 39);
     checkNode<std::string>(nodePerson, "country", "Poland");
     checkNode<bool>(nodePerson, "employed", true);
     checkNode<bool>(nodePerson, "restricted", false);
@@ -116,7 +116,7 @@ TEST(ParserTest, Test_File_3)
     ASSERT_TRUE(nodePerson != nullptr);
 
     checkNode<std::string>(nodePerson, "name", "John");
-    checkNode<int>(nodePerson, "age", 39);
+    checkNode<int64_t>(nodePerson, "age", 39);
     checkNode<std::string>(nodePerson, "country", "Poland");
 
     checkNode<std::string>(root.get(), "company", "abc");
@@ -155,7 +155,7 @@ TEST(ParserTest, Test_File_4)
 
     checkNode<std::string>(nodePerson2_Address, "city", "Cracow");
     checkNode<std::string>(nodePerson2_Address, "street", "Kanonicza");
-    checkNode<int>(nodePerson2_Address, "number", 12);
+    checkNode<int64_t>(nodePerson2_Address, "number", 12);
 
     auto* nodeCompany = std::get_if<ObjectNode>(&root->at("company").value);
     checkNode<std::string>(nodeCompany, "name", "abc");
@@ -172,7 +172,7 @@ TEST(ParserTest, Test_File_5)
     ASSERT_TRUE(nodePerson != nullptr);
 
     checkNode<std::string>(nodePerson, "name", "John");
-    checkNode<int>(nodePerson, "age", 39);
+    checkNode<int64_t>(nodePerson, "age", 39);
     checkNode<std::string>(nodePerson, "country", "Poland");
 
     ASSERT_TRUE(nodePerson->find("values") != nodePerson->end());
@@ -199,11 +199,11 @@ TEST(ParserTest, Test_File_6)
     
     checkNode<std::string>(person1, "name", "Agata");
     checkNode<std::string>(person1, "email", "agata@gmail.com");
-    checkNode<int>(person1, "age", 33);
+    checkNode<int64_t>(person1, "age", 33);
 
     checkNode<std::string>(person2, "name", "Anna");
     checkNode<std::string>(person2, "email", "anna@gmail.com");
-    checkNode<int>(person2, "age", 31);
+    checkNode<int64_t>(person2, "age", 31);
 }
 
 
@@ -229,17 +229,17 @@ TEST(ParserTest, Test_File_7)
     ASSERT_TRUE(dataAgata_1 != nullptr);
     ASSERT_TRUE(dataAgata_1->size() == 3);
 
-    checkArrayValue<int>(dataAgata_1, 0, 1);
-    checkArrayValue<int>(dataAgata_1, 1, 2);
-    checkArrayValue<int>(dataAgata_1, 2, 3);
+    checkArrayValue<int64_t>(dataAgata_1, 0, 1);
+    checkArrayValue<int64_t>(dataAgata_1, 1, 2);
+    checkArrayValue<int64_t>(dataAgata_1, 2, 3);
 
     auto* dataAgata_2 = std::get_if<ArrayNode>(&dataAgata->at(1).value);
     ASSERT_TRUE(dataAgata_2 != nullptr);
     ASSERT_TRUE(dataAgata_2->size() == 3);
 
-    checkArrayValue<int>(dataAgata_2, 0, 4);
-    checkArrayValue<int>(dataAgata_2, 1, 5);
-    checkArrayValue<int>(dataAgata_2, 2, 6);
+    checkArrayValue<int64_t>(dataAgata_2, 0, 4);
+    checkArrayValue<int64_t>(dataAgata_2, 1, 5);
+    checkArrayValue<int64_t>(dataAgata_2, 2, 6);
 
     checkNode<std::string>(Anna, "name", "Anna");
     ASSERT_TRUE(Anna->find("data") != Anna->end());

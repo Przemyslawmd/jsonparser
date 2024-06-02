@@ -67,8 +67,8 @@ void Writer::parseData(const Node& node)
     if (std::holds_alternative<std::string>(node.value)) {
         stream << "\"" << std::get<std::string>(node.value) << "\"" << dataEnd;
     }
-    else if (std::holds_alternative<int>(node.value)) {
-        stream << std::get<int>(node.value) << dataEnd;
+    else if (std::holds_alternative<int64_t>(node.value)) {
+        stream << std::get<int64_t>(node.value) << dataEnd;
     }
     else if (std::holds_alternative<double>(node.value)) {
         stream << std::get<double>(node.value) << dataEnd;

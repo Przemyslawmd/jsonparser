@@ -80,7 +80,7 @@ Result Preparser::getError()
 
 size_t Preparser::parseNumber(const std::string& json, size_t index)
 {
-    int number = 0;
+    int64_t number = 0;
     size_t shift = 1;
     bool isMinus = false;
 

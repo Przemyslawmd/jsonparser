@@ -19,7 +19,7 @@ std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens
             key = std::get<std::string>(it->data);
         }
         else if (it->type == TokenType::DATA_INT) {
-            processData<int>(key, *it);
+            processData<int64_t>(key, *it);
         }
         else if (it->type == TokenType::DATA_DOUBLE) {
             processData<double>(key, *it);

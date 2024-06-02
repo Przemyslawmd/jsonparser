@@ -360,7 +360,6 @@ TEST_F(ApiTest, LoadJsonObject_2)
     api->loadObject(std::move(obj));
 
     std::string json = api->parseObjectToJsonString();
-    std::cout << json << std::endl;
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_WRITER), "test_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -389,7 +388,6 @@ TEST_F(ApiTest, LoadJsonObject_3)
     api->loadObject(std::move(obj));
 
     std::string json = api->parseObjectToJsonString();
-    std::cout << json << std::endl;
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_WRITER), "test_6.json");
     ASSERT_EQ(json, jsonExpected);
 }
