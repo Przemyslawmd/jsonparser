@@ -142,7 +142,7 @@ bool JsonApi::changeNodeInObject(const std::vector<Indicator>& keys, const std::
 }
 
 
-bool JsonApi::changeNodeInArray(const std::vector<Indicator>& keys, int index, Node node)
+bool JsonApi::changeNodeInArray(const std::vector<Indicator>& keys, size_t index, Node node)
 {
     ArrayNode* arr = getArrayAndCheckIndex(keys, index);
     if (arr == nullptr) {
@@ -212,7 +212,7 @@ bool JsonApi::removeNodeFromObject(const std::vector<Indicator>& keys, const std
 }
 
 
-bool JsonApi::removeNodeFromArray(const std::vector<Indicator>& keys, int index)
+bool JsonApi::removeNodeFromArray(const std::vector<Indicator>& keys, size_t index)
 {
     ArrayNode* arr = getArrayAndCheckIndex(keys, index);
     if (arr == nullptr) {
@@ -262,13 +262,8 @@ bool JsonApi::validateNodeType(InnerNodePtr node, Result potentialError)
 }
 
 
-ArrayNode* JsonApi::getArrayAndCheckIndex(const std::vector<Indicator>& keys, int index)
+ArrayNode* JsonApi::getArrayAndCheckIndex(const std::vector<Indicator>& keys, size_t index)
 {
-    if (index < 0) {
-        result = Result::API_INDEX_NEGATIVE;
-        return nullptr;
-    }
-    
     if (isRootEmpty()) {
         return nullptr;
     }

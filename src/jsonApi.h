@@ -11,10 +11,10 @@
 using ObjectNode = std::map<std::string, Node>;
 using ArrayNode = std::vector<Node>;
 
-/* Pointer to internal node: map or array */
+/* Pointer to internal node: object (map) or array */
 using InnerNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 
-/* Indicator is a key for map or index for an array */
+/* Indicator is a key for object (map) or index for an array */
 using Indicator = std::variant<std::string, size_t>;
 
 
@@ -32,17 +32,17 @@ public:
     void clear();
 
     ObjectNode* getRoot();
-    InnerNodePtr getNode(const std::vector<Indicator>& keys);
+    InnerNodePtr getNode(const std::vector<Indicator>&);
 
-    bool changeNodeInObject(const std::vector<Indicator>& keys, const std::string& key, Node node);
-    bool changeNodeInArray(const std::vector<Indicator>& keys, int index, Node node);
+    bool changeNodeInObject(const std::vector<Indicator>&, const std::string& key, Node);
+    bool changeNodeInArray(const std::vector<Indicator>&, size_t index, Node);
 
-    bool addNodeIntoObject(const std::vector<Indicator>& keys, const std::string& key, Node node);
-    bool addNodeIntoArray(const std::vector<Indicator>& keys, Node node);
-    bool insertNodeIntoArray(const std::vector<Indicator>& keys, int index, Node node);
+    bool addNodeIntoObject(const std::vector<Indicator>&, const std::string& key, Node);
+    bool addNodeIntoArray(const std::vector<Indicator>&, Node);
+    bool insertNodeIntoArray(const std::vector<Indicator>&, int index, Node);
 
-    bool removeNodeFromObject(const std::vector<Indicator>& keys, const std::string& key);
-    bool removeNodeFromArray(const std::vector<Indicator>& keys, int index);
+    bool removeNodeFromObject(const std::vector<Indicator>&, const std::string& key);
+    bool removeNodeFromArray(const std::vector<Indicator>&, size_t index);
 
     Result getLastError();
 
@@ -50,8 +50,8 @@ private:
 
     bool isRootEmpty();
 
-    ArrayNode* getArrayAndCheckIndex(const std::vector<Indicator>& keys, int index);
-    ObjectNode* getObjectAndCheckKey(const std::vector<Indicator>& keys, const std::string& key);
+    ArrayNode* getArrayAndCheckIndex(const std::vector<Indicator>&, size_t index);
+    ObjectNode* getObjectAndCheckKey(const std::vector<Indicator>&, const std::string& key);
 
     template <typename T>
     bool validateNodeType(InnerNodePtr, Result potentialError);
