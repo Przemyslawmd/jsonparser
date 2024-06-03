@@ -2,7 +2,11 @@
 #include "message.h"
 
 
-const std::string& Message::getMessage(Result result)
+std::string Message::getMessage(Result result)
 {
-    return messages.at(result);
+    if (messages.at(result).has_value()) {
+        return messages.at(result).value();
+    }
+    return { "No details" };
 }
+
