@@ -15,6 +15,7 @@ add_library(
     ${READER}Validator.cpp
     ${WRITER}Writer.cpp
     message.cpp
+    Error.cpp
 )
 
 target_include_directories(jsonParser PRIVATE ${HEADERS}) 

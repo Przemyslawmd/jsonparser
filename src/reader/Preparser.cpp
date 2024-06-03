@@ -17,10 +17,10 @@ Preparser::Preparser()
 
 std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json)
 {
-    error = Result::OK;
+    error.setInfo(Result::OK);
 
     if (checkQuotation(json) == false) {
-        error = Result::PREPARSER_STRING_ERROR;
+        error.setInfo(Result::PREPARSER_STRING_ERROR);
         return nullptr;
     }
 
@@ -32,7 +32,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
         }
         if (symbol == '\"') {
             index += parseString(json, index);
-            if (error != Result::OK) {
+            if (error.getResult() != Result::OK) {
                 return nullptr;
             }
             continue;
@@ -51,7 +51,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
                 index += (lettersInFalse - 1);
                 continue;
             }
-            error = Result::PREPARSER_UNKNOWN_SYMBOL;
+            error.setInfo(Result::PREPARSER_UNKNOWN_SYMBOL);
             return nullptr;
         }
         if (symbol == 't') {
@@ -60,10 +60,10 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
                 index += (lettersInTrue -1);
                 continue;
             }
-            error = Result::PREPARSER_UNKNOWN_SYMBOL;
+            error.setInfo(Result::PREPARSER_UNKNOWN_SYMBOL);
             return nullptr;
         }
-        error = Result::PREPARSER_UNKNOWN_SYMBOL;
+        error.setInfo(Result::PREPARSER_UNKNOWN_SYMBOL);
         return nullptr;
     }
     return std::move(tokens);
@@ -72,7 +72,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
 
 Result Preparser::getError()
 {
-    return error;
+    return error.getResult();
 }
 
 /*******************************************************************/
@@ -123,7 +123,7 @@ size_t Preparser::parseString(const std::string& json, size_t index)
         }
         shift += 1;
     }
-    error = Result::PREPARSER_STRING_ERROR;
+    error.setInfo(Result::PREPARSER_STRING_ERROR);
     return 0;
 }
 

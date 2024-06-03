@@ -8,6 +8,7 @@
 
 #include <defines.h>
 #include "Token.h"
+#include "../Error.h"
 
 
 class Preparser
@@ -25,7 +26,7 @@ private:
     bool checkQuotation(const std::string& json);
 
     std::unique_ptr<std::vector<Token>> tokens;
-    Result error;
+    Error error;
 
     const std::map<char, TokenType> tokensMap {
         { '{', TokenType::CURLY_OPEN },
