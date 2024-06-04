@@ -11,11 +11,11 @@
 class Validator
 {
     public:
-        Result validate(const std::vector<Token>& tokens);
+        ErrorCode validate(const std::vector<Token>& tokens);
 
     private:
-        Result validateBrackets(const std::vector<Token>& tokens);
-        Result checkRequirements(const std::vector<Token>& tokens);
+        ErrorCode validateBrackets(const std::vector<Token>& tokens);
+        ErrorCode checkRequirements(const std::vector<Token>& tokens);
 };
 
 #endif

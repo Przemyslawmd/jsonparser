@@ -45,7 +45,7 @@ public:
     bool removeNodeFromObject(const std::vector<Indicator>&, const std::string& key);
     bool removeNodeFromArray(const std::vector<Indicator>&, size_t index);
 
-    Result getLastError();
+    ErrorCode getLastError();
     const std::string& getLastErrorMessage();
 
 private:
@@ -56,9 +56,9 @@ private:
     ObjectNode* getObjectAndCheckKey(const std::vector<Indicator>&, const std::string& key);
 
     template <typename T>
-    bool validateNodeType(InnerNodePtr, Result potentialError);
+    bool validateNodeType(InnerNodePtr, ErrorCode potentialError);
 
-    Result result = Result::OK;
+    ErrorCode result = ErrorCode::NO_ERROR;
     std::unique_ptr<ObjectNode> root;
     const std::unique_ptr<Message> message = std::make_unique<Message>();
 };

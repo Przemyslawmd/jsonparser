@@ -17,7 +17,7 @@ public:
     Preparser();
 
     std::unique_ptr<std::vector<Token>> parseJSON(const std::string& json);
-    Result getError();
+    ErrorCode getErrorCode();
 
 private:
     size_t parseNumber(const std::string& json, size_t index);

@@ -30,9 +30,9 @@ enum class State
 };
 
 
-enum class Result
+enum class ErrorCode
 {
-    OK,
+    NO_ERROR,
 
     API_EMPTY,
     API_NOT_EMPTY,

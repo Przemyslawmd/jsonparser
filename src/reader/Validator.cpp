@@ -8,20 +8,20 @@
 #include <defines.h>
 
 
-Result Validator::validate(const std::vector<Token>& tokens)
+ErrorCode Validator::validate(const std::vector<Token>& tokens)
 {
-    Result error;
+    ErrorCode error;
 
     if (tokens.at(0).type != TokenType::CURLY_OPEN) {
-        return Result::VALIDATOR_IMPROPER_BEGINNING;
+        return ErrorCode::VALIDATOR_IMPROPER_BEGINNING;
     }
 
     if (tokens.at(tokens.size() - 1).type != TokenType::CURLY_CLOSE) {
-        return Result::VALIDATOR_IMPROPER_END;
+        return ErrorCode::VALIDATOR_IMPROPER_END;
     }
 
     error = validateBrackets(tokens);
-    if (error != Result::OK) {
+    if (error != ErrorCode::NO_ERROR) {
         return error;
     }
     return checkRequirements(tokens);
@@ -30,7 +30,7 @@ Result Validator::validate(const std::vector<Token>& tokens)
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
-Result Validator::validateBrackets(const std::vector<Token>& tokens)
+ErrorCode Validator::validateBrackets(const std::vector<Token>& tokens)
 {
     int curlyCounter = 0;
     int squareCounter = 0;
@@ -44,27 +44,27 @@ Result Validator::validateBrackets(const std::vector<Token>& tokens)
         }
         else if (token.type == TokenType::CURLY_CLOSE) {
             if (--curlyCounter < 0) {
-                return Result::VALIDATOR_BRACKET_CURLY_ERROR;
+                return ErrorCode::VALIDATOR_BRACKET_CURLY_ERROR;
             }
         }
         else if (token.type == TokenType::SQUARE_CLOSE) {
             if (--squareCounter < 0) {
-                return Result::VALIDATOR_BRACKET_SQUARE_ERROR;
+                return ErrorCode::VALIDATOR_BRACKET_SQUARE_ERROR;
             }
         }
     }
 
     if (curlyCounter != 0) {
-        return Result::VALIDATOR_BRACKET_CURLY_ERROR;
+        return ErrorCode::VALIDATOR_BRACKET_CURLY_ERROR;
     }
     if (squareCounter != 0) {
-        return Result::VALIDATOR_BRACKET_SQUARE_ERROR;
+        return ErrorCode::VALIDATOR_BRACKET_SQUARE_ERROR;
     }
-    return Result::OK;
+    return ErrorCode::NO_ERROR;
 }
 
 
-Result Validator::checkRequirements(const std::vector<Token>& tokens)
+ErrorCode Validator::checkRequirements(const std::vector<Token>& tokens)
 {
     std::stack<State> states;
 
@@ -130,46 +130,46 @@ Result Validator::checkRequirements(const std::vector<Token>& tokens)
         if (it->type == TokenType::CURLY_OPEN) {
             states.push(State::OBJECT_PARSING);
             if (afterCurlyOpen.count((it + 1)->type) == 0) {
-                return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_OPEN;
+                return ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_OPEN;
             }
         }
         else if (it->type == TokenType::SQUARE_OPEN) {
             states.push(State::ARRAY_PARSING);
             if (afterSquareOpen.count((it + 1)->type) == 0) {
-                return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_SQUARE_OPEN;
+                return ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_SQUARE_OPEN;
             }
         }
         else if (it->type == TokenType::CURLY_CLOSE) {
             states.pop();
             if (afterClose.count((it + 1)->type) == 0) {
-                return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_CLOSE;
+                return ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_CLOSE;
             }
         }
         else if (it->type == TokenType::SQUARE_CLOSE) {
             states.pop();
             if (afterClose.count((it + 1)->type) == 0) {
-                return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_SQUARE_CLOSE;
+                return ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_SQUARE_CLOSE;
             }
         }
         else if (it->type == TokenType::COMMA && afterComma.at(state).count((it + 1)->type) == 0) {
-            return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_COMMA;
+            return ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_COMMA;
         }
         else if (it->type == TokenType::COLON && (state == State::ARRAY_PARSING || afterColon.count((it + 1)->type) == 0)) {
-            return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_COLON;
+            return ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_COLON;
         }
         else if (it->type == TokenType::DATA_STR && afterString.at(state).count((it + 1)->type) == 0) {
-            return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_STRING;
+            return ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_STRING;
         }
         else if (it->type == TokenType::DATA_INT && afterData.count((it + 1)->type) == 0) {
-            return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_INT;
+            return ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_INT;
         }
         else if (it->type == TokenType::DATA_DOUBLE && afterData.count((it + 1)->type) == 0) {
-            return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_DOUBLE;
+            return ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_DOUBLE;
         }
         else if (it->type == TokenType::DATA_BOOL && afterData.count((it + 1)->type) == 0) {
-            return Result::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_BOOL;
+            return ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_BOOL;
         }
     }
-    return Result::OK;
+    return ErrorCode::NO_ERROR;
 }
 

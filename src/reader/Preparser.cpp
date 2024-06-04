@@ -17,10 +17,10 @@ Preparser::Preparser()
 
 std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json)
 {
-    error.setInfo(Result::OK);
+    error.setInfo(ErrorCode::NO_ERROR);
 
     if (checkQuotation(json) == false) {
-        error.setInfo(Result::PREPARSER_STRING_ERROR);
+        error.setInfo(ErrorCode::PREPARSER_STRING_ERROR);
         return nullptr;
     }
 
@@ -32,7 +32,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
         }
         if (symbol == '\"') {
             index += parseString(json, index);
-            if (error.getResult() != Result::OK) {
+            if (error.getResult() != ErrorCode::NO_ERROR) {
                 return nullptr;
             }
             continue;
@@ -51,7 +51,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
                 index += (lettersInFalse - 1);
                 continue;
             }
-            error.setInfo(Result::PREPARSER_UNKNOWN_SYMBOL);
+            error.setInfo(ErrorCode::PREPARSER_UNKNOWN_SYMBOL);
             return nullptr;
         }
         if (symbol == 't') {
@@ -60,17 +60,17 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
                 index += (lettersInTrue -1);
                 continue;
             }
-            error.setInfo(Result::PREPARSER_UNKNOWN_SYMBOL);
+            error.setInfo(ErrorCode::PREPARSER_UNKNOWN_SYMBOL);
             return nullptr;
         }
-        error.setInfo(Result::PREPARSER_UNKNOWN_SYMBOL);
+        error.setInfo(ErrorCode::PREPARSER_UNKNOWN_SYMBOL);
         return nullptr;
     }
     return std::move(tokens);
 }
 
 
-Result Preparser::getError()
+ErrorCode Preparser::getErrorCode()
 {
     return error.getResult();
 }
@@ -123,7 +123,7 @@ size_t Preparser::parseString(const std::string& json, size_t index)
         }
         shift += 1;
     }
-    error.setInfo(Result::PREPARSER_STRING_ERROR);
+    error.setInfo(ErrorCode::PREPARSER_STRING_ERROR);
     return 0;
 }
 

@@ -9,11 +9,11 @@ class Error
 public:
     Error() = default;
 
-    void setInfo(Result result, std::optional<std::string> info = std::nullopt);
-    Result getResult();
+    void setInfo(ErrorCode, std::optional<std::string> info = std::nullopt);
+    ErrorCode getResult();
 
 private:
     std::optional<std::string> info;
-    Result errorCode; 
+    ErrorCode errorCode;
 };
 

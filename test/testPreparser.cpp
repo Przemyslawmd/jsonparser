@@ -22,7 +22,7 @@ struct TestData
 };
 
 
-std::unique_ptr<std::vector<Token>> getTokens(const std::string& path, const std::string& file, Result* error)
+std::unique_ptr<std::vector<Token>> getTokens(const std::string& path, const std::string& file, ErrorCode* error)
 {
     std::ifstream jsonStream(path + file);
     std::string jsonString((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
@@ -30,7 +30,7 @@ std::unique_ptr<std::vector<Token>> getTokens(const std::string& path, const std
     auto begin = std::chrono::high_resolution_clock::now();
     auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
-    *error = preparser->getError();
+    *error = preparser->getErrorCode();
     auto parserKey = std::make_unique<ParserKey>();
     if (tokens == nullptr) {
         return nullptr;
@@ -70,7 +70,7 @@ void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestDat
 
 TEST (PreparserTest, Test_File_1)
 {
-    Result error;
+    ErrorCode error;
     auto tokens = getTokens(std::string(TEST_DATA), "test_1.json", &error);
 
     std::vector<TestData> testData = {
@@ -106,7 +106,7 @@ TEST (PreparserTest, Test_File_1)
 
 TEST(PreparserTest, Test_File_2)
 {
-    Result error;
+    ErrorCode error;
     auto tokens = getTokens(std::string(TEST_DATA), "test_2.json", &error);
 
     std::vector<TestData> testData = {
@@ -211,7 +211,7 @@ TEST(PreparserTest, Test_File_2)
 
 TEST(PreparserTest, Test_File_6)
 {
-    Result error;
+    ErrorCode error;
     auto tokens = getTokens(std::string(TEST_DATA), "test_6.json", &error);
 
     std::vector<TestData> testData = {
@@ -258,7 +258,7 @@ TEST(PreparserTest, Test_File_6)
 
 TEST(PreparserTest, Test_File_7)
 {
-    Result error;
+    ErrorCode error;
     auto tokens = getTokens(std::string(TEST_DATA), "test_7.json", &error);
 
     std::vector<TestData> testData = {
@@ -322,7 +322,7 @@ TEST(PreparserTest, Test_File_7)
 
 TEST(PreparserTest, Test_File_8)
 {
-    Result error;
+    ErrorCode error;
     auto tokens = getTokens(std::string(TEST_DATA), "test_8_complex.json", &error);
     ASSERT_TRUE(tokens != nullptr);
 }
@@ -330,20 +330,20 @@ TEST(PreparserTest, Test_File_8)
 
 TEST(PreparserTest, FirstImproperDataTest)
 {
-    Result error = Result::OK;
+    ErrorCode error = ErrorCode::NO_ERROR;
     auto tokens = getTokens(std::string(TEST_DATA_IMPROPER), "string_not_ended_1.json", &error);
 
     ASSERT_EQ(tokens, nullptr);
-    ASSERT_EQ(error, Result::PREPARSER_STRING_ERROR);
+    ASSERT_EQ(error, ErrorCode::PREPARSER_STRING_ERROR);
 }
 
 
 TEST(PreparserTest, SecondImproperDataTest)
 {
-    Result error = Result::OK;
+    ErrorCode error = ErrorCode::NO_ERROR;
     auto tokens = getTokens(std::string(TEST_DATA_IMPROPER), "string_not_ended_2.json", &error);
 
     ASSERT_EQ(tokens, nullptr);
-    ASSERT_EQ(error, Result::PREPARSER_STRING_ERROR);
+    ASSERT_EQ(error, ErrorCode::PREPARSER_STRING_ERROR);
 }
 

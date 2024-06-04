@@ -70,8 +70,8 @@ std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
     EXPECT_TRUE(tokens != nullptr);
 
     const auto validator = std::make_unique<Validator>();
-    Result error = validator->validate(*tokens);
-    EXPECT_EQ(error, Result::OK);
+    ErrorCode error = validator->validate(*tokens);
+    EXPECT_EQ(error, ErrorCode::NO_ERROR);
 
     const auto parserKey = std::make_unique<ParserKey>();
     tokens = parserKey->createKeyTokens(std::move(tokens));
