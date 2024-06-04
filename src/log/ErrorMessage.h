@@ -6,7 +6,7 @@
 #include "../headers/defines.h"
 
 
-class Message
+class ErrorMessage
 {
 public:
     std::string getMessage(ErrorCode ErrorCode);

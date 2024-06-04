@@ -34,8 +34,8 @@ add_executable(
   ../src/reader/ParserKey.cpp
   ../src/reader/Validator.cpp
   ../src/writer/Writer.cpp
-  ../src/message.cpp
-  ../src/Error.cpp
+  ../src/log/ErrorMessage.cpp
+  ../src/log/Error.cpp
   )
 
 target_compile_features(jsonParserTest PRIVATE cxx_std_20)

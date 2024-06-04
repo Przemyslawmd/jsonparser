@@ -6,7 +6,7 @@
 
 #include <defines.h>
 #include <NodeValue.h>
-#include "message.h"
+#include "log/ErrorMessage.h"
 
 
 using ObjectNode = std::map<std::string, Node>;
@@ -60,6 +60,6 @@ private:
 
     ErrorCode result = ErrorCode::NO_ERROR;
     std::unique_ptr<ObjectNode> root;
-    const std::unique_ptr<Message> message = std::make_unique<Message>();
+    const std::unique_ptr<ErrorMessage> message = std::make_unique<ErrorMessage>();
 };
 

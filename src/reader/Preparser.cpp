@@ -1,6 +1,7 @@
 
 #include "Preparser.h"
 
+#include <format>
 #include <iostream>
 #include <stack>
 
@@ -51,7 +52,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
                 index += (lettersInFalse - 1);
                 continue;
             }
-            error.setInfo(ErrorCode::PREPARSER_UNKNOWN_SYMBOL);
+            error.setInfo(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
             return nullptr;
         }
         if (symbol == 't') {
@@ -60,10 +61,10 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
                 index += (lettersInTrue -1);
                 continue;
             }
-            error.setInfo(ErrorCode::PREPARSER_UNKNOWN_SYMBOL);
+            error.setInfo(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
             return nullptr;
         }
-        error.setInfo(ErrorCode::PREPARSER_UNKNOWN_SYMBOL);
+        error.setInfo(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
         return nullptr;
     }
     return std::move(tokens);

@@ -8,7 +8,7 @@
 
 #include <defines.h>
 #include "Token.h"
-#include "../Error.h"
+#include "../log/Error.h"
 
 
 class Preparser
