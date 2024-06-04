@@ -1,4 +1,7 @@
 
+#ifndef JSONPARSER_ERROR_H
+#define JSONPARSER_ERROR_H
+
 #include <optional>
 #include <string>
 
@@ -17,4 +20,7 @@ private:
     std::optional<std::string> info;
     ErrorCode errorCode;
 };
+
+#endif
+
 

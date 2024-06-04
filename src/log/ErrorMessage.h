@@ -1,4 +1,7 @@
 
+#ifndef JSONPARSER_ERROR_MESSAGE_H
+#define JSONPARSER_ERROR_MESSAGE_H
+
 #include <map>
 #include <optional>
 #include <string>
@@ -43,4 +46,6 @@ public:
         { ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_STRING,       std::nullopt },
     };
 };
+
+#endif
 

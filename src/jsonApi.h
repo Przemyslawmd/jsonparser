@@ -1,4 +1,7 @@
 
+#ifndef JSONPARSER_API_H
+#define JSONPARSER_API_H
+
 #include <map>
 #include <memory>
 #include <string>
@@ -6,7 +9,7 @@
 
 #include <defines.h>
 #include <NodeValue.h>
-#include "log/ErrorMessage.h"
+#include "log/Error.h"
 
 
 using ObjectNode = std::map<std::string, Node>;
@@ -57,7 +60,11 @@ private:
     template <typename T>
     bool validateNodeType(InnerNodePtr, ErrorCode potentialError);
 
-    ErrorCode result = ErrorCode::NO_ERROR;
     std::unique_ptr<ObjectNode> root;
+
+    ErrorCode errorCode = ErrorCode::NO_ERROR;
+    std::unique_ptr<Error> error;
 };
+
+#endif
 
