@@ -33,7 +33,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
         }
         if (symbol == '\"') {
             index += parseString(json, index);
-            if (error.getResult() != ErrorCode::NO_ERROR) {
+            if (error.getErrorCode() != ErrorCode::NO_ERROR) {
                 return nullptr;
             }
             continue;
@@ -73,7 +73,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
 
 ErrorCode Preparser::getErrorCode()
 {
-    return error.getResult();
+    return error.getErrorCode();
 }
 
 /*******************************************************************/

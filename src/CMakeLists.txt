@@ -13,8 +13,7 @@ add_library(
     ${READER}ParserKey.cpp
     ${READER}Preparser.cpp
     ${READER}Validator.cpp
-    ${WRITER}Writer.cpp
-    log/ErrorMessage.cpp
+    ${WRITER}Writer.cpp    
     log/Error.cpp
 )
 

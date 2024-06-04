@@ -10,7 +10,8 @@ public:
     Error() = default;
 
     void setInfo(ErrorCode, std::optional<std::string> info = std::nullopt);
-    ErrorCode getResult();
+    ErrorCode getErrorCode();
+    std::string getErrorDetails();
 
 private:
     std::optional<std::string> info;

@@ -33,8 +33,7 @@ add_executable(
   ../src/reader/Parser.cpp
   ../src/reader/ParserKey.cpp
   ../src/reader/Validator.cpp
-  ../src/writer/Writer.cpp
-  ../src/log/ErrorMessage.cpp
+  ../src/writer/Writer.cpp  
   ../src/log/Error.cpp
   )
 

@@ -230,15 +230,9 @@ ObjectNode* JsonApi::getRoot()
 }
 
 
-ErrorCode JsonApi::getLastError()
+ErrorCode JsonApi::getLastErrorCode()
 {
     return result;
-}
-
-
-const std::string& JsonApi::getLastErrorMessage()
-{
-    return message->getMessage(result);
 }
 
 
