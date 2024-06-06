@@ -2,20 +2,25 @@
 #ifndef JSONPARSER_VALIDATOR_H
 #define JSONPARSER_VALIDATOR_H
 
+#include <memory>
 #include <vector>
 
 #include "defines.h"
 #include "Token.h"
+#include "../log/Error.h"
 
 
 class Validator
 {
     public:
-        ErrorCode validate(const std::vector<Token>& tokens);
+        bool validate(const std::vector<Token>& tokens);
+        std::unique_ptr<Error> getError();
 
     private:
-        ErrorCode validateBrackets(const std::vector<Token>& tokens);
-        ErrorCode checkRequirements(const std::vector<Token>& tokens);
+        bool validateBrackets(const std::vector<Token>& tokens);
+        bool checkRequirements(const std::vector<Token>& tokens);
+
+        std::unique_ptr<Error> error;
 };
 
 #endif

@@ -32,8 +32,8 @@ bool JsonApi::parseJsonString(const std::string& jsonString)
     }
 
     const auto validator = std::make_unique<Validator>();
-    errorCode = validator->validate(*tokens);
-    if (errorCode != ErrorCode::NO_ERROR) {
+    if (validator->validate(*tokens) == false) {
+        error = validator->getError();
         return false;
     }
 
@@ -301,3 +301,4 @@ ObjectNode* JsonApi::getObjectAndCheckKey(const std::vector<Indicator>& keys, co
     }
     return obj;
 }
+

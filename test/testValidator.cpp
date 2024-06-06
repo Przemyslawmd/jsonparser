@@ -9,83 +9,84 @@
 #include "utils.h"
 
 
-ErrorCode getValidatorError(const std::string& jsonFile)
+std::unique_ptr<Error> getValidatorError(const std::string& jsonFile)
 {
     Utils utils;
     std::string jsonString = utils.getJsonFromFile(std::string(TEST_DATA_IMPROPER), jsonFile);
-
     auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
-    return Validator().validate(*tokens.get());
+    Validator validator;
+    validator.validate(*tokens.get());
+    return validator.getError();
 }
 
 
 TEST(ValidatorTest, ImproperBegin)
 {
-    ErrorCode error = getValidatorError("improper_begin.json");
-    ASSERT_EQ(error, ErrorCode::VALIDATOR_IMPROPER_BEGINNING);
+    auto error = getValidatorError("improper_begin.json");
+    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_BEGINNING);
 }
 
 
 TEST(ValidatorTest, ImproperEnd)
 {
-    ErrorCode error = getValidatorError("improper_end.json");
-    ASSERT_EQ(error, ErrorCode::VALIDATOR_IMPROPER_END);
+    auto error = getValidatorError("improper_end.json");
+    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_END);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterCurlyOpen)
 {
-    ErrorCode error = getValidatorError("not_allowed_after_curly_open.json");
-    ASSERT_EQ(error, ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_OPEN);
+    auto error = getValidatorError("not_allowed_after_curly_open.json");
+    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_OPEN);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterCurlyClose)
 {
-    ErrorCode error = getValidatorError("not_allowed_after_curly_close.json");
-    ASSERT_EQ(error, ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_CLOSE);
+    auto error = getValidatorError("not_allowed_after_curly_close.json");
+    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_CLOSE);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterString)
 {
-    ErrorCode error = getValidatorError("not_allowed_after_string.json");
-    ASSERT_EQ(error, ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_STRING);
+    auto error = getValidatorError("not_allowed_after_string.json");
+    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_STRING);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterInt)
 {
-    ErrorCode error = getValidatorError("not_allowed_after_int.json");
-    ASSERT_EQ(error, ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_INT);
+    auto error = getValidatorError("not_allowed_after_int.json");
+    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_INT);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterDouble)
 {
-    ErrorCode error = getValidatorError("not_allowed_after_double.json");
-    ASSERT_EQ(error, ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_DOUBLE);
+    auto error = getValidatorError("not_allowed_after_double.json");
+    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_DOUBLE);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterBool)
 {
-    ErrorCode error = getValidatorError("not_allowed_after_bool.json");
-    ASSERT_EQ(error, ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_BOOL);
+    auto error = getValidatorError("not_allowed_after_bool.json");
+    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_BOOL);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterColon)
 {
-    ErrorCode error = getValidatorError("not_allowed_after_colon.json");
-    ASSERT_EQ(error, ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_COLON);
+    auto error = getValidatorError("not_allowed_after_colon.json");
+    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_COLON);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterComma)
 {
-    ErrorCode error = getValidatorError("not_allowed_after_comma.json");
-    ASSERT_EQ(error, ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_COMMA);
+    auto error = getValidatorError("not_allowed_after_comma.json");
+    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_COMMA);
 }
 
