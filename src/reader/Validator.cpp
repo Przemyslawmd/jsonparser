@@ -177,15 +177,15 @@ bool Validator::checkRequirements(const std::vector<Token>& tokens)
             return false;
         }
         else if (it->type == TokenType::DATA_INT && afterData.count((it + 1)->type) == 0) {
-            error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_INT);
+            error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_INT);
             return false;
         }
         else if (it->type == TokenType::DATA_DOUBLE && afterData.count((it + 1)->type) == 0) {
-            error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_DOUBLE);
+            error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DOUBLE);
             return false;
         }
         else if (it->type == TokenType::DATA_BOOL && afterData.count((it + 1)->type) == 0) {
-            error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_BOOL);
+            error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_BOOL);
             return false;
         }
     }

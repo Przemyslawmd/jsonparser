@@ -60,21 +60,21 @@ TEST(ValidatorTest, ImproperTokenAfterString)
 TEST(ValidatorTest, ImproperTokenAfterInt)
 {
     auto error = getValidatorError("not_allowed_after_int.json");
-    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_INT);
+    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_INT);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterDouble)
 {
     auto error = getValidatorError("not_allowed_after_double.json");
-    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_DOUBLE);
+    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DOUBLE);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterBool)
 {
     auto error = getValidatorError("not_allowed_after_bool.json");
-    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DATA_BOOL);
+    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_BOOL);
 }
 
 
