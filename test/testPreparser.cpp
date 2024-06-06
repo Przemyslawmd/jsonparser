@@ -337,7 +337,7 @@ TEST(PreparserTest, FirstImproperDataTest)
     auto tokens = getTokens(std::string(TEST_DATA_IMPROPER), "string_not_ended_1.json", &error);
 
     ASSERT_EQ(tokens, nullptr);
-    ASSERT_EQ(error, ErrorCode::PREPARSER_STRING_ERROR);
+    ASSERT_EQ(error, ErrorCode::PREPARSER_UNKNOWN_SYMBOL);
 }
 
 

@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_ERROR_MESSAGE_H
-#define JSONPARSER_ERROR_MESSAGE_H
+#ifndef JSONPARSER_ERROR_DESCRIPTION_H
+#define JSONPARSER_ERROR_DESCRIPTION_H
 
 #include <map>
 #include <optional>
