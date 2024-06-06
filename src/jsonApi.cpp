@@ -20,7 +20,7 @@ enum class InnerNodeType
 bool JsonApi::parseJsonString(const std::string& jsonString)
 {
     if (root != nullptr) {
-        errorCode = ErrorCode::API_NOT_EMPTY;
+        error = std::make_unique<Error>(ErrorCode::API_NOT_EMPTY);
         return false;
     }
 
@@ -59,7 +59,7 @@ std::string JsonApi::parseObjectToJsonString()
 bool JsonApi::loadObject(std::unique_ptr<ObjectNode> objectNode)
 {
     if (root != nullptr) {
-        errorCode = ErrorCode::API_NOT_EMPTY;
+        error = std::make_unique<Error>(ErrorCode::API_NOT_EMPTY);
         return false;
     }
     root = std::move(objectNode);
@@ -102,7 +102,7 @@ InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
 
             const auto& key = std::get<std::string>(indicator);
             if (obj->contains(key) == false) {
-                errorCode = ErrorCode::API_NOT_KEY_IN_MAP;
+                error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
                 return nullptr;
             }
 
@@ -114,7 +114,7 @@ InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
 
             size_t index = std::get<size_t>(indicator);
             if (index >= arr->size()) {
-                errorCode = ErrorCode::API_INDEX_OUT_OF_ARRAY;
+                error = std::make_unique<Error>(ErrorCode::API_INDEX_OUT_OF_ARRAY);
                 return nullptr;
             }
 
@@ -122,7 +122,7 @@ InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
             getNextNode(&nodePtr, node, lastType);
         }
         else {
-            errorCode = ErrorCode::API_INCONSISTENT_DATA;
+            error = std::make_unique<Error>(ErrorCode::API_INCONSISTENT_DATA);
             return nullptr;
         }
     }
@@ -230,9 +230,12 @@ ObjectNode* JsonApi::getRoot()
 }
 
 
-ErrorCode JsonApi::getLastErrorCode()
+ErrorCode JsonApi::getErrorCode()
 {
-    return errorCode;
+    if (error == nullptr) {
+        return ErrorCode::NO_ERROR;
+    }
+    return error->getErrorCode();
 }
 
 
@@ -242,7 +245,7 @@ ErrorCode JsonApi::getLastErrorCode()
 bool JsonApi::isRootEmpty()
 {
     if (root == nullptr) {
-        errorCode = ErrorCode::API_EMPTY;
+        error = std::make_unique<Error>(ErrorCode::API_EMPTY);
         return true;
     }
     return false;
@@ -256,7 +259,7 @@ bool JsonApi::validateNodeType(InnerNodePtr node, ErrorCode potentialError)
         return false;
     }
     if (std::holds_alternative<T>(node) == false) {
-        errorCode = potentialError;
+        error = std::make_unique<Error>(potentialError);
         return false;
     }
     return true;
@@ -276,7 +279,7 @@ ArrayNode* JsonApi::getArrayAndCheckIndex(const std::vector<Indicator>& keys, si
 
     ArrayNode* arr = std::get<ArrayNode*>(node);
     if (index > arr->size()) {
-        errorCode = ErrorCode::API_INDEX_OUT_OF_ARRAY;
+        error = std::make_unique<Error>(ErrorCode::API_INDEX_OUT_OF_ARRAY);
         return nullptr;
     }
     return arr;
@@ -296,7 +299,7 @@ ObjectNode* JsonApi::getObjectAndCheckKey(const std::vector<Indicator>& keys, co
 
     ObjectNode* obj = std::get<ObjectNode*>(node);
     if (obj->contains(key) == false) {
-        errorCode = ErrorCode::API_NOT_KEY_IN_MAP;
+        error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
         return nullptr;
     }
     return obj;

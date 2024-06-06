@@ -48,7 +48,7 @@ public:
     bool removeNodeFromObject(const std::vector<Indicator>&, const std::string& key);
     bool removeNodeFromArray(const std::vector<Indicator>&, size_t index);
 
-    ErrorCode getLastErrorCode();
+    ErrorCode getErrorCode();
 
 private:
 
@@ -62,7 +62,6 @@ private:
 
     std::unique_ptr<ObjectNode> root;
 
-    ErrorCode errorCode = ErrorCode::NO_ERROR;
     std::unique_ptr<Error> error;
 };
 
