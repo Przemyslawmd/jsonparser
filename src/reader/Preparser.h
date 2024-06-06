@@ -24,7 +24,6 @@ private:
     size_t parseString(const std::string& json, size_t index);
 
     std::unique_ptr<std::vector<Token>> tokens;
-
     std::unique_ptr<Error> error;
 
     const std::map<char, TokenType> tokensMap {

@@ -14,3 +14,4 @@ public:
         return { (std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>() };
     }
 };
+

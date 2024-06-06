@@ -61,7 +61,6 @@ private:
     bool validateNodeType(InnerNodePtr, ErrorCode potentialError);
 
     std::unique_ptr<ObjectNode> root;
-
     std::unique_ptr<Error> error;
 };
 

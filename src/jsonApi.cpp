@@ -19,6 +19,7 @@ enum class InnerNodeType
 
 bool JsonApi::parseJsonString(const std::string& jsonString)
 {
+    error.reset();
     if (root != nullptr) {
         error = std::make_unique<Error>(ErrorCode::API_NOT_EMPTY);
         return false;
@@ -69,9 +70,8 @@ bool JsonApi::loadObject(std::unique_ptr<ObjectNode> objectNode)
 
 void JsonApi::clear()
 {
-    if (root != nullptr) {
-        root.reset();
-    }
+    root.reset();
+    error.reset();
 }
 
 

@@ -16,7 +16,8 @@ std::unique_ptr<Error> getValidatorError(const std::string& jsonFile)
     auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
     Validator validator;
-    validator.validate(*tokens.get());
+    bool result = validator.validate(*tokens.get());
+    EXPECT_FALSE(result);
     return validator.getError();
 }
 
