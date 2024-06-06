@@ -10,9 +10,8 @@
 class Error
 {
 public:
-    Error() = default;
+    Error(ErrorCode, std::optional<std::string> info = std::nullopt);
 
-    void setInfo(ErrorCode, std::optional<std::string> info = std::nullopt);
     ErrorCode getErrorCode();
     std::string getErrorDetails();
 

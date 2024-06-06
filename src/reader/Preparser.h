@@ -14,19 +14,18 @@
 class Preparser
 {
 public:
-    Preparser();
+    Preparser() = default;
 
     std::unique_ptr<std::vector<Token>> parseJSON(const std::string& json);
-    ErrorCode getErrorCode();
+    std::unique_ptr<Error> getError();
 
 private:
     size_t parseNumber(const std::string& json, size_t index);
     size_t parseString(const std::string& json, size_t index);
 
-    bool checkQuotation(const std::string& json);
-
     std::unique_ptr<std::vector<Token>> tokens;
-    Error error;
+
+    std::unique_ptr<Error> error;
 
     const std::map<char, TokenType> tokensMap {
         { '{', TokenType::CURLY_OPEN },

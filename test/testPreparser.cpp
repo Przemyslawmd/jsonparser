@@ -30,7 +30,10 @@ std::unique_ptr<std::vector<Token>> getTokens(const std::string& path, const std
     auto begin = std::chrono::high_resolution_clock::now();
     auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
-    *error = preparser->getErrorCode();
+    std::unique_ptr<Error> errorPreparser = preparser->getError();
+    if (errorPreparser != nullptr) {
+        *error = errorPreparser->getErrorCode();
+    }
     auto parserKey = std::make_unique<ParserKey>();
     if (tokens == nullptr) {
         return nullptr;

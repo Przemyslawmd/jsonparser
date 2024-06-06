@@ -27,7 +27,7 @@ bool JsonApi::parseJsonString(const std::string& jsonString)
     const auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
     if (tokens == nullptr) {
-        errorCode = preparser->getErrorCode();
+        error = preparser->getError();
         return false;
     }
 

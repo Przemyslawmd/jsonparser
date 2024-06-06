@@ -6,11 +6,7 @@
 #include "ErrorDescription.h"
 
 
-void Error::setInfo(ErrorCode errorCode, std::optional<std::string> details)
-{
-    this->errorCode = errorCode;
-    this->details = details;
-}
+Error::Error(ErrorCode errorCode, std::optional<std::string> details) : errorCode(errorCode), details(details) {}
 
 
 ErrorCode Error::getErrorCode()

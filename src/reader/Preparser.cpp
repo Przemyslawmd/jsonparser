@@ -10,20 +10,9 @@ constexpr size_t lettersInFalse = 5;
 constexpr size_t lettersInTrue = 4;
 
 
-Preparser::Preparser()
-{
-    tokens = std::make_unique<std::vector<Token>>();
-}
-
-
 std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json)
 {
-    error.setInfo(ErrorCode::NO_ERROR);
-
-    if (checkQuotation(json) == false) {
-        error.setInfo(ErrorCode::PREPARSER_STRING_ERROR);
-        return nullptr;
-    }
+    tokens = std::make_unique<std::vector<Token>>();
 
     for (size_t index = 0; index < json.length(); index++)
     {
@@ -32,10 +21,11 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             continue;
         }
         if (symbol == '\"') {
-            index += parseString(json, index);
-            if (error.getErrorCode() != ErrorCode::NO_ERROR) {
+            size_t shift = parseString(json, index);
+            if (shift == 0) {
                 return nullptr;
             }
+            index += shift;
             continue;
         }
         if (isdigit(symbol) || symbol == '-') {
@@ -52,7 +42,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
                 index += (lettersInFalse - 1);
                 continue;
             }
-            error.setInfo(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
+            error = std::make_unique<Error>(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
             return nullptr;
         }
         if (symbol == 't') {
@@ -61,19 +51,19 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
                 index += (lettersInTrue -1);
                 continue;
             }
-            error.setInfo(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
+            error = std::make_unique<Error>(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
             return nullptr;
         }
-        error.setInfo(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
+        error = std::make_unique<Error>(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
         return nullptr;
     }
     return std::move(tokens);
 }
 
 
-ErrorCode Preparser::getErrorCode()
+std::unique_ptr<Error> Preparser::getError()
 {
-    return error.getErrorCode();
+    return std::move(error);
 }
 
 /*******************************************************************/
@@ -124,24 +114,7 @@ size_t Preparser::parseString(const std::string& json, size_t index)
         }
         shift += 1;
     }
-    error.setInfo(ErrorCode::PREPARSER_STRING_ERROR);
+    error = std::make_unique<Error>(ErrorCode::PREPARSER_STRING_ERROR);
     return 0;
-}
-
-
-bool Preparser::checkQuotation(const std::string& jsonStr)
-{
-    size_t quotationCount = 0;
-
-    if (jsonStr[0] == '\"') {
-        return false;
-    }
-
-    for (size_t index = 1; index < jsonStr.length(); index++) {
-        if (jsonStr[index] == '\"' && index > 0 && jsonStr[index - 1] != '\\') {
-            quotationCount++;
-        }
-    }
-    return quotationCount % 2 == 0;
 }
 
