@@ -17,7 +17,7 @@ public:
     std::string getErrorDetails();
 
 private:
-    std::optional<std::string> info;
+    std::optional<std::string> details;
     ErrorCode errorCode;
 };
 

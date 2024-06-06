@@ -9,10 +9,10 @@
 #include "../headers/defines.h"
 
 
-class ErrorMessage
+class ErrorDescription
 {
 public:
-    static const inline std::map<ErrorCode, std::optional<std::string>> messages = 
+    static const inline std::map<ErrorCode, std::optional<std::string>> description = 
     {
         { ErrorCode::API_EMPTY,
             "There is no JSON object in JsonApi, parse JSON string or load JSON object" },

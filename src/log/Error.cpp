@@ -3,13 +3,13 @@
 
 #include <format>
 
-#include "ErrorMessage.h"
+#include "ErrorDescription.h"
 
 
-void Error::setInfo(ErrorCode errorCode, std::optional<std::string> info)
+void Error::setInfo(ErrorCode errorCode, std::optional<std::string> details)
 {
     this->errorCode = errorCode;
-    this->info = info;
+    this->details = details;
 }
 
 
@@ -21,8 +21,8 @@ ErrorCode Error::getErrorCode()
 
 std::string Error::getErrorDetails()
 {
-    std::optional<std::string> message = ErrorMessage::messages.at(errorCode);
-    return std::format("{} : {}", message == std::nullopt ? "No error message for this error code" : message.value(), 
-                                  info == std::nullopt ? "No error details for this error" : info.value());
+    std::optional<std::string> message = ErrorDescription::description.at(errorCode);
+    return std::format("{} : {}", message == std::nullopt ? "No description for this error" : message.value(), 
+                                  details == std::nullopt ? "No details for this error" : details.value());
 }
 
