@@ -6,14 +6,14 @@ set(READER "reader/")
 set(WRITER "writer/")
 
 add_library(
-    jsonParser 
+    jsonParser
     SHARED
     jsonApi.cpp
     ${READER}Parser.cpp
     ${READER}ParserKey.cpp
     ${READER}Preparser.cpp
     ${READER}Validator.cpp
-    ${WRITER}Writer.cpp    
+    ${WRITER}Writer.cpp
     log/Error.cpp
 )
 

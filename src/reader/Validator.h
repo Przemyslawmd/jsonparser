@@ -2,6 +2,7 @@
 #ifndef JSONPARSER_VALIDATOR_H
 #define JSONPARSER_VALIDATOR_H
 
+#include <array>
 #include <memory>
 #include <vector>
 
@@ -19,6 +20,8 @@ class Validator
     private:
         bool validateBrackets(const std::vector<Token>& tokens);
         bool checkRequirements(const std::vector<Token>& tokens);
+
+        void createTypeAfterError(ErrorCode, TokenType first, TokenType second);
 
         std::unique_ptr<Error> error;
 };

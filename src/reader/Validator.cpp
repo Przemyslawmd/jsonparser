@@ -1,11 +1,14 @@
 
 #include "Validator.h"
 
+#include <algorithm>
+#include <format>
 #include <map>
 #include <set>
 #include <stack>
 
 #include <defines.h>
+#include "../log/TokenDescription.h"
 
 
 bool Validator::validate(const std::vector<Token>& tokens)
@@ -139,56 +142,65 @@ bool Validator::checkRequirements(const std::vector<Token>& tokens)
         if (it->type == TokenType::CURLY_OPEN) {
             states.push(State::OBJECT_PARSING);
             if (afterCurlyOpen.count((it + 1)->type) == 0) {
-                error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_OPEN);
+                createTypeAfterError(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_OPEN, it->type, (it + 1)->type);
                 return false;
             }
         }
         else if (it->type == TokenType::SQUARE_OPEN) {
             states.push(State::ARRAY_PARSING);
             if (afterSquareOpen.count((it + 1)->type) == 0) {
-                error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_SQUARE_OPEN);
+                createTypeAfterError(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_SQUARE_OPEN, it->type, (it + 1)->type);
                 return false;
             }
         }
         else if (it->type == TokenType::CURLY_CLOSE) {
             states.pop();
             if (afterClose.count((it + 1)->type) == 0) {
-                error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_CLOSE);
+                createTypeAfterError(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_CLOSE, it->type, (it + 1)->type);
                 return false;
             }
         }
         else if (it->type == TokenType::SQUARE_CLOSE) {
             states.pop();
             if (afterClose.count((it + 1)->type) == 0) {
+                createTypeAfterError(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_CURLY_CLOSE, it->type, (it + 1)->type);
                 error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_SQUARE_CLOSE);
                 return false;
             }
         }
         else if (it->type == TokenType::COMMA && afterComma.at(state).count((it + 1)->type) == 0) {
-            error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_COMMA);
+            createTypeAfterError(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_COMMA, it->type, (it + 1)->type);
             return false;
         }
         else if (it->type == TokenType::COLON && (state == State::ARRAY_PARSING || afterColon.count((it + 1)->type) == 0)) {
-            error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_COLON);
+            createTypeAfterError(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_COLON, it->type, (it + 1)->type);
             return false;
         }
         else if (it->type == TokenType::DATA_STR && afterString.at(state).count((it + 1)->type) == 0) {
-            error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_STRING);
+            createTypeAfterError(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_STRING, it->type, (it + 1)->type);
             return false;
         }
         else if (it->type == TokenType::DATA_INT && afterData.count((it + 1)->type) == 0) {
-            error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_INT);
+            createTypeAfterError(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_INT, it->type, (it + 1)->type);
             return false;
         }
         else if (it->type == TokenType::DATA_DOUBLE && afterData.count((it + 1)->type) == 0) {
-            error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DOUBLE);
+            createTypeAfterError(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_DOUBLE, it->type, (it + 1)->type);
             return false;
         }
         else if (it->type == TokenType::DATA_BOOL && afterData.count((it + 1)->type) == 0) {
-            error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_BOOL);
+            createTypeAfterError(ErrorCode::VALIDATOR_IMPROPER_TOKEN_AFTER_BOOL, it->type, (it + 1)->type);
             return false;
         }
     }
     return true;
+}
+
+
+void Validator::createTypeAfterError(ErrorCode errorCode, TokenType first, TokenType second)
+{
+    error = std::make_unique<Error>(
+        errorCode,
+        std::format("Error details: {} after {}", TokenStr::desc.at(second), TokenStr::desc.at(first)));
 }
 
