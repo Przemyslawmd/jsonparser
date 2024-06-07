@@ -2,7 +2,6 @@
 #include "Parser.h"
 
 #include <stack>
-#include <variant>
 
 
 std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens)

@@ -5,9 +5,10 @@
 #include <map>
 #include <memory>
 #include <stack>
+#include <variant>
 #include <vector>
 
-#include "defines.h"
+#include <defines.h>
 #include "Token.h"
 #include <NodeValue.h>
 

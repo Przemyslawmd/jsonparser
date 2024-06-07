@@ -2,7 +2,6 @@
 #ifndef JSONPARSER_VALIDATOR_H
 #define JSONPARSER_VALIDATOR_H
 
-#include <array>
 #include <memory>
 #include <vector>
 

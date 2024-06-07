@@ -2,17 +2,17 @@
 #ifndef JSONPARSER_ERROR_DESCRIPTION_H
 #define JSONPARSER_ERROR_DESCRIPTION_H
 
-#include <map>
+#include <unordered_map>
 #include <optional>
 #include <string>
 
-#include "../headers/defines.h"
+#include <defines.h>
 
 
 class ErrorDescription
 {
 public:
-    static const inline std::map<ErrorCode, std::optional<std::string>> description = 
+    static const inline std::unordered_map<ErrorCode, std::optional<std::string>> description = 
     {
         { ErrorCode::API_EMPTY,
             "There is no JSON object in JsonApi, parse JSON string or load JSON object" },
