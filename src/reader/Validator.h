@@ -8,7 +8,7 @@
 
 #include "defines.h"
 #include "Token.h"
-#include "../log/Error.h"
+#include <Error.h>
 
 
 class Validator

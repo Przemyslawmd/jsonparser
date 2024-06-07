@@ -7,8 +7,8 @@
 #include <vector>
 
 #include <defines.h>
+#include <Error.h>
 #include "Token.h"
-#include "../log/Error.h"
 
 
 class Preparser

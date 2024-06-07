@@ -9,7 +9,7 @@
 
 #include <defines.h>
 #include <NodeValue.h>
-#include "log/Error.h"
+#include <Error.h>
 
 
 using ObjectNode = std::map<std::string, Node>;
