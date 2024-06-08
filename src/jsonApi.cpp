@@ -132,6 +132,10 @@ InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
 
 bool JsonApi::changeNodeInObject(const std::vector<Indicator>& keys, const std::string& key, Node node)
 {
+    if (isRootEmpty()) {
+        return false;
+    }
+
     ObjectNode* obj = getObjectAndCheckKey(keys, key);
     if (obj == nullptr) {
         return false;
@@ -144,6 +148,10 @@ bool JsonApi::changeNodeInObject(const std::vector<Indicator>& keys, const std::
 
 bool JsonApi::changeNodeInArray(const std::vector<Indicator>& keys, size_t index, Node node)
 {
+    if (isRootEmpty()) {
+        return false;
+    }
+
     ArrayNode* arr = getArrayAndCheckIndex(keys, index);
     if (arr == nullptr) {
         return false;
@@ -190,6 +198,10 @@ bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node newNode)
 
 bool JsonApi::insertNodeIntoArray(const std::vector<Indicator>& keys, int index   , Node node)
 {
+    if (isRootEmpty()) {
+        return false;
+    }
+
     ArrayNode* arr = getArrayAndCheckIndex(keys, index);
     if (arr == nullptr) {
         return false;
@@ -202,6 +214,10 @@ bool JsonApi::insertNodeIntoArray(const std::vector<Indicator>& keys, int index 
 
 bool JsonApi::removeNodeFromObject(const std::vector<Indicator>& keys, const std::string& key)
 {
+    if (isRootEmpty()) {
+        return false;
+    }
+
     ObjectNode* obj = getObjectAndCheckKey(keys, key);
     if (obj == nullptr) {
         return false;
@@ -214,6 +230,10 @@ bool JsonApi::removeNodeFromObject(const std::vector<Indicator>& keys, const std
 
 bool JsonApi::removeNodeFromArray(const std::vector<Indicator>& keys, size_t index)
 {
+    if (isRootEmpty()) {
+        return false;
+    }
+
     ArrayNode* arr = getArrayAndCheckIndex(keys, index);
     if (arr == nullptr) {
         return false;
@@ -268,10 +288,6 @@ bool JsonApi::validateNodeType(InnerNodePtr node, ErrorCode potentialError)
 
 ArrayNode* JsonApi::getArrayAndCheckIndex(const std::vector<Indicator>& keys, size_t index)
 {
-    if (isRootEmpty()) {
-        return nullptr;
-    }
-
     InnerNodePtr node = getNode(keys);
     if (validateNodeType<ArrayNode*>(node, ErrorCode::API_NODE_NOT_ARRAY) == false) {
         return nullptr;
@@ -288,10 +304,6 @@ ArrayNode* JsonApi::getArrayAndCheckIndex(const std::vector<Indicator>& keys, si
 
 ObjectNode* JsonApi::getObjectAndCheckKey(const std::vector<Indicator>& keys, const std::string& key)
 {
-    if (isRootEmpty()) {
-        return nullptr;
-    }
-
     InnerNodePtr node = getNode(keys);
     if (validateNodeType<ObjectNode*>(node, ErrorCode::API_NODE_NOT_OBJECT) == false) {
         return nullptr;
