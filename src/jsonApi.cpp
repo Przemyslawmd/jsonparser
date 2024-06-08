@@ -75,61 +75,6 @@ void JsonApi::clear()
 }
 
 
-InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
-{
-    if (isRootEmpty()) {
-        return nullptr;
-    }
-
-    InnerNodePtr nodePtr = root.get();
-    InnerNodeType lastType = InnerNodeType::OBJECT;
-
-    const auto getNextNode = [](InnerNodePtr* nodePtr, Node* node, InnerNodeType& lastType) 
-    {
-        if (std::holds_alternative<ObjectNode>(node->value)) {
-            *nodePtr = std::get_if<ObjectNode>(&node->value);
-            lastType = InnerNodeType::OBJECT;
-        }
-        else if (std::holds_alternative<ArrayNode>(node->value)) {
-            *nodePtr = std::get_if<ArrayNode>(&node->value);
-            lastType = InnerNodeType::ARRAY;
-        }
-    };
-
-    for (const auto& indicator : indicators) {
-        if (lastType == InnerNodeType::OBJECT && std::holds_alternative<std::string>(indicator)) {
-            ObjectNode* obj = std::get<ObjectNode*>(nodePtr);
-
-            const auto& key = std::get<std::string>(indicator);
-            if (obj->contains(key) == false) {
-                error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
-                return nullptr;
-            }
-
-            Node* node = &obj->at(key);
-            getNextNode(&nodePtr, node, lastType);
-        }
-        else if (lastType == InnerNodeType::ARRAY && std::holds_alternative<size_t>(indicator)) {
-            ArrayNode* arr = std::get<ArrayNode*>(nodePtr);
-
-            size_t index = std::get<size_t>(indicator);
-            if (index >= arr->size()) {
-                error = std::make_unique<Error>(ErrorCode::API_INDEX_OUT_OF_ARRAY);
-                return nullptr;
-            }
-
-            Node* node = &arr->at(index);
-            getNextNode(&nodePtr, node, lastType);
-        }
-        else {
-            error = std::make_unique<Error>(ErrorCode::API_INCONSISTENT_DATA);
-            return nullptr;
-        }
-    }
-    return nodePtr;
-}
-
-
 bool JsonApi::changeNodeInObject(const std::vector<Indicator>& keys, const std::string& key, Node node)
 {
     if (isRootEmpty()) {
@@ -269,6 +214,61 @@ bool JsonApi::isRootEmpty()
         return true;
     }
     return false;
+}
+
+
+InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& indicators)
+{
+    if (isRootEmpty()) {
+        return nullptr;
+    }
+
+    InnerNodePtr nodePtr = root.get();
+    InnerNodeType lastType = InnerNodeType::OBJECT;
+
+    const auto getNextNode = [](InnerNodePtr* nodePtr, Node* node, InnerNodeType& lastType) 
+    {
+        if (std::holds_alternative<ObjectNode>(node->value)) {
+            *nodePtr = std::get_if<ObjectNode>(&node->value);
+            lastType = InnerNodeType::OBJECT;
+        }
+        else if (std::holds_alternative<ArrayNode>(node->value)) {
+            *nodePtr = std::get_if<ArrayNode>(&node->value);
+            lastType = InnerNodeType::ARRAY;
+        }
+    };
+
+    for (const auto& indicator : indicators) {
+        if (lastType == InnerNodeType::OBJECT && std::holds_alternative<std::string>(indicator)) {
+            ObjectNode* obj = std::get<ObjectNode*>(nodePtr);
+
+            const auto& key = std::get<std::string>(indicator);
+            if (obj->contains(key) == false) {
+                error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
+                return nullptr;
+            }
+
+            Node* node = &obj->at(key);
+            getNextNode(&nodePtr, node, lastType);
+        }
+        else if (lastType == InnerNodeType::ARRAY && std::holds_alternative<size_t>(indicator)) {
+            ArrayNode* arr = std::get<ArrayNode*>(nodePtr);
+
+            size_t index = std::get<size_t>(indicator);
+            if (index >= arr->size()) {
+                error = std::make_unique<Error>(ErrorCode::API_INDEX_OUT_OF_ARRAY);
+                return nullptr;
+            }
+
+            Node* node = &arr->at(index);
+            getNextNode(&nodePtr, node, lastType);
+        }
+        else {
+            error = std::make_unique<Error>(ErrorCode::API_INCONSISTENT_DATA);
+            return nullptr;
+        }
+    }
+    return nodePtr;
 }
 
 

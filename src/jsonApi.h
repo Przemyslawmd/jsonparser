@@ -36,7 +36,6 @@ public:
     void clear();
 
     ObjectNode* getRoot();
-    InnerNodePtr getNode(const std::vector<Indicator>&);
 
     bool changeNodeInObject(const std::vector<Indicator>&, const std::string& key, Node);
     bool changeNodeInArray(const std::vector<Indicator>&, size_t index, Node);
@@ -53,6 +52,8 @@ public:
 private:
 
     bool isRootEmpty();
+
+    InnerNodePtr getNode(const std::vector<Indicator>&);
 
     ArrayNode* getArrayAndCheckIndex(const std::vector<Indicator>&, size_t index);
     ObjectNode* getObjectAndCheckKey(const std::vector<Indicator>&, const std::string& key);
