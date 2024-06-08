@@ -5,8 +5,8 @@ project(jsonParserProject)
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     execute_process(
         COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
-    if (NOT (GCC_VERSION VERSION_GREATER 10 OR GCC_VERSION VERSION_EQUAL 10))
-        message(FATAL_ERROR "It requires gcc version 10 or greater.")
+    if (NOT (GCC_VERSION VERSION_GREATER 13 OR GCC_VERSION VERSION_EQUAL 13))
+        message(FATAL_ERROR "It requires gcc version 13 or greater.")
     endif ()
 endif ()
 
