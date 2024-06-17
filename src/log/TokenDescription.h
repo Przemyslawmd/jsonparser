@@ -25,6 +25,7 @@ public:
         { TokenType::DATA_BOOL,    "Boolean" },
         { TokenType::DATA_INT,     "Integer number" },
         { TokenType::DATA_DOUBLE,  "Double number" },
+        { TokenType::DATA_NULL,    "Null" },
     };
 };
 
