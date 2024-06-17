@@ -29,6 +29,9 @@ std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens
         else if (it->type == TokenType::DATA_BOOL) {
             processData<bool>(key, *it);
         }
+        else if (it->type == TokenType::DATA_NULL) {
+            processData<nullptr_t>(key, *it);
+        }
         else if (it->type == TokenType::CURLY_OPEN) {
             pushInnerNodeOnStack<ObjectNode>(key, State::OBJECT_PARSING);
         }

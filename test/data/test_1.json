@@ -4,6 +4,7 @@
     "age": 39,
     "country": "Poland",
     "employed": true,
-    "restricted": false
+    "restricted": false,
+    "empty": null
   }
 }

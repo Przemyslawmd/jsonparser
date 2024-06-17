@@ -8,6 +8,7 @@
 
 constexpr size_t lettersInFalse = 5;
 constexpr size_t lettersInTrue = 4;
+constexpr size_t lettersInNull = 4;
 
 
 std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json)
@@ -49,6 +50,15 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             if (json.length() - index > lettersInTrue && (json.compare(index, lettersInTrue, "true") == 0)) {
                 tokens->emplace_back(Token{ TokenType::DATA_BOOL, true });
                 index += (lettersInTrue -1);
+                continue;
+            }
+            error = std::make_unique<Error>(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
+            return nullptr;
+        }
+        if (symbol == 'n') {
+            if (json.length() - index > lettersInNull && (json.compare(index, lettersInNull, "null") == 0)) {
+                tokens->emplace_back(Token{ TokenType::DATA_NULL, nullptr });
+                index += (lettersInNull - 1);
                 continue;
             }
             error = std::make_unique<Error>(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));

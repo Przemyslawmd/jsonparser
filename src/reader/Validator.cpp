@@ -113,6 +113,7 @@ bool Validator::checkRequirements(const std::vector<Token>& tokens)
         TokenType::DATA_INT,
         TokenType::DATA_DOUBLE,
         TokenType::DATA_BOOL,
+        TokenType::DATA_NULL,
         TokenType::CURLY_OPEN,
         TokenType::SQUARE_OPEN
     };

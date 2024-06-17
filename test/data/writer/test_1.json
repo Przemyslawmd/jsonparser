@@ -3,6 +3,7 @@
     "age": 39,
     "country": "Poland",
     "employed": true,
+    "empty": null,
     "name": "John",
     "restricted": false
   }

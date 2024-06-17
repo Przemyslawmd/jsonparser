@@ -20,6 +20,7 @@ enum class TokenType
     DATA_BOOL,
     DATA_INT,
     DATA_DOUBLE,
+    DATA_NULL,
 };
 
 

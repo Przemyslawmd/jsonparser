@@ -45,34 +45,6 @@ TEST_F(ApiTest, AddIntValueToObjectDirectly)
     ASSERT_EQ(json, jsonExpected);
 }
 
-/*
-TEST_F(ApiTest, AddBoolValueToObjectDirectly)
-{
-    auto api = prepareApi("test_2.json");
-    InnerNodePtr node = api->getNode({ "shipTo", "name" });
-    ASSERT_FALSE(std::holds_alternative<nullptr_t>(node));
-
-    (std::get<ObjectNode*>(node))->insert(std::pair<std::string, bool>("boolValue", true));
-
-    std::string json = api->parseObjectToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_2_1.json");
-    ASSERT_EQ(json, jsonExpected);
-}
-
-
-TEST_F(ApiTest, AddNestedObjectDirectly)
-{
-    auto api = prepareApi("test_2.json");
-    InnerNodePtr node = api->getNode({ "shipTo", "name" });
-    ASSERT_FALSE(std::holds_alternative<nullptr_t>(node));
-
-    (std::get<ObjectNode*>(node))->insert(std::pair<std::string, bool>("boolValue", true));
-
-    std::string json = api->parseObjectToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_2_1.json");
-    ASSERT_EQ(json, jsonExpected);
-}
-*/
 
 TEST_F(ApiTest, ChangeNodeValue)
 {
@@ -328,6 +300,7 @@ TEST_F(ApiTest, LoadJsonObject_1)
     personObj->insert(std::make_pair("employed", true));
     personObj->insert(std::make_pair("name", "John"));
     personObj->insert(std::make_pair("restricted", false));
+    personObj->insert(std::make_pair("empty", nullptr));
 
     auto api = std::make_unique<JsonApi>();
     api->loadObject(std::move(obj));

@@ -100,6 +100,10 @@ TEST (PreparserTest, Test_File_1)
        { TokenType::KEY, std::string{ "restricted" }},
        { TokenType::COLON },
        { TokenType::DATA_BOOL, false },
+       { TokenType::COMMA },
+       { TokenType::KEY, std::string{ "empty" }},
+       { TokenType::COLON },
+       { TokenType::DATA_NULL, nullptr },
        { TokenType::CURLY_CLOSE },
        { TokenType::CURLY_CLOSE },
     };
