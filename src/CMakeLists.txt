@@ -9,6 +9,7 @@ add_library(
     jsonParser
     SHARED
     jsonApi.cpp
+    keyMapper.cpp
     ${READER}Parser.cpp
     ${READER}ParserKey.cpp
     ${READER}Preparser.cpp

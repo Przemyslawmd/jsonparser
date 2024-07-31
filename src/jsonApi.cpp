@@ -17,6 +17,12 @@ enum class InnerNodeType
 };
 
 
+JsonApi::JsonApi()
+{
+    keyMapper = std::make_unique<KeyMapper>();
+}
+
+
 bool JsonApi::parseJsonString(const std::string& jsonString)
 {
     error.reset();

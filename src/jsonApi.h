@@ -8,6 +8,7 @@
 #include <vector>
 
 #include <defines.h>
+#include "keyMapper.h"
 #include <NodeValue.h>
 #include <Error.h>
 
@@ -26,7 +27,7 @@ class JsonApi
 {
 public:
 
-    JsonApi() = default;
+    JsonApi();
 
     bool parseJsonString(const std::string& file);
     std::string parseObjectToJsonString();
@@ -63,6 +64,7 @@ private:
 
     std::unique_ptr<ObjectNode> root;
     std::unique_ptr<Error> error;
+    std::unique_ptr<KeyMapper> keyMapper;
 };
 
 #endif
