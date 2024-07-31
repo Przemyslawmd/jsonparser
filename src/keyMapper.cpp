@@ -4,13 +4,8 @@
 #include "keyMapper.h" 
 
 
-void KeyMapper::putKey(const std::string& key, size_t mapId, size_t nodeId)
+void KeyMapper::putKey(const std::string& key, size_t id)
 {
-    if (mapId > USHRT_MAX || nodeId > USHRT_MAX) {
-        return;
-    }
-
-    size_t id = (mapId << 16) + nodeId;
     if (keyMap.contains(id)) {
         return;
     }

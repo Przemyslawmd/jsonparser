@@ -10,11 +10,11 @@
 class KeyMapper
 {
 public:
-    void putKey(const std::string& key, size_t mapId, size_t nodeId);
+    void putKey(const std::string& key, size_t mapId);
 
     std::optional<std::string> getKey(const size_t id);
 
-private:
+//private:
     std::map<size_t, std::string> keyMap;
 };
 

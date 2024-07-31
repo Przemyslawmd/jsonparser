@@ -48,7 +48,7 @@ bool JsonApi::parseJsonString(const std::string& jsonString)
     tokens = parserKey->createKeyTokens(std::move(tokens));
 
     const auto parser = std::make_unique<Parser>();
-    root = parser->parseTokens(*tokens);
+    root = parser->parseTokens(*tokens, keyMapper.get());
     return true;
 }
 

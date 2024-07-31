@@ -13,6 +13,7 @@
 #include "../src/reader/ParserKey.h"
 #include "../src/reader/Preparser.h"
 #include "../src/writer/Writer.h"
+#include "../src/keyMapper.h"
 #include "config.h"
 #include "utils.h"
 
@@ -32,8 +33,10 @@ std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile)
     const auto parserKey = std::make_unique<ParserKey>();
     tokens = parserKey->createKeyTokens(std::move(tokens));
 
+    auto keyMapper = std::make_unique<KeyMapper>();
+
     const auto parser = std::make_unique<Parser>();
-    return parser->parseTokens(*tokens);
+    return parser->parseTokens(*tokens, keyMapper.get());
 }
 
 

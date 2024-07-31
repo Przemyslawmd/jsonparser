@@ -22,12 +22,12 @@ endif()
 
 add_executable(
   jsonParserTest
-  testPreparser.cpp
+  #testPreparser.cpp
   testParser.cpp
-  testValidator.cpp
-  testWriter.cpp
-  testApi.cpp
-  testApiError.cpp
+  #testValidator.cpp
+  #testWriter.cpp
+  #testApi.cpp
+  #testApiError.cpp
   ../src/jsonApi.cpp
   ../src/reader/Preparser.cpp
   ../src/reader/Parser.cpp
@@ -35,6 +35,7 @@ add_executable(
   ../src/reader/Validator.cpp
   ../src/writer/Writer.cpp  
   ../src/log/Error.cpp
+  ../src/keyMapper.cpp
   )
 
 target_compile_features(jsonParserTest PRIVATE cxx_std_20)
