@@ -86,7 +86,7 @@ TEST_F(ApiTest, ChangeValueComplexJson)
 TEST_F(ApiTest, AddSimpleNodeIntoObject)
 {
     auto api = prepareApi("test_4.json");
-    bool result = api->addNodeIntoObject({ "person2", "address" }, "post", Node{.value = "Cracow"});
+    bool result = api->addNodeIntoObject({ "person2", "address" }, "post", Node{.value = "Cracow" });
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();

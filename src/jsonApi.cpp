@@ -81,20 +81,23 @@ void JsonApi::clear()
 }
 */
 
-bool JsonApi::changeNodeInObject(const std::vector<Indicator>& keys, const std::string& key, Node node)
+bool JsonApi::changeNodeInObject(const std::vector<Indicator>& path, const std::string& key, Node newNode)
 {
     if (isRootEmpty()) {
         return false;
     }
 
-    ObjectNode* obj = getObjectAndCheckKey(keys, key);
+    ObjectNode* obj = getObjectAndCheckKey(path, key);
     if (obj == nullptr) {
         return false;
     }
 
-    size_t keyId = keyMapper->getIdKey(key, obj->begin()->first).value();
-    obj->at(keyId) = node;
-    return true;
+    if (getNodeType(newNode) == NodeType::SIMPLE) {
+        size_t keyId = keyMapper->getIdKey(key, obj->begin()->first).value();
+        obj->at(keyId) = newNode;
+        return true;
+    }
+
 }
 
 /*
@@ -120,15 +123,18 @@ bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& path, const std::s
         return false;
     }
 
-    InnerNodePtr node = getNode(path);
-    if (validateNodeType<ObjectNode*>(node, ErrorCode::API_NODE_NOT_OBJECT) == false) {
+    InnerNodePtr objNode = getNode(path);
+    if (validateNodeType<ObjectNode*>(objNode, ErrorCode::API_NODE_NOT_OBJECT) == false) {
         return false;
     }
 
-    ObjectNode* obj = std::get<ObjectNode*>(node);
-    size_t newId = keyMapper->putKeyIntoExistingMap(key, obj->begin()->first);
-    obj->emplace(std::make_pair(newId, newNode));
-    return true;
+    if (getNodeType(newNode) == NodeType::SIMPLE) {
+        ObjectNode* obj = std::get<ObjectNode*>(objNode);
+        size_t newId = keyMapper->putKeyIntoExistingMap(key, obj->begin()->first);
+        obj->emplace(std::make_pair(newId, newNode));
+        return true;
+    }
+    return false;
 }
 
 /*
@@ -325,3 +331,14 @@ ObjectNode* JsonApi::getObjectAndCheckKey(const std::vector<Indicator>& path, co
     return obj;
 }
 
+
+NodeType JsonApi::getNodeType(Node& node)
+{
+    if (std::holds_alternative<ObjectNode>(node.value)) {
+        return NodeType::OBJECT;
+    }
+    if (std::holds_alternative<ArrayNode>(node.value)) {
+        return NodeType::ARRAY;
+    }
+    return NodeType::SIMPLE;
+}

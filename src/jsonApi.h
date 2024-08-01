@@ -20,6 +20,13 @@ using InnerNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 using Indicator = std::variant<std::string, size_t>;
 
 
+enum class NodeType {
+    SIMPLE,
+    OBJECT,
+    ARRAY
+};
+
+
 class JsonApi
 {
 public:
@@ -53,6 +60,8 @@ private:
     bool isRootEmpty();
 
     InnerNodePtr getNode(const std::vector<Indicator>& path);
+
+    NodeType getNodeType(Node& node);
 
     ArrayNode* getArrayAndCheckIndex(const std::vector<Indicator>& path, size_t index);
     ObjectNode* getObjectAndCheckKey(const std::vector<Indicator>& path, const std::string& key);
