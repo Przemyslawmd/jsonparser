@@ -5,5 +5,10 @@
     "country": "Poland"
   },
   "company": "abc",
-  "cities": [ "Krakow", "Warszawa", "Wroclaw", "Poznan" ]
+  "cities": [
+    "Krakow",
+    "Warszawa",
+    "Wroclaw",
+    "Poznan"
+  ]
 }

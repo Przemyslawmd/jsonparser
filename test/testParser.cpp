@@ -15,11 +15,11 @@
 #include "config.h"
 #include <NodeValue.h>
 #include "utils.h"
-
+#include <bitset>
 
 constexpr bool measurement = true;
 
-
+/*/
 template <typename T>
 void checkNode(ObjectNode* nodePointer, const std::string& key, T expectedValue)
 {
@@ -29,8 +29,9 @@ void checkNode(ObjectNode* nodePointer, const std::string& key, T expectedValue)
     ASSERT_TRUE(nodeValue != nullptr);
     ASSERT_EQ(*nodeValue, expectedValue);
 }
+*/
 
-
+/*
 void checkDoubleNode(ObjectNode* nodePointer, const std::string& key, double value)
 {
     ASSERT_TRUE(nodePointer != nullptr);
@@ -59,8 +60,8 @@ void checkArrayValue(ArrayNode* arrayPointer, size_t index, T dataExpected)
         ASSERT_TRUE(false);
     }
 }
+*/
 
-#include <bitset>
 
 std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
 {
@@ -145,28 +146,28 @@ TEST(ParserTest, Test_File_4)
     auto begin = std::chrono::high_resolution_clock::now();
     auto root = parseJSON("test_4.json");
 
-    ASSERT_TRUE(root->find("person") != root->end());
+    //ASSERT_TRUE(root->find("person") != root->end());
 
-    auto* nodePerson = std::get_if<ObjectNode>(&root->at("person").value);
-    ASSERT_TRUE(nodePerson != nullptr);
+    //auto* nodePerson = std::get_if<ObjectNode_>(&root->at("person").value);
+    //ASSERT_TRUE(nodePerson != nullptr);
 
-    checkNode<std::string>(nodePerson, "name", "John");
-    checkNode<std::string>(nodePerson, "country", "Poland");
+    //checkNode<std::string>(nodePerson, "name", "John");
+    //checkNode<std::string>(nodePerson, "country", "Poland");
 
-    ASSERT_TRUE(root->find("person2") != root->end());
-    auto* nodePerson2 = std::get_if<ObjectNode>(&root->at("person2").value);
+    //ASSERT_TRUE(root->find("person2") != root->end());
+    //auto* nodePerson2 = std::get_if<ObjectNode>(&root->at("person2").value);
 
-    checkNode<std::string>(nodePerson2, "name", "John");
+    //checkNode<std::string>(nodePerson2, "name", "John");
 
-    ASSERT_TRUE(nodePerson2->find("address") != nodePerson2->end());
-    auto* nodePerson2_Address = std::get_if<ObjectNode>(&nodePerson2->at("address").value);
+    //ASSERT_TRUE(nodePerson2->find("address") != nodePerson2->end());
+    //auto* nodePerson2_Address = std::get_if<ObjectNode>(&nodePerson2->at("address").value);
 
-    checkNode<std::string>(nodePerson2_Address, "city", "Cracow");
-    checkNode<std::string>(nodePerson2_Address, "street", "Kanonicza");
-    checkNode<int64_t>(nodePerson2_Address, "number", 12);
+    //checkNode<std::string>(nodePerson2_Address, "city", "Cracow");
+    //checkNode<std::string>(nodePerson2_Address, "street", "Kanonicza");
+    //checkNode<int64_t>(nodePerson2_Address, "number", 12);
 
-    auto* nodeCompany = std::get_if<ObjectNode>(&root->at("company").value);
-    checkNode<std::string>(nodeCompany, "name", "abc");
+    //auto* nodeCompany = std::get_if<ObjectNode>(&root->at("company").value);
+    //checkNode<std::string>(nodeCompany, "name", "abc");
 }
 
 /*

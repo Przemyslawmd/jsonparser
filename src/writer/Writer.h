@@ -8,9 +8,10 @@
 #include <variant>
 
 #include <NodeValue.h>
+#include "../keyMapper.h"
 
 
-using ObjectNode = std::map<std::string, Node>;
+using ObjectNode = std::map<size_t, Node>;
 using ArrayNode = std::vector<Node>;
 
 
@@ -20,7 +21,7 @@ public:
 
     Writer() = default;
 
-    std::string createJsonString(ObjectNode*);
+    std::string createJsonString(ObjectNode*, KeyMapper*);
 
     void setMarginStep(size_t);
 
@@ -39,6 +40,7 @@ private:
 
     size_t margin = 0;
     size_t marginStep = 2;
+    KeyMapper* keyMapper;
 };
 
 #endif

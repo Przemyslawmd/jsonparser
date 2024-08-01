@@ -13,8 +13,7 @@
 #include "Token.h"
 #include <NodeValue.h>
 
-
-using ObjectNode = std::map<std::string, Node>;
+using ObjectNode = std::map<size_t, Node>;
 using ArrayNode = std::vector<Node>;
 
 

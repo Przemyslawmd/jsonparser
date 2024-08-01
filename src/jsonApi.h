@@ -13,14 +13,11 @@
 #include <Error.h>
 
 
-using ObjectNode = std::map<std::string, Node>;
+using ObjectNode = std::map<size_t, Node>;
 using ArrayNode = std::vector<Node>;
 
 /* Pointer to internal node: object (map) or array */
 using InnerNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
-
-/* Indicator is a key for object (map) or index for an array */
-using Indicator = std::variant<std::string, size_t>;
 
 
 class JsonApi
@@ -30,23 +27,24 @@ public:
     JsonApi();
 
     bool parseJsonString(const std::string& file);
+    
     std::string parseObjectToJsonString();
+    
+    //bool loadObject(std::unique_ptr<ObjectNode>);
 
-    bool loadObject(std::unique_ptr<ObjectNode>);
+    //void clear();
 
-    void clear();
+    //ObjectNode* getRoot();
 
-    ObjectNode* getRoot();
+    //bool changeNodeInObject(const std::vector<Indicator>&, const std::string& key, Node);
+    //bool changeNodeInArray(const std::vector<Indicator>&, size_t index, Node);
 
-    bool changeNodeInObject(const std::vector<Indicator>&, const std::string& key, Node);
-    bool changeNodeInArray(const std::vector<Indicator>&, size_t index, Node);
+    //bool addNodeIntoObject(const std::vector<Indicator>&, const std::string& key, Node);
+    //bool addNodeIntoArray(const std::vector<Indicator>&, Node);
+    //bool insertNodeIntoArray(const std::vector<Indicator>&, int index, Node);
 
-    bool addNodeIntoObject(const std::vector<Indicator>&, const std::string& key, Node);
-    bool addNodeIntoArray(const std::vector<Indicator>&, Node);
-    bool insertNodeIntoArray(const std::vector<Indicator>&, int index, Node);
-
-    bool removeNodeFromObject(const std::vector<Indicator>&, const std::string& key);
-    bool removeNodeFromArray(const std::vector<Indicator>&, size_t index);
+    //bool removeNodeFromObject(const std::vector<Indicator>&, const std::string& key);
+    //bool removeNodeFromArray(const std::vector<Indicator>&, size_t index);
 
     ErrorCode getErrorCode();
 
@@ -54,17 +52,17 @@ private:
 
     bool isRootEmpty();
 
-    InnerNodePtr getNode(const std::vector<Indicator>&);
+    InnerNodePtr getNode(const std::vector<size_t>& );
 
-    ArrayNode* getArrayAndCheckIndex(const std::vector<Indicator>&, size_t index);
-    ObjectNode* getObjectAndCheckKey(const std::vector<Indicator>&, const std::string& key);
+    ArrayNode* getArrayAndCheckIndex(const std::vector<size_t>&, size_t index);
+    ObjectNode* getObjectAndCheckKey(const std::vector<size_t>&, const size_t key);
 
     template <typename T>
     bool validateNodeType(InnerNodePtr, ErrorCode potentialError);
 
     std::unique_ptr<ObjectNode> root;
-    std::unique_ptr<Error> error;
     std::unique_ptr<KeyMapper> keyMapper;
+    std::unique_ptr<Error> error;
 };
 
 #endif
