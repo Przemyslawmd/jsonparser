@@ -4,9 +4,11 @@
 #include <stack>
 
 
-std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens, KeyMapper* keyMapperParam)
+constexpr size_t BITS_16 = 16;
+
+
+std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens)
 {
-    keyMapper = keyMapperParam;
     std::string key;
     auto nodes = std::make_unique<ObjectNode>();
     idStack.push({ 0, 0 });
@@ -53,8 +55,8 @@ void Parser::pushInnerNodeOnStack(const std::string& key, State state)
     if (stateStack.top() == State::OBJECT_PARSING) {
         ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
         size_t id = createId();
-        obj->emplace(std::make_pair(id, T()));        
-        keyMapper->putKey(key, id);
+        keyMapper.putKey(key, id);
+        obj->emplace(std::make_pair(id, T()));
         auto* currentNode = &(std::get<T>(obj->at(id).value));
         pushDataOnStack(currentNode, state);
     }
@@ -72,7 +74,7 @@ void Parser::processData(const std::string& key, const Token& token)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
         size_t id = createId();
-        keyMapper->putKey(key, id);
+        keyMapper.putKey(key, id);
         std::get<ObjectNode*>(nodeStack.top())->emplace(std::make_pair(id, std::get<T>(token.data)));
     }
     else {
@@ -86,7 +88,7 @@ void Parser::pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> node, State s
     nodeStack.push(node);
     stateStack.push(state);
     if (state == State::OBJECT_PARSING) {
-        idStack.push({ ++highestMapId, 1 });
+        idStack.push({ ++maxMapId, 1 });
     }
 }
 
@@ -103,7 +105,7 @@ void Parser::popDataFromStack()
 
 size_t Parser::createId()
 {
-    size_t id = (idStack.top().map << 16) + idStack.top().node;
+    size_t id = (idStack.top().map << BITS_16) + idStack.top().node;
     idStack.top().node += 1;
     return id;
 }

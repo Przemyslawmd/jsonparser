@@ -33,8 +33,8 @@ std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, KeyMapp
     const auto parserKey = std::make_unique<ParserKey>();
     tokens = parserKey->createKeyTokens(std::move(tokens));
 
-    const auto parser = std::make_unique<Parser>();
-    return parser->parseTokens(*tokens, keyMapper);
+    const auto parser = std::make_unique<Parser>(*keyMapper);
+    return parser->parseTokens(*tokens);
 }
 
 

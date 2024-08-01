@@ -13,9 +13,6 @@
 #include <Error.h>
 
 
-using ObjectNode = std::map<size_t, Node>;
-using ArrayNode = std::vector<Node>;
-
 /* Pointer to internal node: object (map) or array */
 using InnerNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 

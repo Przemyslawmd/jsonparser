@@ -22,9 +22,9 @@ endif()
 
 add_executable(
   jsonParserTest
-  #testPreparser.cpp
+  testPreparser.cpp
   testParser.cpp
-  #testValidator.cpp
+  testValidator.cpp
   testWriter.cpp
   #testApi.cpp
   #testApiError.cpp

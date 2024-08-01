@@ -81,12 +81,12 @@ std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
     auto keyMapper = std::make_unique<KeyMapper>();
 
     auto begin = std::chrono::high_resolution_clock::now();
-    const auto parser = std::make_unique<Parser>();
-    std::unique_ptr<ObjectNode> jsonObj = parser->parseTokens(*tokens, keyMapper.get());
+    const auto parser = std::make_unique<Parser>(*keyMapper.get());
+    std::unique_ptr<ObjectNode> jsonObj = parser->parseTokens(*tokens);
     
-    for (auto const& [key, val] : keyMapper.get()->keyMap) {
-        std::cout << std::bitset<32>(key)  << " : " << val << " : " << key << std::endl;
-    }
+    //for (auto const& [key, val] : keyMapper.get()->keyMap) {
+    //    std::cout << std::bitset<32>(key)  << " : " << val << " : " << key << std::endl;
+    //}
 
     if (measurement) {
         auto end = std::chrono::high_resolution_clock::now();

@@ -4,5 +4,4 @@
 #define TEST_DATA "${PROJECT_SOURCE_DIR}/data/"
 #define TEST_DATA_API "${PROJECT_SOURCE_DIR}/data/api/"
 #define TEST_DATA_IMPROPER "${PROJECT_SOURCE_DIR}/dataImproper/"
-#define TEST_DATA_WRITER "${PROJECT_SOURCE_DIR}/data/writer/"
 
