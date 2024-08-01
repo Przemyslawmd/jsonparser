@@ -12,7 +12,8 @@ class KeyMapper
 public:
     void putKey(const std::string& key, size_t mapId);
 
-    std::optional<std::string> getKey(const size_t id);
+    std::optional<std::string> getStrKey(const size_t id);
+    std::optional<size_t> getIdKey(const std::string& key, size_t mapId);
 
 private:
     std::map<size_t, std::string> keyMap;

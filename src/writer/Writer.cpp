@@ -28,9 +28,9 @@ void Writer::processObject(const ObjectNode* jsonObject)
     stream << "{\n";
     incMargin();
 
-    for (auto const& [key, val] : *jsonObject) {
+    for (auto const& [idKey, val] : *jsonObject) {
         std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
-        std::string keyStr = keyMapper.getKey(key).value();
+        std::string keyStr = keyMapper.getStrKey(idKey).value();
         stream << "\"" << keyStr << "\": ";
         parseData(val);
     }
