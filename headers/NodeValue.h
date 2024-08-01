@@ -14,5 +14,9 @@ struct Node
     Value value;
 };
 
+
+using ObjectNode = std::map<size_t, Node>;
+using ArrayNode = std::vector<Node>;
+
 #endif
 

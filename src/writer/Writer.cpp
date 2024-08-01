@@ -8,9 +8,8 @@
 constexpr std::string_view dataEnd = ",\n";
 
 
-std::string Writer::createJsonString(ObjectNode* object, KeyMapper* param)
+std::string Writer::createJsonString(ObjectNode* object)
 {
-    keyMapper = param;
     processObject(object);
     return stream.str();
 }
@@ -31,7 +30,7 @@ void Writer::processObject(const ObjectNode* jsonObject)
 
     for (auto const& [key, val] : *jsonObject) {
         std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
-        std::string keyStr = keyMapper->getKey(key).value();
+        std::string keyStr = keyMapper.getKey(key).value();
         stream << "\"" << keyStr << "\": ";
         parseData(val);
     }

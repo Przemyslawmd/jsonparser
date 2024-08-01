@@ -58,8 +58,8 @@ std::string JsonApi::parseObjectToJsonString()
     if (isRootEmpty()) {
         return {};
     }
-    auto writer = std::make_unique<Writer>();
-    return { writer->createJsonString(root.get(), keyMapper.get()) };
+    auto writer = std::make_unique<Writer>(*keyMapper.get());
+    return { writer->createJsonString(root.get()) };
 }
 
 /*

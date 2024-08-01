@@ -44,8 +44,8 @@ void testJsonString(const std::string& file)
     auto root = writerParseJSON(file, keyMapper.get());
 
     auto begin = std::chrono::high_resolution_clock::now();
-    Writer writer;
-    std::string json = writer.createJsonString(root.get(), keyMapper.get());
+    Writer writer(*keyMapper.get());
+    std::string json = writer.createJsonString(root.get());
 
     if (measurement) {
         auto end = std::chrono::high_resolution_clock::now();
