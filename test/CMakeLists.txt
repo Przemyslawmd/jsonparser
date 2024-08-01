@@ -26,7 +26,7 @@ add_executable(
   testParser.cpp
   testValidator.cpp
   testWriter.cpp
-  #testApi.cpp
+  testApi.cpp
   #testApiError.cpp
   ../src/jsonApi.cpp
   ../src/reader/Preparser.cpp

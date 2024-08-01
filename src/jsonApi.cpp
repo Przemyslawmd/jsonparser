@@ -79,7 +79,7 @@ void JsonApi::clear()
     root.reset();
     error.reset();
 }
-
+*/
 
 bool JsonApi::changeNodeInObject(const std::vector<Indicator>& keys, const std::string& key, Node node)
 {
@@ -92,11 +92,12 @@ bool JsonApi::changeNodeInObject(const std::vector<Indicator>& keys, const std::
         return false;
     }
 
-    obj->at(key) = node;
+    size_t keyId = keyMapper->getIdKey(key, obj->begin()->first).value();
+    obj->at(keyId) = node;
     return true;
 }
 
-
+/*
 bool JsonApi::changeNodeInArray(const std::vector<Indicator>& keys, size_t index, Node node)
 {
     if (isRootEmpty()) {
@@ -111,25 +112,26 @@ bool JsonApi::changeNodeInArray(const std::vector<Indicator>& keys, size_t index
     arr->at(index) = node;
     return true;
 }
+*/
 
-
-bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& keys, const std::string& key, Node newNode)
+bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& path, const std::string& key, Node newNode)
 {
     if (isRootEmpty()) {
         return false;
     }
 
-    InnerNodePtr node = getNode(keys);
+    InnerNodePtr node = getNode(path);
     if (validateNodeType<ObjectNode*>(node, ErrorCode::API_NODE_NOT_OBJECT) == false) {
         return false;
     }
 
     ObjectNode* obj = std::get<ObjectNode*>(node);
-    obj->emplace(std::make_pair(key, newNode));
+    size_t newId = keyMapper->putKeyIntoExistingMap(key, obj->begin()->first);
+    obj->emplace(std::make_pair(newId, newNode));
     return true;
 }
 
-
+/*
 bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node newNode)
 {
     if (isRootEmpty()) {
@@ -223,7 +225,7 @@ bool JsonApi::isRootEmpty()
 }
 
 
-InnerNodePtr JsonApi::getNode(const std::vector<size_t>& keys)
+InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& path)
 {
     if (isRootEmpty()) {
         return nullptr;
@@ -244,26 +246,28 @@ InnerNodePtr JsonApi::getNode(const std::vector<size_t>& keys)
         }
     };
 
-    for (const size_t key : keys) {
-        if (lastType == InnerNodeType::OBJECT) {
+    for (const auto indicator : path) {
+        if (lastType == InnerNodeType::OBJECT && std::holds_alternative<std::string>(indicator)) {
             ObjectNode* obj = std::get<ObjectNode*>(nodePtr);
-
-            if (obj->contains(key) == false) {
+            const auto& keyStr = std::get<std::string>(indicator);
+            size_t keyId = keyMapper->getIdKey(keyStr, obj->begin()->first).value();
+            if (obj->contains(keyId) == false) {
                 error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
                 return nullptr;
             }
 
-            Node* node = &obj->at(key);
+            Node* node = &obj->at(keyId);
             getNextNode(&nodePtr, node, lastType);
         }
-        else if (lastType == InnerNodeType::ARRAY) {
+        else if (lastType == InnerNodeType::ARRAY && std::holds_alternative<size_t>(indicator)) {
             ArrayNode* arr = std::get<ArrayNode*>(nodePtr);
-            if (key >= arr->size()) {
+            size_t index = std::get<size_t>(indicator);
+            if (index >= arr->size()) {
                 error = std::make_unique<Error>(ErrorCode::API_INDEX_OUT_OF_ARRAY);
                 return nullptr;
             }
 
-            Node* node = &arr->at(key);
+            Node* node = &arr->at(index);
             getNextNode(&nodePtr, node, lastType);
         }
         else {
@@ -289,9 +293,9 @@ bool JsonApi::validateNodeType(InnerNodePtr node, ErrorCode potentialError)
 }
 
 
-ArrayNode* JsonApi::getArrayAndCheckIndex(const std::vector<size_t>& keys, size_t index)
+ArrayNode* JsonApi::getArrayAndCheckIndex(const std::vector<Indicator>& path, size_t index)
 {
-    InnerNodePtr node = getNode(keys);
+    InnerNodePtr node = getNode(path);
     if (validateNodeType<ArrayNode*>(node, ErrorCode::API_NODE_NOT_ARRAY) == false) {
         return nullptr;
     }
@@ -305,15 +309,16 @@ ArrayNode* JsonApi::getArrayAndCheckIndex(const std::vector<size_t>& keys, size_
 }
 
 
-ObjectNode* JsonApi::getObjectAndCheckKey(const std::vector<size_t>& keys, const size_t key)
+ObjectNode* JsonApi::getObjectAndCheckKey(const std::vector<Indicator>& path, const std::string& key)
 {
-    InnerNodePtr node = getNode(keys);
+    InnerNodePtr node = getNode(path);
     if (validateNodeType<ObjectNode*>(node, ErrorCode::API_NODE_NOT_OBJECT) == false) {
         return nullptr;
     }
 
     ObjectNode* obj = std::get<ObjectNode*>(node);
-    if (obj->contains(key) == false) {
+    size_t keyId = keyMapper->getIdKey(key, obj->begin()->first).value();
+    if (obj->contains(keyId) == false) {
         error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
         return nullptr;
     }

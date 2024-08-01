@@ -1,18 +1,18 @@
 {
-  "company": {
-    "name": "abc"
-  },
   "person": {
-    "country": "Poland",
-    "name": "John"
+    "name": "John",
+    "country": "Poland"
   },
   "person2": {
+    "name": "John",
     "address": {
       "city": "Cracow",
+      "street": "Kanonicza",
       "number": 12,
-      "post": "Cracow",
-      "street": "Kanonicza"
-    },
-    "name": "John"
+      "post": "Cracow"
+    }
+  },
+  "company": {
+    "name": "abc"
   }
 }

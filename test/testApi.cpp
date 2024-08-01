@@ -30,7 +30,7 @@ std::unique_ptr<JsonApi> ApiTest::prepareApi(const std::string& file)
     return api;
 }
 
-
+/*
 TEST_F(ApiTest, AddIntValueToObjectDirectly)
 {
     auto api = prepareApi("test_1.json");
@@ -44,7 +44,7 @@ TEST_F(ApiTest, AddIntValueToObjectDirectly)
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
-
+*/
 
 TEST_F(ApiTest, ChangeNodeValue)
 {
@@ -57,7 +57,7 @@ TEST_F(ApiTest, ChangeNodeValue)
     ASSERT_EQ(json, jsonExpected);
 }
 
-
+/*
 TEST_F(ApiTest, ChangeValueComplexJson)
 {
     auto begin = std::chrono::high_resolution_clock::now();
@@ -81,7 +81,7 @@ TEST_F(ApiTest, ChangeValueComplexJson)
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_8_complex.json");
     ASSERT_EQ(json, jsonExpected);
 }
-
+*/
 
 TEST_F(ApiTest, AddSimpleNodeIntoObject)
 {
@@ -94,7 +94,7 @@ TEST_F(ApiTest, AddSimpleNodeIntoObject)
     ASSERT_EQ(json, jsonExpected);
 }
 
-
+/*
 TEST_F(ApiTest, AddSimpleNodeIntoArray)
 {
     auto api = prepareApi("test_7.json");
@@ -364,4 +364,5 @@ TEST_F(ApiTest, LoadJsonObject_3)
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_WRITER), "test_6.json");
     ASSERT_EQ(json, jsonExpected);
 }
+*/
 

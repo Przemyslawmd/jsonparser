@@ -16,6 +16,9 @@
 /* Pointer to internal node: object (map) or array */
 using InnerNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 
+/* Indicator is a key for object (map) or index for an array */
+using Indicator = std::variant<std::string, size_t>;
+
 
 class JsonApi
 {
@@ -33,10 +36,10 @@ public:
 
     //ObjectNode* getRoot();
 
-    //bool changeNodeInObject(const std::vector<Indicator>&, const std::string& key, Node);
+    bool changeNodeInObject(const std::vector<Indicator>&, const std::string& key, Node);
     //bool changeNodeInArray(const std::vector<Indicator>&, size_t index, Node);
 
-    //bool addNodeIntoObject(const std::vector<Indicator>&, const std::string& key, Node);
+    bool addNodeIntoObject(const std::vector<Indicator>&, const std::string& key, Node);
     //bool addNodeIntoArray(const std::vector<Indicator>&, Node);
     //bool insertNodeIntoArray(const std::vector<Indicator>&, int index, Node);
 
@@ -49,10 +52,10 @@ private:
 
     bool isRootEmpty();
 
-    InnerNodePtr getNode(const std::vector<size_t>& );
+    InnerNodePtr getNode(const std::vector<Indicator>& path);
 
-    ArrayNode* getArrayAndCheckIndex(const std::vector<size_t>&, size_t index);
-    ObjectNode* getObjectAndCheckKey(const std::vector<size_t>&, const size_t key);
+    ArrayNode* getArrayAndCheckIndex(const std::vector<Indicator>& path, size_t index);
+    ObjectNode* getObjectAndCheckKey(const std::vector<Indicator>& path, const std::string& key);
 
     template <typename T>
     bool validateNodeType(InnerNodePtr, ErrorCode potentialError);
