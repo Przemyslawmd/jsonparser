@@ -94,7 +94,7 @@ bool JsonApi::changeNodeInObject(const std::vector<Indicator>& path, const std::
 
     if (getNodeType(newNode) == NodeType::SIMPLE) {
         size_t keyId = keyMapper->getIdKey(key, obj->begin()->first).value();
-        obj->at(keyId) = getNodeFromNodeExternal(newNode);
+        obj->at(keyId) = getNodeInternalFromNode(newNode);
         return true;
     }
 
@@ -128,14 +128,38 @@ bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& path, const std::s
         return false;
     }
 
-    if (getNodeType(newNode) == NodeType::SIMPLE) {
-        ObjectNode* obj = std::get<ObjectNode*>(objNode);
-        size_t newId = keyMapper->putKeyIntoExistingMap(key, obj->begin()->first);
-        NodeInternal x = getNodeFromNodeExternal(newNode);
-        obj->emplace(std::make_pair(newId, x));
+    ObjectNode* obj = std::get<ObjectNode*>(objNode);
+    size_t newId = keyMapper->putKeyIntoExistingMap(key, obj->begin()->first);
+    NodeType newNodeType = getNodeType(newNode);
+
+    if (newNodeType == NodeType::SIMPLE) {
+        obj->emplace(std::make_pair(newId, getNodeInternalFromNode(newNode)));
         return true;
     }
-    return false;
+    else if (newNodeType == NodeType::OBJECT) {
+        obj->emplace(std::make_pair(newId, ObjectNode()));
+        ObjectNode* objNew = &(std::get<ObjectNode>(obj->at(newId).value));
+        addNodeIntoObjectInternally(objNew, newNode);
+    }
+    return true;
+}
+
+
+bool JsonApi::addNodeIntoObjectInternally(ObjectNode* currentObject, Node newNode)
+{
+    size_t mapID = keyMapper->getMaxMapID() + 1;
+    size_t nodeID = 0;
+    const size_t BIT_MASK = 0b11111111111111110000000000000000;
+    
+    for (auto& [key, val] : std::get<ObjectNodeExternal>(newNode.value)) {
+        if (getNodeType(val) == NodeType::SIMPLE) {
+            size_t ID = mapID & BIT_MASK + nodeID;
+            keyMapper->putKey(key, ID);
+            currentObject->emplace(std::make_pair(ID, getNodeInternalFromNode(val)));
+            nodeID++;
+        }
+    }
+    return true;
 }
 
 /*
@@ -345,7 +369,7 @@ NodeType JsonApi::getNodeType(Node& node)
 }
 
 
-NodeInternal JsonApi::getNodeFromNodeExternal(Node& nodeExternal)
+NodeInternal JsonApi::getNodeInternalFromNode(Node& nodeExternal)
 {
     if (std::holds_alternative<std::string>(nodeExternal.value)) {
         return NodeInternal{ .value = std::get<std::string>(nodeExternal.value) };
@@ -355,5 +379,8 @@ NodeInternal JsonApi::getNodeFromNodeExternal(Node& nodeExternal)
     }
     if (std::holds_alternative<double>(nodeExternal.value)) {
         return NodeInternal{ .value = std::get<double>(nodeExternal.value) };
+    }
+    if (std::holds_alternative<bool>(nodeExternal.value)) {
+        return NodeInternal{ .value = std::get<bool>(nodeExternal.value) };
     }
 }

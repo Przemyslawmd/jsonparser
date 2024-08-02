@@ -94,6 +94,35 @@ TEST_F(ApiTest, AddSimpleNodeIntoObject)
     ASSERT_EQ(json, jsonExpected);
 }
 
+#include <iostream>
+
+
+TEST_F(ApiTest, AddObjectNodeIntoObject)
+{
+    auto begin = std::chrono::high_resolution_clock::now();
+    auto api = prepareApi("test_5.json");
+
+    std::map<std::string, Node> newObject;
+    newObject.emplace(std::make_pair("a", 123));
+    newObject.emplace(std::make_pair("b", "AAA"));
+    
+
+    bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectToJsonString(); 
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+    }
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_5_1.json");
+    std::cout << json << std::endl;
+    
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
 /*
 TEST_F(ApiTest, AddSimpleNodeIntoArray)
 {

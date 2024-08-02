@@ -63,10 +63,12 @@ private:
 
     NodeType getNodeType(Node& node);
 
-    NodeInternal getNodeFromNodeExternal(Node&);
+    NodeInternal getNodeInternalFromNode(Node&);
 
     ArrayNode* getArrayAndCheckIndex(const std::vector<Indicator>& path, size_t index);
     ObjectNode* getObjectAndCheckKey(const std::vector<Indicator>& path, const std::string& key);
+
+    bool addNodeIntoObjectInternally(ObjectNode*, Node);
 
     template <typename T>
     bool validateNodeType(InnerNodePtr, ErrorCode potentialError);
