@@ -49,7 +49,7 @@ TEST_F(ApiTest, AddIntValueToObjectDirectly)
 TEST_F(ApiTest, ChangeNodeValue)
 {
     auto api = prepareApi("test_3.json");
-    bool result = api->changeNodeInObject({ "person" }, "country", NodeExternal{ .value = "Spain" });
+    bool result = api->changeNodeInObject({ "person" }, "country", Node{ .value = "Spain" });
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
@@ -86,7 +86,7 @@ TEST_F(ApiTest, ChangeValueComplexJson)
 TEST_F(ApiTest, AddSimpleNodeIntoObject)
 {
     auto api = prepareApi("test_4.json");
-    bool result = api->addNodeIntoObject({ "person2", "address" }, "post", NodeExternal{ .value = "Cracow" });
+    bool result = api->addNodeIntoObject({ "person2", "address" }, "post", Node{ .value = "Cracow" });
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();

@@ -81,7 +81,7 @@ void JsonApi::clear()
 }
 */
 
-bool JsonApi::changeNodeInObject(const std::vector<Indicator>& path, const std::string& key, NodeExternal newNode)
+bool JsonApi::changeNodeInObject(const std::vector<Indicator>& path, const std::string& key, Node newNode)
 {
     if (isRootEmpty()) {
         return false;
@@ -117,7 +117,7 @@ bool JsonApi::changeNodeInArray(const std::vector<Indicator>& keys, size_t index
 }
 */
 
-bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& path, const std::string& key, NodeExternal newNode)
+bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& path, const std::string& key, Node newNode)
 {
     if (isRootEmpty()) {
         return false;
@@ -333,7 +333,7 @@ ObjectNode* JsonApi::getObjectAndCheckKey(const std::vector<Indicator>& path, co
 }
 
 
-NodeType JsonApi::getNodeType(NodeExternal& node)
+NodeType JsonApi::getNodeType(Node& node)
 {
     if (std::holds_alternative<ObjectNodeExternal>(node.value)) {
         return NodeType::OBJECT;
@@ -345,7 +345,7 @@ NodeType JsonApi::getNodeType(NodeExternal& node)
 }
 
 
-NodeInternal JsonApi::getNodeFromNodeExternal(NodeExternal& nodeExternal)
+NodeInternal JsonApi::getNodeFromNodeExternal(Node& nodeExternal)
 {
     if (std::holds_alternative<std::string>(nodeExternal.value)) {
         return NodeInternal{ .value = std::get<std::string>(nodeExternal.value) };

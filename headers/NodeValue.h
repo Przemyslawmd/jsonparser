@@ -19,15 +19,15 @@ using ObjectNode = std::map<size_t, NodeInternal>;
 using ArrayNode = std::vector<NodeInternal>;
 
 
-struct NodeExternal
+struct Node
 {
-    using Value = std::variant<std::string, int64_t, double, bool, nullptr_t, std::map<std::string, NodeExternal>, std::vector<NodeExternal>>;
+    using Value = std::variant<std::string, int64_t, double, bool, nullptr_t, std::map<std::string, Node>, std::vector<Node>>;
     Value value;
 };
 
 
-using ObjectNodeExternal = std::map<std::string, NodeExternal>;
-using ArrayNodeExternal = std::vector<NodeExternal>;
+using ObjectNodeExternal = std::map<std::string, Node>;
+using ArrayNodeExternal = std::vector<Node>;
 
 
 #endif
