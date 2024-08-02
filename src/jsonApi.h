@@ -47,8 +47,8 @@ public:
     //bool changeNodeInArray(const std::vector<Indicator>&, size_t index, Node);
 
     bool addNodeIntoObject(const std::vector<Indicator>&, const std::string& key, Node);
-    //bool addNodeIntoArray(const std::vector<Indicator>&, Node);
-    //bool insertNodeIntoArray(const std::vector<Indicator>&, int index, Node);
+    bool addNodeIntoArray(const std::vector<Indicator>&, Node);
+    bool insertNodeIntoArray(const std::vector<Indicator>&, int index, Node);
 
     //bool removeNodeFromObject(const std::vector<Indicator>&, const std::string& key);
     //bool removeNodeFromArray(const std::vector<Indicator>&, size_t index);
@@ -69,6 +69,7 @@ private:
     ObjectNode* getObjectAndCheckKey(const std::vector<Indicator>& path, const std::string& key);
 
     bool addNodeIntoObjectInternally(ObjectNode*, Node);
+    //bool addNodeIntoArrayInternally(ObjectNode*, Node);
 
     template <typename T>
     bool validateNodeType(InnerNodePtr, ErrorCode potentialError);

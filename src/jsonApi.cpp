@@ -162,7 +162,7 @@ bool JsonApi::addNodeIntoObjectInternally(ObjectNode* currentObject, Node newNod
     return true;
 }
 
-/*
+
 bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node newNode)
 {
     if (isRootEmpty()) {
@@ -175,12 +175,16 @@ bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node newNode)
     }
 
     ArrayNode* arr = std::get<ArrayNode*>(node);
-    arr->emplace_back(newNode);
+    NodeType newNodeType = getNodeType(newNode);
+    
+    if (newNodeType == NodeType::SIMPLE) {
+        arr->emplace_back(getNodeInternalFromNode(newNode));
+    }
     return true;
 }
 
 
-bool JsonApi::insertNodeIntoArray(const std::vector<Indicator>& keys, int index   , Node node)
+bool JsonApi::insertNodeIntoArray(const std::vector<Indicator>& keys, int index, Node node)
 {
     if (isRootEmpty()) {
         return false;
@@ -191,11 +195,14 @@ bool JsonApi::insertNodeIntoArray(const std::vector<Indicator>& keys, int index 
         return false;
     }
 
-    arr->insert(arr->begin() + index, node);
+    NodeType newNodeType = getNodeType(node);
+    if (newNodeType == NodeType::SIMPLE) {
+        arr->insert(arr->begin() + index, getNodeInternalFromNode(node));
+    }
     return true;
 }
 
-
+/*
 bool JsonApi::removeNodeFromObject(const std::vector<Indicator>& keys, const std::string& key)
 {
     if (isRootEmpty()) {

@@ -94,8 +94,6 @@ TEST_F(ApiTest, AddSimpleNodeIntoObject)
     ASSERT_EQ(json, jsonExpected);
 }
 
-#include <iostream>
-
 
 TEST_F(ApiTest, AddObjectNodeIntoObject)
 {
@@ -105,7 +103,6 @@ TEST_F(ApiTest, AddObjectNodeIntoObject)
     std::map<std::string, Node> newObject;
     newObject.emplace(std::make_pair("a", 123));
     newObject.emplace(std::make_pair("b", "AAA"));
-    
 
     bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
     ASSERT_TRUE(result);
@@ -117,21 +114,18 @@ TEST_F(ApiTest, AddObjectNodeIntoObject)
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_5_1.json");
-    std::cout << json << std::endl;
-    
     ASSERT_EQ(json, jsonExpected);
 }
 
 
-/*
 TEST_F(ApiTest, AddSimpleNodeIntoArray)
 {
     auto api = prepareApi("test_7.json");
 
-    bool result = api->addNodeIntoArray({ "employees", size_t(0), "data", size_t(0) }, Node{.value = 4 });
+    bool result = api->addNodeIntoArray({ "employees", size_t(0), "data", size_t(0) }, Node{ .value = 4 });
     ASSERT_TRUE(result);
 
-    result = api->insertNodeIntoArray({ "employees", size_t(1), "data", size_t(0) }, 1, Node{ .value = "c c"});
+    result = api->insertNodeIntoArray({ "employees", size_t(1), "data", size_t(0) }, 1, Node{ .value = "c c" });
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
@@ -139,7 +133,7 @@ TEST_F(ApiTest, AddSimpleNodeIntoArray)
     ASSERT_EQ(json, jsonExpected);
 }
 
-
+/*
 TEST_F(ApiTest, AddObjectNodeIntoObject)
 {
     auto begin = std::chrono::high_resolution_clock::now();
