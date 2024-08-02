@@ -63,7 +63,7 @@ void Writer::processArray(const ArrayNode* jsonArray)
 }
 
 
-void Writer::parseData(const Node& node)
+void Writer::parseData(const NodeInternal& node)
 {
     if (std::holds_alternative<std::string>(node.value)) {
         stream << "\"" << std::get<std::string>(node.value) << "\"" << dataEnd;

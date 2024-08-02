@@ -43,10 +43,10 @@ public:
 
     //ObjectNode* getRoot();
 
-    bool changeNodeInObject(const std::vector<Indicator>&, const std::string& key, Node);
+    bool changeNodeInObject(const std::vector<Indicator>&, const std::string& key, NodeExternal);
     //bool changeNodeInArray(const std::vector<Indicator>&, size_t index, Node);
 
-    bool addNodeIntoObject(const std::vector<Indicator>&, const std::string& key, Node);
+    bool addNodeIntoObject(const std::vector<Indicator>&, const std::string& key, NodeExternal);
     //bool addNodeIntoArray(const std::vector<Indicator>&, Node);
     //bool insertNodeIntoArray(const std::vector<Indicator>&, int index, Node);
 
@@ -61,7 +61,9 @@ private:
 
     InnerNodePtr getNode(const std::vector<Indicator>& path);
 
-    NodeType getNodeType(Node& node);
+    NodeType getNodeType(NodeExternal& node);
+
+    NodeInternal getNodeFromNodeExternal(NodeExternal&);
 
     ArrayNode* getArrayAndCheckIndex(const std::vector<Indicator>& path, size_t index);
     ObjectNode* getObjectAndCheckKey(const std::vector<Indicator>& path, const std::string& key);

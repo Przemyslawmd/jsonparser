@@ -26,7 +26,7 @@ private:
 
     void processObject(const ObjectNode*);
     void processArray(const ArrayNode*);
-    void parseData(const Node&);
+    void parseData(const NodeInternal&);
 
     void incMargin();
     void decMargin();
