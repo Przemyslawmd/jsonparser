@@ -113,22 +113,28 @@ bool JsonApi::changeNodeInObject(const std::vector<Indicator>& path, const std::
     return true;
 }
 
-/*
-bool JsonApi::changeNodeInArray(const std::vector<Indicator>& keys, size_t index, Node node)
+
+bool JsonApi::changeNodeInArray(const std::vector<Indicator>& path, size_t index, Node newNode)
 {
     if (isRootEmpty()) {
         return false;
     }
 
-    Array* arr = getArrayAndCheckIndex(keys, index);
+    Array* arr = getArrayAndCheckIndex(path, index);
     if (arr == nullptr) {
         return false;
     }
 
-    arr->at(index) = node;
+    NodeType nodeType = getNodeType(newNode);
+    if (nodeType == NodeType::SIMPLE) {
+        arr->at(index) = getNodeInternalFromNode(newNode);
+        return true;
+    }
+    // TODO : Object and Array
+
     return true;
 }
-*/
+
 
 bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& path, const std::string& key, Node newNode)
 {
@@ -217,7 +223,6 @@ bool JsonApi::addObjectInternally(Object* currentObject, Node newNode)
 }
 
 
-
 bool JsonApi::addArrayInternally(Array* currentObject, Node newNode)
 {
     for (auto& val : std::get<ArrayExternal>(newNode.value)) {
@@ -256,6 +261,7 @@ bool JsonApi::insertNodeIntoArray(const std::vector<Indicator>& keys, int index,
     if (newNodeType == NodeType::SIMPLE) {
         arr->insert(arr->begin() + index, getNodeInternalFromNode(node));
     }
+    // TODO : Object and Array
     return true;
 }
 
@@ -453,4 +459,5 @@ NodeInternal JsonApi::getNodeInternalFromNode(Node& node)
     if (std::holds_alternative<bool>(node.value)) {
         return NodeInternal{ .value = std::get<bool>(node.value) };
     }
+    // TODO : Error if change not for simple value 
 }

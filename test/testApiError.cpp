@@ -77,7 +77,7 @@ TEST_F(ApiTestError, ImproperKeyOuterNode)
     ASSERT_EQ(api.getErrorCode(), ErrorCode::API_NOT_KEY_IN_MAP);
 }
 
-/*
+
 TEST_F(ApiTestError, OutOfIndexOuterNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_7.json");
@@ -91,9 +91,8 @@ TEST_F(ApiTestError, OutOfIndexOuterNode)
     ASSERT_FALSE(result);
     ASSERT_EQ(api.getErrorCode(), ErrorCode::API_INDEX_OUT_OF_ARRAY);
 }
-*/
 
-/*
+
 TEST_F(ApiTestError, inconsistentDataOuterNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
@@ -117,7 +116,6 @@ TEST_F(ApiTestError, emptyApi_1)
     ASSERT_FALSE(result);
     ASSERT_EQ(api.getErrorCode(), ErrorCode::API_EMPTY);
 }
-*/
 
 
 TEST_F(ApiTestError, emptyApi_2)

@@ -44,7 +44,7 @@ public:
     //Object* getRoot();
 
     bool changeNodeInObject(const std::vector<Indicator>&, const std::string& key, Node);
-    //bool changeNodeInArray(const std::vector<Indicator>&, size_t index, Node);
+    bool changeNodeInArray(const std::vector<Indicator>&, size_t index, Node);
 
     bool addNodeIntoObject(const std::vector<Indicator>&, const std::string& key, Node);
     bool addNodeIntoArray(const std::vector<Indicator>&, Node);
