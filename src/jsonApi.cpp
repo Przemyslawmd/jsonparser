@@ -284,24 +284,31 @@ bool JsonApi::addArrayNodeInternally(ArrayNode* currentArray, Node newNode)
     return true;
 }
 
-/*
-bool JsonApi::removeNodeFromObjectNode(const std::vector<Indicator>& keys, const std::string& key)
+
+bool JsonApi::removeNodeFromObject(const std::vector<Indicator>& keys, const std::string& key)
 {
     if (isRootEmpty()) {
         return false;
     }
 
-    ObjectNode* obj = getObjectNodeAndCheckKey(keys, key);
+    auto [obj, keyID] = getObjectNodeAndCheckKey(keys, key);
     if (obj == nullptr) {
         return false;
     }
 
-    obj->erase(key);
+    NodeInternal nodeToRemove = obj->at(keyID);
+    NodeType nodeType = getNodeInternalType(nodeToRemove);
+
+    if (nodeType == NodeType::SIMPLE) {
+        obj->erase(keyID);
+        keyMapper->removeKey(keyID);
+    }
+    // TODO : Object and Array
     return true;
 }
 
 
-bool JsonApi::removeNodeFromArrayNode(const std::vector<Indicator>& keys, size_t index)
+bool JsonApi::removeNodeFromArray(const std::vector<Indicator>& keys, size_t index)
 {
     if (isRootEmpty()) {
         return false;
@@ -312,10 +319,16 @@ bool JsonApi::removeNodeFromArrayNode(const std::vector<Indicator>& keys, size_t
         return false;
     }
 
-    arr->erase(arr->begin() + index);
+    NodeInternal nodeToRemove = arr->at(index);
+    NodeType nodeType = getNodeInternalType(nodeToRemove);
+
+    if (nodeType == NodeType::SIMPLE) {
+        arr->erase(arr->begin() + index);
+    }
+    // TODO : Object and Array
     return true;
 }
-*/
+
 
 ErrorCode JsonApi::getErrorCode()
 {
@@ -324,7 +337,6 @@ ErrorCode JsonApi::getErrorCode()
     }
     return error->getErrorCode();
 }
-
 
 /*******************************************************************/
 /* PRIVATE *********************************************************/
@@ -450,12 +462,24 @@ std::tuple<ObjectNode*, size_t> JsonApi::getObjectNodeAndCheckKey(const std::vec
 }
 
 
-NodeType JsonApi::getNodeType(Node& node)
+NodeType JsonApi::getNodeType(const Node& node)
 {
     if (std::holds_alternative<ObjectNodeExternal>(node.value)) {
         return NodeType::OBJECT;
     }
     if (std::holds_alternative<ArrayNodeExternal>(node.value)) {
+        return NodeType::ARRAY;
+    }
+    return NodeType::SIMPLE;
+}
+
+
+NodeType JsonApi::getNodeInternalType(const NodeInternal& node)
+{
+    if (std::holds_alternative<ObjectNode>(node.value)) {
+        return NodeType::OBJECT;
+    }
+    if (std::holds_alternative<ArrayNode>(node.value)) {
         return NodeType::ARRAY;
     }
     return NodeType::SIMPLE;

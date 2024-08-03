@@ -1,26 +1,23 @@
 {
-  "billTo": {
-    "address": "123 Maple Street",
-    "city": "Pretendville",
-    "minusWeight": -0.24567,
-    "name": "John Smith",
-    "state": "NY",
-    "zip": 26111474836476
-  },
   "name": "John Smith",
+  "value": "20223",
   "price": 2224,
   "shipTo": {
-    "address": "123 Maple Street",
-    "boolValue": true,
+    "name": "Jane Smith",
     "cities": [
       "Pretendville",
       "New York",
       "Chicago"
     ],
-    "name": "Jane Smith",
     "state": "NY",
-    "weight": 12.34,
-    "zip": -12345
+    "zip": -12345,
+    "weight": 12.34
   },
-  "value": "20223"
+  "billTo": {
+    "address": "123 Maple Street",
+    "city": "Pretendville",
+    "state": "NY",
+    "zip": 26111474836476,
+    "minusWeight": -0.24567
+  }
 }

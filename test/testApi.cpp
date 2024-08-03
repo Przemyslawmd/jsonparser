@@ -267,17 +267,18 @@ TEST_F(ApiTest, ChangeValueComplexJson)
     ASSERT_EQ(json, jsonExpected);
 }
 
+/********************************************************************************/
+/* REMOVE NODE FROM OBJECT ******************************************************/
 
-/*
-TEST_F(ApiTest, RemoveNodeFromObjectNode)
+TEST_F(ApiTest, RemoveSimpleNodeFromObject)
 {
     auto begin = std::chrono::high_resolution_clock::now();
     auto api = prepareApi("test_2.json");
 
-    bool result = api->removeNodeFromObjectNode({ "billTo" }, "name");
+    bool result = api->removeNodeFromObject({ "billTo" }, "name");
     ASSERT_TRUE(result);
 
-    result = api->removeNodeFromObjectNode({ "shipTo", "address" }, "cities");
+    result = api->removeNodeFromObject({ "shipTo" }, "address" );
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectNodeToJsonString();
@@ -286,25 +287,24 @@ TEST_F(ApiTest, RemoveNodeFromObjectNode)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_2_2.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_2_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
+/********************************************************************************/
+/* REMOVE NODE FROM ARRAY *******************************************************/
 
-TEST_F(ApiTest, RemoveNodeFromArrayNode)
+TEST_F(ApiTest, RemoveSimpleNodeFromArray)
 {
     auto api = prepareApi("test_7.json");
 
-    bool result = api->removeNodeFromArrayNode({ "employees", size_t(0), "data", size_t(0) }, 1);
+    bool result = api->removeNodeFromArray({ "employees", size_t(0), "data", size_t(0) }, 1);
     ASSERT_TRUE(result);
 
-    result = api->removeNodeFromArrayNode({ "employees", size_t(0), "data", size_t(1) }, 0);
+    result = api->removeNodeFromArray({ "employees", size_t(0), "data", size_t(1) }, 0);
     ASSERT_TRUE(result);
 
-    result = api->removeNodeFromArrayNode({ "employees", size_t(1), "data", size_t(0) }, 1);
-    ASSERT_TRUE(result);
-
-    result = api->removeNodeFromArrayNode({ "employees", size_t(1), "data" }, 1);
+    result = api->removeNodeFromArray({ "employees", size_t(1), "data", size_t(0) }, 1);
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectNodeToJsonString();
@@ -312,7 +312,7 @@ TEST_F(ApiTest, RemoveNodeFromArrayNode)
     ASSERT_EQ(json, jsonExpected);
 }
 
-
+/*
 TEST_F(ApiTest, ChangeJSONForTheSameAPI)
 {
     auto begin = std::chrono::high_resolution_clock::now();

@@ -26,6 +26,12 @@ size_t KeyMapper::putKeyIntoMapAndReturnKeyID(const std::string& keyStr, size_t 
 }
 
 
+void KeyMapper::removeKey(size_t keyID)
+{
+    keyMap.erase(keyID);
+}
+
+
 std::optional<std::string> KeyMapper::getStrKey(const size_t keyID)
 {
     if (keyMap.contains(keyID) == false) {
