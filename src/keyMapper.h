@@ -18,12 +18,13 @@ public:
     std::optional<std::string> getStrKey(const size_t mapID);
     std::optional<size_t> getKeyID(const std::string& keyStr, size_t mapID);
 
-    size_t getMaxMapID();
+    size_t getNextMapID() const;
+    size_t createItemID(size_t mapID, size_t nodeID) const;
 
 private:
     std::map<size_t, std::string> keyMap;
 
-    const size_t BIT_MASK = 0b11111111111111110000000000000000;
+    const size_t MAP_ID_MASK = 0xFFFF0000;
 };
 
 #endif

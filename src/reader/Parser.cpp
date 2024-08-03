@@ -4,9 +4,6 @@
 #include <stack>
 
 
-constexpr size_t BITS_16 = 16;
-
-
 std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens)
 {
     std::string key;
@@ -106,8 +103,7 @@ void Parser::popDataFromStack()
 
 size_t Parser::createId()
 {
-    const size_t BIT_MASK = 0b11111111111111110000000000000000;
-    size_t id = (idStack.top().map & BIT_MASK) + idStack.top().node;
+    size_t id = keyMapper.createItemID(idStack.top().map, idStack.top().node);
     idStack.top().node += 1;
     return id;
 }

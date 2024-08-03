@@ -237,12 +237,11 @@ bool JsonApi::changeNodeInArray(const std::vector<Indicator>& path, size_t index
 
 bool JsonApi::addObjectNodeInternally(ObjectNode* currentObject, Node newNode)
 {
-    size_t mapID = keyMapper->getMaxMapID() + (1 << 16);
+    size_t mapID = keyMapper->getNextMapID();
     size_t nodeID = 0;
-    const size_t BIT_MASK = 0b11111111111111110000000000000000;
     for (auto& [key, val] : std::get<ObjectNodeExternal>(newNode.value)) {
         NodeType newNodeType = getNodeType(val);
-        size_t itemID = (mapID & BIT_MASK) + nodeID;
+        size_t itemID = keyMapper->createItemID(mapID, nodeID);
         keyMapper->putKey(key, itemID);
         if (newNodeType == NodeType::SIMPLE) {
             currentObject->emplace(std::make_pair(itemID, getInternalNode(val)));
