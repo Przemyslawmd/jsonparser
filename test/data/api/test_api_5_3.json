@@ -8,12 +8,12 @@
       "cd": 43.001
     },
     "newValues": {
-      "a": 12.45,
-      "b": true,
-      "internal": {
-        "asd": 345353,
-        "qwe": "AA AA"
-      }
+      "a": [
+        0,
+        100,
+        200
+      ],
+      "b": true
     }
   },
   "company": "abc",
