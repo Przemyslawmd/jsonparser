@@ -94,8 +94,8 @@ TEST_F(ApiTest, AddSimpleNodeIntoObject)
     ASSERT_EQ(json, jsonExpected);
 }
 
-
-TEST_F(ApiTest, AddObjectNodeIntoObject)
+/*
+TEST_F(ApiTest, AddSimpleObjectNodeIntoObject)
 {
     auto begin = std::chrono::high_resolution_clock::now();
     auto api = prepareApi("test_5.json");
@@ -116,6 +116,7 @@ TEST_F(ApiTest, AddObjectNodeIntoObject)
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_5_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
+*/
 
 
 TEST_F(ApiTest, AddSimpleNodeIntoArray)
@@ -132,6 +133,36 @@ TEST_F(ApiTest, AddSimpleNodeIntoArray)
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_7_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
+
+
+TEST_F(ApiTest, AddNestedObjectNodeIntoObject)
+{
+    auto begin = std::chrono::high_resolution_clock::now();
+    auto api = prepareApi("test_5.json");
+
+    std::map<std::string, Node> newObject;
+    newObject.emplace(std::make_pair("b", true));
+    newObject.emplace(std::make_pair("a", 12.45));
+
+    std::map<std::string, Node> nestedObject;
+    nestedObject.emplace(std::make_pair("qwe", "AA AA"));
+    nestedObject.emplace(std::make_pair("asd", 345353));
+    newObject.emplace(std::make_pair("internal", nestedObject));
+
+    bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectToJsonString();
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+    }
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_5.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
 
 /*
 TEST_F(ApiTest, AddObjectNodeIntoObject)
@@ -155,8 +186,8 @@ TEST_F(ApiTest, AddObjectNodeIntoObject)
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
-
-
+*/
+/*
 TEST_F(ApiTest, AddObjectNodeIntoArray)
 {
     auto api = prepareApi("test_7.json");

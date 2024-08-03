@@ -1,21 +1,21 @@
 {
-  "city": "Cracow",
-  "company": "abc",
   "person": {
+    "name": "John",
     "age": 39,
     "country": "Poland",
-    "name": "John",
-    "newValues": {
-      "a": [
-        0,
-        100,
-        200
-      ],
-      "b": true
-    },
     "values": {
       "ab": -12.67,
       "cd": 43.001
+    },
+    "newValues": {
+      "a": 12.45,
+      "b": true,
+      "internal": {
+        "asd": 345353,
+        "qwe": "AA AA"
+      }
     }
-  }
+  },
+  "company": "abc",
+  "city": "Cracow"
 }

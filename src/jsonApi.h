@@ -69,7 +69,7 @@ private:
     ObjectNode* getObjectAndCheckKey(const std::vector<Indicator>& path, const std::string& key);
 
     bool addNodeIntoObjectInternally(ObjectNode*, Node);
-    //bool addNodeIntoArrayInternally(ObjectNode*, Node);
+    //bool addNodeIntoArrayInternally(ArrayNode*, Node);
 
     template <typename T>
     bool validateNodeType(InnerNodePtr, ErrorCode potentialError);

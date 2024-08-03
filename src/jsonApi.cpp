@@ -147,17 +147,22 @@ bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& path, const std::s
 
 bool JsonApi::addNodeIntoObjectInternally(ObjectNode* currentObject, Node newNode)
 {
-    size_t mapID = keyMapper->getMaxMapID() + 1;
+    size_t mapID = keyMapper->getMaxMapID() + (1 << 16);
     size_t nodeID = 0;
     const size_t BIT_MASK = 0b11111111111111110000000000000000;
-    
     for (auto& [key, val] : std::get<ObjectNodeExternal>(newNode.value)) {
-        if (getNodeType(val) == NodeType::SIMPLE) {
-            size_t ID = mapID & BIT_MASK + nodeID;
-            keyMapper->putKey(key, ID);
-            currentObject->emplace(std::make_pair(ID, getNodeInternalFromNode(val)));
-            nodeID++;
+        NodeType newNodeType = getNodeType(val);
+        size_t itemID = (mapID & BIT_MASK) + nodeID;
+        keyMapper->putKey(key, itemID);
+        if (newNodeType == NodeType::SIMPLE) {
+            currentObject->emplace(std::make_pair(itemID, getNodeInternalFromNode(val)));
         }
+        else if (newNodeType == NodeType::OBJECT) {
+            currentObject->emplace(std::make_pair(itemID, ObjectNode()));
+            auto* objNew = &(std::get<ObjectNode>(currentObject->at(itemID).value));
+            addNodeIntoObjectInternally(objNew, val);
+        }
+        nodeID++;
     }
     return true;
 }
@@ -376,18 +381,18 @@ NodeType JsonApi::getNodeType(Node& node)
 }
 
 
-NodeInternal JsonApi::getNodeInternalFromNode(Node& nodeExternal)
+NodeInternal JsonApi::getNodeInternalFromNode(Node& node)
 {
-    if (std::holds_alternative<std::string>(nodeExternal.value)) {
-        return NodeInternal{ .value = std::get<std::string>(nodeExternal.value) };
+    if (std::holds_alternative<std::string>(node.value)) {
+        return NodeInternal{ .value = std::get<std::string>(node.value) };
     }
-    if (std::holds_alternative<int64_t>(nodeExternal.value)) {
-        return NodeInternal{ .value = std::get<int64_t>(nodeExternal.value) };
+    if (std::holds_alternative<int64_t>(node.value)) {
+        return NodeInternal{ .value = std::get<int64_t>(node.value) };
     }
-    if (std::holds_alternative<double>(nodeExternal.value)) {
-        return NodeInternal{ .value = std::get<double>(nodeExternal.value) };
+    if (std::holds_alternative<double>(node.value)) {
+        return NodeInternal{ .value = std::get<double>(node.value) };
     }
-    if (std::holds_alternative<bool>(nodeExternal.value)) {
-        return NodeInternal{ .value = std::get<bool>(nodeExternal.value) };
+    if (std::holds_alternative<bool>(node.value)) {
+        return NodeInternal{ .value = std::get<bool>(node.value) };
     }
 }

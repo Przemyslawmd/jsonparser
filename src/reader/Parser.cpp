@@ -88,7 +88,8 @@ void Parser::pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> node, State s
     nodeStack.push(node);
     stateStack.push(state);
     if (state == State::OBJECT_PARSING) {
-        idStack.push({ ++maxMapId, 1 });
+        maxMapId += (1 << 16);
+        idStack.push({ maxMapId, 1 });
     }
 }
 
@@ -105,7 +106,8 @@ void Parser::popDataFromStack()
 
 size_t Parser::createId()
 {
-    size_t id = (idStack.top().map << BITS_16) + idStack.top().node;
+    const size_t BIT_MASK = 0b11111111111111110000000000000000;
+    size_t id = (idStack.top().map & BIT_MASK) + idStack.top().node;
     idStack.top().node += 1;
     return id;
 }
