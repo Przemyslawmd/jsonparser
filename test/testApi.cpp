@@ -224,7 +224,7 @@ TEST_F(ApiTest, AddArrayIntoObject)
     ASSERT_EQ(json, jsonExpected);
 }
 
-/*
+
 TEST_F(ApiTest, AddArrayIntoArray)
 {
     auto api = prepareApi("test_7.json");
@@ -238,10 +238,11 @@ TEST_F(ApiTest, AddArrayIntoArray)
 
     std::string json = api->parseObjectToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_7_3.json");
+    std::cout << json << std::endl;
     ASSERT_EQ(json, jsonExpected);
 }
 
-
+/*
 TEST_F(ApiTest, RemoveNodeFromObject)
 {
     auto begin = std::chrono::high_resolution_clock::now();

@@ -167,6 +167,16 @@ bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node newNode)
     if (newNodeType == NodeType::SIMPLE) {
         arr->emplace_back(getNodeInternalFromNode(newNode));
     }
+    else if (newNodeType == NodeType::OBJECT) {
+        arr->emplace_back(Object());
+        Object* objNew = &(std::get<Object>(arr->back().value));
+        addNodeIntoObjectInternally(objNew, newNode);
+    }
+    else if (newNodeType == NodeType::ARRAY) {
+        arr->emplace_back(Array());
+        Array* arrNew = &(std::get<Array>(arr->back().value));
+        addArrayInternally(arrNew, newNode);
+    }
     return true;
 }
 
@@ -206,6 +216,12 @@ bool JsonApi::addArrayInternally(Array* currentObject, Node newNode)
         //keyMapper->putKey(key, itemID);
         if (newNodeType == NodeType::SIMPLE) {
             currentObject->emplace_back(getNodeInternalFromNode(val));
+        }
+        else if (newNodeType == NodeType::ARRAY) {
+            currentObject->emplace_back(Array());
+            Array* arrNew = &(std::get<Array>(currentObject->back().value));
+            addArrayInternally(arrNew, val);
+
         }
         //else if (newNodeType == NodeType::OBJECT) {
         //    currentObject->emplace(std::make_pair(itemID, Object()));
