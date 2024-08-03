@@ -3,9 +3,10 @@
 
 #include "keyMapper.h" 
 
-constexpr size_t TWO_BYTES = 16;
+constexpr uint32_t TWO_BYTES = 16;
 
-void KeyMapper::putKey(const std::string& keyStr, size_t keyID)
+
+void KeyMapper::putKey(const std::string& keyStr, uint32_t keyID)
 {
     if (keyMap.contains(keyID)) {
         return;
@@ -14,7 +15,7 @@ void KeyMapper::putKey(const std::string& keyStr, size_t keyID)
 }
 
 
-size_t KeyMapper::putKeyIntoMapAndReturnKeyID(const std::string& keyStr, size_t mapID)
+uint32_t KeyMapper::putKeyIntoMapAndReturnKeyID(const std::string& keyStr, uint32_t mapID)
 {
     size_t maxKeyID = 0;
     for (const auto& [key, value] : keyMap) {
@@ -27,13 +28,13 @@ size_t KeyMapper::putKeyIntoMapAndReturnKeyID(const std::string& keyStr, size_t 
 }
 
 
-void KeyMapper::removeKey(size_t keyID)
+void KeyMapper::removeKey(uint32_t keyID)
 {
     keyMap.erase(keyID);
 }
 
 
-std::optional<std::string> KeyMapper::getStrKey(const size_t keyID)
+std::optional<std::string> KeyMapper::getStrKey(uint32_t keyID) const
 {
     if (keyMap.contains(keyID) == false) {
         return std::nullopt;
@@ -42,7 +43,7 @@ std::optional<std::string> KeyMapper::getStrKey(const size_t keyID)
 }
 
 
-std::optional<size_t> KeyMapper::getKeyID(const std::string& keyStr, size_t mapID)
+std::optional<uint32_t> KeyMapper::getKeyID(const std::string& keyStr, uint32_t mapID) const
 {
     for (const auto& [key, value] : keyMap) {
         if (value.compare(keyStr) == 0 && ((key & MAP_ID_MASK) == (mapID & MAP_ID_MASK))) {
@@ -53,13 +54,13 @@ std::optional<size_t> KeyMapper::getKeyID(const std::string& keyStr, size_t mapI
 }
 
 
-size_t KeyMapper::createItemID(size_t mapID, size_t nodeID) const
+uint32_t KeyMapper::createItemID(uint32_t mapID, uint32_t nodeID) const
 {
     return (mapID & MAP_ID_MASK) + nodeID;
 }
 
 
-size_t KeyMapper::getNextMapID() const
+uint32_t KeyMapper::getNextMapID() const
 {
     size_t maxMapID = 0;
     for (const auto& [key, value] : keyMap) {
@@ -67,6 +68,6 @@ size_t KeyMapper::getNextMapID() const
             maxMapID = key;
         }
     }
-    return (maxMapID & MAP_ID_MASK) + (size_t(1) << TWO_BYTES);
-    uint32_t c;
+    return (maxMapID & MAP_ID_MASK) + (uint32_t(1) << TWO_BYTES);
 }
+

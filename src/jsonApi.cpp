@@ -96,7 +96,7 @@ bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& path, const std::s
     }
 
     ObjectNode* obj = std::get<ObjectNode*>(objNode);
-    size_t newId = keyMapper->putKeyIntoMapAndReturnKeyID(key, obj->begin()->first);
+    uint32_t newId = keyMapper->putKeyIntoMapAndReturnKeyID(key, obj->begin()->first);
     NodeType newNodeType = getNodeType(newNode);
 
     if (newNodeType == NodeType::SIMPLE) {
@@ -148,7 +148,7 @@ bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node newNode)
 }
 
 
-bool JsonApi::insertNodeIntoArray(const std::vector<Indicator>& path, int index, Node newNode)
+bool JsonApi::insertNodeIntoArray(const std::vector<Indicator>& path, size_t index, Node newNode)
 {
     if (isRootEmpty()) {
         return false;
@@ -237,11 +237,11 @@ bool JsonApi::changeNodeInArray(const std::vector<Indicator>& path, size_t index
 
 bool JsonApi::addObjectNodeInternally(ObjectNode* currentObject, Node newNode)
 {
-    size_t mapID = keyMapper->getNextMapID();
-    size_t nodeID = 0;
+    uint32_t mapID = keyMapper->getNextMapID();
+    uint32_t nodeID = 0;
     for (auto& [key, val] : std::get<ObjectNodeExternal>(newNode.value)) {
         NodeType newNodeType = getNodeType(val);
-        size_t itemID = keyMapper->createItemID(mapID, nodeID);
+        uint32_t itemID = keyMapper->createItemID(mapID, nodeID);
         keyMapper->putKey(key, itemID);
         if (newNodeType == NodeType::SIMPLE) {
             currentObject->emplace(std::make_pair(itemID, getInternalNode(val)));
@@ -375,7 +375,7 @@ InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& path)
         if (lastType == InnerNodeType::OBJECT && std::holds_alternative<std::string>(indicator)) {
             ObjectNode* obj = std::get<ObjectNode*>(nodePtr);
             const auto& keyStr = std::get<std::string>(indicator);
-            std::optional<size_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
+            std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
             if (keyID == std::nullopt) {
                 error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
                 return nullptr;
@@ -447,7 +447,7 @@ std::tuple<ObjectNode*, size_t> JsonApi::getObjectNodeAndCheckKey(const std::vec
 
     ObjectNode* obj = std::get<ObjectNode*>(node);
 
-    std::optional<size_t> keyID = keyMapper->getKeyID(key, obj->begin()->first);
+    std::optional<uint32_t> keyID = keyMapper->getKeyID(key, obj->begin()->first);
     if (keyID == std::nullopt) {
         error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
         return { nullptr, 0 } ;

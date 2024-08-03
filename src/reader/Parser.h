@@ -15,8 +15,8 @@
 
 
 struct ItemId {
-    size_t map;
-    size_t node;
+    uint32_t map;
+    uint32_t node;
 };
 
 
@@ -31,7 +31,7 @@ class Parser
         std::stack<std::variant<ObjectNode*, ArrayNode*>> nodeStack;
         std::stack<State> stateStack;
         std::stack<ItemId> idStack;
-        size_t maxMapId = 0;
+        uint32_t maxMapId = 0;
 
         KeyMapper& keyMapper;
 
@@ -44,7 +44,7 @@ class Parser
         template <typename T>
         void processData(const std::string& key, const Token&);
 
-        size_t createId();
+        uint32_t createId();
 };
 
 #endif

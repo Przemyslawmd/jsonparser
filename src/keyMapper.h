@@ -10,21 +10,21 @@
 class KeyMapper
 {
 public:
-    void putKey(const std::string& key, size_t mapID);
-    size_t putKeyIntoMapAndReturnKeyID(const std::string& keyStr, size_t mapID);
+    void putKey(const std::string& key, uint32_t mapID);
+    uint32_t putKeyIntoMapAndReturnKeyID(const std::string& keyStr, uint32_t mapID);
 
-    void removeKey(size_t keyID);
+    void removeKey(uint32_t keyID);
 
-    std::optional<std::string> getStrKey(const size_t mapID);
-    std::optional<size_t> getKeyID(const std::string& keyStr, size_t mapID);
+    std::optional<std::string> getStrKey(uint32_t mapID) const;
+    std::optional<uint32_t> getKeyID(const std::string& keyStr, uint32_t mapID) const;
 
-    size_t getNextMapID() const;
-    size_t createItemID(size_t mapID, size_t nodeID) const;
+    uint32_t getNextMapID() const;
+    uint32_t createItemID(uint32_t mapID, uint32_t nodeID) const;
 
 private:
-    std::map<size_t, std::string> keyMap;
+    std::map<uint32_t, std::string> keyMap;
 
-    const size_t MAP_ID_MASK = 0xFFFF0000;
+    const uint32_t MAP_ID_MASK = 0xFFFF0000;
 };
 
 #endif

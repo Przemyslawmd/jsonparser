@@ -46,7 +46,7 @@ public:
 
     bool addNodeIntoObject(const std::vector<Indicator>& path, const std::string& keyStr, Node);
     bool addNodeIntoArray(const std::vector<Indicator>& path, Node);
-    bool insertNodeIntoArray(const std::vector<Indicator>& path, int index, Node);
+    bool insertNodeIntoArray(const std::vector<Indicator>& path, size_t index, Node);
 
     bool removeNodeFromObject(const std::vector<Indicator>& path, const std::string& key);
     bool removeNodeFromArray(const std::vector<Indicator>& path, size_t index);
