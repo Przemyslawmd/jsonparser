@@ -41,8 +41,6 @@ public:
 
     //void clear();
 
-    //Object* getRoot();
-
     bool changeNodeInObject(const std::vector<Indicator>&, const std::string& key, Node);
     bool changeNodeInArray(const std::vector<Indicator>&, size_t index, Node);
 

@@ -296,12 +296,6 @@ bool JsonApi::removeNodeFromArray(const std::vector<Indicator>& keys, size_t ind
     arr->erase(arr->begin() + index);
     return true;
 }
-
-
-Object* JsonApi::getRoot()
-{
-    return root.get();
-}
 */
 
 ErrorCode JsonApi::getErrorCode()

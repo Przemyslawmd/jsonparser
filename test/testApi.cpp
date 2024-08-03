@@ -30,21 +30,6 @@ std::unique_ptr<JsonApi> ApiTest::prepareApi(const std::string& file)
     return api;
 }
 
-/*
-TEST_F(ApiTest, AddIntValueToObjectDirectly)
-{
-    auto api = prepareApi("test_1.json");
-    Object* root = api->getRoot();
-    Node* node = &(root->at("person"));
-
-    Object* nodePerson = std::get_if<Object>(&(node->value));
-    nodePerson->insert(std::pair<std::string, int>("newValue", 23));
-
-    std::string json = api->parseObjectToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_1.json");
-    ASSERT_EQ(json, jsonExpected);
-}
-*/
 
 TEST_F(ApiTest, ChangeNodeInObjectIntoSimple)
 {
@@ -199,7 +184,6 @@ TEST_F(ApiTest, AddNestedObjectIntoObject)
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
-
 
 
 /*
