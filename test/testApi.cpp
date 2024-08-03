@@ -242,22 +242,19 @@ TEST_F(ApiTest, ChangeNodeInObjectIntoArray)
     ASSERT_EQ(json, jsonExpected);
 }
 
-/********************************************************************************/
-/* CHANGE NODE INTO ARRAY *******************************************************/
 
-/*
 TEST_F(ApiTest, ChangeValueComplexJson)
 {
     auto begin = std::chrono::high_resolution_clock::now();
     auto api = prepareApi("test_8_complex.json");
 
-    bool result = api->changeNodeInArrayNode({ "employees", size_t(0), "data", size_t(1) }, 2, Node{ .value = 10 });
+    bool result = api->changeNodeInArray({ "employees", size_t(0), "data", size_t(1) }, 2, Node{ .value = 10 });
     ASSERT_TRUE(result);
 
-    result = api->changeNodeInObjectNode({ "employees", size_t(1), "employees", size_t(0) }, "name", Node{.value = "Maria"});
+    result = api->changeNodeInObject({ "employees", size_t(1), "employees", size_t(0) }, "name", Node{.value = "Maria"});
     ASSERT_TRUE(result);
 
-    result = api->changeNodeInArrayNode({ "employees", size_t(1), "data", size_t(2), size_t(0), "numbers" }, 0, Node{ .value = 0.12 });
+    result = api->changeNodeInArray({ "employees", size_t(1), "data", size_t(2), size_t(0), "numbers" }, 0, Node{ .value = 0.12 });
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectNodeToJsonString();
@@ -269,26 +266,7 @@ TEST_F(ApiTest, ChangeValueComplexJson)
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_8_complex.json");
     ASSERT_EQ(json, jsonExpected);
 }
-*/
 
-
-/*
-TEST_F(ApiTest, AddObjectNodeIntoArrayNode)
-{
-    auto api = prepareApi("test_7.json");
-
-    std::map<std::string, Node> newObjectNode;
-    newObjectNode.emplace(std::make_pair("aa", "bb"));
-    newObjectNode.emplace(std::make_pair("cc", 12));
-
-    bool result = api->insertNodeIntoArrayNode({ "employees" , size_t(1), "data", size_t(0), size_t(0) }, 1, { newObjectNode });
-    ASSERT_TRUE(result);
-
-    std::string json = api->parseObjectNodeToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_7_2.json");
-    ASSERT_EQ(json, jsonExpected);
-}
-*/
 
 /*
 TEST_F(ApiTest, RemoveNodeFromObjectNode)

@@ -1,6 +1,7 @@
 {
   "employees": [
     {
+      "name": "Agata",
       "data": [
         [
           1,
@@ -26,10 +27,84 @@
             "lastName": "Jones"
           }
         ]
-      ],
-      "name": "Agata"
+      ]
     },
     {
+      "name": "Anna",
+      "employees": [
+        {
+          "name": "Maria",
+          "email": "agata@gmail.com",
+          "age": 33,
+          "address": {
+            "city": "Cracow",
+            "street": "Kanonicza",
+            "number": 12
+          }
+        },
+        {
+          "name": "Anna",
+          "email": "anna@gmail.com",
+          "age": 31,
+          "address": {
+            "city": "Cracow",
+            "street": "Stradom",
+            "number": 12,
+            "person": {
+              "name": "John",
+              "age": 39,
+              "country": "Poland",
+              "cities": [
+                "Krakow",
+                "Warszawa",
+                "Wroclaw",
+                "Poznan"
+              ],
+              "shipTo": {
+                "name": "Jane Smith",
+                "address": "123 Maple Street",
+                "cities": [
+                  "Rome",
+                  "New York",
+                  "Chicago"
+                ],
+                "state": "NY",
+                "zip": -12345,
+                "weight": 12.34,
+                "employees": [
+                  {
+                    "name": "Agata",
+                    "data": [
+                      [
+                        11,
+                        22,
+                        3333
+                      ],
+                      [
+                        41,
+                        534242423,
+                        632131232
+                      ]
+                    ]
+                  },
+                  {
+                    "name": "Anna",
+                    "data": [
+                      [
+                        "a",
+                        "b"
+                      ],
+                      [
+                        "c d e     abcdefghijk"
+                      ]
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
       "data": [
         [
           "a",
@@ -53,99 +128,24 @@
           },
           {
             "firstName": "Anna",
+            "lastName": "Smith",
             "flags": [
               true,
               false,
               true,
               true
-            ],
-            "lastName": "Smith"
+            ]
           },
           {
+            "firstName": "Peter",
+            "lastName": "Jones",
             "cities": [
               "warsaw",
               "Cracow"
-            ],
-            "firstName": "Peter",
-            "lastName": "Jones"
+            ]
           }
         ]
-      ],
-      "employees": [
-        {
-          "address": {
-            "city": "Cracow",
-            "number": 12,
-            "street": "Kanonicza"
-          },
-          "age": 33,
-          "email": "agata@gmail.com",
-          "name": "Maria"
-        },
-        {
-          "address": {
-            "city": "Cracow",
-            "number": 12,
-            "person": {
-              "age": 39,
-              "cities": [
-                "Krakow",
-                "Warszawa",
-                "Wroclaw",
-                "Poznan"
-              ],
-              "country": "Poland",
-              "name": "John",
-              "shipTo": {
-                "address": "123 Maple Street",
-                "cities": [
-                  "Rome",
-                  "New York",
-                  "Chicago"
-                ],
-                "employees": [
-                  {
-                    "data": [
-                      [
-                        11,
-                        22,
-                        3333
-                      ],
-                      [
-                        41,
-                        534242423,
-                        632131232
-                      ]
-                    ],
-                    "name": "Agata"
-                  },
-                  {
-                    "data": [
-                      [
-                        "a",
-                        "b"
-                      ],
-                      [
-                        "c d e     abcdefghijk"
-                      ]
-                    ],
-                    "name": "Anna"
-                  }
-                ],
-                "name": "Jane Smith",
-                "state": "NY",
-                "weight": 12.34,
-                "zip": -12345
-              }
-            },
-            "street": "Stradom"
-          },
-          "age": 31,
-          "email": "anna@gmail.com",
-          "name": "Anna"
-        }
-      ],
-      "name": "Anna"
+      ]
     }
   ]
 }
