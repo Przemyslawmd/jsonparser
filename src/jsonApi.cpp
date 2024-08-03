@@ -362,13 +362,17 @@ InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& path)
         if (lastType == InnerNodeType::OBJECT && std::holds_alternative<std::string>(indicator)) {
             ObjectNode* obj = std::get<ObjectNode*>(nodePtr);
             const auto& keyStr = std::get<std::string>(indicator);
-            size_t keyId = keyMapper->getKeyID(keyStr, obj->begin()->first).value();
-            if (obj->contains(keyId) == false) {
+            std::optional<size_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
+            if (keyID == std::nullopt) {
+                error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
+                return nullptr;
+            }
+            if (obj->contains(keyID.value()) == false) {
                 error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
                 return nullptr;
             }
 
-            NodeInternal* node = &obj->at(keyId);
+            NodeInternal* node = &obj->at(keyID.value());
             getNextNode(&nodePtr, node, lastType);
         }
         else if (lastType == InnerNodeType::ARRAY && std::holds_alternative<size_t>(indicator)) {

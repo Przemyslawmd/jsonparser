@@ -16,7 +16,7 @@ protected:
     Utils utils;
 };
 
-/*
+
 TEST_F(ApiTestError, ImproperKeyInnerNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
@@ -26,13 +26,12 @@ TEST_F(ApiTestError, ImproperKeyInnerNode)
     ASSERT_TRUE(result);
 
     Node newNode{ .value = "Cracow" };
-    result = api.changeNodeInObjectNode({ "person2", "street" }, "address", newNode);
+    result = api.changeNodeInObject({ "person2", "street" }, "address", newNode);
     ASSERT_FALSE(result);
     ASSERT_EQ(api.getErrorCode(), ErrorCode::API_NOT_KEY_IN_MAP);
 }
-*/
 
-/*
+
 TEST_F(ApiTestError, OutOfIndexInnerNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_7.json");
@@ -42,11 +41,11 @@ TEST_F(ApiTestError, OutOfIndexInnerNode)
     ASSERT_TRUE(result);
 
     Node newNode{ .value = "Spain" };
-    result = api.changeNodeInArrayNode({ "employees", size_t(3), "data", size_t(3) }, 2, newNode);
+    result = api.changeNodeInArray({ "employees", size_t(3), "data", size_t(3) }, 2, newNode);
     ASSERT_FALSE(result);
     ASSERT_EQ(api.getErrorCode(), ErrorCode::API_INDEX_OUT_OF_ARRAY);
 }
-*/
+
 
 TEST_F(ApiTestError, inconsistentDataInnerNode)
 {
