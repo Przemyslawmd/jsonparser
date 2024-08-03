@@ -203,7 +203,7 @@ TEST_F(ApiTest, AddObjectIntoArray)
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_7_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
-
+*/
 
 TEST_F(ApiTest, AddArrayIntoObject)
 {
@@ -224,7 +224,7 @@ TEST_F(ApiTest, AddArrayIntoObject)
     ASSERT_EQ(json, jsonExpected);
 }
 
-
+/*
 TEST_F(ApiTest, AddArrayIntoArray)
 {
     auto api = prepareApi("test_7.json");
