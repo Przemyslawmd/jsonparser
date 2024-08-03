@@ -25,17 +25,17 @@ class Parser
     public:
         Parser(KeyMapper& keyMapper) : keyMapper(keyMapper) {};
 
-        std::unique_ptr<Object> parseTokens(const std::vector<Token>&);
+        std::unique_ptr<ObjectNode> parseTokens(const std::vector<Token>&);
 
     private:
-        std::stack<std::variant<Object*, Array*>> nodeStack;
+        std::stack<std::variant<ObjectNode*, ArrayNode*>> nodeStack;
         std::stack<State> stateStack;
         std::stack<ItemId> idStack;
         size_t maxMapId = 0;
 
         KeyMapper& keyMapper;
 
-        void pushDataOnStack(std::variant<Object*, Array*> nodeStack, State);
+        void pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> nodeStack, State);
         void popDataFromStack();
 
         template <typename T>

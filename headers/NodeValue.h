@@ -15,8 +15,8 @@ struct NodeInternal
 };
 
 
-using Object = std::map<size_t, NodeInternal>;
-using Array = std::vector<NodeInternal>;
+using ObjectNode = std::map<size_t, NodeInternal>;
+using ArrayNode = std::vector<NodeInternal>;
 
 
 struct Node
@@ -26,8 +26,8 @@ struct Node
 };
 
 
-using ObjectExternal = std::map<std::string, Node>;
-using ArrayExternal = std::vector<Node>;
+using ObjectNodeExternal = std::map<std::string, Node>;
+using ArrayNodeExternal = std::vector<Node>;
 
 
 #endif

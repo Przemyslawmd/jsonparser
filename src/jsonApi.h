@@ -14,7 +14,7 @@
 
 
 /* Pointer to internal node: object (map) or array */
-using InnerNodePtr = std::variant<Object*, Array*, nullptr_t>;
+using InnerNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 
 /* Indicator is a key for object (map) or index for an array */
 using Indicator = std::variant<std::string, size_t>;
@@ -35,9 +35,9 @@ public:
 
     bool parseJsonString(const std::string& file);
     
-    std::string parseObjectToJsonString();
+    std::string parseObjectNodeToJsonString();
 
-    //bool loadObject(std::unique_ptr<Object>);
+    //bool loadObjectNode(std::unique_ptr<ObjectNode>);
 
     //void clear();
 
@@ -48,8 +48,8 @@ public:
     bool addNodeIntoArray(const std::vector<Indicator>& path, Node);
     bool insertNodeIntoArray(const std::vector<Indicator>& path, int index, Node);
 
-    //bool removeNodeFromObject(const std::vector<Indicator>&, const std::string& key);
-    //bool removeNodeFromArray(const std::vector<Indicator>&, size_t index);
+    //bool removeNodeFromObjectNode(const std::vector<Indicator>&, const std::string& key);
+    //bool removeNodeFromArrayNode(const std::vector<Indicator>&, size_t index);
 
     ErrorCode getErrorCode();
 
@@ -63,16 +63,16 @@ private:
 
     NodeInternal getInternalNode(Node&);
 
-    Array* getArrayAndCheckIndex(const std::vector<Indicator>& path, size_t index);
-    std::tuple<Object*, size_t> getObjectAndCheckKey(const std::vector<Indicator>& path, const std::string& keyStr);
+    ArrayNode* getArrayNodeAndCheckIndex(const std::vector<Indicator>& path, size_t index);
+    std::tuple<ObjectNode*, size_t> getObjectNodeAndCheckKey(const std::vector<Indicator>& path, const std::string& keyStr);
 
-    bool addObjectInternally(Object*, Node);
-    bool addArrayInternally(Array*, Node);
+    bool addObjectNodeInternally(ObjectNode*, Node);
+    bool addArrayNodeInternally(ArrayNode*, Node);
 
     template <typename T>
     bool validateNodeType(InnerNodePtr, ErrorCode potentialError);
 
-    std::unique_ptr<Object> root;
+    std::unique_ptr<ObjectNode> root;
     std::unique_ptr<KeyMapper> keyMapper;
     std::unique_ptr<Error> error;
 };

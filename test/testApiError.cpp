@@ -26,7 +26,7 @@ TEST_F(ApiTestError, ImproperKeyInnerNode)
     ASSERT_TRUE(result);
 
     Node newNode{ .value = "Cracow" };
-    result = api.changeNodeInObject({ "person2", "street" }, "address", newNode);
+    result = api.changeNodeInObjectNode({ "person2", "street" }, "address", newNode);
     ASSERT_FALSE(result);
     ASSERT_EQ(api.getErrorCode(), ErrorCode::API_NOT_KEY_IN_MAP);
 }
@@ -42,7 +42,7 @@ TEST_F(ApiTestError, OutOfIndexInnerNode)
     ASSERT_TRUE(result);
 
     Node newNode{ .value = "Spain" };
-    result = api.changeNodeInArray({ "employees", size_t(3), "data", size_t(3) }, 2, newNode);
+    result = api.changeNodeInArrayNode({ "employees", size_t(3), "data", size_t(3) }, 2, newNode);
     ASSERT_FALSE(result);
     ASSERT_EQ(api.getErrorCode(), ErrorCode::API_INDEX_OUT_OF_ARRAY);
 }
@@ -121,7 +121,7 @@ TEST_F(ApiTestError, emptyApi_1)
 TEST_F(ApiTestError, emptyApi_2)
 {
     JsonApi api;
-    std::string json = api.parseObjectToJsonString();
+    std::string json = api.parseObjectNodeToJsonString();
     ASSERT_TRUE(json.empty());
     ASSERT_EQ(api.getErrorCode(), ErrorCode::API_EMPTY);
 }

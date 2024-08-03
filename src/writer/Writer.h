@@ -18,14 +18,14 @@ public:
 
     Writer(KeyMapper& keyMapper) : keyMapper(keyMapper) {}
 
-    std::string createJsonString(Object*);
+    std::string createJsonString(ObjectNode*);
 
     void setMarginStep(size_t);
 
 private:
 
-    void processObject(const Object*);
-    void processArray(const Array*);
+    void processObjectNode(const ObjectNode*);
+    void processArrayNode(const ArrayNode*);
     void parseData(const NodeInternal&);
 
     void incMargin();

@@ -8,9 +8,9 @@
 constexpr std::string_view dataEnd = ",\n";
 
 
-std::string Writer::createJsonString(Object* object)
+std::string Writer::createJsonString(ObjectNode* object)
 {
-    processObject(object);
+    processObjectNode(object);
     return stream.str();
 }
 
@@ -23,12 +23,12 @@ void Writer::setMarginStep(size_t marginStep)
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
-void Writer::processObject(const Object* jsonObject)
+void Writer::processObjectNode(const ObjectNode* jsonObjectNode)
 {
     stream << "{\n";
     incMargin();
 
-    for (auto const& [idKey, val] : *jsonObject) {
+    for (auto const& [idKey, val] : *jsonObjectNode) {
         std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
         std::string keyStr = keyMapper.getStrKey(idKey).value();
         stream << "\"" << keyStr << "\": ";
@@ -46,12 +46,12 @@ void Writer::processObject(const Object* jsonObject)
 }
 
 
-void Writer::processArray(const Array* jsonArray)
+void Writer::processArrayNode(const ArrayNode* jsonArrayNode)
 {
     stream << "[\n";
     incMargin();
     
-    for (auto const& val : *jsonArray) {
+    for (auto const& val : *jsonArrayNode) {
         std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
         parseData(val);
     }    
@@ -80,11 +80,11 @@ void Writer::parseData(const NodeInternal& node)
     else if (std::holds_alternative<nullptr_t>(node.value)) {
         stream << "null" << dataEnd;
     }
-    else if (std::holds_alternative<Object>(node.value)) {
-        processObject(std::get_if<Object>(&node.value));
+    else if (std::holds_alternative<ObjectNode>(node.value)) {
+        processObjectNode(std::get_if<ObjectNode>(&node.value));
     }
-    else if (std::holds_alternative<Array>(node.value)) {
-        processArray(std::get_if<Array>(&node.value));
+    else if (std::holds_alternative<ArrayNode>(node.value)) {
+        processArrayNode(std::get_if<ArrayNode>(&node.value));
     }
 }
 
