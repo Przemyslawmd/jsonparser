@@ -14,7 +14,7 @@ public:
     size_t putKeyIntoExistingMap(const std::string& keyStr, size_t mapID);
 
     std::optional<std::string> getStrKey(const size_t mapID);
-    std::optional<size_t> getIdKey(const std::string& keyStr, size_t mapID);
+    std::optional<size_t> getKeyID(const std::string& keyStr, size_t mapID);
 
     size_t getMaxMapID();
 

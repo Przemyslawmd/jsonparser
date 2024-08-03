@@ -20,6 +20,8 @@ public:
             "Action requires JsonApi instance without JSON object, invoke clear function" },
         { ErrorCode::API_NOT_KEY_IN_MAP,
             "There is no provided key in object" },
+        { ErrorCode::API_NOT_KEY_IN_INTERNAL_MAP,
+            "Internal error : Key exists in the key mapper but not inside an internal object" },
         { ErrorCode::API_INCONSISTENT_DATA,
             "Using key for array or index for object" },
         { ErrorCode::API_INDEX_OUT_OF_ARRAY,

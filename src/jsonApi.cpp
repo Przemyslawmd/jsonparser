@@ -93,7 +93,7 @@ bool JsonApi::changeNodeInObject(const std::vector<Indicator>& path, const std::
     }
 
     NodeType nodeType = getNodeType(newNode);
-    size_t keyID = keyMapper->getIdKey(key, obj->begin()->first).value();
+    size_t keyID = keyMapper->getKeyID(key, obj->begin()->first).value();
     if (nodeType == NodeType::SIMPLE) {
         obj->at(keyID) = getNodeInternalFromNode(newNode);
         return true;
@@ -345,7 +345,7 @@ InnerNodePtr JsonApi::getNode(const std::vector<Indicator>& path)
         if (lastType == InnerNodeType::OBJECT && std::holds_alternative<std::string>(indicator)) {
             Object* obj = std::get<Object*>(nodePtr);
             const auto& keyStr = std::get<std::string>(indicator);
-            size_t keyId = keyMapper->getIdKey(keyStr, obj->begin()->first).value();
+            size_t keyId = keyMapper->getKeyID(keyStr, obj->begin()->first).value();
             if (obj->contains(keyId) == false) {
                 error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
                 return nullptr;
@@ -412,9 +412,15 @@ Object* JsonApi::getObjectAndCheckKey(const std::vector<Indicator>& path, const 
     }
 
     Object* obj = std::get<Object*>(node);
-    size_t keyId = keyMapper->getIdKey(key, obj->begin()->first).value();
-    if (obj->contains(keyId) == false) {
+
+    std::optional<size_t> keyID = keyMapper->getKeyID(key, obj->begin()->first);
+    if (keyID == std::nullopt) {
         error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
+        return nullptr;
+    }
+
+    if (obj->contains(keyID.value()) == false) {
+        error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_INTERNAL_MAP);
         return nullptr;
     }
     return obj;

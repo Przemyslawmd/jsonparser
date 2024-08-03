@@ -35,10 +35,10 @@ std::optional<std::string> KeyMapper::getStrKey(const size_t keyID)
 }
 
 
-std::optional<size_t> KeyMapper::getIdKey(const std::string& keyStr, size_t mapId)
+std::optional<size_t> KeyMapper::getKeyID(const std::string& keyStr, size_t mapID)
 {
     for (const auto& [key, value] : keyMap) {
-        if (value.compare(keyStr) == 0 && ((key & BIT_MASK) == (mapId & BIT_MASK))) {
+        if (value.compare(keyStr) == 0 && ((key & BIT_MASK) == (mapID & BIT_MASK))) {
             return key;
         }
     }
