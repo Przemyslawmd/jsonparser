@@ -7,10 +7,10 @@
 constexpr size_t BITS_16 = 16;
 
 
-std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens)
+std::unique_ptr<Object> Parser::parseTokens(const std::vector<Token>& tokens)
 {
     std::string key;
-    auto nodes = std::make_unique<ObjectNode>();
+    auto nodes = std::make_unique<Object>();
     idStack.push({ 0, 0 });
     pushDataOnStack(nodes.get(), State::OBJECT_PARSING);
 
@@ -37,10 +37,10 @@ std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens
             processData<nullptr_t>(key, *it);
         }
         else if (it->type == TokenType::CURLY_OPEN) {
-            pushInnerNodeOnStack<ObjectNode>(key, State::OBJECT_PARSING);
+            pushInnerNodeOnStack<Object>(key, State::OBJECT_PARSING);
         }
         else if (it->type == TokenType::SQUARE_OPEN) {
-            pushInnerNodeOnStack<ArrayNode>(key, State::ARRAY_PARSING);
+            pushInnerNodeOnStack<Array>(key, State::ARRAY_PARSING);
         }
     }
     return nodes;
@@ -53,7 +53,7 @@ template <typename T>
 void Parser::pushInnerNodeOnStack(const std::string& key, State state)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
-        ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
+        Object* obj = std::get<Object*>(nodeStack.top());
         size_t id = createId();
         keyMapper.putKey(key, id);
         obj->emplace(std::make_pair(id, T()));
@@ -61,7 +61,7 @@ void Parser::pushInnerNodeOnStack(const std::string& key, State state)
         pushDataOnStack(currentNode, state);
     }
     else {
-        ArrayNode* arr = std::get<ArrayNode*>(nodeStack.top());
+        Array* arr = std::get<Array*>(nodeStack.top());
         arr->emplace_back(T());
         auto* currentNode = &(std::get<T>(arr->back().value));
         pushDataOnStack(currentNode, state);
@@ -75,15 +75,15 @@ void Parser::processData(const std::string& key, const Token& token)
     if (stateStack.top() == State::OBJECT_PARSING) {
         size_t id = createId();
         keyMapper.putKey(key, id);
-        std::get<ObjectNode*>(nodeStack.top())->emplace(std::make_pair(id, std::get<T>(token.data)));
+        std::get<Object*>(nodeStack.top())->emplace(std::make_pair(id, std::get<T>(token.data)));
     }
     else {
-        std::get<ArrayNode*>(nodeStack.top())->emplace_back(std::get<T>(token.data));
+        std::get<Array*>(nodeStack.top())->emplace_back(std::get<T>(token.data));
     }
 }
 
 
-void Parser::pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> node, State state)
+void Parser::pushDataOnStack(std::variant<Object*, Array*> node, State state)
 {
     nodeStack.push(node);
     stateStack.push(state);

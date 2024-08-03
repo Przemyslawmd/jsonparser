@@ -34,10 +34,10 @@ std::unique_ptr<JsonApi> ApiTest::prepareApi(const std::string& file)
 TEST_F(ApiTest, AddIntValueToObjectDirectly)
 {
     auto api = prepareApi("test_1.json");
-    ObjectNode* root = api->getRoot();
+    Object* root = api->getRoot();
     Node* node = &(root->at("person"));
 
-    ObjectNode* nodePerson = std::get_if<ObjectNode>(&(node->value));
+    Object* nodePerson = std::get_if<Object>(&(node->value));
     nodePerson->insert(std::pair<std::string, int>("newValue", 23));
 
     std::string json = api->parseObjectToJsonString();
@@ -95,7 +95,7 @@ TEST_F(ApiTest, AddSimpleNodeIntoObject)
 }
 
 /*
-TEST_F(ApiTest, AddSimpleObjectNodeIntoObject)
+TEST_F(ApiTest, AddSimpleObjectIntoObject)
 {
     auto begin = std::chrono::high_resolution_clock::now();
     auto api = prepareApi("test_5.json");
@@ -135,7 +135,7 @@ TEST_F(ApiTest, AddSimpleNodeIntoArray)
 }
 
 
-TEST_F(ApiTest, AddNestedObjectNodeIntoObject)
+TEST_F(ApiTest, AddNestedObjectIntoObject)
 {
     auto begin = std::chrono::high_resolution_clock::now();
     auto api = prepareApi("test_5.json");
@@ -165,7 +165,7 @@ TEST_F(ApiTest, AddNestedObjectNodeIntoObject)
 
 
 /*
-TEST_F(ApiTest, AddObjectNodeIntoObject)
+TEST_F(ApiTest, AddObjectIntoObject)
 {
     auto begin = std::chrono::high_resolution_clock::now();
     auto api = prepareApi("test_5.json");
@@ -188,7 +188,7 @@ TEST_F(ApiTest, AddObjectNodeIntoObject)
 }
 */
 /*
-TEST_F(ApiTest, AddObjectNodeIntoArray)
+TEST_F(ApiTest, AddObjectIntoArray)
 {
     auto api = prepareApi("test_7.json");
 
@@ -205,7 +205,7 @@ TEST_F(ApiTest, AddObjectNodeIntoArray)
 }
 
 
-TEST_F(ApiTest, AddArrayNodeIntoObject)
+TEST_F(ApiTest, AddArrayIntoObject)
 {
     auto begin = std::chrono::high_resolution_clock::now();
     auto api = prepareApi("test_4.json");
@@ -225,7 +225,7 @@ TEST_F(ApiTest, AddArrayNodeIntoObject)
 }
 
 
-TEST_F(ApiTest, AddArrayNodeIntoArray)
+TEST_F(ApiTest, AddArrayIntoArray)
 {
     auto api = prepareApi("test_7.json");
 
@@ -345,10 +345,10 @@ TEST_F(ApiTest, ChangeJSONForTheSameAPI)
 
 TEST_F(ApiTest, LoadJsonObject_1)
 {
-    std::unique_ptr<ObjectNode> obj = std::make_unique<ObjectNode>();
-    obj->insert(std::make_pair<std::string, ObjectNode>("person", { ObjectNode() }));
+    std::unique_ptr<Object> obj = std::make_unique<Object>();
+    obj->insert(std::make_pair<std::string, Object>("person", { Object() }));
 
-    ObjectNode* personObj = std::get_if<ObjectNode>(&obj->at("person").value);
+    Object* personObj = std::get_if<Object>(&obj->at("person").value);
     personObj->insert(std::make_pair("age", 39));
     personObj->insert(std::make_pair("country", "Poland"));
     personObj->insert(std::make_pair("employed", true));
@@ -367,17 +367,17 @@ TEST_F(ApiTest, LoadJsonObject_1)
 
 TEST_F(ApiTest, LoadJsonObject_2)
 {
-    std::unique_ptr<ObjectNode> obj = std::make_unique<ObjectNode>();
-    obj->insert(std::make_pair<std::string, ObjectNode>("person", { ObjectNode() }));
+    std::unique_ptr<Object> obj = std::make_unique<Object>();
+    obj->insert(std::make_pair<std::string, Object>("person", { Object() }));
     obj->insert(std::make_pair<std::string, std::string>("company", "abc"));
-    obj->insert(std::make_pair<std::string, ArrayNode>("cities", { ArrayNode() }));
+    obj->insert(std::make_pair<std::string, Array>("cities", { Array() }));
 
-    ObjectNode* personObj = std::get_if<ObjectNode>(&obj->at("person").value);
+    Object* personObj = std::get_if<Object>(&obj->at("person").value);
     personObj->insert(std::make_pair("age", 39));
     personObj->insert(std::make_pair("country", "Poland"));
     personObj->insert(std::make_pair("name", "John"));
 
-    ArrayNode* citiesArr = std::get_if<ArrayNode>(&obj->at("cities").value);
+    Array* citiesArr = std::get_if<Array>(&obj->at("cities").value);
     citiesArr->emplace_back("Krakow");
     citiesArr->emplace_back("Warszawa");
     citiesArr->emplace_back("Wroclaw");
@@ -394,18 +394,18 @@ TEST_F(ApiTest, LoadJsonObject_2)
 
 TEST_F(ApiTest, LoadJsonObject_3)
 {
-    std::unique_ptr<ObjectNode> obj = std::make_unique<ObjectNode>();
-    obj->insert(std::make_pair<std::string, ArrayNode>("employees", { ArrayNode() }));
+    std::unique_ptr<Object> obj = std::make_unique<Object>();
+    obj->insert(std::make_pair<std::string, Array>("employees", { Array() }));
 
-    ArrayNode* employeesArr = std::get_if<ArrayNode>(&obj->at("employees").value);
+    Array* employeesArr = std::get_if<Array>(&obj->at("employees").value);
 
-    ObjectNode objAgata;
+    Object objAgata;
     objAgata.insert(std::make_pair<std::string, int>("age", 33));
     objAgata.insert(std::make_pair<std::string, std::string>("email", "agata@gmail.com"));
     objAgata.insert(std::make_pair<std::string, std::string>("name", "Agata"));
     employeesArr->emplace_back(objAgata);
 
-    ObjectNode objAnna;
+    Object objAnna;
     objAnna.insert(std::make_pair<std::string, int>("age", 31));
     objAnna.insert(std::make_pair<std::string, std::string>("email", "anna@gmail.com"));
     objAnna.insert(std::make_pair<std::string, std::string>("name", "Anna"));

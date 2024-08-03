@@ -21,7 +21,7 @@
 constexpr bool measurement = true;
 
 
-std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, KeyMapper* keyMapper)
+std::unique_ptr<Object> writerParseJSON(const std::string& jsonFile, KeyMapper* keyMapper)
 {
     Utils utils;
     std::string jsonString = utils.getJsonFromFile(std::string(TEST_DATA), jsonFile);

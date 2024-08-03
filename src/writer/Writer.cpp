@@ -8,7 +8,7 @@
 constexpr std::string_view dataEnd = ",\n";
 
 
-std::string Writer::createJsonString(ObjectNode* object)
+std::string Writer::createJsonString(Object* object)
 {
     processObject(object);
     return stream.str();
@@ -23,7 +23,7 @@ void Writer::setMarginStep(size_t marginStep)
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
-void Writer::processObject(const ObjectNode* jsonObject)
+void Writer::processObject(const Object* jsonObject)
 {
     stream << "{\n";
     incMargin();
@@ -46,7 +46,7 @@ void Writer::processObject(const ObjectNode* jsonObject)
 }
 
 
-void Writer::processArray(const ArrayNode* jsonArray)
+void Writer::processArray(const Array* jsonArray)
 {
     stream << "[\n";
     incMargin();
@@ -80,11 +80,11 @@ void Writer::parseData(const NodeInternal& node)
     else if (std::holds_alternative<nullptr_t>(node.value)) {
         stream << "null" << dataEnd;
     }
-    else if (std::holds_alternative<ObjectNode>(node.value)) {
-        processObject(std::get_if<ObjectNode>(&node.value));
+    else if (std::holds_alternative<Object>(node.value)) {
+        processObject(std::get_if<Object>(&node.value));
     }
-    else if (std::holds_alternative<ArrayNode>(node.value)) {
-        processArray(std::get_if<ArrayNode>(&node.value));
+    else if (std::holds_alternative<Array>(node.value)) {
+        processArray(std::get_if<Array>(&node.value));
     }
 }
 
