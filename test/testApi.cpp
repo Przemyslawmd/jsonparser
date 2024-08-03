@@ -46,16 +46,54 @@ TEST_F(ApiTest, AddIntValueToObjectDirectly)
 }
 */
 
-TEST_F(ApiTest, ChangeNodeValue)
+TEST_F(ApiTest, ChangeNodeInObjectIntoSimple)
 {
     auto api = prepareApi("test_3.json");
     bool result = api->changeNodeInObject({ "person" }, "country", Node{ .value = "Spain" });
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_3.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_3_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
+
+
+TEST_F(ApiTest, ChangeNodeInObjectIntoObject)
+{
+    auto api = prepareApi("test_3.json");
+
+    std::map<std::string, Node> newObject;
+    newObject.emplace(std::make_pair("b", true));
+    newObject.emplace(std::make_pair("a", 12.45));
+    newObject.emplace(std::make_pair("--", "........."));
+
+    std::map<std::string, Node> nestedObject;
+    nestedObject.emplace(std::make_pair("**", "ccccccccc"));
+    nestedObject.emplace(std::make_pair("^^", -12));
+    newObject.emplace(std::make_pair("internal", nestedObject));
+
+    bool result = api->changeNodeInObject({ "person" }, "country", Node{ .value = newObject });
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectToJsonString();
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_3_2.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, ChangeNodeInObjectIntoArray)
+{
+    auto api = prepareApi("test_3.json");
+    std::vector<Node> newArray{ { true }, { "abv" }, { 0 }, { 1.01 }};
+
+    bool result = api->changeNodeInObject({ "person" }, "country", Node{ .value = newArray });
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectToJsonString();
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_3_3.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
 
 /*
 TEST_F(ApiTest, ChangeValueComplexJson)
@@ -238,7 +276,6 @@ TEST_F(ApiTest, AddArrayIntoArray)
 
     std::string json = api->parseObjectToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_7_3.json");
-    std::cout << json << std::endl;
     ASSERT_EQ(json, jsonExpected);
 }
 

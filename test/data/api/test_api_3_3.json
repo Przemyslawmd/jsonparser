@@ -1,0 +1,19 @@
+{
+  "person": {
+    "name": "John",
+    "age": 39,
+    "country": [
+      true,
+      "abv",
+      0,
+      1.01
+    ]
+  },
+  "company": "abc",
+  "cities": [
+    "Krakow",
+    "Warszawa",
+    "Wroclaw",
+    "Poznan"
+  ]
+}

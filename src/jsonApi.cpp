@@ -92,12 +92,25 @@ bool JsonApi::changeNodeInObject(const std::vector<Indicator>& path, const std::
         return false;
     }
 
-    if (getNodeType(newNode) == NodeType::SIMPLE) {
-        size_t keyId = keyMapper->getIdKey(key, obj->begin()->first).value();
-        obj->at(keyId) = getNodeInternalFromNode(newNode);
+    NodeType nodeType = getNodeType(newNode);
+    size_t keyID = keyMapper->getIdKey(key, obj->begin()->first).value();
+    if (nodeType == NodeType::SIMPLE) {
+        obj->at(keyID) = getNodeInternalFromNode(newNode);
         return true;
     }
 
+    obj->erase(keyID);
+    if (nodeType == NodeType::OBJECT) {
+        obj->insert(std::make_pair(keyID, Object()));
+        Object* objectNew = &(std::get<Object>(obj->at(keyID).value));
+        addObjectInternally(objectNew, newNode);
+    }
+    else if (nodeType == NodeType::ARRAY) {
+        obj->insert(std::make_pair(keyID, Array()));
+        Array* arrayNew = &(std::get<Array>(obj->at(keyID).value));
+        addArrayInternally(arrayNew, newNode);
+    }
+    return true;
 }
 
 /*
@@ -139,7 +152,7 @@ bool JsonApi::addNodeIntoObject(const std::vector<Indicator>& path, const std::s
     else if (newNodeType == NodeType::OBJECT) {
         obj->emplace(std::make_pair(newId, Object()));
         Object* objNew = &(std::get<Object>(obj->at(newId).value));
-        addNodeIntoObjectInternally(objNew, newNode);
+        addObjectInternally(objNew, newNode);
     }
     else if (newNodeType == NodeType::ARRAY) {
         obj->emplace(std::make_pair(newId, Array()));
@@ -170,7 +183,7 @@ bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node newNode)
     else if (newNodeType == NodeType::OBJECT) {
         arr->emplace_back(Object());
         Object* objNew = &(std::get<Object>(arr->back().value));
-        addNodeIntoObjectInternally(objNew, newNode);
+        addObjectInternally(objNew, newNode);
     }
     else if (newNodeType == NodeType::ARRAY) {
         arr->emplace_back(Array());
@@ -181,7 +194,7 @@ bool JsonApi::addNodeIntoArray(const std::vector<Indicator>& keys, Node newNode)
 }
 
 
-bool JsonApi::addNodeIntoObjectInternally(Object* currentObject, Node newNode)
+bool JsonApi::addObjectInternally(Object* currentObject, Node newNode)
 {
     size_t mapID = keyMapper->getMaxMapID() + (1 << 16);
     size_t nodeID = 0;
@@ -196,7 +209,7 @@ bool JsonApi::addNodeIntoObjectInternally(Object* currentObject, Node newNode)
         else if (newNodeType == NodeType::OBJECT) {
             currentObject->emplace(std::make_pair(itemID, Object()));
             auto* objNew = &(std::get<Object>(currentObject->at(itemID).value));
-            addNodeIntoObjectInternally(objNew, val);
+            addObjectInternally(objNew, val);
         }
         nodeID++;
     }
@@ -207,13 +220,8 @@ bool JsonApi::addNodeIntoObjectInternally(Object* currentObject, Node newNode)
 
 bool JsonApi::addArrayInternally(Array* currentObject, Node newNode)
 {
-    //size_t mapID = keyMapper->getMaxMapID() + (1 << 16);
-    //size_t nodeID = 0;
-    //const size_t BIT_MASK = 0b11111111111111110000000000000000;
     for (auto& val : std::get<ArrayExternal>(newNode.value)) {
         NodeType newNodeType = getNodeType(val);
-        //size_t itemID = (mapID & BIT_MASK) + nodeID;
-        //keyMapper->putKey(key, itemID);
         if (newNodeType == NodeType::SIMPLE) {
             currentObject->emplace_back(getNodeInternalFromNode(val));
         }
@@ -223,20 +231,14 @@ bool JsonApi::addArrayInternally(Array* currentObject, Node newNode)
             addArrayInternally(arrNew, val);
 
         }
-        //else if (newNodeType == NodeType::OBJECT) {
-        //    currentObject->emplace(std::make_pair(itemID, Object()));
-        //    auto* objNew = &(std::get<Object>(currentObject->at(itemID).value));
-        //    addNodeIntoObjectInternally(objNew, val);
-        //}
-        //nodeID++;
+        else if (newNodeType == NodeType::OBJECT) {
+            currentObject->emplace_back(Object());
+            Object* objNew = &(std::get<Object>(currentObject->back().value));
+            addObjectInternally(objNew, val);
+        }
     }
     return true;
 }
-
-
-
-
-
 
 
 bool JsonApi::insertNodeIntoArray(const std::vector<Indicator>& keys, int index, Node node)

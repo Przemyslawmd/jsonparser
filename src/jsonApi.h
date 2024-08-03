@@ -36,7 +36,7 @@ public:
     bool parseJsonString(const std::string& file);
     
     std::string parseObjectToJsonString();
-    
+
     //bool loadObject(std::unique_ptr<Object>);
 
     //void clear();
@@ -68,7 +68,7 @@ private:
     Array* getArrayAndCheckIndex(const std::vector<Indicator>& path, size_t index);
     Object* getObjectAndCheckKey(const std::vector<Indicator>& path, const std::string& key);
 
-    bool addNodeIntoObjectInternally(Object*, Node);
+    bool addObjectInternally(Object*, Node);
     bool addArrayInternally(Array*, Node);
 
     template <typename T>
