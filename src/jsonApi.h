@@ -41,12 +41,12 @@ public:
 
     //void clear();
 
-    bool changeNodeInObject(const std::vector<Indicator>&, const std::string& key, Node);
-    bool changeNodeInArray(const std::vector<Indicator>&, size_t index, Node);
+    bool changeNodeInObject(const std::vector<Indicator>& path, const std::string& keyStr, Node);
+    bool changeNodeInArray(const std::vector<Indicator>& path, size_t index, Node);
 
-    bool addNodeIntoObject(const std::vector<Indicator>&, const std::string& key, Node);
-    bool addNodeIntoArray(const std::vector<Indicator>&, Node);
-    bool insertNodeIntoArray(const std::vector<Indicator>&, int index, Node);
+    bool addNodeIntoObject(const std::vector<Indicator>& path, const std::string& keyStr, Node);
+    bool addNodeIntoArray(const std::vector<Indicator>& path, Node);
+    bool insertNodeIntoArray(const std::vector<Indicator>& path, int index, Node);
 
     //bool removeNodeFromObject(const std::vector<Indicator>&, const std::string& key);
     //bool removeNodeFromArray(const std::vector<Indicator>&, size_t index);
@@ -59,12 +59,12 @@ private:
 
     InnerNodePtr getNode(const std::vector<Indicator>& path);
 
-    NodeType getNodeType(Node& node);
+    NodeType getNodeType(Node&);
 
-    NodeInternal getNodeInternalFromNode(Node&);
+    NodeInternal getInternalNode(Node&);
 
     Array* getArrayAndCheckIndex(const std::vector<Indicator>& path, size_t index);
-    Object* getObjectAndCheckKey(const std::vector<Indicator>& path, const std::string& key);
+    std::tuple<Object*, size_t> getObjectAndCheckKey(const std::vector<Indicator>& path, const std::string& keyStr);
 
     bool addObjectInternally(Object*, Node);
     bool addArrayInternally(Array*, Node);

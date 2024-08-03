@@ -30,8 +30,150 @@ std::unique_ptr<JsonApi> ApiTest::prepareApi(const std::string& file)
     return api;
 }
 
+/********************************************************************************/
+/* ADD NODE INTO OBJECT *********************************************************/
 
-TEST_F(ApiTest, ChangeNodeInObjectIntoSimple)
+TEST_F(ApiTest, AddSimpleNodeIntoObject)
+{
+    auto api = prepareApi("test_4.json");
+    bool result = api->addNodeIntoObject({ "person2", "address" }, "post", Node{ .value = "Cracow" });
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectToJsonString();
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_4_1.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, AddObjectIntoObject)
+{
+    auto begin = std::chrono::high_resolution_clock::now();
+    auto api = prepareApi("test_5.json");
+
+    std::map<std::string, Node> newObject;
+    newObject.emplace(std::make_pair("a", 123));
+    newObject.emplace(std::make_pair("b", "AAA"));
+
+    bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectToJsonString();
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+    }
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_5_1.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, AddNestedObjectIntoObject)
+{
+    auto begin = std::chrono::high_resolution_clock::now();
+    auto api = prepareApi("test_5.json");
+
+    std::map<std::string, Node> newObject;
+    newObject.emplace(std::make_pair("b", true));
+    newObject.emplace(std::make_pair("a", 12.45));
+
+    std::map<std::string, Node> nestedObject;
+    nestedObject.emplace(std::make_pair("qwe", "AA AA"));
+    nestedObject.emplace(std::make_pair("asd", 345353));
+    newObject.emplace(std::make_pair("internal", nestedObject));
+
+    bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectToJsonString();
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+    }
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_5.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, AddArrayIntoObject)
+{
+    auto begin = std::chrono::high_resolution_clock::now();
+    auto api = prepareApi("test_4.json");
+
+    std::vector<Node> newArray{ { 232 }, { 234234 }, { 0 }, { 100 } };
+    bool result = api->addNodeIntoObject({ "person2", "address" }, "dataArray", { newArray });
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectToJsonString();
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+    }
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_4_2.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+/********************************************************************************/
+/* ADD NODE INTO ARRAY **********************************************************/
+
+
+TEST_F(ApiTest, AddSimpleNodeIntoArray)
+{
+    auto api = prepareApi("test_7.json");
+
+    bool result = api->addNodeIntoArray({ "employees", size_t(0), "data", size_t(0) }, Node{ .value = 4 });
+    ASSERT_TRUE(result);
+
+    result = api->insertNodeIntoArray({ "employees", size_t(1), "data", size_t(0) }, 1, Node{ .value = "c c" });
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectToJsonString();
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_7_1.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+/*
+TEST_F(ApiTest, AddObjectIntoArray)
+{
+    auto api = prepareApi("test_7.json");
+
+    std::map<std::string, Node> newObject;
+    newObject.emplace(std::make_pair("aa", "bb"));
+    newObject.emplace(std::make_pair("cc", 12));
+
+    bool result = api->insertNodeIntoArray({ "employees" , size_t(1), "data", size_t(0), size_t(0) }, 1, { newObject });
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectToJsonString();
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_7_2.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+*/
+
+TEST_F(ApiTest, AddArrayIntoArray)
+{
+    auto api = prepareApi("test_7.json");
+
+    std::vector<Node> arr1{ { 1 }, { 2 }, { 3 } };
+    std::vector<Node> arr2{ { "aa" }, { "b" } };
+    std::vector<Node> arr3{ { true }, { false } };
+    std::vector<Node> newArray{ { arr1 }, { arr2 }, { arr3 } };
+    bool result = api->addNodeIntoArray({ "employees", size_t(1), "data" }, { newArray });
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectToJsonString();
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_7_3.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+/********************************************************************************/
+/* CHANGE NODE INTO OBJECT ******************************************************/
+
+
+TEST_F(ApiTest, ChangeSimpleNodeInObjectIntoSimpleNode)
 {
     auto api = prepareApi("test_3.json");
     bool result = api->changeNodeInObject({ "person" }, "country", Node{ .value = "Spain" });
@@ -65,6 +207,8 @@ TEST_F(ApiTest, ChangeNodeInObjectIntoObject)
     ASSERT_EQ(json, jsonExpected);
 }
 
+/********************************************************************************/
+/* CHANGE NODE INTO ARRAY *******************************************************/
 
 TEST_F(ApiTest, ChangeNodeInObjectIntoArray)
 {
@@ -106,84 +250,6 @@ TEST_F(ApiTest, ChangeValueComplexJson)
 }
 */
 
-TEST_F(ApiTest, AddSimpleNodeIntoObject)
-{
-    auto api = prepareApi("test_4.json");
-    bool result = api->addNodeIntoObject({ "person2", "address" }, "post", Node{ .value = "Cracow" });
-    ASSERT_TRUE(result);
-
-    std::string json = api->parseObjectToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_4_1.json");
-    ASSERT_EQ(json, jsonExpected);
-}
-
-/*
-TEST_F(ApiTest, AddSimpleObjectIntoObject)
-{
-    auto begin = std::chrono::high_resolution_clock::now();
-    auto api = prepareApi("test_5.json");
-
-    std::map<std::string, Node> newObject;
-    newObject.emplace(std::make_pair("a", 123));
-    newObject.emplace(std::make_pair("b", "AAA"));
-
-    bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
-    ASSERT_TRUE(result);
-
-    std::string json = api->parseObjectToJsonString(); 
-    if (measurement) {
-        auto end = std::chrono::high_resolution_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
-    }
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_5_1.json");
-    ASSERT_EQ(json, jsonExpected);
-}
-*/
-
-
-TEST_F(ApiTest, AddSimpleNodeIntoArray)
-{
-    auto api = prepareApi("test_7.json");
-
-    bool result = api->addNodeIntoArray({ "employees", size_t(0), "data", size_t(0) }, Node{ .value = 4 });
-    ASSERT_TRUE(result);
-
-    result = api->insertNodeIntoArray({ "employees", size_t(1), "data", size_t(0) }, 1, Node{ .value = "c c" });
-    ASSERT_TRUE(result);
-
-    std::string json = api->parseObjectToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_7_1.json");
-    ASSERT_EQ(json, jsonExpected);
-}
-
-
-TEST_F(ApiTest, AddNestedObjectIntoObject)
-{
-    auto begin = std::chrono::high_resolution_clock::now();
-    auto api = prepareApi("test_5.json");
-
-    std::map<std::string, Node> newObject;
-    newObject.emplace(std::make_pair("b", true));
-    newObject.emplace(std::make_pair("a", 12.45));
-
-    std::map<std::string, Node> nestedObject;
-    nestedObject.emplace(std::make_pair("qwe", "AA AA"));
-    nestedObject.emplace(std::make_pair("asd", 345353));
-    newObject.emplace(std::make_pair("internal", nestedObject));
-
-    bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
-    ASSERT_TRUE(result);
-
-    std::string json = api->parseObjectToJsonString();
-    if (measurement) {
-        auto end = std::chrono::high_resolution_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
-    }
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_5.json");
-    ASSERT_EQ(json, jsonExpected);
-}
 
 
 /*
@@ -226,42 +292,6 @@ TEST_F(ApiTest, AddObjectIntoArray)
     ASSERT_EQ(json, jsonExpected);
 }
 */
-
-TEST_F(ApiTest, AddArrayIntoObject)
-{
-    auto begin = std::chrono::high_resolution_clock::now();
-    auto api = prepareApi("test_4.json");
-
-    std::vector<Node> newArray{ { 232 }, { 234234 }, { 0 }, { 100 }};
-    bool result = api->addNodeIntoObject({ "person2", "address"}, "dataArray", { newArray });
-    ASSERT_TRUE(result);
-
-    std::string json = api->parseObjectToJsonString();
-    if (measurement) {
-        auto end = std::chrono::high_resolution_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
-    }
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_4_2.json");
-    ASSERT_EQ(json, jsonExpected);
-}
-
-
-TEST_F(ApiTest, AddArrayIntoArray)
-{
-    auto api = prepareApi("test_7.json");
-
-    std::vector<Node> arr1{{ 1 }, { 2 }, { 3 }};
-    std::vector<Node> arr2{{ "aa" }, { "b" }};
-    std::vector<Node> arr3{{ true }, { false }};
-    std::vector<Node> newArray{{ arr1 }, { arr2 }, { arr3 }};
-    bool result = api->addNodeIntoArray({ "employees", size_t(1), "data" }, { newArray });
-    ASSERT_TRUE(result);
-
-    std::string json = api->parseObjectToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_7_3.json");
-    ASSERT_EQ(json, jsonExpected);
-}
 
 /*
 TEST_F(ApiTest, RemoveNodeFromObject)

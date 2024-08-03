@@ -13,7 +13,7 @@ void KeyMapper::putKey(const std::string& keyStr, size_t keyID)
 }
 
 
-size_t KeyMapper::putKeyIntoExistingMap(const std::string& keyStr, size_t mapID)
+size_t KeyMapper::putKeyIntoMapAndReturnKeyID(const std::string& keyStr, size_t mapID)
 {
     size_t maxKeyID = 0;
     for (const auto& [key, value] : keyMap) {
