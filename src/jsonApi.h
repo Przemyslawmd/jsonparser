@@ -62,7 +62,7 @@ private:
     NodeType getNodeType(const Node&);
     NodeType getNodeInternalType(const NodeInternal&);
 
-    NodeInternal getInternalNode(Node&);
+    NodeInternal getNodeInternal(Node&);
 
     ArrayNode* getArrayNodeAndCheckIndex(const std::vector<Path>& path, size_t index);
 

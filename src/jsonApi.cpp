@@ -100,7 +100,7 @@ bool JsonApi::addNodeIntoObject(const std::vector<Path>& path, const std::string
     NodeType newNodeType = getNodeType(newNode);
 
     if (newNodeType == NodeType::SIMPLE) {
-        obj->emplace(std::make_pair(newId, getInternalNode(newNode)));
+        obj->emplace(std::make_pair(newId, getNodeInternal(newNode)));
     }
     else if (newNodeType == NodeType::OBJECT) {
         obj->emplace(std::make_pair(newId, ObjectNode()));
@@ -131,7 +131,7 @@ bool JsonApi::addNodeIntoArray(const std::vector<Path>& keys, Node newNode)
     NodeType newNodeType = getNodeType(newNode);
 
     if (newNodeType == NodeType::SIMPLE) {
-        arr->emplace_back(getInternalNode(newNode));
+        arr->emplace_back(getNodeInternal(newNode));
     }
     else if (newNodeType == NodeType::OBJECT) {
         arr->emplace_back(ObjectNode());
@@ -160,7 +160,7 @@ bool JsonApi::insertNodeIntoArray(const std::vector<Path>& path, size_t index, N
 
     NodeType newNodeType = getNodeType(newNode);
     if (newNodeType == NodeType::SIMPLE) {
-        arr->insert(arr->begin() + index, getInternalNode(newNode));
+        arr->insert(arr->begin() + index, getNodeInternal(newNode));
         return true;
     }
     if (newNodeType == NodeType::OBJECT) {
@@ -191,7 +191,7 @@ bool JsonApi::changeNodeInObject(const std::vector<Path>& path, const std::strin
 
     NodeType nodeType = getNodeType(newNode);
     if (nodeType == NodeType::SIMPLE) {
-        obj->at(keyID) = getInternalNode(newNode);
+        obj->at(keyID) = getNodeInternal(newNode);
         return true;
     }
 
@@ -223,7 +223,7 @@ bool JsonApi::changeNodeInArray(const std::vector<Path>& path, size_t index, Nod
 
     NodeType nodeType = getNodeType(newNode);
     if (nodeType == NodeType::SIMPLE) {
-        arr->at(index) = getInternalNode(newNode);
+        arr->at(index) = getNodeInternal(newNode);
         return true;
     }
     // TODO : ObjectNode and ArrayNode
@@ -375,7 +375,7 @@ bool JsonApi::addObjectNodeInternally(ObjectNode* currentObject, Node newNode)
         uint32_t itemID = keyMapper->createItemID(mapID, nodeID);
         keyMapper->putKey(key, itemID);
         if (newNodeType == NodeType::SIMPLE) {
-            currentObject->emplace(std::make_pair(itemID, getInternalNode(val)));
+            currentObject->emplace(std::make_pair(itemID, getNodeInternal(val)));
         }
         else if (newNodeType == NodeType::OBJECT) {
             currentObject->emplace(std::make_pair(itemID, ObjectNode()));
@@ -398,7 +398,7 @@ bool JsonApi::addArrayNodeInternally(ArrayNode* currentArray, Node newNode)
     for (auto& val : std::get<ArrayNodeExternal>(newNode.value)) {
         NodeType newNodeType = getNodeType(val);
         if (newNodeType == NodeType::SIMPLE) {
-            currentArray->emplace_back(getInternalNode(val));
+            currentArray->emplace_back(getNodeInternal(val));
         }
         else if (newNodeType == NodeType::ARRAY) {
             currentArray->emplace_back(ArrayNode());
@@ -526,7 +526,7 @@ NodeType JsonApi::getNodeInternalType(const NodeInternal& node)
 }
 
 
-NodeInternal JsonApi::getInternalNode(Node& node)
+NodeInternal JsonApi::getNodeInternal(Node& node)
 {
     if (std::holds_alternative<std::string>(node.value)) {
         return NodeInternal{ .value = std::get<std::string>(node.value) };
