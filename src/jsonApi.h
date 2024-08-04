@@ -67,10 +67,13 @@ private:
     ArrayNode* getArrayNodeAndCheckIndex(const std::vector<Indicator>& path, size_t index);
 
     std::tuple<ObjectNode*, size_t>
-    getObjectNodeAndCheckKey(const std::vector<Indicator>& path, const std::string& keyStr);
+    getObjectAndKeyID(const std::vector<Indicator>& path, const std::string& keyStr);
 
     bool addObjectNodeInternally(ObjectNode*, Node);
     bool addArrayNodeInternally(ArrayNode*, Node);
+
+    bool traverseObjectToRemoveKeyID(ObjectNode*);
+    bool traverseArrayToRemoveKeyID(ArrayNode*);
 
     template <typename T>
     bool validateNodeType(InnerNodePtr, ErrorCode potentialError);

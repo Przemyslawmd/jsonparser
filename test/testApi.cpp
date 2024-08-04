@@ -115,7 +115,6 @@ TEST_F(ApiTest, AddNestedObjectWithArrayIntoObject)
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "addNestedObjectWithArrayToObject_5.json");
-    std::cout << json << std::endl;
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -291,6 +290,44 @@ TEST_F(ApiTest, RemoveSimpleNodeFromObject)
     ASSERT_EQ(json, jsonExpected);
 }
 
+
+TEST_F(ApiTest, RemoveObjectFromObject)
+{
+    auto begin = std::chrono::high_resolution_clock::now();
+    auto api = prepareApi("test_3.json");
+
+    bool result = api->removeNodeFromObject({}, "person");
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectNodeToJsonString();
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+    }
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "removeObjectFromObject_3.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, RemoveArrayFromObject)
+{
+    auto begin = std::chrono::high_resolution_clock::now();
+    auto api = prepareApi("test_7.json");
+
+    bool result = api->removeNodeFromObject({ "employees", size_t(1) }, "data");
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectNodeToJsonString();
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+    }
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "removeArrayFromObject_7.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
 /********************************************************************************/
 /* REMOVE NODE FROM ARRAY *******************************************************/
 
@@ -311,6 +348,45 @@ TEST_F(ApiTest, RemoveSimpleNodeFromArray)
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "removeSimpleNodeFromArray_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
+
+
+TEST_F(ApiTest, RemoveObjectFromArray)
+{
+    auto begin = std::chrono::high_resolution_clock::now();
+    auto api = prepareApi("test_6.json");
+
+    bool result = api->removeNodeFromArray({ "employees" }, size_t(0));
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectNodeToJsonString();
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+    }
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "removeObjectFromArray_6.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, RemoveArrayFromArray)
+{
+    auto begin = std::chrono::high_resolution_clock::now();
+    auto api = prepareApi("test_7.json");
+
+    bool result = api->removeNodeFromArray({ "employees", size_t(0), "data"}, size_t(1));
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectNodeToJsonString();
+    if (measurement) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+    }
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "removeArrayFromArray_7.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
 
 /*
 TEST_F(ApiTest, ChangeJSONForTheSameAPI)

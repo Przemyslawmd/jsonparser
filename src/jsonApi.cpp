@@ -185,7 +185,7 @@ bool JsonApi::changeNodeInObject(const std::vector<Indicator>& path, const std::
         return false;
     }
 
-    auto [obj, keyID] = getObjectNodeAndCheckKey(path, key);
+    auto [obj, keyID] = getObjectAndKeyID(path, key);
     if (obj == nullptr) {
         return false;
     }
@@ -284,25 +284,30 @@ bool JsonApi::addArrayNodeInternally(ArrayNode* currentArray, Node newNode)
 }
 
 
-bool JsonApi::removeNodeFromObject(const std::vector<Indicator>& keys, const std::string& key)
+bool JsonApi::removeNodeFromObject(const std::vector<Indicator>& keys, const std::string& keyStr)
 {
     if (isRootEmpty()) {
         return false;
     }
 
-    auto [obj, keyID] = getObjectNodeAndCheckKey(keys, key);
-    if (obj == nullptr) {
+    auto [currentObject, keyID] = getObjectAndKeyID(keys, keyStr);
+    if (currentObject == nullptr) {
         return false;
     }
 
-    NodeInternal nodeToRemove = obj->at(keyID);
+    NodeInternal nodeToRemove = currentObject->at(keyID);
     NodeType nodeType = getNodeInternalType(nodeToRemove);
 
-    if (nodeType == NodeType::SIMPLE) {
-        obj->erase(keyID);
-        keyMapper->removeKey(keyID);
+    if (nodeType == NodeType::OBJECT) {
+        ObjectNode* objectToRemove = &(std::get<ObjectNode>(currentObject->at(keyID).value));
+        traverseObjectToRemoveKeyID(objectToRemove);
     }
-    // TODO : Object and Array
+    else if (nodeType == NodeType::ARRAY) {
+        ArrayNode* arrayToRemove = &(std::get<ArrayNode>(currentObject->at(keyID).value));
+        traverseArrayToRemoveKeyID(arrayToRemove);
+    }
+    currentObject->erase(keyID);
+    keyMapper->removeKey(keyID);
     return true;
 }
 
@@ -313,18 +318,58 @@ bool JsonApi::removeNodeFromArray(const std::vector<Indicator>& keys, size_t ind
         return false;
     }
 
-    ArrayNode* arr = getArrayNodeAndCheckIndex(keys, index);
-    if (arr == nullptr) {
+    ArrayNode* currentArray = getArrayNodeAndCheckIndex(keys, index);
+    if (currentArray == nullptr) {
         return false;
     }
 
-    NodeInternal nodeToRemove = arr->at(index);
+    NodeInternal nodeToRemove = currentArray->at(index);
     NodeType nodeType = getNodeInternalType(nodeToRemove);
 
-    if (nodeType == NodeType::SIMPLE) {
-        arr->erase(arr->begin() + index);
+    if (nodeType == NodeType::OBJECT) {
+        ObjectNode* objectToRemove = &(std::get<ObjectNode>(currentArray->at(index).value));
+        traverseObjectToRemoveKeyID(objectToRemove);
     }
-    // TODO : Object and Array
+    else if (nodeType == NodeType::ARRAY) {
+        ArrayNode* arrayToRemove = &(std::get<ArrayNode>(currentArray->at(index).value));
+        traverseArrayToRemoveKeyID(arrayToRemove);
+    }
+    currentArray->erase(currentArray->begin() + index);
+    return true;
+}
+
+
+bool JsonApi::traverseObjectToRemoveKeyID(ObjectNode* currentObject)
+{
+    for (auto& [keyID, data] : *currentObject) {
+        NodeType nodeType = getNodeInternalType(data);
+        if (nodeType == NodeType::OBJECT) {
+            ObjectNode* objectToRemove = &std::get<ObjectNode>(data.value);
+            traverseObjectToRemoveKeyID(objectToRemove);
+        }
+        else if (nodeType == NodeType::ARRAY) {
+            ArrayNode* arrayToRemove = &std::get<ArrayNode>(data.value);
+            traverseArrayToRemoveKeyID(arrayToRemove);
+        }
+        keyMapper->removeKey(keyID);
+    }
+    return true;
+}
+
+
+bool JsonApi::traverseArrayToRemoveKeyID(ArrayNode* currentArray)
+{
+    for (auto& data : *currentArray) {
+        NodeType nodeType = getNodeInternalType(data);
+        if (nodeType == NodeType::OBJECT) {
+            ObjectNode* objectToRemove = &std::get<ObjectNode>(data.value);
+            traverseObjectToRemoveKeyID(objectToRemove);
+        }
+        else if (nodeType == NodeType::ARRAY) {
+            ArrayNode* arrayToRemove = &std::get<ArrayNode>(data.value);
+            traverseArrayToRemoveKeyID(arrayToRemove);
+        }
+    }
     return true;
 }
 
@@ -438,7 +483,7 @@ ArrayNode* JsonApi::getArrayNodeAndCheckIndex(const std::vector<Indicator>& path
 }
 
 
-std::tuple<ObjectNode*, size_t> JsonApi::getObjectNodeAndCheckKey(const std::vector<Indicator>& path, const std::string& key)
+std::tuple<ObjectNode*, size_t> JsonApi::getObjectAndKeyID(const std::vector<Indicator>& path, const std::string& key)
 {
     InnerNodePtr node = getNode(path);
     if (validateNodeType<ObjectNode*>(node, ErrorCode::API_NODE_NOT_OBJECT) == false) {
