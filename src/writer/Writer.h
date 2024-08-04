@@ -16,9 +16,9 @@ class Writer
 {
 public:
 
-    Writer(KeyMapper& keyMapper) : keyMapper(keyMapper) {}
+    Writer(const KeyMapper& keyMapper) : keyMapper(keyMapper) {}
 
-    std::string createJsonString(ObjectNode*);
+    std::string createJsonString(const ObjectNode*);
 
     void setMarginStep(size_t);
 
@@ -33,12 +33,11 @@ private:
 
     void deleteLastChars(std::ostringstream& stream);
 
-    std::ostringstream stream;
+    const KeyMapper& keyMapper;
 
+    std::ostringstream stream;
     size_t margin = 0;
     size_t marginStep = 2;
-
-    KeyMapper& keyMapper;
 };
 
 #endif

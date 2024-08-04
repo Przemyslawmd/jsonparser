@@ -8,7 +8,7 @@
 constexpr std::string_view dataEnd = ",\n";
 
 
-std::string Writer::createJsonString(ObjectNode* object)
+std::string Writer::createJsonString(const ObjectNode* object)
 {
     processObjectNode(object);
     return stream.str();
@@ -23,12 +23,12 @@ void Writer::setMarginStep(size_t marginStep)
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
-void Writer::processObjectNode(const ObjectNode* jsonObjectNode)
+void Writer::processObjectNode(const ObjectNode* obj)
 {
     stream << "{\n";
     incMargin();
 
-    for (auto const& [idKey, val] : *jsonObjectNode) {
+    for (auto const& [idKey, val] : *obj) {
         std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
         std::string keyStr = keyMapper.getStrKey(idKey).value();
         stream << "\"" << keyStr << "\": ";
@@ -46,12 +46,12 @@ void Writer::processObjectNode(const ObjectNode* jsonObjectNode)
 }
 
 
-void Writer::processArrayNode(const ArrayNode* jsonArrayNode)
+void Writer::processArrayNode(const ArrayNode* arr)
 {
     stream << "[\n";
     incMargin();
     
-    for (auto const& val : *jsonArrayNode) {
+    for (auto const& val : *arr) {
         std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
         parseData(val);
     }    
