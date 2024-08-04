@@ -16,8 +16,8 @@
 /* Pointer to internal node: object (map) or array */
 using InnerNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 
-/* Indicator is a key for object (map) or index for an array */
-using Indicator = std::variant<std::string, size_t>;
+/* Path contains a key for an object (map) or index for an array */
+using Path = std::variant<std::string, size_t>;
 
 
 enum class NodeType {
@@ -41,15 +41,15 @@ public:
 
     //void clear();
 
-    bool changeNodeInObject(const std::vector<Indicator>& path, const std::string& keyStr, Node);
-    bool changeNodeInArray(const std::vector<Indicator>& path, size_t index, Node);
+    bool changeNodeInObject(const std::vector<Path>& path, const std::string& keyStr, Node);
+    bool changeNodeInArray(const std::vector<Path>& path, size_t index, Node);
 
-    bool addNodeIntoObject(const std::vector<Indicator>& path, const std::string& keyStr, Node);
-    bool addNodeIntoArray(const std::vector<Indicator>& path, Node);
-    bool insertNodeIntoArray(const std::vector<Indicator>& path, size_t index, Node);
+    bool addNodeIntoObject(const std::vector<Path>& path, const std::string& keyStr, Node);
+    bool addNodeIntoArray(const std::vector<Path>& path, Node);
+    bool insertNodeIntoArray(const std::vector<Path>& path, size_t index, Node);
 
-    bool removeNodeFromObject(const std::vector<Indicator>& path, const std::string& key);
-    bool removeNodeFromArray(const std::vector<Indicator>& path, size_t index);
+    bool removeNodeFromObject(const std::vector<Path>& path, const std::string& key);
+    bool removeNodeFromArray(const std::vector<Path>& path, size_t index);
 
     ErrorCode getErrorCode();
 
@@ -57,17 +57,17 @@ private:
 
     bool isRootEmpty();
 
-    InnerNodePtr getNode(const std::vector<Indicator>& path);
+    InnerNodePtr getNode(const std::vector<Path>& path);
 
     NodeType getNodeType(const Node&);
     NodeType getNodeInternalType(const NodeInternal&);
 
     NodeInternal getInternalNode(Node&);
 
-    ArrayNode* getArrayNodeAndCheckIndex(const std::vector<Indicator>& path, size_t index);
+    ArrayNode* getArrayNodeAndCheckIndex(const std::vector<Path>& path, size_t index);
 
     std::tuple<ObjectNode*, size_t>
-    getObjectAndKeyID(const std::vector<Indicator>& path, const std::string& keyStr);
+    getObjectAndKeyID(const std::vector<Path>& path, const std::string& keyStr);
 
     bool addObjectNodeInternally(ObjectNode*, Node);
     bool addArrayNodeInternally(ArrayNode*, Node);
