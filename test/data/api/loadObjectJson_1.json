@@ -5,7 +5,7 @@
     "employed": true,
     "empty": null,
     "name": "John",
-    "newValue": 23,
+    "newValue": 23.1,
     "restricted": false
   }
 }

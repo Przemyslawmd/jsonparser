@@ -37,7 +37,7 @@ public:
     
     std::string parseObjectNodeToJsonString();
 
-    //bool loadObjectNode(std::unique_ptr<ObjectNode>);
+    bool loadObjectJson(const Node&);
 
     //void clear();
 

@@ -55,18 +55,19 @@ std::string JsonApi::parseObjectNodeToJsonString()
     return { writer->createJsonString(root.get()) };
 }
 
-/*
-bool JsonApi::loadObjectNode(std::unique_ptr<ObjectNode> ObjectNode)
+
+bool JsonApi::loadObjectJson(const Node& node)
 {
     if (root != nullptr) {
         error = std::make_unique<Error>(ErrorCode::API_NOT_EMPTY);
         return false;
     }
-    root = std::move(ObjectNode);
+    root = std::make_unique<ObjectNode>();
+    addObjectNodeInternally(root.get(), node);
     return true;
 }
 
-
+/*
 void JsonApi::clear()
 {
     root.reset();
@@ -534,6 +535,9 @@ NodeInternal JsonApi::getNodeInternal(Node& node)
     }
     if (std::holds_alternative<bool>(node.value)) {
         return NodeInternal{ .value = std::get<bool>(node.value) };
+    }
+    if (std::holds_alternative<nullptr_t>(node.value)) {
+        return NodeInternal{ .value = nullptr };
     }
     // TODO : Error if change not for simple value 
 }

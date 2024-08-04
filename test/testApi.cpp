@@ -444,30 +444,31 @@ TEST_F(ApiTest, ChangeJSONForTheSameAPI)
     jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_7_4.json");
     ASSERT_EQ(json, jsonExpected);
 }
+*/
 
-
-TEST_F(ApiTest, LoadJsonObjectNode_1)
+TEST_F(ApiTest, LoadObjectJson_1)
 {
-    std::unique_ptr<ObjectNode> obj = std::make_unique<ObjectNode>();
-    obj->insert(std::make_pair<std::string, ObjectNode>("person", { ObjectNode() }));
+    std::map<std::string, Node> internalObject;
+    internalObject.insert(std::make_pair("age", 39));
+    internalObject.insert(std::make_pair("country", "Poland"));
+    internalObject.insert(std::make_pair("employed", true));
+    internalObject.insert(std::make_pair("name", "John"));
+    internalObject.insert(std::make_pair("restricted", false));
+    internalObject.insert(std::make_pair("empty", nullptr));
+    internalObject.insert(std::make_pair("newValue", 23.1));
 
-    ObjectNode* personObj = std::get_if<ObjectNode>(&obj->at("person").value);
-    personObj->insert(std::make_pair("age", 39));
-    personObj->insert(std::make_pair("country", "Poland"));
-    personObj->insert(std::make_pair("employed", true));
-    personObj->insert(std::make_pair("name", "John"));
-    personObj->insert(std::make_pair("restricted", false));
-    personObj->insert(std::make_pair("empty", nullptr));
+    std::map<std::string, Node> root;
+    root.insert(std::make_pair("person", internalObject));
 
     auto api = std::make_unique<JsonApi>();
-    api->loadObjectNode(std::move(obj));
+    api->loadObjectJson(Node{ .value = root });
 
     std::string json = api->parseObjectNodeToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_WRITER), "test_1.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "loadObjectJson_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
-
+/*
 TEST_F(ApiTest, LoadJsonObjectNode_2)
 {
     std::unique_ptr<ObjectNode> obj = std::make_unique<ObjectNode>();
