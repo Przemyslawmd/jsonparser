@@ -64,7 +64,7 @@ private:
 
     NodeInternal getNodeInternal(Node&);
 
-    ArrayNode* getArrayNodeAndCheckIndex(const std::vector<Path>& path, size_t index);
+    ArrayNode* getArrayAndCheckIndex(const std::vector<Path>& path, size_t index);
 
     std::tuple<ObjectNode*, size_t>
     getObjectAndKeyID(const std::vector<Path>& path, const std::string& keyStr);
