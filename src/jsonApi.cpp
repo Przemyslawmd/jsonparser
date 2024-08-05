@@ -82,7 +82,7 @@ void JsonApi::clear()
 /**********************************************************************************/
 /* ADD TO OBJECT ******************************************************************/
 
-bool JsonApi::addNodeIntoObject(const std::vector<Path>& path, const std::string& keyStr, Node newNode)
+bool JsonApi::addNodeIntoObject(const std::vector<Path>& path, const std::string& keyStr, const Node& newNode)
 {
     if (isRootEmpty()) {
         return false;
@@ -112,7 +112,7 @@ bool JsonApi::addNodeIntoObject(const std::vector<Path>& path, const std::string
 }
 
 
-bool JsonApi::addNodeIntoArray(const std::vector<Path>& path, Node newNode)
+bool JsonApi::addNodeIntoArray(const std::vector<Path>& path, const Node& newNode)
 {
     if (isRootEmpty()) {
         return false;
@@ -141,7 +141,7 @@ bool JsonApi::addNodeIntoArray(const std::vector<Path>& path, Node newNode)
 }
 
 
-bool JsonApi::insertNodeIntoArray(const std::vector<Path>& path, size_t index, Node newNode)
+bool JsonApi::insertNodeIntoArray(const std::vector<Path>& path, size_t index, const Node& newNode)
 {
     if (isRootEmpty()) {
         return false;
@@ -172,7 +172,7 @@ bool JsonApi::insertNodeIntoArray(const std::vector<Path>& path, size_t index, N
 }
 
 
-bool JsonApi::changeNodeInObject(const std::vector<Path>& path, const std::string& key, Node newNode)
+bool JsonApi::changeNodeInObject(const std::vector<Path>& path, const std::string& key, const Node& newNode)
 {
     if (isRootEmpty()) {
         return false;
@@ -204,7 +204,7 @@ bool JsonApi::changeNodeInObject(const std::vector<Path>& path, const std::strin
 }
 
 
-bool JsonApi::changeNodeInArray(const std::vector<Path>& path, size_t index, Node newNode)
+bool JsonApi::changeNodeInArray(const std::vector<Path>& path, size_t index, const Node& newNode)
 {
     if (isRootEmpty()) {
         return false;
@@ -369,7 +369,7 @@ InnerNodePtr JsonApi::getNodeFromPath(const std::vector<Path>& path)
 }
 
 
-bool JsonApi::addObjectNodeInternally(ObjectNode* obj, Node newNode)
+bool JsonApi::addObjectNodeInternally(ObjectNode* obj, const Node& newNode)
 {
     uint32_t mapID = keyMapper->getNextMapID();
     uint32_t nodeID = 0;
@@ -396,7 +396,7 @@ bool JsonApi::addObjectNodeInternally(ObjectNode* obj, Node newNode)
 }
 
 
-bool JsonApi::addArrayNodeInternally(ArrayNode* arr, Node newNode)
+bool JsonApi::addArrayNodeInternally(ArrayNode* arr, const Node& newNode)
 {
     for (auto& val : std::get<ArrayNodeApi>(newNode.value)) {
         NodeType newNodeType = getNodeType(val);
@@ -544,7 +544,7 @@ NodeType JsonApi::getNodeInternalType(const NodeInternal& node)
 }
 
 
-NodeInternal JsonApi::getNodeInternal(Node& node)
+NodeInternal JsonApi::getNodeInternal(const Node& node)
 {
     if (std::holds_alternative<std::string>(node.value)) {
         return NodeInternal{ .value = std::get<std::string>(node.value) };
