@@ -76,6 +76,12 @@ private:
     bool traverseArrayToRemoveKeyID(ArrayNode*);
 
     template <typename T>
+    T* putIntoObjectAndGet(ObjectNode* obj, uint32_t itemID);
+
+    template <typename T>
+    T* putIntoArrayAndGet(ArrayNode* obj);
+
+    template <typename T>
     bool validateNodeType(InnerNodePtr, ErrorCode potentialError);
 
     std::unique_ptr<ObjectNode> root;
