@@ -57,7 +57,7 @@ private:
 
     bool isRootEmpty();
 
-    InnerNodePtr getNode(const std::vector<Path>& path);
+    InnerNodePtr getNodeFromPath(const std::vector<Path>& path);
 
     NodeType getNodeType(const Node&);
     NodeType getNodeInternalType(const NodeInternal&);

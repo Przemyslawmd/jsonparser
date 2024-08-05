@@ -25,10 +25,5 @@ struct Node
     Value value;
 };
 
-
-using ObjectNodeExternal = std::map<std::string, Node>;
-using ArrayNodeExternal = std::vector<Node>;
-
-
 #endif
 
