@@ -218,10 +218,19 @@ bool JsonApi::changeNodeInArray(const std::vector<Path>& path, size_t index, Nod
     NodeType nodeType = getNodeType(newNode);
     if (nodeType == NodeType::SIMPLE) {
         arr->at(index) = getNodeInternal(newNode);
+    }
+    else if (nodeType == NodeType::OBJECT) {
+        arr->at(index) = NodeInternal{ .value = ObjectNode() };
+        ObjectNode* objNew = &std::get<ObjectNode>(arr->at(index).value);
+        addObjectNodeInternally(objNew, newNode);
         return true;
     }
-    // TODO : ObjectNode and ArrayNode
-
+    else if (nodeType == NodeType::ARRAY) {
+        arr->at(index) = NodeInternal{ .value = ArrayNode() };
+        ArrayNode* arrNew = &std::get<ArrayNode>(arr->at(index).value);
+        addArrayNodeInternally(arrNew, newNode);
+        return true;
+    } 
     return true;
 }
 

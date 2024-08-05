@@ -267,6 +267,56 @@ TEST_F(ApiTest, ChangeComplexJson)
 }
 
 /********************************************************************************/
+/* CHANGE NODE IN ARAY **********************************************************/
+
+TEST_F(ApiTest, ChangeNodeInArrayIntoSimpleNode)
+{
+    auto api = prepareApi("test_2.json");
+    bool result = api->changeNodeInArray({ "shipTo", "cities" }, 2, Node{ .value = "Cracow" });
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectNodeToJsonString();
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "change_node_in_array_into_simple_node_2.json");
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, ChangeNodeInArrayIntoObject)
+{
+    auto api = prepareApi("test_6.json");
+
+    std::map<std::string, Node> newObject;
+    newObject.emplace(std::make_pair("aa", "bb"));
+    newObject.emplace(std::make_pair("xcd", true));
+    newObject.emplace(std::make_pair("qwe", 33.45));
+    newObject.emplace(std::make_pair("qaz", -12));
+
+    bool result = api->changeNodeInArray({ "employees" }, size_t(0), Node{ .value = newObject });
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectNodeToJsonString();
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "change_node_in_array_into_object_6.json");
+    std::cout << json << std::endl;
+    ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, ChangeNodeInArrayIntoArray)
+{
+    auto api = prepareApi("test_7.json");
+
+    std::vector<Node> newArray{ { 1 }, { -100 }, { 43212231231 }};
+
+    bool result = api->changeNodeInArray({ "employees", size_t(1), "data", size_t(0) }, size_t(0), Node{ .value = newArray });
+    ASSERT_TRUE(result);
+
+    std::string json = api->parseObjectNodeToJsonString();
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "change_node_in_array_into_array_7.json");
+    std::cout << json << std::endl;
+    ASSERT_EQ(json, jsonExpected);
+}
+
+/********************************************************************************/
 /* REMOVE NODE FROM OBJECT ******************************************************/
 
 TEST_F(ApiTest, RemoveSimpleNodeFromObject)

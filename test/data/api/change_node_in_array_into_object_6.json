@@ -1,0 +1,15 @@
+{
+  "employees": [
+    {
+      "aa": "bb",
+      "qaz": -12,
+      "qwe": 33.45,
+      "xcd": true
+    },
+    {
+      "name": "Anna",
+      "email": "anna@gmail.com",
+      "age": 31
+    }
+  ]
+}
