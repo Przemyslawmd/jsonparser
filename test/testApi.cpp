@@ -496,7 +496,7 @@ TEST_F(ApiTest, ChangeJSONForTheSameAPI)
 }
 */
 
-TEST_F(ApiTest, LoadObjectJson_1)
+TEST_F(ApiTest, LoadJsonObject_1)
 {
     std::map<std::string, Node> internalObject;
     internalObject.insert(std::make_pair("age", 39));
@@ -514,63 +514,42 @@ TEST_F(ApiTest, LoadObjectJson_1)
     api->loadObjectJson(Node{ .value = root });
 
     std::string json = api->parseObjectNodeToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "loadObjectJson_1.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "load_json_object_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
-/*
-TEST_F(ApiTest, LoadJsonObjectNode_2)
+
+TEST_F(ApiTest, LoadJsonObject_2)
 {
-    std::unique_ptr<ObjectNode> obj = std::make_unique<ObjectNode>();
-    obj->insert(std::make_pair<std::string, ObjectNode>("person", { ObjectNode() }));
-    obj->insert(std::make_pair<std::string, std::string>("company", "abc"));
-    obj->insert(std::make_pair<std::string, ArrayNode>("cities", { ArrayNode() }));
+    std::vector<Node> array_1_1{ { 1 }, { 2 }, { 3 } };
+    std::vector<Node> array_1_2{ { 4 }, { 5 }, { 6 } };
+    std::vector<Node> array_1{ { array_1_1 }, { array_1_2 } };
 
-    ObjectNode* personObj = std::get_if<ObjectNode>(&obj->at("person").value);
-    personObj->insert(std::make_pair("age", 39));
-    personObj->insert(std::make_pair("country", "Poland"));
-    personObj->insert(std::make_pair("name", "John"));
+    std::map<std::string, Node> object_1;
+    object_1.emplace(std::make_pair("name", "Agata"));
+    object_1.emplace(std::make_pair("data", array_1));
 
-    ArrayNode* citiesArr = std::get_if<ArrayNode>(&obj->at("cities").value);
-    citiesArr->emplace_back("Krakow");
-    citiesArr->emplace_back("Warszawa");
-    citiesArr->emplace_back("Wroclaw");
-    citiesArr->emplace_back("Poznan");
+    std::vector<Node> array_2_1{ { "a" }, { "b" } };
+    std::vector<Node> array_2_2{ { "c d e" } };
+    std::vector<Node> array_2{ { array_2_1 }, { array_2_2 } };
+
+    std::map<std::string, Node> object_2;
+    object_2.emplace(std::make_pair("name", "Anna"));
+    object_2.emplace(std::make_pair("data", array_2));
+
+    std::vector<Node> mainArray;
+    mainArray.emplace_back(object_1);
+    mainArray.emplace_back(object_2);
+
+    std::map<std::string, Node> root;
+    root.emplace("employees", mainArray);
 
     auto api = std::make_unique<JsonApi>();
-    api->loadObjectNode(std::move(obj));
+    api->loadObjectJson(Node{ .value = root });
 
     std::string json = api->parseObjectNodeToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_WRITER), "test_3.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "load_json_object_2.json");
+    std::cout << json << std::endl;
     ASSERT_EQ(json, jsonExpected);
 }
-
-
-TEST_F(ApiTest, LoadJsonObjectNode_3)
-{
-    std::unique_ptr<ObjectNode> obj = std::make_unique<ObjectNode>();
-    obj->insert(std::make_pair<std::string, ArrayNode>("employees", { ArrayNode() }));
-
-    ArrayNode* employeesArr = std::get_if<ArrayNode>(&obj->at("employees").value);
-
-    ObjectNode objAgata;
-    objAgata.insert(std::make_pair<std::string, int>("age", 33));
-    objAgata.insert(std::make_pair<std::string, std::string>("email", "agata@gmail.com"));
-    objAgata.insert(std::make_pair<std::string, std::string>("name", "Agata"));
-    employeesArr->emplace_back(objAgata);
-
-    ObjectNode objAnna;
-    objAnna.insert(std::make_pair<std::string, int>("age", 31));
-    objAnna.insert(std::make_pair<std::string, std::string>("email", "anna@gmail.com"));
-    objAnna.insert(std::make_pair<std::string, std::string>("name", "Anna"));
-    employeesArr->emplace_back(objAnna);
-
-    auto api = std::make_unique<JsonApi>();
-    api->loadObjectNode(std::move(obj));
-
-    std::string json = api->parseObjectNodeToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_WRITER), "test_6.json");
-    ASSERT_EQ(json, jsonExpected);
-}
-*/
 
