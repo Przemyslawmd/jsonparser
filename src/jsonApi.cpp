@@ -313,30 +313,31 @@ bool JsonApi::isRootEmpty()
 
 ComplexNodePtr JsonApi::getNodeFromPath(const std::vector<Path>& path)
 {
-    ComplexNodePtr nodePtr = root.get();
+    ComplexNodePtr nodeComplexPtr = root.get();
     if (path.empty()) {
-        return nodePtr;
+        return nodeComplexPtr;
     }
 
     NodeType nodeType = NodeType::OBJECT;
 
-    const auto getNextNode = [](ComplexNodePtr* nodePtr, NodeInternal* node, NodeType& nodeType)
+    const auto getNextNode = [&nodeType](NodeInternal* node) -> ComplexNodePtr
     {
         if (std::holds_alternative<ObjectNode>(node->value)) {
-            *nodePtr = std::get_if<ObjectNode>(&node->value);
             nodeType = NodeType::OBJECT;
+            return std::get_if<ObjectNode>(&node->value);
         }
         else if (std::holds_alternative<ArrayNode>(node->value)) {
-            *nodePtr = std::get_if<ArrayNode>(&node->value);
             nodeType = NodeType::ARRAY;
+            return std::get_if<ArrayNode>(&node->value);
         }
     };
 
-    for (const auto& indicator : path) {
-        if (nodeType == NodeType::OBJECT && std::holds_alternative<std::string>(indicator)) {
-            ObjectNode* obj = std::get<ObjectNode*>(nodePtr);
-            const auto& keyStr = std::get<std::string>(indicator);
+    for (const auto& pathKey : path) {
+        if (nodeType == NodeType::OBJECT && std::holds_alternative<std::string>(pathKey)) {
+            ObjectNode* obj = std::get<ObjectNode*>(nodeComplexPtr);
+            const auto& keyStr = std::get<std::string>(pathKey);
             std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
+
             if (keyID == std::nullopt) {
                 error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
                 return nullptr;
@@ -345,27 +346,26 @@ ComplexNodePtr JsonApi::getNodeFromPath(const std::vector<Path>& path)
                 error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
                 return nullptr;
             }
-
             NodeInternal* node = &obj->at(keyID.value());
-            getNextNode(&nodePtr, node, nodeType);
+            nodeComplexPtr = getNextNode( node);
         }
-        else if (nodeType == NodeType::ARRAY && std::holds_alternative<size_t>(indicator)) {
-            ArrayNode* arr = std::get<ArrayNode*>(nodePtr);
-            size_t index = std::get<size_t>(indicator);
+        else if (nodeType == NodeType::ARRAY && std::holds_alternative<size_t>(pathKey)) {
+            ArrayNode* arr = std::get<ArrayNode*>(nodeComplexPtr);
+            size_t index = std::get<size_t>(pathKey);
+ 
             if (index >= arr->size()) {
                 error = std::make_unique<Error>(ErrorCode::API_INDEX_OUT_OF_ARRAY);
                 return nullptr;
             }
-
             NodeInternal* node = &arr->at(index);
-            getNextNode(&nodePtr, node, nodeType);
+            nodeComplexPtr = getNextNode(node);
         }
         else {
             error = std::make_unique<Error>(ErrorCode::API_INCONSISTENT_DATA);
             return nullptr;
         }
     }
-    return nodePtr;
+    return nodeComplexPtr;
 }
 
 
