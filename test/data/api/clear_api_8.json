@@ -1,0 +1,151 @@
+{
+  "employees": [
+    {
+      "name": "Agata",
+      "data": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          4,
+          5,
+          10
+        ],
+        [
+          {
+            "firstName": "John",
+            "lastName": "Doe"
+          },
+          {
+            "firstName": "Anna",
+            "lastName": "Smith"
+          },
+          {
+            "firstName": "Peter",
+            "lastName": "Jones"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Anna",
+      "employees": [
+        {
+          "name": "Maria",
+          "email": "agata@gmail.com",
+          "age": 33,
+          "address": {
+            "city": "Cracow",
+            "street": "Kanonicza",
+            "number": 12
+          }
+        },
+        {
+          "name": "Anna",
+          "email": "anna@gmail.com",
+          "age": 31,
+          "address": {
+            "city": "Cracow",
+            "street": "Stradom",
+            "number": 12,
+            "person": {
+              "name": "John",
+              "age": 39,
+              "country": "Poland",
+              "cities": [
+                "Krakow",
+                "Warszawa",
+                "Wroclaw",
+                "Poznan"
+              ],
+              "shipTo": {
+                "name": "Jane Smith",
+                "address": "123 Maple Street",
+                "cities": [
+                  "Rome",
+                  "New York",
+                  "Chicago"
+                ],
+                "state": "NY",
+                "zip": -12345,
+                "weight": 12.34,
+                "employees": [
+                  {
+                    "name": "Agata",
+                    "data": [
+                      [
+                        11,
+                        22,
+                        3333
+                      ],
+                      [
+                        41,
+                        534242423,
+                        632131232
+                      ]
+                    ]
+                  },
+                  {
+                    "name": "Anna",
+                    "data": [
+                      [
+                        "a",
+                        "b"
+                      ],
+                      [
+                        "c d e     abcdefghijk"
+                      ]
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "data": [
+        [
+          "a",
+          "b",
+          "c"
+        ],
+        [
+          "c d e",
+          "aaaaaaaaa-sws 'swsws'",
+          "bbbbbbbbbbbbb, aaaa.322% ^&"
+        ],
+        [
+          {
+            "firstName": "John",
+            "lastName": "Doe",
+            "numbers": [
+              0.12,
+              34.56,
+              67.332
+            ]
+          },
+          {
+            "firstName": "Anna",
+            "lastName": "Smith",
+            "flags": [
+              true,
+              false,
+              true,
+              true
+            ]
+          },
+          {
+            "firstName": "Peter",
+            "lastName": "Jones",
+            "cities": [
+              "warsaw",
+              "Cracow"
+            ]
+          }
+        ]
+      ]
+    }
+  ]
+}

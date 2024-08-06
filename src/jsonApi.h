@@ -39,7 +39,7 @@ public:
 
     bool loadObjectJson(const Node&);
 
-    //void clear();
+    void clear();
 
     bool addNodeIntoObject(const std::vector<Path>& path, const std::string& keyStr, const Node&);
     bool addNodeIntoArray(const std::vector<Path>& path, const Node&);

@@ -28,6 +28,12 @@ uint32_t KeyMapper::putKeyIntoMapAndReturnKeyID(const std::string& keyStr, uint3
 }
 
 
+void KeyMapper::clear()
+{
+    keyMap.clear();
+}
+
+
 void KeyMapper::removeKey(uint32_t keyID)
 {
     keyMap.erase(keyID);

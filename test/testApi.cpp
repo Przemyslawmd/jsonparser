@@ -296,7 +296,6 @@ TEST_F(ApiTest, ChangeNodeInArrayIntoObject)
 
     std::string json = api->parseObjectNodeToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "change_node_in_array_into_object_6.json");
-    std::cout << json << std::endl;
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -312,7 +311,6 @@ TEST_F(ApiTest, ChangeNodeInArrayIntoArray)
 
     std::string json = api->parseObjectNodeToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "change_node_in_array_into_array_7.json");
-    std::cout << json << std::endl;
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -438,21 +436,20 @@ TEST_F(ApiTest, RemoveArrayFromArray)
 }
 
 
-/*
-TEST_F(ApiTest, ChangeJSONForTheSameAPI)
+TEST_F(ApiTest, ClearApi)
 {
     auto begin = std::chrono::high_resolution_clock::now();
     auto api = prepareApi("test_7.json");
 
-    std::vector<Node> arr1{{ 1 }, { 2 }, { 3 }};
-    std::vector<Node> arr2{{ "aa" }, { "b" }};
-    std::vector<Node> arr3{{ true }, { false }};
-    std::vector<Node> newArrayNode{{ arr1 }, { arr2 }, { arr3 }};
-    bool result = api->addNodeIntoArrayNode({ "employees", size_t(1), "data" }, { newArrayNode });
+    std::vector<Node> arr1{ { 1 }, { 2 }, { 3 } };
+    std::vector<Node> arr2{ { "aa" }, { "b" } };
+    std::vector<Node> arr3{ { true }, { false } };
+    std::vector<Node> newArray{ { arr1 }, { arr2 }, { arr3 } };
+    bool result = api->addNodeIntoArray({ "employees", size_t(1), "data" }, { newArray });
     ASSERT_TRUE(result);
 
     std::string json = api->parseObjectNodeToJsonString();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_7_3.json");
+    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "clear_api_7.json");
     ASSERT_EQ(json, jsonExpected);
 
     api->clear();
@@ -460,15 +457,15 @@ TEST_F(ApiTest, ChangeJSONForTheSameAPI)
     result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
 
-    result = api->changeNodeInArrayNode({ "employees", size_t(0), "data", size_t(1) }, 2, Node{ .value = 10 });
+    result = api->changeNodeInArray({ "employees", size_t(0), "data", size_t(1) }, 2, Node{ .value = 10 });
     ASSERT_TRUE(result);
-    result = api->changeNodeInObjectNode({ "employees", size_t(1), "employees", size_t(0) }, "name", Node{.value = "Maria"});
+    result = api->changeNodeInObject({ "employees", size_t(1), "employees", size_t(0) }, "name", Node{ .value = "Maria" });
     ASSERT_TRUE(result);
-    result = api->changeNodeInArrayNode({ "employees", size_t(1), "data", size_t(2), size_t(0), "numbers" }, 0, Node{ .value = 0.12 });
+    result = api->changeNodeInArray({ "employees", size_t(1), "data", size_t(2), size_t(0), "numbers" }, 0, Node{ .value = 0.12 });
     ASSERT_TRUE(result);
 
     json = api->parseObjectNodeToJsonString();
-    jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_8_complex.json");
+    jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "clear_api_8.json");
     ASSERT_EQ(json, jsonExpected);
 
     api->clear();
@@ -476,13 +473,13 @@ TEST_F(ApiTest, ChangeJSONForTheSameAPI)
     result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
 
-    result = api->removeNodeFromArrayNode({ "employees", size_t(0), "data", size_t(0) }, 1);
+    result = api->removeNodeFromArray({ "employees", size_t(0), "data", size_t(0) }, 1);
     ASSERT_TRUE(result);
-    result = api->removeNodeFromArrayNode({ "employees", size_t(0), "data", size_t(1) }, 0);
+    result = api->removeNodeFromArray({ "employees", size_t(0), "data", size_t(1) }, 0);
     ASSERT_TRUE(result);
-    result = api->removeNodeFromArrayNode({ "employees", size_t(1), "data", size_t(0) }, 1);
+    result = api->removeNodeFromArray({ "employees", size_t(1), "data", size_t(0) }, 1);
     ASSERT_TRUE(result);
-    result = api->removeNodeFromArrayNode({ "employees", size_t(1), "data" }, 1);
+    result = api->removeNodeFromArray({ "employees", size_t(1), "data" }, 1);
     ASSERT_TRUE(result);
 
     json = api->parseObjectNodeToJsonString();
@@ -491,10 +488,10 @@ TEST_F(ApiTest, ChangeJSONForTheSameAPI)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-    jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "test_api_7_4.json");
+    jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "clear_api_7_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
-*/
+
 
 TEST_F(ApiTest, LoadJsonObject_1)
 {
@@ -549,7 +546,6 @@ TEST_F(ApiTest, LoadJsonObject_2)
 
     std::string json = api->parseObjectNodeToJsonString();
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "load_json_object_2.json");
-    std::cout << json << std::endl;
     ASSERT_EQ(json, jsonExpected);
 }
 

@@ -71,13 +71,13 @@ bool JsonApi::loadObjectJson(const Node& node)
     return true;
 }
 
-/*
+
 void JsonApi::clear()
 {
     root.reset();
     error.reset();
+    keyMapper->clear();
 }
-*/
 
 /**********************************************************************************/
 /* ADD TO OBJECT ******************************************************************/

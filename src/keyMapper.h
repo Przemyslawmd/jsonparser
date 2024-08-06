@@ -13,6 +13,7 @@ public:
     void putKey(const std::string& key, uint32_t mapID);
     uint32_t putKeyIntoMapAndReturnKeyID(const std::string& keyStr, uint32_t mapID);
 
+    void clear();
     void removeKey(uint32_t keyID);
 
     std::optional<std::string> getStrKey(uint32_t mapID) const;
