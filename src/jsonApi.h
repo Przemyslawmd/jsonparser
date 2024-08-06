@@ -13,8 +13,8 @@
 #include <Error.h>
 
 
-/* Pointer to internal node: object (map) or array */
-using InnerNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
+/* Pointer to complex node: object (map) or array */
+using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 
 /* Path contains a key for an object (map) or index for an array */
 using Path = std::variant<std::string, size_t>;
@@ -57,7 +57,7 @@ private:
 
     bool isRootEmpty();
 
-    InnerNodePtr getNodeFromPath(const std::vector<Path>& path);
+    ComplexNodePtr getNodeFromPath(const std::vector<Path>& path);
 
     NodeType getNodeType(const Node&);
     NodeType getNodeInternalType(const NodeInternal&);
@@ -82,7 +82,7 @@ private:
     T* putIntoArrayAndGet(ArrayNode* obj);
 
     template <typename T>
-    bool validateNodeType(InnerNodePtr, ErrorCode potentialError);
+    bool validateNodeType(ComplexNodePtr, ErrorCode potentialError);
 
     std::unique_ptr<ObjectNode> root;
     std::unique_ptr<KeyMapper> keyMapper;

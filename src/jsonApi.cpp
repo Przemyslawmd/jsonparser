@@ -88,7 +88,7 @@ bool JsonApi::addNodeIntoObject(const std::vector<Path>& path, const std::string
         return false;
     }
 
-    InnerNodePtr objNode = getNodeFromPath(path);
+    ComplexNodePtr objNode = getNodeFromPath(path);
     if (validateNodeType<ObjectNode*>(objNode, ErrorCode::API_NODE_NOT_OBJECT) == false) {
         return false;
     }
@@ -118,7 +118,7 @@ bool JsonApi::addNodeIntoArray(const std::vector<Path>& path, const Node& newNod
         return false;
     }
 
-    InnerNodePtr node = getNodeFromPath(path);
+    ComplexNodePtr node = getNodeFromPath(path);
     if (validateNodeType<ArrayNode*>(node, ErrorCode::API_NODE_NOT_ARRAY) == false) {
         return false;
     }
@@ -311,16 +311,16 @@ bool JsonApi::isRootEmpty()
 }
 
 
-InnerNodePtr JsonApi::getNodeFromPath(const std::vector<Path>& path)
+ComplexNodePtr JsonApi::getNodeFromPath(const std::vector<Path>& path)
 {
-    InnerNodePtr nodePtr = root.get();
+    ComplexNodePtr nodePtr = root.get();
     if (path.empty()) {
         return nodePtr;
     }
 
     NodeType nodeType = NodeType::OBJECT;
 
-    const auto getNextNode = [](InnerNodePtr* nodePtr, NodeInternal* node, NodeType& nodeType) 
+    const auto getNextNode = [](ComplexNodePtr* nodePtr, NodeInternal* node, NodeType& nodeType)
     {
         if (std::holds_alternative<ObjectNode>(node->value)) {
             *nodePtr = std::get_if<ObjectNode>(&node->value);
@@ -417,7 +417,7 @@ bool JsonApi::addArrayNodeInternally(ArrayNode* arr, const Node& newNode)
 
 
 template <typename T>
-bool JsonApi::validateNodeType(InnerNodePtr node, ErrorCode errorCode)
+bool JsonApi::validateNodeType(ComplexNodePtr node, ErrorCode errorCode)
 {
     if (std::holds_alternative<nullptr_t>(node)) {
         return false;
@@ -432,7 +432,7 @@ bool JsonApi::validateNodeType(InnerNodePtr node, ErrorCode errorCode)
 
 ArrayNode* JsonApi::getArrayAndCheckIndex(const std::vector<Path>& path, size_t index)
 {
-    InnerNodePtr node = getNodeFromPath(path);
+    ComplexNodePtr node = getNodeFromPath(path);
     if (validateNodeType<ArrayNode*>(node, ErrorCode::API_NODE_NOT_ARRAY) == false) {
         return nullptr;
     }
@@ -448,7 +448,7 @@ ArrayNode* JsonApi::getArrayAndCheckIndex(const std::vector<Path>& path, size_t 
 
 std::tuple<ObjectNode*, size_t> JsonApi::getObjectAndKeyID(const std::vector<Path>& path, const std::string& keyStr)
 {
-    InnerNodePtr node = getNodeFromPath(path);
+    ComplexNodePtr node = getNodeFromPath(path);
     if (validateNodeType<ObjectNode*>(node, ErrorCode::API_NODE_NOT_OBJECT) == false) {
         return { nullptr, 0 };
     }
