@@ -8,6 +8,7 @@
 #include <variant>
 
 #include <defines.h>
+#include <Error.h>
 #include <NodeValue.h>
 #include "../keyMapper.h"
 
@@ -18,26 +19,28 @@ public:
 
     Writer(const KeyMapper& keyMapper) : keyMapper(keyMapper) {}
 
-    std::string createJsonString(const ObjectNode*);
+    std::optional<std::string> createJsonString(const ObjectNode&);
 
-    void setMarginStep(size_t);
+    void setIndent(size_t);
+    std::unique_ptr<Error> getError();
 
 private:
 
-    void processObjectNode(const ObjectNode*);
-    void processArrayNode(const ArrayNode*);
+    void processObjectNode(const ObjectNode&);
+    void processArrayNode(const ArrayNode&);
     void parseData(const NodeInternal&);
 
-    void incMargin();
-    void decMargin();
+    void incIndent();
+    void decIndent();
 
     void deleteLastChars(std::ostringstream& stream);
 
     const KeyMapper& keyMapper;
+    std::unique_ptr<Error> error;
 
     std::ostringstream stream;
-    size_t margin = 0;
-    size_t marginStep = 2;
+    size_t indent = 0;
+    size_t indentStep = 2;
 };
 
 #endif

@@ -56,7 +56,12 @@ std::string JsonApi::parseObjectNodeToJsonString()
         return {};
     }
     auto writer = std::make_unique<Writer>(*keyMapper.get());
-    return { writer->createJsonString(root.get()) };
+    auto jsonStr = writer->createJsonString(*root.get());
+    if (jsonStr == std::nullopt) {
+        error = writer->getError();
+        return "";
+    }
+    return jsonStr.value();
 }
 
 

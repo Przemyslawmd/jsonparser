@@ -45,7 +45,7 @@ void testJsonString(const std::string& file)
 
     auto begin = std::chrono::high_resolution_clock::now();
     Writer writer(*keyMapper.get());
-    std::string json = writer.createJsonString(root.get());
+    std::string json = writer.createJsonString(*root.get()).value();
 
     if (measurement) {
         auto end = std::chrono::high_resolution_clock::now();

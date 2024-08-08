@@ -2,63 +2,77 @@
 #include "Writer.h"
 
 #include <iterator>
+#include <optional>
 #include <variant>
 
 
 constexpr std::string_view dataEnd = ",\n";
 
 
-std::string Writer::createJsonString(const ObjectNode* object)
+std::optional<std::string> Writer::createJsonString(const ObjectNode& object)
 {
     processObjectNode(object);
-    return stream.str();
+    if (error == nullptr) {
+        return stream.str();
+    }
+    return std::nullopt;
 }
 
 
-void Writer::setMarginStep(size_t marginStep)
+void Writer::setIndent(size_t indentStep)
 {
-    this->marginStep = marginStep;
+    this->indentStep = indentStep;
+}
+
+
+std::unique_ptr<Error> Writer::getError()
+{
+    return std::move(error);
 }
 
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
-void Writer::processObjectNode(const ObjectNode* obj)
+void Writer::processObjectNode(const ObjectNode& obj)
 {
     stream << "{\n";
-    incMargin();
+    incIndent();
 
-    for (auto const& [idKey, val] : *obj) {
-        std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
-        std::string keyStr = keyMapper.getStrKey(idKey).value();
-        stream << "\"" << keyStr << "\": ";
+    for (auto const& [idKey, val] : obj) {
+        std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
+        auto keyStr = keyMapper.getStrKey(idKey);
+        if (keyStr == std::nullopt) {
+            error = std::make_unique<Error>(ErrorCode::WRITER_NOT_KEY_IN_MAP);
+            return;
+        }
+        stream << "\"" << keyStr.value() << "\": ";
         parseData(val);
     }
     deleteLastChars(stream);
 
-    decMargin();
-    if (margin == 0) {
+    decIndent();
+    if (indent == 0) {
         stream << '}';
         return;
     }
-    std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
+    std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
     stream << "},\n"; 
 }
 
 
-void Writer::processArrayNode(const ArrayNode* arr)
+void Writer::processArrayNode(const ArrayNode& arr)
 {
     stream << "[\n";
-    incMargin();
+    incIndent();
     
-    for (auto const& val : *arr) {
-        std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
+    for (auto const& val : arr) {
+        std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
         parseData(val);
-    }    
+    }
     deleteLastChars(stream);
 
-    decMargin();
-    std::fill_n(std::ostream_iterator<char>(stream), margin, ' ');
+    decIndent();
+    std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
     stream << "],\n";
 }
 
@@ -81,10 +95,10 @@ void Writer::parseData(const NodeInternal& node)
         stream << "null" << dataEnd;
     }
     else if (std::holds_alternative<ObjectNode>(node.value)) {
-        processObjectNode(std::get_if<ObjectNode>(&node.value));
+        processObjectNode(std::get<ObjectNode>(node.value));
     }
     else if (std::holds_alternative<ArrayNode>(node.value)) {
-        processArrayNode(std::get_if<ArrayNode>(&node.value));
+        processArrayNode(std::get<ArrayNode>(node.value));
     }
 }
 
@@ -97,14 +111,14 @@ void Writer::deleteLastChars(std::ostringstream& stream)
 }
 
 
-void Writer::incMargin()
+void Writer::incIndent()
 {
-    margin += marginStep;
+    indent += indentStep;
 }
 
 
-void Writer::decMargin()
+void Writer::decIndent()
 {
-    margin -= marginStep;
+    indent -= indentStep;
 }
 
