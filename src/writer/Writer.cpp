@@ -6,7 +6,7 @@
 #include <variant>
 
 
-constexpr std::string_view dataEnd = ",\n";
+constexpr std::string_view DATA_END = ",\n";
 
 
 std::optional<std::string> Writer::createJsonString(const ObjectNode& object)
@@ -80,19 +80,19 @@ void Writer::processArrayNode(const ArrayNode& arr)
 void Writer::parseData(const NodeInternal& node)
 {
     if (std::holds_alternative<std::string>(node.value)) {
-        stream << "\"" << std::get<std::string>(node.value) << "\"" << dataEnd;
+        stream << "\"" << std::get<std::string>(node.value) << "\"" << DATA_END;
     }
     else if (std::holds_alternative<int64_t>(node.value)) {
-        stream << std::get<int64_t>(node.value) << dataEnd;
+        stream << std::get<int64_t>(node.value) << DATA_END;
     }
     else if (std::holds_alternative<double>(node.value)) {
-        stream << std::get<double>(node.value) << dataEnd;
+        stream << std::get<double>(node.value) << DATA_END;
     }
     else if (std::holds_alternative<bool>(node.value)) {
-        stream << (std::get<bool>(node.value) == true ? "true" : "false") << dataEnd;
+        stream << (std::get<bool>(node.value) == true ? "true" : "false") << DATA_END;
     }
     else if (std::holds_alternative<nullptr_t>(node.value)) {
-        stream << "null" << dataEnd;
+        stream << "null" << DATA_END;
     }
     else if (std::holds_alternative<ObjectNode>(node.value)) {
         processObjectNode(std::get<ObjectNode>(node.value));
