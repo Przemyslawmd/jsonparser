@@ -1,6 +1,5 @@
 
 #include <fstream>
-#include <limits>
 #include <memory>
 #include <vector>
 #include <variant>
@@ -15,7 +14,6 @@
 #include "config.h"
 #include <NodeValue.h>
 #include "utils.h"
-#include <bitset>
 
 constexpr bool measurement = true;
 
@@ -74,18 +72,6 @@ protected:
             ASSERT_TRUE(keyMapper->getStrKey(keyIDMock).value() == keyStrMock);
         }
     }
-    
-    /*
-    template <typename T>
-    void checkNode(ObjectNode* node, const std::string& key, T expectedValue)
-    {
-        ASSERT_TRUE(node != nullptr);
-        ASSERT_TRUE(node->find(key) != node->end());
-        auto* nodeValue = std::get_if<T>(&node->at(key).value);
-        ASSERT_TRUE(nodeValue != nullptr);
-        ASSERT_EQ(*nodeValue, expectedValue);
-    }
-    */
 };
 
 
@@ -99,24 +85,6 @@ void checkSimpleNode(ObjectNode* objectNode, const uint32_t key, T expected)
 }
 
 
-/*
-void checkDoubleNode(ObjectNode* nodePointer, const std::string& key, double value)
-{
-    ASSERT_TRUE(nodePointer != nullptr);
-    auto* node = std::get_if<double>(&nodePointer->at(key).value);
-    ASSERT_TRUE(node != nullptr);
-    ASSERT_TRUE(*node - value <= DBL_EPSILON);
-}
-
-
-void checkArrayNode(ObjectNode* nodePointer, const std::string& key)
-{
-    ASSERT_TRUE(nodePointer != nullptr);
-    auto* node = std::get_if<std::vector<Node>>(&nodePointer->at(key).value);
-    ASSERT_TRUE(node != nullptr);
-}
-*/
-
 template <typename T>
 void checkArrayValue(ArrayNode* arrayPointer, size_t index, T dataExpected)
 {
@@ -128,38 +96,6 @@ void checkArrayValue(ArrayNode* arrayPointer, size_t index, T dataExpected)
         ASSERT_TRUE(false);
     }
 }
-
-
-/*
-std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
-{
-    Utils utils;
-    std::string jsonString = utils.getJsonFromFile(std::string(TEST_DATA), jsonFile);
-
-    const auto preparser = std::make_unique<Preparser>();
-    auto tokens = preparser->parseJSON(jsonString);
-    EXPECT_TRUE(tokens != nullptr);
-
-    const auto validator = std::make_unique<Validator>();
-    validator->validate(*tokens);
-
-    const auto parserKey = std::make_unique<ParserKey>();
-    tokens = parserKey->createKeyTokens(std::move(tokens));
-
-    auto keyMapper = std::make_unique<KeyMapper>();
-
-    auto begin = std::chrono::high_resolution_clock::now();
-    const auto parser = std::make_unique<Parser>(*keyMapper.get());
-    std::unique_ptr<ObjectNode> jsonObj = parser->parseTokens(*tokens);
-
-    if (measurement) {
-        auto end = std::chrono::high_resolution_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
-    }
-    return jsonObj;
-}
-*/
 
 
 TEST_F(TestParser, Test_File_1)
@@ -216,53 +152,60 @@ TEST_F(TestParser, Test_File_3)
     checkArrayValue<std::string>(arrayCities, 3, std::string{ "Poznan" });
 }
 
-/*
+
 TEST_F(TestParser, Test_File_6)
 {
     auto root = parseJSON("test_6.json");
-    ASSERT_TRUE(root != nullptr);
 
-    std::map<std::string, uint32_t> keyMap{
-    { "employees",  0x00'01'00'01 },
-    { "name",       0x00'02'00'01 },
-    { "email",        0x00'02'00'02 },
-    { "age",    0x00'02'00'03 },
-    { "name",    0x00'01'00'02 },
-    { "",     0x00'01'00'03 } };
+    std::map<uint32_t, std::string> keyMap{
+        { 0x00'01'00'01, "employees" },
+        { 0x00'02'00'01, "name" },
+        { 0x00'02'00'02, "email" },
+        { 0x00'02'00'03, "age" },
+        { 0x00'03'00'01, "name" },
+        { 0x00'03'00'02, "email" },
+        { 0x00'03'00'03, "age" } };
     checkKeyMapping(keyMap);
-    
-    std::vector<Node>* employees = std::get_if<ArrayNode>(&root->at("employees").value);
-    ASSERT_TRUE(employees != nullptr);
-    
-    ASSERT_TRUE(employees->size() == 2);
-    auto* person1 = std::get_if<ObjectNode>(&employees->at(0).value);
-    auto* person2 = std::get_if<ObjectNode>(&employees->at(1).value);
-    
-    checkNode<std::string>(person1, "name", "Agata");
-    checkNode<std::string>(person1, "email", "agata@gmail.com");
-    checkNode<int64_t>(person1, "age", 33);
 
-    checkNode<std::string>(person2, "name", "Anna");
-    checkNode<std::string>(person2, "email", "anna@gmail.com");
-    checkNode<int64_t>(person2, "age", 31);
+    auto* arrayEmployees = std::get_if<ArrayNode>(&root->at(0x00'01'00'01).value);
+    ASSERT_TRUE(arrayEmployees != nullptr);
+    ASSERT_EQ(arrayEmployees->size(), 2);
+
+    ObjectNode* person1 = std::get_if<ObjectNode>(&arrayEmployees->at(0).value);
+    ObjectNode* person2 = std::get_if<ObjectNode>(&arrayEmployees->at(1).value);
+    
+    checkSimpleNode<std::string>(person1, 0x00'02'00'01, "Agata");
+    checkSimpleNode<std::string>(person1, 0x00'02'00'02, "agata@gmail.com");
+    checkSimpleNode<int64_t>(person1, 0x00'02'00'03, 33);
+
+    checkSimpleNode<std::string>(person2, 0x00'03'00'01, "Anna");
+    checkSimpleNode<std::string>(person2, 0x00'03'00'02, "anna@gmail.com");
+    checkSimpleNode<int64_t>(person2, 0x00'03'00'03, 31);
 }
 
-/*
-TEST(ParserTest, Test_File_7)
+
+TEST_F(TestParser, Test_File_7)
 {
-    auto begin = std::chrono::high_resolution_clock::now();
     auto root = parseJSON("test_7.json");
-    ASSERT_TRUE(root->find("employees") != root->end());
-    std::vector<Node>* employees = std::get_if<ArrayNode>(&root->at("employees").value);
-    ASSERT_TRUE(employees != nullptr);
-    ASSERT_TRUE(employees->size() == 2);
 
-    auto* Agata = std::get_if<ObjectNode>(&employees->at(0).value);
-    auto* Anna = std::get_if<ObjectNode>(&employees->at(1).value);
+    std::map<uint32_t, std::string> keyMap{
+        { 0x00'01'00'01, "employees" },
+        { 0x00'02'00'01, "name" },
+        { 0x00'02'00'02, "data" },
+        { 0x00'03'00'01, "name" },
+        { 0x00'03'00'02, "data" } };
+    checkKeyMapping(keyMap);
+    
+    auto* arrayEmployees = std::get_if<ArrayNode>(&root->at(0x00'01'00'01).value);
+    ASSERT_TRUE(arrayEmployees != nullptr);
+    ASSERT_EQ(arrayEmployees->size(), 2);
 
-    checkNode<std::string>(Agata, "name", "Agata");
-    ASSERT_TRUE(Agata->find("data") != Agata->end());
-    auto* dataAgata = std::get_if<ArrayNode>(&Agata->at("data").value);
+    auto* objectAgata = std::get_if<ObjectNode>(&arrayEmployees->at(0).value);
+    auto* objectAnna = std::get_if<ObjectNode>(&arrayEmployees->at(1).value);
+
+    checkSimpleNode<std::string>(objectAgata, 0x00'02'00'01, "Agata");
+
+    ArrayNode* dataAgata = std::get_if<ArrayNode>(&objectAgata->at(0x00'02'00'02).value);
     ASSERT_TRUE(dataAgata != nullptr);
     ASSERT_TRUE(dataAgata->size() == 2);
 
@@ -270,21 +213,21 @@ TEST(ParserTest, Test_File_7)
     ASSERT_TRUE(dataAgata_1 != nullptr);
     ASSERT_TRUE(dataAgata_1->size() == 3);
 
-    checkArrayNodeValue<int64_t>(dataAgata_1, 0, 1);
-    checkArrayNodeValue<int64_t>(dataAgata_1, 1, 2);
-    checkArrayNodeValue<int64_t>(dataAgata_1, 2, 3);
+    checkArrayValue<int64_t>(dataAgata_1, 0, 1);
+    checkArrayValue<int64_t>(dataAgata_1, 1, 2);
+    checkArrayValue<int64_t>(dataAgata_1, 2, 3);
 
     auto* dataAgata_2 = std::get_if<ArrayNode>(&dataAgata->at(1).value);
     ASSERT_TRUE(dataAgata_2 != nullptr);
     ASSERT_TRUE(dataAgata_2->size() == 3);
 
-    checkArrayNodeValue<int64_t>(dataAgata_2, 0, 4);
-    checkArrayNodeValue<int64_t>(dataAgata_2, 1, 5);
-    checkArrayNodeValue<int64_t>(dataAgata_2, 2, 6);
+    checkArrayValue<int64_t>(dataAgata_2, 0, 4);
+    checkArrayValue<int64_t>(dataAgata_2, 1, 5);
+    checkArrayValue<int64_t>(dataAgata_2, 2, 6);
 
-    checkNode<std::string>(Anna, "name", "Anna");
-    ASSERT_TRUE(Anna->find("data") != Anna->end());
-    auto* dataAnna = std::get_if<ArrayNode>(&Anna->at("data").value);
+    checkSimpleNode<std::string>(objectAnna, 0x00'03'00'01, "Anna");
+    ASSERT_TRUE(objectAnna->find(0x00'03'00'02) != objectAnna->end());
+    auto* dataAnna = std::get_if<ArrayNode>(&objectAnna->at(0x00'03'00'02).value);
     ASSERT_TRUE(dataAnna != nullptr);
     ASSERT_TRUE(dataAnna->size() == 2);
 
@@ -292,19 +235,12 @@ TEST(ParserTest, Test_File_7)
     ASSERT_TRUE(dataAnna_1 != nullptr);
     ASSERT_TRUE(dataAnna_1->size() == 2);
 
-    checkArrayNodeValue<std::string>(dataAnna_1, 0, "a");
-    checkArrayNodeValue<std::string>(dataAnna_1, 1, "b");
+    checkArrayValue<std::string>(dataAnna_1, 0, "a");
+    checkArrayValue<std::string>(dataAnna_1, 1, "b");
 
     auto* dataAnna_2 = std::get_if<ArrayNode>(&dataAnna->at(1).value);
     ASSERT_TRUE(dataAnna_2 != nullptr);
     ASSERT_TRUE(dataAnna_2->size() == 1);
-    checkArrayNodeValue<std::string>(dataAnna_2, 0, "c d e");
+    checkArrayValue<std::string>(dataAnna_2, 0, "c d e");
 }
-
-
-TEST(ParserTest, Test_File_8)
-{
-    auto root = parseJSON("test_8_complex.json");
-}
-*/
 
