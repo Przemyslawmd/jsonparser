@@ -25,7 +25,7 @@ NodeInternal Utils::getNodeInternal(const Node& node)
     if (std::holds_alternative<nullptr_t>(node.value)) {
         return NodeInternal{ .value = nullptr };
     }
-    // TODO : Error if change not for simple value 
+    return {};
 }
 
 

@@ -61,8 +61,8 @@ private:
     bool addObjectNodeInternally(ObjectNode*, const Node&);
     bool addArrayNodeInternally(ArrayNode*, const Node&);
 
-    bool traverseObjectToRemoveKeyID(ObjectNode*);
-    bool traverseArrayToRemoveKeyID(ArrayNode*);
+    void traverseObjectToRemoveKeyID(const ObjectNode&);
+    void traverseArrayToRemoveKeyID(const ArrayNode&);
 
     template <typename T>
     T* putIntoObjectAndGet(ObjectNode* obj, uint32_t itemID);

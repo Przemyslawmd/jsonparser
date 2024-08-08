@@ -17,7 +17,7 @@ using ArrayNodeApi = std::vector<Node>;
 JsonApi::JsonApi()
 {
     keyMapper = std::make_unique<KeyMapper>();
-    utils = std::make_unique < Utils>();;
+    utils = std::make_unique < Utils>();
 }
 
 
@@ -256,11 +256,11 @@ bool JsonApi::removeNodeFromObject(const std::vector<Path>& path, const std::str
     NodeType nodeType = utils->getNodeInternalType(nodeToRemove);
 
     if (nodeType == NodeType::OBJECT) {
-        ObjectNode* objToRemove = &(std::get<ObjectNode>(obj->at(keyID).value));
+        const auto& objToRemove = std::get<ObjectNode>(obj->at(keyID).value);
         traverseObjectToRemoveKeyID(objToRemove);
     }
     else if (nodeType == NodeType::ARRAY) {
-        ArrayNode* arrToRemove = &(std::get<ArrayNode>(obj->at(keyID).value));
+        const auto& arrToRemove = std::get<ArrayNode>(obj->at(keyID).value);
         traverseArrayToRemoveKeyID(arrToRemove);
     }
     obj->erase(keyID);
@@ -284,11 +284,11 @@ bool JsonApi::removeNodeFromArray(const std::vector<Path>& path, size_t index)
     NodeType nodeType = utils->getNodeInternalType(nodeToRemove);
 
     if (nodeType == NodeType::OBJECT) {
-        ObjectNode* objToRemove = &(std::get<ObjectNode>(arr->at(index).value));
+        const auto& objToRemove = std::get<ObjectNode>(arr->at(index).value);
         traverseObjectToRemoveKeyID(objToRemove);
     }
     else if (nodeType == NodeType::ARRAY) {
-        ArrayNode* arrToRemove = &(std::get<ArrayNode>(arr->at(index).value));
+        const auto& arrToRemove = std::get<ArrayNode>(arr->at(index).value);
         traverseArrayToRemoveKeyID(arrToRemove);
     }
     arr->erase(arr->begin() + index);
@@ -491,37 +491,35 @@ T* JsonApi::putIntoArrayAndGet(ArrayNode* arr)
 }
 
 
-bool JsonApi::traverseObjectToRemoveKeyID(ObjectNode* currentObject)
+void JsonApi::traverseObjectToRemoveKeyID(const ObjectNode& obj)
 {
-    for (auto& [keyID, data] : *currentObject) {
+    for (const auto& [keyID, data] : obj) {
         NodeType nodeType = utils->getNodeInternalType(data);
         if (nodeType == NodeType::OBJECT) {
-            ObjectNode* objectToRemove = &std::get<ObjectNode>(data.value);
-            traverseObjectToRemoveKeyID(objectToRemove);
+            const auto& objToRemove = std::get<ObjectNode>(data.value);
+            traverseObjectToRemoveKeyID(objToRemove);
         }
         else if (nodeType == NodeType::ARRAY) {
-            ArrayNode* arrayToRemove = &std::get<ArrayNode>(data.value);
-            traverseArrayToRemoveKeyID(arrayToRemove);
+            const auto& arrToRemove = std::get<ArrayNode>(data.value);
+            traverseArrayToRemoveKeyID(arrToRemove);
         }
         keyMapper->removeKey(keyID);
     }
-    return true;
 }
 
 
-bool JsonApi::traverseArrayToRemoveKeyID(ArrayNode* currentArray)
+void JsonApi::traverseArrayToRemoveKeyID(const ArrayNode& arr)
 {
-    for (auto& data : *currentArray) {
+    for (const auto& data : arr) {
         NodeType nodeType = utils->getNodeInternalType(data);
         if (nodeType == NodeType::OBJECT) {
-            ObjectNode* objectToRemove = &std::get<ObjectNode>(data.value);
-            traverseObjectToRemoveKeyID(objectToRemove);
+            const auto& objToRemove = std::get<ObjectNode>(data.value);
+            traverseObjectToRemoveKeyID(objToRemove);
         }
         else if (nodeType == NodeType::ARRAY) {
-            ArrayNode* arrayToRemove = &std::get<ArrayNode>(data.value);
-            traverseArrayToRemoveKeyID(arrayToRemove);
+            const auto& arrToRemove = std::get<ArrayNode>(data.value);
+            traverseArrayToRemoveKeyID(arrToRemove);
         }
     }
-    return true;
 }
 
