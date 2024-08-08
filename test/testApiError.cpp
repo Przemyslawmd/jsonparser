@@ -13,7 +13,7 @@ class ApiTestError : public testing::Test
 {
 protected:
 
-    Utils utils;
+    TestUtils utils;
 };
 
 

@@ -44,7 +44,7 @@ protected:
 
     std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
     {
-        Utils utils;
+        TestUtils utils;
         std::string jsonString = utils.getJsonFromFile(std::string(TEST_DATA), jsonFile);
 
         auto tokens = preparser->parseJSON(jsonString);

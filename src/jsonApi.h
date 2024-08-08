@@ -11,6 +11,7 @@
 #include "keyMapper.h"
 #include <NodeValue.h>
 #include <Error.h>
+#include "utils.h"
 
 
 /* Pointer to complex node: object (map) or array */
@@ -18,13 +19,6 @@ using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 
 /* Path contains a key for an object (map) or index for an array */
 using Path = std::variant<std::string, size_t>;
-
-
-enum class NodeType {
-    SIMPLE,
-    OBJECT,
-    ARRAY
-};
 
 
 class JsonApi
@@ -59,11 +53,6 @@ private:
 
     ComplexNodePtr getNodeFromPath(const std::vector<Path>& path);
 
-    NodeType getNodeType(const Node&);
-    NodeType getNodeInternalType(const NodeInternal&);
-
-    NodeInternal getNodeInternal(const Node&);
-
     ArrayNode* getArrayAndCheckIndex(const std::vector<Path>& path, size_t index);
 
     std::tuple<ObjectNode*, size_t>
@@ -86,6 +75,7 @@ private:
 
     std::unique_ptr<ObjectNode> root;
     std::unique_ptr<KeyMapper> keyMapper;
+    std::unique_ptr<Utils> utils;
     std::unique_ptr<Error> error;
 };
 

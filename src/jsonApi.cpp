@@ -17,6 +17,7 @@ using ArrayNodeApi = std::vector<Node>;
 JsonApi::JsonApi()
 {
     keyMapper = std::make_unique<KeyMapper>();
+    utils = std::make_unique < Utils>();;
 }
 
 
@@ -100,10 +101,10 @@ bool JsonApi::addNodeIntoObject(const std::vector<Path>& path, const std::string
 
     ObjectNode* obj = std::get<ObjectNode*>(objNode);
     uint32_t newID = keyMapper->putKeyIntoMapAndReturnKeyID(keyStr, obj->begin()->first);
-    NodeType newNodeType = getNodeType(newNode);
+    NodeType newNodeType = utils->getNodeType(newNode);
 
     if (newNodeType == NodeType::SIMPLE) {
-        obj->emplace(std::make_pair(newID, getNodeInternal(newNode)));
+        obj->emplace(std::make_pair(newID, utils->getNodeInternal(newNode)));
     }
     else if (newNodeType == NodeType::OBJECT) {
         ObjectNode* objNew = putIntoObjectAndGet<ObjectNode>(obj, newID);
@@ -129,10 +130,10 @@ bool JsonApi::addNodeIntoArray(const std::vector<Path>& path, const Node& newNod
     }
 
     ArrayNode* arr = std::get<ArrayNode*>(node);
-    NodeType newNodeType = getNodeType(newNode);
+    NodeType newNodeType = utils->getNodeType(newNode);
 
     if (newNodeType == NodeType::SIMPLE) {
-        arr->emplace_back(getNodeInternal(newNode));
+        arr->emplace_back(utils->getNodeInternal(newNode));
     }
     else if (newNodeType == NodeType::OBJECT) {
         ObjectNode* objNew = putIntoArrayAndGet<ObjectNode>(arr);
@@ -157,9 +158,9 @@ bool JsonApi::insertNodeIntoArray(const std::vector<Path>& path, size_t index, c
         return false;
     }
 
-    NodeType newNodeType = getNodeType(newNode);
+    NodeType newNodeType = utils->getNodeType(newNode);
     if (newNodeType == NodeType::SIMPLE) {
-        arr->insert(arr->begin() + index, getNodeInternal(newNode));
+        arr->insert(arr->begin() + index, utils->getNodeInternal(newNode));
         return true;
     }
     if (newNodeType == NodeType::OBJECT) {
@@ -188,9 +189,9 @@ bool JsonApi::changeNodeInObject(const std::vector<Path>& path, const std::strin
         return false;
     }
 
-    NodeType nodeType = getNodeType(newNode);
+    NodeType nodeType = utils->getNodeType(newNode);
     if (nodeType == NodeType::SIMPLE) {
-        obj->at(keyID) = getNodeInternal(newNode);
+        obj->at(keyID) = utils->getNodeInternal(newNode);
         return true;
     }
 
@@ -220,9 +221,9 @@ bool JsonApi::changeNodeInArray(const std::vector<Path>& path, size_t index, con
         return false;
     }
 
-    NodeType nodeType = getNodeType(newNode);
+    NodeType nodeType = utils->getNodeType(newNode);
     if (nodeType == NodeType::SIMPLE) {
-        arr->at(index) = getNodeInternal(newNode);
+        arr->at(index) = utils->getNodeInternal(newNode);
     }
     else if (nodeType == NodeType::OBJECT) {
         arr->at(index) = NodeInternal{ .value = ObjectNode() };
@@ -252,7 +253,7 @@ bool JsonApi::removeNodeFromObject(const std::vector<Path>& path, const std::str
     }
 
     NodeInternal nodeToRemove = obj->at(keyID);
-    NodeType nodeType = getNodeInternalType(nodeToRemove);
+    NodeType nodeType = utils->getNodeInternalType(nodeToRemove);
 
     if (nodeType == NodeType::OBJECT) {
         ObjectNode* objToRemove = &(std::get<ObjectNode>(obj->at(keyID).value));
@@ -280,7 +281,7 @@ bool JsonApi::removeNodeFromArray(const std::vector<Path>& path, size_t index)
     }
 
     NodeInternal nodeToRemove = arr->at(index);
-    NodeType nodeType = getNodeInternalType(nodeToRemove);
+    NodeType nodeType = utils->getNodeInternalType(nodeToRemove);
 
     if (nodeType == NodeType::OBJECT) {
         ObjectNode* objToRemove = &(std::get<ObjectNode>(arr->at(index).value));
@@ -380,12 +381,12 @@ bool JsonApi::addObjectNodeInternally(ObjectNode* obj, const Node& newNode)
     uint32_t nodeID = 0;
 
     for (auto& [key, val] : std::get<ObjectNodeApi>(newNode.value)) {
-        NodeType newNodeType = getNodeType(val);
+        NodeType newNodeType = utils->getNodeType(val);
         uint32_t itemID = keyMapper->createItemID(mapID, nodeID);
         keyMapper->putKey(key, itemID);
 
         if (newNodeType == NodeType::SIMPLE) {
-            obj->emplace(std::make_pair(itemID, getNodeInternal(val)));
+            obj->emplace(std::make_pair(itemID, utils->getNodeInternal(val)));
         }
         else if (newNodeType == NodeType::OBJECT) {
             ObjectNode* objNew = putIntoObjectAndGet<ObjectNode>(obj, itemID);
@@ -404,9 +405,9 @@ bool JsonApi::addObjectNodeInternally(ObjectNode* obj, const Node& newNode)
 bool JsonApi::addArrayNodeInternally(ArrayNode* arr, const Node& newNode)
 {
     for (auto& val : std::get<ArrayNodeApi>(newNode.value)) {
-        NodeType newNodeType = getNodeType(val);
+        NodeType newNodeType = utils->getNodeType(val);
         if (newNodeType == NodeType::SIMPLE) {
-            arr->emplace_back(getNodeInternal(val));
+            arr->emplace_back(utils->getNodeInternal(val));
         }
         else if (newNodeType == NodeType::ARRAY) {
             ArrayNode* arrNew = putIntoArrayAndGet<ArrayNode>(arr);
@@ -493,7 +494,7 @@ T* JsonApi::putIntoArrayAndGet(ArrayNode* arr)
 bool JsonApi::traverseObjectToRemoveKeyID(ObjectNode* currentObject)
 {
     for (auto& [keyID, data] : *currentObject) {
-        NodeType nodeType = getNodeInternalType(data);
+        NodeType nodeType = utils->getNodeInternalType(data);
         if (nodeType == NodeType::OBJECT) {
             ObjectNode* objectToRemove = &std::get<ObjectNode>(data.value);
             traverseObjectToRemoveKeyID(objectToRemove);
@@ -511,7 +512,7 @@ bool JsonApi::traverseObjectToRemoveKeyID(ObjectNode* currentObject)
 bool JsonApi::traverseArrayToRemoveKeyID(ArrayNode* currentArray)
 {
     for (auto& data : *currentArray) {
-        NodeType nodeType = getNodeInternalType(data);
+        NodeType nodeType = utils->getNodeInternalType(data);
         if (nodeType == NodeType::OBJECT) {
             ObjectNode* objectToRemove = &std::get<ObjectNode>(data.value);
             traverseObjectToRemoveKeyID(objectToRemove);
@@ -524,47 +525,3 @@ bool JsonApi::traverseArrayToRemoveKeyID(ArrayNode* currentArray)
     return true;
 }
 
-
-NodeType JsonApi::getNodeType(const Node& node)
-{
-    if (std::holds_alternative<ObjectNodeApi>(node.value)) {
-        return NodeType::OBJECT;
-    }
-    if (std::holds_alternative<ArrayNodeApi>(node.value)) {
-        return NodeType::ARRAY;
-    }
-    return NodeType::SIMPLE;
-}
-
-
-NodeType JsonApi::getNodeInternalType(const NodeInternal& node)
-{
-    if (std::holds_alternative<ObjectNode>(node.value)) {
-        return NodeType::OBJECT;
-    }
-    if (std::holds_alternative<ArrayNode>(node.value)) {
-        return NodeType::ARRAY;
-    }
-    return NodeType::SIMPLE;
-}
-
-
-NodeInternal JsonApi::getNodeInternal(const Node& node)
-{
-    if (std::holds_alternative<std::string>(node.value)) {
-        return NodeInternal{ .value = std::get<std::string>(node.value) };
-    }
-    if (std::holds_alternative<int64_t>(node.value)) {
-        return NodeInternal{ .value = std::get<int64_t>(node.value) };
-    }
-    if (std::holds_alternative<double>(node.value)) {
-        return NodeInternal{ .value = std::get<double>(node.value) };
-    }
-    if (std::holds_alternative<bool>(node.value)) {
-        return NodeInternal{ .value = std::get<bool>(node.value) };
-    }
-    if (std::holds_alternative<nullptr_t>(node.value)) {
-        return NodeInternal{ .value = nullptr };
-    }
-    // TODO : Error if change not for simple value 
-}

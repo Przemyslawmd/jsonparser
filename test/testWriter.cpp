@@ -23,7 +23,7 @@ constexpr bool measurement = true;
 
 std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, KeyMapper* keyMapper)
 {
-    Utils utils;
+    TestUtils utils;
     std::string jsonString = utils.getJsonFromFile(std::string(TEST_DATA), jsonFile);
 
     const auto preparser = std::make_unique<Preparser>();
@@ -53,7 +53,7 @@ void testJsonString(const std::string& file)
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
 
-    Utils utils;
+    TestUtils utils;
     std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA), file);
     ASSERT_EQ(json, jsonExpected);
 }

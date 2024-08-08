@@ -3,7 +3,7 @@
 #include <string>
 
 
-class Utils
+class TestUtils
 {
 public:
 

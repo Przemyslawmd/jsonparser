@@ -11,7 +11,7 @@
 
 std::unique_ptr<Error> getValidatorError(const std::string& jsonFile)
 {
-    Utils utils;
+    TestUtils utils;
     std::string jsonString = utils.getJsonFromFile(std::string(TEST_DATA_IMPROPER), jsonFile);
     auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);

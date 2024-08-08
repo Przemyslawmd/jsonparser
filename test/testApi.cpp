@@ -16,7 +16,7 @@ class ApiTest : public testing::Test
 {
 protected:
 
-    Utils utils;
+    TestUtils utils;
     std::unique_ptr<JsonApi> prepareApi(const std::string& file);
 };
 
