@@ -19,17 +19,85 @@
 
 constexpr bool measurement = true;
 
-/*/
-template <typename T>
-void checkNode(ObjectNode* nodePointer, const std::string& key, T expectedValue)
+
+class TestParser : public ::testing::Test
 {
-    ASSERT_TRUE(nodePointer != nullptr);
-    ASSERT_TRUE(nodePointer->find(key) != nodePointer->end());
-    auto* nodeValue = std::get_if<T>(&nodePointer->at(key).value);
+protected:
+    std::unique_ptr<KeyMapper> keyMapper;
+    std::unique_ptr<ParserKey> keyParser;
+    std::unique_ptr<Preparser> preparser;
+    std::unique_ptr<Validator> validator;
+
+    virtual void SetUp()
+    {
+        keyMapper = std::make_unique<KeyMapper>();
+        keyParser = std::make_unique<ParserKey>();
+        preparser = std::make_unique<Preparser>();
+        validator = std::make_unique<Validator>();
+    }
+
+    virtual void TearDown()
+    {
+        keyMapper.reset();
+        keyParser.reset();
+        preparser.reset();
+        validator.reset();
+    }
+
+    std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
+    {
+        Utils utils;
+        std::string jsonString = utils.getJsonFromFile(std::string(TEST_DATA), jsonFile);
+
+        auto tokens = preparser->parseJSON(jsonString);
+        EXPECT_TRUE(tokens != nullptr);
+
+        validator->validate(*tokens);
+        tokens = keyParser->createKeyTokens(std::move(tokens));
+
+        const auto parser = std::make_unique<Parser>(*keyMapper.get());
+        auto begin = std::chrono::high_resolution_clock::now();
+        std::unique_ptr<ObjectNode> jsonObj = parser->parseTokens(*tokens);
+
+        if (measurement) {
+            auto end = std::chrono::high_resolution_clock::now();
+            auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+            std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+        }
+        return jsonObj;
+    }
+
+    void checkKeyMapping(const std::map<uint32_t, std::string>& keyMapMock)
+    {
+        for (const auto& [keyIDMock, keyStrMock] : keyMapMock) {
+            ASSERT_TRUE(keyMapper->getStrKey(keyIDMock) != std::nullopt);
+            ASSERT_TRUE(keyMapper->getStrKey(keyIDMock).value() == keyStrMock);
+        }
+    }
+    
+    /*
+    template <typename T>
+    void checkNode(ObjectNode* node, const std::string& key, T expectedValue)
+    {
+        ASSERT_TRUE(node != nullptr);
+        ASSERT_TRUE(node->find(key) != node->end());
+        auto* nodeValue = std::get_if<T>(&node->at(key).value);
+        ASSERT_TRUE(nodeValue != nullptr);
+        ASSERT_EQ(*nodeValue, expectedValue);
+    }
+    */
+};
+
+
+template <typename T>
+void checkSimpleNode(ObjectNode* objectNode, const uint32_t key, T expected)
+{
+    ASSERT_TRUE(objectNode->find(key) != objectNode->end());
+    auto* nodeValue = std::get_if<T>(&objectNode->at(key).value);
     ASSERT_TRUE(nodeValue != nullptr);
-    ASSERT_EQ(*nodeValue, expectedValue);
+    ASSERT_EQ(*nodeValue, expected);
 }
-*/
+
 
 /*
 void checkDoubleNode(ObjectNode* nodePointer, const std::string& key, double value)
@@ -47,10 +115,10 @@ void checkArrayNode(ObjectNode* nodePointer, const std::string& key)
     auto* node = std::get_if<std::vector<Node>>(&nodePointer->at(key).value);
     ASSERT_TRUE(node != nullptr);
 }
-
+*/
 
 template <typename T>
-void checkArrayNodeValue(ArrayNode* arrayPointer, size_t index, T dataExpected)
+void checkArrayValue(ArrayNode* arrayPointer, size_t index, T dataExpected)
 {
     try {
         T data = std::get<T>(arrayPointer->at(index).value);
@@ -60,9 +128,9 @@ void checkArrayNodeValue(ArrayNode* arrayPointer, size_t index, T dataExpected)
         ASSERT_TRUE(false);
     }
 }
-*/
 
 
+/*
 std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
 {
     Utils utils;
@@ -83,10 +151,6 @@ std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
     auto begin = std::chrono::high_resolution_clock::now();
     const auto parser = std::make_unique<Parser>(*keyMapper.get());
     std::unique_ptr<ObjectNode> jsonObj = parser->parseTokens(*tokens);
-    
-    //for (auto const& [key, val] : keyMapper.get()->keyMap) {
-    //    std::cout << std::bitset<32>(key)  << " : " << val << " : " << key << std::endl;
-    //}
 
     if (measurement) {
         auto end = std::chrono::high_resolution_clock::now();
@@ -95,110 +159,78 @@ std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
     }
     return jsonObj;
 }
+*/
 
-/*
-TEST(ParserTest, Test_File_1)
+
+TEST_F(TestParser, Test_File_1)
 {
     auto root = parseJSON("test_1.json");
 
-    ASSERT_TRUE(root->find("person") != root->end());
+    std::map <uint32_t, std::string> keyMap {
+        { 0x00'01'00'01, "person" },
+        { 0x00'02'00'01, "name" },
+        { 0x00'02'00'02, "age" },
+        { 0x00'02'00'03, "country" },
+        { 0x00'02'00'04, "employed" },
+        { 0x00'02'00'05, "restricted" },
+        { 0x00'02'00'06, "empty" }};
+    checkKeyMapping(keyMap);
 
-    auto* nodePerson = std::get_if<ObjectNode>(&root->at("person").value);
-    ASSERT_TRUE(nodePerson != nullptr);
+    auto* objectPerson = std::get_if<ObjectNode>(&root->at(0x00'01'00'01).value);
+    ASSERT_TRUE(objectPerson != nullptr);
 
-    checkNode<std::string>(nodePerson, "name", "John");
-    checkNode<int64_t>(nodePerson, "age", 39);
-    checkNode<std::string>(nodePerson, "country", "Poland");
-    checkNode<bool>(nodePerson, "employed", true);
-    checkNode<bool>(nodePerson, "restricted", false);
+    checkSimpleNode<std::string>(objectPerson, 0x00'02'00'01, "John");
+    checkSimpleNode<int64_t>(objectPerson, 0x00'02'00'02, 39);
+    checkSimpleNode<std::string>(objectPerson, 0x00'02'00'03, "Poland");
+    checkSimpleNode<bool>(objectPerson, 0x00'02'00'04, true);
+    checkSimpleNode<bool>(objectPerson, 0x00'02'00'05, false);
 }
-*/
 
-/*
-TEST(ParserTest, Test_File_3)
+
+TEST_F(TestParser, Test_File_3)
 {
     auto root = parseJSON("test_3.json");
 
-    ASSERT_TRUE(root->find("person") != root->end());
+    std::map<uint32_t, std::string> keyMap{
+        { 0x00'01'00'01, "person" },
+        { 0x00'02'00'01, "name" },
+        { 0x00'02'00'02, "age" },
+        { 0x00'02'00'03, "country" },
+        { 0x00'01'00'02, "company" },
+        { 0x00'01'00'03, "cities" } };
+    checkKeyMapping(keyMap);
 
-    auto* nodePerson = std::get_if<ObjectNode>(&root->at("person").value);
-    ASSERT_TRUE(nodePerson != nullptr);
+    auto* objectPerson = std::get_if<ObjectNode>(&root->at(0x00'01'00'01).value);
+    ASSERT_TRUE(objectPerson != nullptr);
 
-    checkNode<std::string>(nodePerson, "name", "John");
-    checkNode<int64_t>(nodePerson, "age", 39);
-    checkNode<std::string>(nodePerson, "country", "Poland");
+    checkSimpleNode<std::string>(objectPerson, 0x00'02'00'01, "John");
+    checkSimpleNode<int64_t>(objectPerson, 0x00'02'00'02, 39);
+    checkSimpleNode<std::string>(objectPerson, 0x00'02'00'03, "Poland");
 
-    checkNode<std::string>(root.get(), "company", "abc");
+    checkSimpleNode<std::string>(root.get(), 0x00'01'00'02, "abc");
 
-    ASSERT_TRUE(root->find("cities") != root->end());
-    checkArrayNode(root.get(), "cities");
-    std::vector<Node>* arrayCities = std::get_if<ArrayNode>(&root->at("cities").value);
-
-    checkArrayNodeValue<std::string>(arrayCities, 0, std::string{ "Krakow" });
-    checkArrayNodeValue<std::string>(arrayCities, 1, std::string{ "Warszawa" });
-    checkArrayNodeValue<std::string>(arrayCities, 2, std::string{ "Wroclaw" });
-    checkArrayNodeValue<std::string>(arrayCities, 3, std::string{ "Poznan" });
-}
-*/
-
-TEST(ParserTest, Test_File_4)
-{
-    auto begin = std::chrono::high_resolution_clock::now();
-    auto root = parseJSON("test_4.json");
-
-    //ASSERT_TRUE(root->find("person") != root->end());
-
-    //auto* nodePerson = std::get_if<ObjectNode_>(&root->at("person").value);
-    //ASSERT_TRUE(nodePerson != nullptr);
-
-    //checkNode<std::string>(nodePerson, "name", "John");
-    //checkNode<std::string>(nodePerson, "country", "Poland");
-
-    //ASSERT_TRUE(root->find("person2") != root->end());
-    //auto* nodePerson2 = std::get_if<ObjectNode>(&root->at("person2").value);
-
-    //checkNode<std::string>(nodePerson2, "name", "John");
-
-    //ASSERT_TRUE(nodePerson2->find("address") != nodePerson2->end());
-    //auto* nodePerson2_Address = std::get_if<ObjectNode>(&nodePerson2->at("address").value);
-
-    //checkNode<std::string>(nodePerson2_Address, "city", "Cracow");
-    //checkNode<std::string>(nodePerson2_Address, "street", "Kanonicza");
-    //checkNode<int64_t>(nodePerson2_Address, "number", 12);
-
-    //auto* nodeCompany = std::get_if<ObjectNode>(&root->at("company").value);
-    //checkNode<std::string>(nodeCompany, "name", "abc");
+    ArrayNode* arrayCities = std::get_if<ArrayNode>(&root->at(0x00'01'00'03).value);
+    checkArrayValue<std::string>(arrayCities, 0, std::string{ "Krakow" });
+    checkArrayValue<std::string>(arrayCities, 1, std::string{ "Warszawa" });
+    checkArrayValue<std::string>(arrayCities, 2, std::string{ "Wroclaw" });
+    checkArrayValue<std::string>(arrayCities, 3, std::string{ "Poznan" });
 }
 
 /*
-TEST(ParserTest, Test_File_5)
-{
-    auto root = parseJSON("test_5.json");
-
-    ASSERT_TRUE(root->find("person") != root->end());
-
-    auto* nodePerson = std::get_if<ObjectNode>(&root->at("person").value);
-    ASSERT_TRUE(nodePerson != nullptr);
-
-    checkNode<std::string>(nodePerson, "name", "John");
-    checkNode<int64_t>(nodePerson, "age", 39);
-    checkNode<std::string>(nodePerson, "country", "Poland");
-
-    ASSERT_TRUE(nodePerson->find("values") != nodePerson->end());
-    auto* nodeValues = std::get_if<ObjectNode>(&nodePerson->at("values").value);
-    checkDoubleNode(nodeValues, "ab", -12.67);
-    checkDoubleNode(nodeValues, "cd", 43.001);
-
-    checkNode<std::string>(root.get(), "company", "abc");
-    checkNode<std::string>(root.get(), "city", "Cracow");
-}
-
-
-TEST(ParserTest, Test_File_6)
+TEST_F(TestParser, Test_File_6)
 {
     auto root = parseJSON("test_6.json");
-    ASSERT_TRUE(root->find("employees") != root->end());
+    ASSERT_TRUE(root != nullptr);
 
+    std::map<std::string, uint32_t> keyMap{
+    { "employees",  0x00'01'00'01 },
+    { "name",       0x00'02'00'01 },
+    { "email",        0x00'02'00'02 },
+    { "age",    0x00'02'00'03 },
+    { "name",    0x00'01'00'02 },
+    { "",     0x00'01'00'03 } };
+    checkKeyMapping(keyMap);
+    
     std::vector<Node>* employees = std::get_if<ArrayNode>(&root->at("employees").value);
     ASSERT_TRUE(employees != nullptr);
     
@@ -215,7 +247,7 @@ TEST(ParserTest, Test_File_6)
     checkNode<int64_t>(person2, "age", 31);
 }
 
-
+/*
 TEST(ParserTest, Test_File_7)
 {
     auto begin = std::chrono::high_resolution_clock::now();
