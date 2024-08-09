@@ -120,7 +120,7 @@ TEST_F(ApiTestError, emptyApi_1)
 TEST_F(ApiTestError, emptyApi_2)
 {
     JsonApi api;
-    std::string json = api.parseObjectNodeToJsonString();
+    std::string json = api.parseObjectToJsonString();
     ASSERT_TRUE(json.empty());
     ASSERT_EQ(api.getErrorCode(), ErrorCode::API_EMPTY);
 }

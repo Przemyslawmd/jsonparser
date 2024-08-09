@@ -51,7 +51,7 @@ bool JsonApi::parseJsonString(const std::string& jsonString)
 }
 
 
-std::string JsonApi::parseObjectNodeToJsonString()
+std::string JsonApi::parseObjectToJsonString()
 {
     if (isRootEmpty()) {
         return {};

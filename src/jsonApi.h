@@ -29,7 +29,7 @@ public:
 
     bool parseJsonString(const std::string& file);
 
-    std::string parseObjectNodeToJsonString();
+    std::string parseObjectToJsonString();
 
     bool loadObjectJson(const Node&);
 
