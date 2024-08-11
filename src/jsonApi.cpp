@@ -100,7 +100,7 @@ bool JsonApi::addNodeIntoObject(const std::vector<Path>& path, const std::string
     }
 
     ObjectNode* obj = std::get<ObjectNode*>(objNode);
-    uint32_t newID = keyMapper->putKeyIntoMapAndReturnKeyID(keyStr, obj->begin()->first);
+    uint32_t newID = keyMapper->createAndPutKeyID(keyStr, obj->begin()->first);
     NodeType newNodeType = utils->getNodeType(newNode);
 
     if (newNodeType == NodeType::SIMPLE) {
@@ -381,8 +381,7 @@ bool JsonApi::addObjectNodeInternally(ObjectNode* obj, const Node& newNode)
 
     for (auto& [keyStr, val] : std::get<ObjectNodeApi>(newNode.value)) {
         NodeType newNodeType = utils->getNodeType(val);
-        uint32_t keyID = keyMapper->createKeyID(mapID);
-        keyMapper->putKey(keyStr, keyID);
+        uint32_t keyID = keyMapper->createAndPutKeyID(keyStr, mapID);
 
         if (newNodeType == NodeType::SIMPLE) {
             obj->emplace(std::make_pair(keyID, utils->getNodeInternal(val)));

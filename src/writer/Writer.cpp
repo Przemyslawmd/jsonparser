@@ -40,7 +40,7 @@ void Writer::processObjectNode(const ObjectNode& obj)
 
     for (auto const& [idKey, val] : obj) {
         std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
-        auto keyStr = keyMapper.getStrKey(idKey);
+        auto keyStr = keyMapper.getKeyStr(idKey);
         if (keyStr == std::nullopt) {
             error = std::make_unique<Error>(ErrorCode::WRITER_NOT_KEY_IN_MAP);
             return;

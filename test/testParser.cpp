@@ -68,8 +68,8 @@ protected:
     void checkKeyMapping(const std::map<uint32_t, std::string>& keyMapMock)
     {
         for (const auto& [keyIDMock, keyStrMock] : keyMapMock) {
-            ASSERT_TRUE(keyMapper->getStrKey(keyIDMock) != std::nullopt);
-            ASSERT_TRUE(keyMapper->getStrKey(keyIDMock).value() == keyStrMock);
+            ASSERT_TRUE(keyMapper->getKeyStr(keyIDMock) != std::nullopt);
+            ASSERT_TRUE(keyMapper->getKeyStr(keyIDMock).value() == keyStrMock);
         }
     }
 };

@@ -51,8 +51,7 @@ void Parser::pushInnerNodeOnStack(const std::string& keyStr, State state)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
         ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
-        uint32_t keyID = keyMapper.createKeyID(mapIDStack.top());
-        keyMapper.putKey(keyStr, keyID);
+        uint32_t keyID = keyMapper.createAndPutKeyID(keyStr, mapIDStack.top());
         obj->emplace(std::make_pair(keyID, T()));
         auto* currentNode = &(std::get<T>(obj->at(keyID).value));
         pushDataOnStack(currentNode, state);
@@ -70,8 +69,7 @@ template <typename T>
 void Parser::processData(const std::string& keyStr, const Token& token)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
-        uint32_t keyID = keyMapper.createKeyID(mapIDStack.top());
-        keyMapper.putKey(keyStr, keyID);
+        uint32_t keyID = keyMapper.createAndPutKeyID(keyStr, mapIDStack.top());
         std::get<ObjectNode*>(nodeStack.top())->emplace(std::make_pair(keyID, std::get<T>(token.data)));
     }
     else {
