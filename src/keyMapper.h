@@ -21,11 +21,14 @@ public:
 
     uint32_t getNextMapID() const;
     uint32_t createItemID(uint32_t mapID, uint32_t nodeID) const;
+    uint32_t getMaxItemID(uint32_t mapID) const;
 
 private:
+
     std::map<uint32_t, std::string> keyMap;
 
-    const uint32_t MAP_ID_MASK = 0xFFFF0000;
+    const uint32_t MASK_MAP_ID = 0xFFFF0000;
+    const uint32_t MASK_ITEM_ID = 0x0000FFFF;
 };
 
 #endif

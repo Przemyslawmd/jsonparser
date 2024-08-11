@@ -378,10 +378,10 @@ ComplexNodePtr JsonApi::getNodeFromPath(const std::vector<Path>& path)
 bool JsonApi::addObjectNodeInternally(ObjectNode* obj, const Node& newNode)
 {
     uint32_t mapID = keyMapper->getNextMapID();
-    uint32_t nodeID = 0;
 
     for (auto& [key, val] : std::get<ObjectNodeApi>(newNode.value)) {
         NodeType newNodeType = utils->getNodeType(val);
+        uint32_t nodeID = keyMapper->getMaxItemID(mapID) + 1;
         uint32_t itemID = keyMapper->createItemID(mapID, nodeID);
         keyMapper->putKey(key, itemID);
 
@@ -396,7 +396,6 @@ bool JsonApi::addObjectNodeInternally(ObjectNode* obj, const Node& newNode)
             ArrayNode* arrNew = putIntoObjectAndGet<ArrayNode>(obj, itemID);
             addArrayNodeInternally(arrNew, val);
         }
-        nodeID++;
     }
     return true;
 }

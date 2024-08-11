@@ -19,7 +19,7 @@ uint32_t KeyMapper::putKeyIntoMapAndReturnKeyID(const std::string& keyStr, uint3
 {
     size_t maxKeyID = 0;
     for (const auto& [key, value] : keyMap) {
-        if ((key & MAP_ID_MASK) == (mapID & MAP_ID_MASK)) {
+        if ((key & MASK_MAP_ID) == (mapID & MASK_MAP_ID)) {
             maxKeyID = key > maxKeyID ? key : maxKeyID;
         }
     }
@@ -52,7 +52,7 @@ std::optional<std::string> KeyMapper::getStrKey(uint32_t keyID) const
 std::optional<uint32_t> KeyMapper::getKeyID(const std::string& keyStr, uint32_t mapID) const
 {
     for (const auto& [key, value] : keyMap) {
-        if (value.compare(keyStr) == 0 && ((key & MAP_ID_MASK) == (mapID & MAP_ID_MASK))) {
+        if (value.compare(keyStr) == 0 && ((key & MASK_MAP_ID) == (mapID & MASK_MAP_ID))) {
             return key;
         }
     }
@@ -62,18 +62,30 @@ std::optional<uint32_t> KeyMapper::getKeyID(const std::string& keyStr, uint32_t 
 
 uint32_t KeyMapper::createItemID(uint32_t mapID, uint32_t nodeID) const
 {
-    return (mapID & MAP_ID_MASK) + nodeID;
+    return (mapID & MASK_MAP_ID) + nodeID;
 }
 
 
 uint32_t KeyMapper::getNextMapID() const
 {
-    size_t maxMapID = 0;
+    uint32_t maxMapID = 0;
     for (const auto& [key, value] : keyMap) {
         if (key > maxMapID) {
             maxMapID = key;
         }
     }
-    return (maxMapID & MAP_ID_MASK) + (uint32_t(1) << TWO_BYTES);
+    return (maxMapID & MASK_MAP_ID) + (uint32_t(1) << TWO_BYTES);
+}
+
+
+uint32_t KeyMapper::getMaxItemID(uint32_t mapID) const
+{
+    uint32_t maxItemID = 0;
+    for (const auto& [keyID, _] : keyMap) {
+        if (((keyID & MASK_MAP_ID) == mapID) && ((keyID & MASK_ITEM_ID) > maxItemID)) {
+            maxItemID = (keyID & MASK_ITEM_ID);
+        }
+    }
+    return maxItemID;
 }
 
