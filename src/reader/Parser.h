@@ -37,8 +37,6 @@ class Parser
 
         template <typename T>
         void processData(const std::string& key, const Token&);
-
-        uint32_t createId();
 };
 
 #endif

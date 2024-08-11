@@ -47,14 +47,14 @@ std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens
 /* PRIVATE *********************************************************/
 
 template <typename T>
-void Parser::pushInnerNodeOnStack(const std::string& key, State state)
+void Parser::pushInnerNodeOnStack(const std::string& keyStr, State state)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
         ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
-        uint32_t id = createId();
-        keyMapper.putKey(key, id);
-        obj->emplace(std::make_pair(id, T()));
-        auto* currentNode = &(std::get<T>(obj->at(id).value));
+        uint32_t keyID = keyMapper.createKeyID(mapIDStack.top());
+        keyMapper.putKey(keyStr, keyID);
+        obj->emplace(std::make_pair(keyID, T()));
+        auto* currentNode = &(std::get<T>(obj->at(keyID).value));
         pushDataOnStack(currentNode, state);
     }
     else {
@@ -67,12 +67,12 @@ void Parser::pushInnerNodeOnStack(const std::string& key, State state)
 
 
 template <typename T>
-void Parser::processData(const std::string& key, const Token& token)
+void Parser::processData(const std::string& keyStr, const Token& token)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
-        uint32_t id = createId();
-        keyMapper.putKey(key, id);
-        std::get<ObjectNode*>(nodeStack.top())->emplace(std::make_pair(id, std::get<T>(token.data)));
+        uint32_t keyID = keyMapper.createKeyID(mapIDStack.top());
+        keyMapper.putKey(keyStr, keyID);
+        std::get<ObjectNode*>(nodeStack.top())->emplace(std::make_pair(keyID, std::get<T>(token.data)));
     }
     else {
         std::get<ArrayNode*>(nodeStack.top())->emplace_back(std::get<T>(token.data));
@@ -98,13 +98,5 @@ void Parser::popDataFromStack()
     }
     nodeStack.pop();
     stateStack.pop();
-}
-
-
-uint32_t Parser::createId()
-{
-    uint32_t itemID = keyMapper.getMaxItemID(mapIDStack.top());
-    uint32_t id = keyMapper.createItemID(mapIDStack.top(), itemID + 1);
-    return id;
 }
 

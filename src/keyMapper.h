@@ -20,10 +20,10 @@ public:
     std::optional<uint32_t> getKeyID(const std::string& keyStr, uint32_t mapID) const;
 
     uint32_t getNextMapID() const;
-    uint32_t createItemID(uint32_t mapID, uint32_t nodeID) const;
-    uint32_t getMaxItemID(uint32_t mapID) const;
+    uint32_t createKeyID(uint32_t mapID) const;
 
 private:
+    uint32_t getMaxItemID(uint32_t mapID) const;
 
     std::map<uint32_t, std::string> keyMap;
 

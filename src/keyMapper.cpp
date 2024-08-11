@@ -60,9 +60,10 @@ std::optional<uint32_t> KeyMapper::getKeyID(const std::string& keyStr, uint32_t 
 }
 
 
-uint32_t KeyMapper::createItemID(uint32_t mapID, uint32_t nodeID) const
+uint32_t KeyMapper::createKeyID(uint32_t mapID) const
 {
-    return (mapID & MASK_MAP_ID) + nodeID;
+    uint32_t nextItemID = getMaxItemID(mapID) + 1;
+    return (mapID & MASK_MAP_ID) + nextItemID;
 }
 
 

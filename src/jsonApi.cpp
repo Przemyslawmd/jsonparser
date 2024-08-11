@@ -381,8 +381,8 @@ bool JsonApi::addObjectNodeInternally(ObjectNode* obj, const Node& newNode)
 
     for (auto& [key, val] : std::get<ObjectNodeApi>(newNode.value)) {
         NodeType newNodeType = utils->getNodeType(val);
-        uint32_t nodeID = keyMapper->getMaxItemID(mapID) + 1;
-        uint32_t itemID = keyMapper->createItemID(mapID, nodeID);
+        //uint32_t nodeID = keyMapper->getMaxItemID(mapID) + 1;
+        uint32_t itemID = keyMapper->createKeyID(mapID);
         keyMapper->putKey(key, itemID);
 
         if (newNodeType == NodeType::SIMPLE) {
