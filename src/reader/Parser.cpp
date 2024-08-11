@@ -8,7 +8,7 @@ std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens
 {
     std::string key;
     auto nodes = std::make_unique<ObjectNode>();
-    idStack.push({ 0, 0 });
+    mapIDStack.push(0);
     pushDataOnStack(nodes.get(), State::OBJECT_PARSING);
 
     for (auto it = tokens.begin() + 1; it != tokens.end() - 1; it++) {
@@ -86,7 +86,7 @@ void Parser::pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> node, State s
     stateStack.push(state);
     if (state == State::OBJECT_PARSING) {
         maxMapId += (1 << 16);
-        idStack.push({ maxMapId, 1 });
+        mapIDStack.push(maxMapId);
     }
 }
 
@@ -94,7 +94,7 @@ void Parser::pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> node, State s
 void Parser::popDataFromStack()
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
-        idStack.pop();
+        mapIDStack.pop();
     }
     nodeStack.pop();
     stateStack.pop();
@@ -103,8 +103,8 @@ void Parser::popDataFromStack()
 
 uint32_t Parser::createId()
 {
-    uint32_t id = keyMapper.createItemID(idStack.top().map, idStack.top().node);
-    idStack.top().node += 1;
+    uint32_t itemID = keyMapper.getMaxItemID(mapIDStack.top());
+    uint32_t id = keyMapper.createItemID(mapIDStack.top(), itemID + 1);
     return id;
 }
 
