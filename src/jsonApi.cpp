@@ -379,21 +379,20 @@ bool JsonApi::addObjectNodeInternally(ObjectNode* obj, const Node& newNode)
 {
     uint32_t mapID = keyMapper->getNextMapID();
 
-    for (auto& [key, val] : std::get<ObjectNodeApi>(newNode.value)) {
+    for (auto& [keyStr, val] : std::get<ObjectNodeApi>(newNode.value)) {
         NodeType newNodeType = utils->getNodeType(val);
-        //uint32_t nodeID = keyMapper->getMaxItemID(mapID) + 1;
-        uint32_t itemID = keyMapper->createKeyID(mapID);
-        keyMapper->putKey(key, itemID);
+        uint32_t keyID = keyMapper->createKeyID(mapID);
+        keyMapper->putKey(keyStr, keyID);
 
         if (newNodeType == NodeType::SIMPLE) {
-            obj->emplace(std::make_pair(itemID, utils->getNodeInternal(val)));
+            obj->emplace(std::make_pair(keyID, utils->getNodeInternal(val)));
         }
         else if (newNodeType == NodeType::OBJECT) {
-            ObjectNode* objNew = putIntoObjectAndGet<ObjectNode>(obj, itemID);
+            ObjectNode* objNew = putIntoObjectAndGet<ObjectNode>(obj, keyID);
             addObjectNodeInternally(objNew, val);
         }
         else if (newNodeType == NodeType::ARRAY) {
-            ArrayNode* arrNew = putIntoObjectAndGet<ArrayNode>(obj, itemID);
+            ArrayNode* arrNew = putIntoObjectAndGet<ArrayNode>(obj, keyID);
             addArrayNodeInternally(arrNew, val);
         }
     }
