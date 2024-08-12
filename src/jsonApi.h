@@ -42,7 +42,7 @@ public:
     bool changeNodeInObject(const std::vector<Path>& path, const std::string& keyStr, const Node&);
     bool changeNodeInArray(const std::vector<Path>& path, size_t index, const Node&);
 
-    bool removeNodeFromObject(const std::vector<Path>& path, const std::string& key);
+    bool removeNodeFromObject(const std::vector<Path>& path, const std::string& keyStr);
     bool removeNodeFromArray(const std::vector<Path>& path, size_t index);
 
     ErrorCode getErrorCode();
@@ -65,10 +65,10 @@ private:
     void traverseArrayToRemoveKeyID(const ArrayNode&);
 
     template <typename T>
-    T* putIntoObjectAndGet(ObjectNode* obj, uint32_t itemID);
+    T* putIntoObjectAndGet(ObjectNode*, uint32_t keyID);
 
     template <typename T>
-    T* putIntoArrayAndGet(ArrayNode* obj);
+    T* putIntoArrayAndGet(ArrayNode*);
 
     template <typename T>
     bool validateNodeType(ComplexNodePtr, ErrorCode potentialError);

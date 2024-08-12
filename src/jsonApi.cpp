@@ -47,7 +47,11 @@ bool JsonApi::parseJsonString(const std::string& jsonString)
 
     const auto parser = std::make_unique<Parser>(*keyMapper.get());
     root = parser->parseTokens(*tokens);
-    return true;
+    if (root != nullptr) {
+        return true;
+    }
+    error = parser->getError();
+    return false;
 }
 
 
@@ -100,18 +104,23 @@ bool JsonApi::addNodeIntoObject(const std::vector<Path>& path, const std::string
     }
 
     ObjectNode* obj = std::get<ObjectNode*>(objNode);
-    uint32_t newID = keyMapper->createAndPutKeyID(keyStr, obj->begin()->first);
-    NodeType newNodeType = utils->getNodeType(newNode);
 
+    auto optKeyID = keyMapper->createAndPutKeyID(keyStr, obj->begin()->first);
+    if (optKeyID == std::nullopt) {
+        return false;
+    }
+    uint32_t keyID = optKeyID.value();
+
+    NodeType newNodeType = utils->getNodeType(newNode);
     if (newNodeType == NodeType::SIMPLE) {
-        obj->emplace(std::make_pair(newID, utils->getNodeInternal(newNode)));
+        obj->emplace(std::make_pair(keyID, utils->getNodeInternal(newNode)));
     }
     else if (newNodeType == NodeType::OBJECT) {
-        ObjectNode* objNew = putIntoObjectAndGet<ObjectNode>(obj, newID);
+        ObjectNode* objNew = putIntoObjectAndGet<ObjectNode>(obj, keyID);
         addObjectNodeInternally(objNew, newNode);
     }
     else if (newNodeType == NodeType::ARRAY) {
-        ArrayNode* arrNew = putIntoObjectAndGet<ArrayNode>(obj, newID);
+        ArrayNode* arrNew = putIntoObjectAndGet<ArrayNode>(obj, keyID);
         addArrayNodeInternally(arrNew, newNode);
     }
     return true;
@@ -381,14 +390,21 @@ bool JsonApi::addObjectNodeInternally(ObjectNode* obj, const Node& newNode)
 
     for (auto& [keyStr, val] : std::get<ObjectNodeApi>(newNode.value)) {
         NodeType newNodeType = utils->getNodeType(val);
-        uint32_t keyID = keyMapper->createAndPutKeyID(keyStr, mapID);
+
+        auto optKeyID = keyMapper->createAndPutKeyID(keyStr, mapID);
+        if (optKeyID == std::nullopt) {
+            return false;
+        }
+        uint32_t keyID = optKeyID.value();
 
         if (newNodeType == NodeType::SIMPLE) {
             obj->emplace(std::make_pair(keyID, utils->getNodeInternal(val)));
         }
         else if (newNodeType == NodeType::OBJECT) {
             ObjectNode* objNew = putIntoObjectAndGet<ObjectNode>(obj, keyID);
-            addObjectNodeInternally(objNew, val);
+            if (addObjectNodeInternally(objNew, val) == false) {
+                return false;
+            }
         }
         else if (newNodeType == NodeType::ARRAY) {
             ArrayNode* arrNew = putIntoObjectAndGet<ArrayNode>(obj, keyID);
@@ -473,10 +489,10 @@ std::tuple<ObjectNode*, size_t> JsonApi::getObjectAndKeyID(const std::vector<Pat
 
 
 template <typename T>
-T* JsonApi::putIntoObjectAndGet(ObjectNode* obj, uint32_t itemID)
+T* JsonApi::putIntoObjectAndGet(ObjectNode* obj, uint32_t keyID)
 {
-    obj->emplace(std::make_pair(itemID, T()));
-    return &(std::get<T>(obj->at(itemID).value));
+    obj->emplace(std::make_pair(keyID, T()));
+    return &(std::get<T>(obj->at(keyID).value));
 }
 
 

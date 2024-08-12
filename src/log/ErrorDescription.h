@@ -30,6 +30,10 @@ public:
             "ArrayNode is expected, but Node is not array" },
         { ErrorCode::API_NODE_NOT_OBJECT, 
             "ObjectNode is expected, but Node is not object" },
+        
+        { ErrorCode::KEY_MAPPER_KEY_STR_REPEAT,
+            "KeyMapper: Key in JSON repeated" },
+        
         { ErrorCode::PREPARSER_STRING_ERROR,                      std::nullopt },
         { ErrorCode::PREPARSER_UNKNOWN_SYMBOL,                    std::nullopt },
         { ErrorCode::VALIDATOR_BRACKET_CURLY_ERROR,               std::nullopt },

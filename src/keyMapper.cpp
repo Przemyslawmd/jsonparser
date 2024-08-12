@@ -11,6 +11,7 @@ KeyMapper::createAndPutKeyID(const std::string& keyStr, uint32_t mapID)
 {
     mapID &= MASK_MAP_ID;
     if (getKeyID(keyStr, mapID) != std::nullopt) {
+        error = std::make_unique<Error>(ErrorCode::KEY_MAPPER_KEY_STR_REPEAT);
         return std::nullopt;
     }
     uint32_t newKeyID = mapID + getMaxItemID(mapID) + 1;
@@ -61,6 +62,12 @@ void KeyMapper::clear()
 void KeyMapper::removeKey(uint32_t keyID)
 {
     keyMap.erase(keyID);
+}
+
+
+std::unique_ptr<Error> KeyMapper::getError()
+{
+    return std::move(error);
 }
 
 /*******************************************************************/

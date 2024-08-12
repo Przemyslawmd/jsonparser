@@ -21,6 +21,8 @@ class Parser
 
         std::unique_ptr<ObjectNode> parseTokens(const std::vector<Token>&);
 
+        std::unique_ptr<Error> getError();
+
     private:
         std::stack<std::variant<ObjectNode*, ArrayNode*>> nodeStack;
         std::stack<State> stateStack;
@@ -29,14 +31,16 @@ class Parser
 
         KeyMapper& keyMapper;
 
+        std::unique_ptr<Error> error;
+
         void pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> nodeStack, State);
         void popDataFromStack();
 
         template <typename T>
-        void pushInnerNodeOnStack(const std::string& key, State);
+        bool pushInnerNodeOnStack(const std::string& key, State);
 
         template <typename T>
-        void processData(const std::string& key, const Token&);
+        bool processData(const std::string& key, const Token&);
 };
 
 #endif

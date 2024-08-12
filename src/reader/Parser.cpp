@@ -7,11 +7,13 @@
 std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens)
 {
     std::string key;
+    bool result;
     auto nodes = std::make_unique<ObjectNode>();
     mapIDStack.push(0);
     pushDataOnStack(nodes.get(), State::OBJECT_PARSING);
 
     for (auto it = tokens.begin() + 1; it != tokens.end() - 1; it++) {
+        result = true;
         if (it->type == TokenType::CURLY_CLOSE || it->type == TokenType::SQUARE_CLOSE) {
             popDataFromStack();
         }
@@ -19,39 +21,56 @@ std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens
             key = std::get<std::string>(it->data);
         }
         else if (it->type == TokenType::DATA_INT) {
-            processData<int64_t>(key, *it);
+            result = processData<int64_t>(key, *it);
         }
         else if (it->type == TokenType::DATA_DOUBLE) {
-            processData<double>(key, *it);
+            result = processData<double>(key, *it);
         }
         else if (it->type == TokenType::DATA_STR) {
-            processData<std::string>(key, *it);
+            result = processData<std::string>(key, *it);
         }
         else if (it->type == TokenType::DATA_BOOL) {
-            processData<bool>(key, *it);
+            result = processData<bool>(key, *it);
         }
         else if (it->type == TokenType::DATA_NULL) {
-            processData<nullptr_t>(key, *it);
+            result = processData<nullptr_t>(key, *it);
         }
         else if (it->type == TokenType::CURLY_OPEN) {
-            pushInnerNodeOnStack<ObjectNode>(key, State::OBJECT_PARSING);
+            result = pushInnerNodeOnStack<ObjectNode>(key, State::OBJECT_PARSING);
         }
         else if (it->type == TokenType::SQUARE_OPEN) {
             pushInnerNodeOnStack<ArrayNode>(key, State::ARRAY_PARSING);
         }
+
+        if (result == false) {
+            return nullptr;
+        }
     }
     return nodes;
+}
+
+
+std::unique_ptr<Error> Parser::getError()
+{
+    return std::move(error);
 }
 
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
 template <typename T>
-void Parser::pushInnerNodeOnStack(const std::string& keyStr, State state)
+bool Parser::pushInnerNodeOnStack(const std::string& keyStr, State state)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
         ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
-        uint32_t keyID = keyMapper.createAndPutKeyID(keyStr, mapIDStack.top());
+
+        auto optKeyID = keyMapper.createAndPutKeyID(keyStr, mapIDStack.top());
+        if (optKeyID == std::nullopt) {
+            error = keyMapper.getError();
+            return false;
+        }
+        uint32_t keyID = optKeyID.value();
+
         obj->emplace(std::make_pair(keyID, T()));
         auto* currentNode = &(std::get<T>(obj->at(keyID).value));
         pushDataOnStack(currentNode, state);
@@ -62,19 +81,26 @@ void Parser::pushInnerNodeOnStack(const std::string& keyStr, State state)
         auto* currentNode = &(std::get<T>(arr->back().value));
         pushDataOnStack(currentNode, state);
     }
+    return true;
 }
 
 
 template <typename T>
-void Parser::processData(const std::string& keyStr, const Token& token)
+bool Parser::processData(const std::string& keyStr, const Token& token)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
-        uint32_t keyID = keyMapper.createAndPutKeyID(keyStr, mapIDStack.top());
+        auto optKeyID = keyMapper.createAndPutKeyID(keyStr, mapIDStack.top());
+        if (optKeyID == std::nullopt) {
+            error = keyMapper.getError();
+            return false;
+        }
+        uint32_t keyID = optKeyID.value();
         std::get<ObjectNode*>(nodeStack.top())->emplace(std::make_pair(keyID, std::get<T>(token.data)));
     }
     else {
         std::get<ArrayNode*>(nodeStack.top())->emplace_back(std::get<T>(token.data));
     }
+    return true;
 }
 
 

@@ -14,114 +14,120 @@ class ApiTestError : public testing::Test
 protected:
 
     TestUtils utils;
+    std::unique_ptr<JsonApi> api;
+
+    virtual void SetUp()
+    {
+        api = std::make_unique<JsonApi>();
+    }
+
+    virtual void TearDown()
+    {
+        api.reset();
+    }
 };
 
 
 TEST_F(ApiTestError, ImproperKeyInnerNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
-
-    JsonApi api;
-    bool result = api.parseJsonString(jsonString);
+    bool result = api->parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
     Node newNode{ .value = "Cracow" };
-    result = api.changeNodeInObject({ "person2", "street" }, "address", newNode);
+    result = api->changeNodeInObject({ "person2", "street" }, "address", newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api.getErrorCode(), ErrorCode::API_NOT_KEY_IN_MAP);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_NOT_KEY_IN_MAP);
 }
 
 
 TEST_F(ApiTestError, OutOfIndexInnerNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_7.json");
-
-    JsonApi api;
-    bool result = api.parseJsonString(jsonString);
+    bool result = api->parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
     Node newNode{ .value = "Spain" };
-    result = api.changeNodeInArray({ "employees", size_t(3), "data", size_t(3) }, 2, newNode);
+    result = api->changeNodeInArray({ "employees", size_t(3), "data", size_t(3) }, 2, newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api.getErrorCode(), ErrorCode::API_INDEX_OUT_OF_ARRAY);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_INDEX_OUT_OF_ARRAY);
 }
 
 
 TEST_F(ApiTestError, inconsistentDataInnerNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
-
-    JsonApi api;
-    bool result = api.parseJsonString(jsonString);
+    bool result = api->parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
     Node newNode{ .value = 12 };
-    result = api.changeNodeInObject({ "person2", size_t(0) }, "city", newNode);
+    result = api->changeNodeInObject({ "person2", size_t(0) }, "city", newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api.getErrorCode(), ErrorCode::API_INCONSISTENT_DATA);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_INCONSISTENT_DATA);
 }
 
 
 TEST_F(ApiTestError, ImproperKeyOuterNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
-
-    JsonApi api;
-    bool result = api.parseJsonString(jsonString);
+    bool result = api->parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
     Node newNode{ .value = false };
-    result = api.changeNodeInObject({ "person2", "address" }, "bbb", newNode);
+    result = api->changeNodeInObject({ "person2", "address" }, "bbb", newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api.getErrorCode(), ErrorCode::API_NOT_KEY_IN_MAP);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_NOT_KEY_IN_MAP);
 }
 
 
 TEST_F(ApiTestError, OutOfIndexOuterNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_7.json");
-
-    JsonApi api;
-    bool result = api.parseJsonString(jsonString);
+    bool result = api->parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
     Node newNode{ .value = 23.45 };
-    result = api.changeNodeInArray({ "employees", size_t(0), "data", size_t(1) }, 4, newNode);
+    result = api->changeNodeInArray({ "employees", size_t(0), "data", size_t(1) }, 4, newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api.getErrorCode(), ErrorCode::API_INDEX_OUT_OF_ARRAY);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_INDEX_OUT_OF_ARRAY);
 }
 
 
 TEST_F(ApiTestError, inconsistentDataOuterNode)
 {
     std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
-
-    JsonApi api;
-    bool result = api.parseJsonString(jsonString);
+    bool result = api->parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
     Node newNode{ .value = "ABC" };
-    result = api.changeNodeInArray({ "person2", "address" }, 1, newNode);
+    result = api->changeNodeInArray({ "person2", "address" }, 1, newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api.getErrorCode(), ErrorCode::API_NODE_NOT_ARRAY);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_NODE_NOT_ARRAY);
 }
 
 
-TEST_F(ApiTestError, emptyApi_1)
+TEST_F(ApiTestError, changeNotForEmptyRoot)
 {
-    JsonApi api;
     Node newNode{ .value = "ABC" };
-    bool result = api.changeNodeInArray({ "person2", "address" }, 1, newNode);
+    bool result = api->changeNodeInArray({ "person2", "address" }, 1, newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api.getErrorCode(), ErrorCode::API_EMPTY);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_EMPTY);
 }
 
 
-TEST_F(ApiTestError, emptyApi_2)
+TEST_F(ApiTestError, parseObjectForEmptyRoot)
 {
-    JsonApi api;
-    std::string json = api.parseObjectToJsonString();
+    std::string json = api->parseObjectToJsonString();
     ASSERT_TRUE(json.empty());
-    ASSERT_EQ(api.getErrorCode(), ErrorCode::API_EMPTY);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_EMPTY);
+}
+
+
+TEST_F(ApiTestError, parseJSONStringWithDoubleKey)
+{
+    std::string jsonString = utils.getJsonFromFile(TEST_DATA_IMPROPER, "double_key.json");
+    bool result = api->parseJsonString(jsonString);
+    ASSERT_FALSE(result);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::KEY_MAPPER_KEY_STR_REPEAT);
 }
 
