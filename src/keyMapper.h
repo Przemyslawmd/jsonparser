@@ -10,7 +10,7 @@
 class KeyMapper
 {
 public:
-    uint32_t createAndPutKeyID(const std::string& keyStr, uint32_t mapID);
+    std::optional<uint32_t> createAndPutKeyID(const std::string& keyStr, uint32_t mapID);
 
     void clear();
     void removeKey(uint32_t keyID);
@@ -21,7 +21,6 @@ public:
     uint32_t getNextMapID() const;
 
 private:
-    uint32_t createKeyID(uint32_t mapID) const;
     uint32_t getMaxItemID(uint32_t mapID) const;
 
     std::map<uint32_t, std::string> keyMap;
