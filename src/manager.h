@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_API_H
-#define JSONPARSER_API_H
+#ifndef JSONPARSER_MANAGER_H
+#define JSONPARSER_MANAGER_H
 
 #include <map>
 #include <memory>
@@ -12,8 +12,6 @@
 #include <NodeValue.h>
 #include <Error.h>
 #include "utils.h"
-#include "manager.h"
-
 
 /* Pointer to complex node: object (map) or array */
 using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
@@ -21,20 +19,13 @@ using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 /* Path contains a key for an object (map) or index for an array */
 using Path = std::variant<std::string, size_t>;
 
-
-class JsonApi
+class Manager
 {
 public:
-
-    JsonApi();
-
+    Manager();
+    
     bool parseJsonString(const std::string& file);
-
-    std::string parseObjectToJsonString();
-
-    bool loadObjectJson(const Node&);
-
-    void clear();
+    std::string parseObjectToString();
 
     bool addNodeIntoObject(const std::vector<Path>& path, const std::string& keyStr, const Node&);
     bool addNodeIntoArray(const std::vector<Path>& path, const Node&);
@@ -46,15 +37,18 @@ public:
     bool removeNodeFromObject(const std::vector<Path>& path, const std::string& keyStr);
     bool removeNodeFromArray(const std::vector<Path>& path, size_t index);
 
-    ErrorCode getErrorCode();
+    std::unique_ptr<Error> getError();
 
 private:
+    bool isRootEmpty();
 
     bool addObjectNodeInternally(ObjectNode*, const Node&);
     bool addArrayNodeInternally(ArrayNode*, const Node&);
 
-    void traverseObjectToRemoveKeyID(const ObjectNode&);
-    void traverseArrayToRemoveKeyID(const ArrayNode&);
+    ArrayNode* getArrayAndCheckIndex(const std::vector<Path>& path, size_t index);
+
+    std::tuple<ObjectNode*, size_t>
+    getObjectAndKeyID(const std::vector<Path>& path, const std::string& keyStr);
 
     template <typename T>
     T* putIntoObjectAndGet(ObjectNode*, uint32_t keyID);
@@ -62,10 +56,14 @@ private:
     template <typename T>
     T* putIntoArrayAndGet(ArrayNode*);
 
+    void traverseObjectToRemoveKeyID(const ObjectNode&);
+    void traverseArrayToRemoveKeyID(const ArrayNode&);
+
+    ComplexNodePtr getNodeFromPath(const std::vector<Path>& path);
+
     template <typename T>
     bool validateNodeType(ComplexNodePtr, ErrorCode potentialError);
-
-    std::unique_ptr<Manager> manager;
+    
     std::unique_ptr<ObjectNode> root;
     std::unique_ptr<KeyMapper> keyMapper;
     std::unique_ptr<Utils> utils;
@@ -73,4 +71,3 @@ private:
 };
 
 #endif
-
