@@ -1,34 +1,16 @@
 
 #include "jsonApi.h"
 
-#include <iostream>
-
-#include "../src/reader/Parser.h"
-#include "../src/reader/ParserKey.h"
-#include "../src/reader/Preparser.h"
-#include "../src/reader/Validator.h"
-#include "../src/writer/Writer.h"
-
-
-using ObjectNodeApi = std::map<std::string, Node>;
-using ArrayNodeApi = std::vector<Node>;
-
 
 JsonApi::JsonApi()
 {
-    keyMapper = std::make_unique<KeyMapper>();
-    utils = std::make_unique < Utils>();
     manager = std::make_unique<Manager>();
 }
 
 
-bool JsonApi::parseJsonString(const std::string& jsonString)
+bool JsonApi::parseJsonString(const std::string& json)
 {
-    if (manager->parseJsonString(jsonString) == false) {
-        error = manager->getError();
-        return false;
-    }
-    return true;
+    return manager->parseJsonString(json);
 }
 
 
@@ -46,9 +28,7 @@ bool JsonApi::loadObjectJson(const Node& node)
 
 void JsonApi::clear()
 {
-    root.reset();
-    error.reset();
-    keyMapper->clear();
+    manager->clear();
 }
 
 
@@ -70,9 +50,9 @@ bool JsonApi::insertNodeIntoArray(const std::vector<Path>& path, size_t index, c
 }
 
 
-bool JsonApi::changeNodeInObject(const std::vector<Path>& path, const std::string& key, const Node& newNode)
+bool JsonApi::changeNodeInObject(const std::vector<Path>& path, const std::string& key, const Node& node)
 {
-    return manager->changeNodeInObject(path, key, newNode);
+    return manager->changeNodeInObject(path, key, node);
 }
 
 
@@ -96,41 +76,7 @@ bool JsonApi::removeNodeFromArray(const std::vector<Path>& path, size_t index)
 
 ErrorCode JsonApi::getErrorCode()
 {
-    if (error == nullptr) {
-        return ErrorCode::NO_ERROR;
-    }
-    return error->getErrorCode();
-}
-
-/*******************************************************************/
-/* PRIVATE *********************************************************/
-
-
-template <typename T>
-bool JsonApi::validateNodeType(ComplexNodePtr node, ErrorCode errorCode)
-{
-    if (std::holds_alternative<nullptr_t>(node)) {
-        return false;
-    }
-    if (std::holds_alternative<T>(node) == false) {
-        error = std::make_unique<Error>(errorCode);
-        return false;
-    }
-    return true;
-}
-
-template <typename T>
-T* JsonApi::putIntoObjectAndGet(ObjectNode* obj, uint32_t keyID)
-{
-    obj->emplace(std::make_pair(keyID, T()));
-    return &(std::get<T>(obj->at(keyID).value));
-}
-
-
-template <typename T>
-T* JsonApi::putIntoArrayAndGet(ArrayNode* arr)
-{
-    arr->emplace_back(T());
-    return &(std::get<T>(arr->back().value));
+    auto error = manager->getError();
+    return (error == nullptr) ? ErrorCode::NO_ERROR : error->getErrorCode();
 }
 

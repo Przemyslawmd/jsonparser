@@ -1,9 +1,6 @@
 
 #include "manager.h"
 
-#include <iostream>
-
-
 #include "../src/reader/Parser.h"
 #include "../src/reader/ParserKey.h"
 #include "../src/reader/Preparser.h"
@@ -18,6 +15,14 @@ Manager::Manager()
 {
     keyMapper = std::make_unique<KeyMapper>();
     utils = std::make_unique <Utils>();
+}
+
+
+void Manager::clear()
+{
+    root.reset();
+    error.reset();
+    keyMapper->clear();
 }
 
 
@@ -89,7 +94,7 @@ bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string
     }
 
     ComplexNodePtr objNode = getNodeFromPath(path);
-    if (validateNodeType<ObjectNode*>(objNode, ErrorCode::API_NODE_NOT_OBJECT) == false) {
+    if (validateNode<ObjectNode*>(objNode, ErrorCode::API_NODE_NOT_OBJECT) == false) {
         return false;
     }
 
@@ -124,7 +129,7 @@ bool Manager::addNodeIntoArray(const std::vector<Path>& path, const Node& newNod
     }
 
     ComplexNodePtr node = getNodeFromPath(path);
-    if (validateNodeType<ArrayNode*>(node, ErrorCode::API_NODE_NOT_ARRAY) == false) {
+    if (validateNode<ArrayNode*>(node, ErrorCode::API_NODE_NOT_ARRAY) == false) {
         return false;
     }
 
@@ -312,6 +317,7 @@ bool Manager::isRootEmpty()
     return false;
 }
 
+
 ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
 {
     ComplexNodePtr nodeComplexPtr = root.get();
@@ -422,7 +428,7 @@ bool Manager::addArrayNodeInternally(ArrayNode* arr, const Node& newNode)
 
 
 template <typename T>
-bool Manager::validateNodeType(ComplexNodePtr node, ErrorCode errorCode)
+bool Manager::validateNode(ComplexNodePtr node, ErrorCode errorCode)
 {
     if (std::holds_alternative<nullptr_t>(node)) {
         return false;
@@ -450,10 +456,11 @@ T* Manager::putIntoArrayAndGet(ArrayNode* arr)
     return &(std::get<T>(arr->back().value));
 }
 
+
 ArrayNode* Manager::getArrayAndCheckIndex(const std::vector<Path>& path, size_t index)
 {
     ComplexNodePtr node = getNodeFromPath(path);
-    if (validateNodeType<ArrayNode*>(node, ErrorCode::API_NODE_NOT_ARRAY) == false) {
+    if (validateNode<ArrayNode*>(node, ErrorCode::API_NODE_NOT_ARRAY) == false) {
         return nullptr;
     }
 
@@ -468,7 +475,7 @@ ArrayNode* Manager::getArrayAndCheckIndex(const std::vector<Path>& path, size_t 
 std::tuple<ObjectNode*, size_t> Manager::getObjectAndKeyID(const std::vector<Path>& path, const std::string& keyStr)
 {
     ComplexNodePtr node = getNodeFromPath(path);
-    if (validateNodeType<ObjectNode*>(node, ErrorCode::API_NODE_NOT_OBJECT) == false) {
+    if (validateNode<ObjectNode*>(node, ErrorCode::API_NODE_NOT_OBJECT) == false) {
         return { nullptr, 0 };
     }
 
@@ -486,6 +493,7 @@ std::tuple<ObjectNode*, size_t> Manager::getObjectAndKeyID(const std::vector<Pat
     }
     return { obj, keyID.value() };
 }
+
 
 void Manager::traverseObjectToRemoveKeyID(const ObjectNode& obj)
 {
@@ -518,3 +526,4 @@ void Manager::traverseArrayToRemoveKeyID(const ArrayNode& arr)
         }
     }
 }
+
