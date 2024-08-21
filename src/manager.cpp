@@ -70,6 +70,18 @@ std::string Manager::parseObjectToString()
 }
 
 
+bool Manager::loadObjectJson(const Node& node)
+{
+    if (root != nullptr) {
+        error = std::make_unique<Error>(ErrorCode::API_NOT_EMPTY);
+        return false;
+    }
+    root = std::make_unique<ObjectNode>();
+    addObjectNodeInternally(root.get(), node);
+    return true;
+}
+
+
 bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string& keyStr, const Node& newNode)
 {
     if (isRootEmpty()) {

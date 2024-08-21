@@ -27,6 +27,8 @@ public:
     bool parseJsonString(const std::string& file);
     std::string parseObjectToString();
 
+    bool loadObjectJson(const Node&);
+
     bool addNodeIntoObject(const std::vector<Path>& path, const std::string& keyStr, const Node&);
     bool addNodeIntoArray(const std::vector<Path>& path, const Node&);
     bool insertNodeIntoArray(const std::vector<Path>& path, size_t index, const Node&);
