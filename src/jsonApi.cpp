@@ -22,7 +22,7 @@ std::optional<std::string> JsonApi::parseJsonObjectToString()
 
 bool JsonApi::loadJsonObject(const Node& node)
 {
-    return manager->loadObjectJson(node);
+    return manager->loadJsonObject(node);
 }
 
 

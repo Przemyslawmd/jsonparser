@@ -30,7 +30,7 @@ bool Manager::parseJsonString(const std::string& jsonString)
 {
     error.reset();
     if (root != nullptr) {
-        error = std::make_unique<Error>(ErrorCode::API_NOT_EMPTY);
+        error = std::make_unique<Error>(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
         return false;
     }
 
@@ -50,23 +50,23 @@ bool Manager::parseJsonString(const std::string& jsonString)
     const auto parserKey = std::make_unique<ParserKey>();
     tokens = parserKey->createKeyTokens(std::move(tokens));
 
-    const auto parser = std::make_unique<Parser>(*keyMapper.get());
+    const auto parser = std::make_unique<Parser>(*keyMapper);
     root = parser->parseTokens(*tokens);
-    if (root != nullptr) {
-        return true;
+    if (root == nullptr) {
+        error = parser->getError();
+        return false;
     }
-    error = parser->getError();
-    return false;
+    return true;
 }
 
 
 std::optional<std::string> Manager::parseObjectToString()
 {
     if (isRootEmpty()) {
-        return {};
+        return std::nullopt;
     }
-    auto writer = std::make_unique<Writer>(*keyMapper.get());
-    auto jsonStr = writer->createJsonString(*root.get());
+    auto writer = std::make_unique<Writer>(*keyMapper);
+    auto jsonStr = writer->createJsonString(*root);
     if (jsonStr == std::nullopt) {
         error = writer->getError();
     }
@@ -74,15 +74,14 @@ std::optional<std::string> Manager::parseObjectToString()
 }
 
 
-bool Manager::loadObjectJson(const Node& node)
+bool Manager::loadJsonObject(const Node& node)
 {
     if (root != nullptr) {
-        error = std::make_unique<Error>(ErrorCode::API_NOT_EMPTY);
+        error = std::make_unique<Error>(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
         return false;
     }
     root = std::make_unique<ObjectNode>();
-    addObjectNodeInternally(root.get(), node);
-    return true;
+    return addObjectNodeInternally(root.get(), node);
 }
 
 
@@ -93,7 +92,7 @@ bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string
     }
 
     ComplexNodePtr objNode = getNodeFromPath(path);
-    if (validateNode<ObjectNode*>(objNode, ErrorCode::API_NODE_NOT_OBJECT) == false) {
+    if (validateNode<ObjectNode*>(objNode, ErrorCode::MANAGER_NODE_NOT_OBJECT) == false) {
         return false;
     }
 
@@ -128,7 +127,7 @@ bool Manager::addNodeIntoArray(const std::vector<Path>& path, const Node& newNod
     }
 
     ComplexNodePtr node = getNodeFromPath(path);
-    if (validateNode<ArrayNode*>(node, ErrorCode::API_NODE_NOT_ARRAY) == false) {
+    if (validateNode<ArrayNode*>(node, ErrorCode::MANAGER_NODE_NOT_ARRAY) == false) {
         return false;
     }
 
@@ -310,7 +309,7 @@ std::unique_ptr<Error> Manager::getError()
 bool Manager::isRootEmpty()
 {
     if (root == nullptr) {
-        error = std::make_unique<Error>(ErrorCode::API_EMPTY);
+        error = std::make_unique<Error>(ErrorCode::MANAGER_EMPTY);
         return true;
     }
     return false;
@@ -345,11 +344,11 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
             std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
 
             if (keyID == std::nullopt) {
-                error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
+                error = std::make_unique<Error>(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
                 return nullptr;
             }
             if (obj->contains(keyID.value()) == false) {
-                error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
+                error = std::make_unique<Error>(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
                 return nullptr;
             }
             NodeInternal* node = &obj->at(keyID.value());
@@ -360,14 +359,14 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
             size_t index = std::get<size_t>(pathKey);
 
             if (index >= arr->size()) {
-                error = std::make_unique<Error>(ErrorCode::API_INDEX_OUT_OF_ARRAY);
+                error = std::make_unique<Error>(ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
                 return nullptr;
             }
             NodeInternal* node = &arr->at(index);
             nodeComplexPtr = getNextNode(node);
         }
         else {
-            error = std::make_unique<Error>(ErrorCode::API_INCONSISTENT_DATA);
+            error = std::make_unique<Error>(ErrorCode::MANAGER_IMPROPER_PATH);
             return nullptr;
         }
     }
@@ -459,13 +458,13 @@ T* Manager::putIntoArrayAndGet(ArrayNode* arr)
 ArrayNode* Manager::getArrayAndCheckIndex(const std::vector<Path>& path, size_t index)
 {
     ComplexNodePtr node = getNodeFromPath(path);
-    if (validateNode<ArrayNode*>(node, ErrorCode::API_NODE_NOT_ARRAY) == false) {
+    if (validateNode<ArrayNode*>(node, ErrorCode::MANAGER_NODE_NOT_ARRAY) == false) {
         return nullptr;
     }
 
     ArrayNode* arr = std::get<ArrayNode*>(node);
     if (index > arr->size()) {
-        error = std::make_unique<Error>(ErrorCode::API_INDEX_OUT_OF_ARRAY);
+        error = std::make_unique<Error>(ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
         return nullptr;
     }
     return arr;
@@ -474,7 +473,7 @@ ArrayNode* Manager::getArrayAndCheckIndex(const std::vector<Path>& path, size_t 
 std::tuple<ObjectNode*, size_t> Manager::getObjectAndKeyID(const std::vector<Path>& path, const std::string& keyStr)
 {
     ComplexNodePtr node = getNodeFromPath(path);
-    if (validateNode<ObjectNode*>(node, ErrorCode::API_NODE_NOT_OBJECT) == false) {
+    if (validateNode<ObjectNode*>(node, ErrorCode::MANAGER_NODE_NOT_OBJECT) == false) {
         return { nullptr, 0 };
     }
 
@@ -482,12 +481,12 @@ std::tuple<ObjectNode*, size_t> Manager::getObjectAndKeyID(const std::vector<Pat
 
     std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
     if (keyID == std::nullopt) {
-        error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_MAP);
+        error = std::make_unique<Error>(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
         return { nullptr, 0 };
     }
 
     if (obj->contains(keyID.value()) == false) {
-        error = std::make_unique<Error>(ErrorCode::API_NOT_KEY_IN_INTERNAL_MAP);
+        error = std::make_unique<Error>(ErrorCode::MANAGER_NOT_KEY_IN_INTERNAL_OBJECT);
         return { nullptr, 0 };
     }
     return { obj, keyID.value() };

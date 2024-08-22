@@ -37,7 +37,7 @@ TEST_F(ApiTestError, ImproperKeyInnerNode)
     Node newNode{ .value = "Cracow" };
     result = api->changeNodeInObject({ "person2", "street" }, "address", newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_NOT_KEY_IN_MAP);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
 }
 
 
@@ -50,7 +50,7 @@ TEST_F(ApiTestError, OutOfIndexInnerNode)
     Node newNode{ .value = "Spain" };
     result = api->changeNodeInArray({ "employees", size_t(3), "data", size_t(3) }, 2, newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_INDEX_OUT_OF_ARRAY);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
 }
 
 
@@ -63,7 +63,7 @@ TEST_F(ApiTestError, inconsistentDataInnerNode)
     Node newNode{ .value = 12 };
     result = api->changeNodeInObject({ "person2", size_t(0) }, "city", newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_INCONSISTENT_DATA);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_IMPROPER_PATH);
 }
 
 
@@ -76,7 +76,7 @@ TEST_F(ApiTestError, ImproperKeyOuterNode)
     Node newNode{ .value = false };
     result = api->changeNodeInObject({ "person2", "address" }, "bbb", newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_NOT_KEY_IN_MAP);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
 }
 
 
@@ -89,7 +89,7 @@ TEST_F(ApiTestError, OutOfIndexOuterNode)
     Node newNode{ .value = 23.45 };
     result = api->changeNodeInArray({ "employees", size_t(0), "data", size_t(1) }, 4, newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_INDEX_OUT_OF_ARRAY);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
 }
 
 
@@ -102,7 +102,7 @@ TEST_F(ApiTestError, inconsistentDataOuterNode)
     Node newNode{ .value = "ABC" };
     result = api->changeNodeInArray({ "person2", "address" }, 1, newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_NODE_NOT_ARRAY);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_NODE_NOT_ARRAY);
 }
 
 
@@ -111,7 +111,7 @@ TEST_F(ApiTestError, changeNotForEmptyRoot)
     Node newNode{ .value = "ABC" };
     bool result = api->changeNodeInArray({ "person2", "address" }, 1, newNode);
     ASSERT_FALSE(result);
-    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_EMPTY);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_EMPTY);
 }
 
 
@@ -119,7 +119,7 @@ TEST_F(ApiTestError, parseObjectForEmptyRoot)
 {
     std::optional<std::string> json = api->parseJsonObjectToString();
     ASSERT_TRUE(json == std::nullopt);
-    ASSERT_EQ(api->getErrorCode(), ErrorCode::API_EMPTY);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_EMPTY);
 }
 
 
