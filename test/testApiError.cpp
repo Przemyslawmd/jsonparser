@@ -117,7 +117,7 @@ TEST_F(ApiTestError, changeNotForEmptyRoot)
 
 TEST_F(ApiTestError, parseObjectForEmptyRoot)
 {
-    std::string json = api->parseObjectToJsonString();
+    std::string json = api->parseJsonObjectToString();
     ASSERT_TRUE(json.empty());
     ASSERT_EQ(api->getErrorCode(), ErrorCode::API_EMPTY);
 }

@@ -21,9 +21,9 @@ public:
 
     bool parseJsonString(const std::string& file);
 
-    std::string parseObjectToJsonString();
+    std::string parseJsonObjectToString();
 
-    bool loadObjectJson(const Node&);
+    bool loadJsonObject(const Node&);
 
     void clear();
 

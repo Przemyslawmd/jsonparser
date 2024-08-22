@@ -14,13 +14,13 @@ bool JsonApi::parseJsonString(const std::string& json)
 }
 
 
-std::string JsonApi::parseObjectToJsonString()
+std::string JsonApi::parseJsonObjectToString()
 {
     return manager->parseObjectToString();
 }
 
 
-bool JsonApi::loadObjectJson(const Node& node)
+bool JsonApi::loadJsonObject(const Node& node)
 {
     return manager->loadObjectJson(node);
 }
