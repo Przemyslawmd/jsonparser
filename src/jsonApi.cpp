@@ -14,7 +14,7 @@ bool JsonApi::parseJsonString(const std::string& json)
 }
 
 
-std::string JsonApi::parseJsonObjectToString()
+std::optional<std::string> JsonApi::parseJsonObjectToString()
 {
     return manager->parseObjectToString();
 }

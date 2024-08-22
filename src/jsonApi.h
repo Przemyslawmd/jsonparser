@@ -3,6 +3,7 @@
 #define JSONPARSER_API_H
 
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -21,7 +22,7 @@ public:
 
     bool parseJsonString(const std::string& file);
 
-    std::string parseJsonObjectToString();
+    std::optional<std::string> parseJsonObjectToString();
 
     bool loadJsonObject(const Node&);
 

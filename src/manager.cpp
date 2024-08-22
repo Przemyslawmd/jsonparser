@@ -60,7 +60,7 @@ bool Manager::parseJsonString(const std::string& jsonString)
 }
 
 
-std::string Manager::parseObjectToString()
+std::optional<std::string> Manager::parseObjectToString()
 {
     if (isRootEmpty()) {
         return {};
@@ -69,9 +69,8 @@ std::string Manager::parseObjectToString()
     auto jsonStr = writer->createJsonString(*root.get());
     if (jsonStr == std::nullopt) {
         error = writer->getError();
-        return "";
     }
-    return jsonStr.value();
+    return jsonStr;
 }
 
 

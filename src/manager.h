@@ -4,6 +4,7 @@
 
 #include <map>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -27,7 +28,7 @@ public:
     Manager();
     
     bool parseJsonString(const std::string& file);
-    std::string parseObjectToString();
+    std::optional<std::string> parseObjectToString();
 
     bool loadObjectJson(const Node&);
 
