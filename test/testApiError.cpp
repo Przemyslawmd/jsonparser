@@ -13,7 +13,6 @@ class ApiTestError : public testing::Test
 {
 protected:
 
-    TestUtils utils;
     std::unique_ptr<JsonApi> api;
 
     virtual void SetUp()
@@ -30,7 +29,7 @@ protected:
 
 TEST_F(ApiTestError, ImproperKeyInnerNode)
 {
-    std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
+    std::string jsonString = TestUtils::getJsonFromFile(TEST_DATA, "test_4.json");
     bool result = api->parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
@@ -43,7 +42,7 @@ TEST_F(ApiTestError, ImproperKeyInnerNode)
 
 TEST_F(ApiTestError, OutOfIndexInnerNode)
 {
-    std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_7.json");
+    std::string jsonString = TestUtils::getJsonFromFile(TEST_DATA, "test_7.json");
     bool result = api->parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
@@ -56,7 +55,7 @@ TEST_F(ApiTestError, OutOfIndexInnerNode)
 
 TEST_F(ApiTestError, inconsistentDataInnerNode)
 {
-    std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
+    std::string jsonString = TestUtils::getJsonFromFile(TEST_DATA, "test_4.json");
     bool result = api->parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
@@ -69,7 +68,7 @@ TEST_F(ApiTestError, inconsistentDataInnerNode)
 
 TEST_F(ApiTestError, ImproperKeyOuterNode)
 {
-    std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
+    std::string jsonString = TestUtils::getJsonFromFile(TEST_DATA, "test_4.json");
     bool result = api->parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
@@ -82,7 +81,7 @@ TEST_F(ApiTestError, ImproperKeyOuterNode)
 
 TEST_F(ApiTestError, OutOfIndexOuterNode)
 {
-    std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_7.json");
+    std::string jsonString = TestUtils::getJsonFromFile(TEST_DATA, "test_7.json");
     bool result = api->parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
@@ -95,7 +94,7 @@ TEST_F(ApiTestError, OutOfIndexOuterNode)
 
 TEST_F(ApiTestError, inconsistentDataOuterNode)
 {
-    std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_4.json");
+    std::string jsonString = TestUtils::getJsonFromFile(TEST_DATA, "test_4.json");
     bool result = api->parseJsonString(jsonString);
     ASSERT_TRUE(result);
 
@@ -125,7 +124,7 @@ TEST_F(ApiTestError, parseObjectForEmptyRoot)
 
 TEST_F(ApiTestError, parseJSONStringWithDoubleKey)
 {
-    std::string jsonString = utils.getJsonFromFile(TEST_DATA_IMPROPER, "double_key.json");
+    std::string jsonString = TestUtils::getJsonFromFile(TEST_DATA_IMPROPER, "double_key.json");
     bool result = api->parseJsonString(jsonString);
     ASSERT_FALSE(result);
     ASSERT_EQ(api->getErrorCode(), ErrorCode::KEY_MAPPER_KEY_STR_REPEAT);

@@ -74,7 +74,7 @@ void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestDat
 TEST (PreparserTest, Test_File_1)
 {
     ErrorCode error;
-    auto tokens = getTokens(std::string(TEST_DATA), "test_1.json", &error);
+    auto tokens = getTokens(TEST_DATA, "test_1.json", &error);
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
@@ -114,7 +114,7 @@ TEST (PreparserTest, Test_File_1)
 TEST(PreparserTest, Test_File_2)
 {
     ErrorCode error;
-    auto tokens = getTokens(std::string(TEST_DATA), "test_2.json", &error);
+    auto tokens = getTokens(TEST_DATA, "test_2.json", &error);
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
@@ -219,7 +219,7 @@ TEST(PreparserTest, Test_File_2)
 TEST(PreparserTest, Test_File_6)
 {
     ErrorCode error;
-    auto tokens = getTokens(std::string(TEST_DATA), "test_6.json", &error);
+    auto tokens = getTokens(TEST_DATA, "test_6.json", &error);
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
@@ -266,7 +266,7 @@ TEST(PreparserTest, Test_File_6)
 TEST(PreparserTest, Test_File_7)
 {
     ErrorCode error;
-    auto tokens = getTokens(std::string(TEST_DATA), "test_7.json", &error);
+    auto tokens = getTokens(TEST_DATA, "test_7.json", &error);
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
@@ -330,7 +330,7 @@ TEST(PreparserTest, Test_File_7)
 TEST(PreparserTest, Test_File_8)
 {
     ErrorCode error;
-    auto tokens = getTokens(std::string(TEST_DATA), "test_8_complex.json", &error);
+    auto tokens = getTokens(TEST_DATA, "test_8_complex.json", &error);
     ASSERT_TRUE(tokens != nullptr);
 }
 
@@ -338,7 +338,7 @@ TEST(PreparserTest, Test_File_8)
 TEST(PreparserTest, FirstImproperDataTest)
 {
     ErrorCode error = ErrorCode::NO_ERROR;
-    auto tokens = getTokens(std::string(TEST_DATA_IMPROPER), "string_not_ended_1.json", &error);
+    auto tokens = getTokens(TEST_DATA_IMPROPER, "string_not_ended_1.json", &error);
 
     ASSERT_EQ(tokens, nullptr);
     ASSERT_EQ(error, ErrorCode::PREPARSER_UNKNOWN_SYMBOL);
@@ -348,7 +348,7 @@ TEST(PreparserTest, FirstImproperDataTest)
 TEST(PreparserTest, SecondImproperDataTest)
 {
     ErrorCode error = ErrorCode::NO_ERROR;
-    auto tokens = getTokens(std::string(TEST_DATA_IMPROPER), "string_not_ended_2.json", &error);
+    auto tokens = getTokens(TEST_DATA_IMPROPER, "string_not_ended_2.json", &error);
 
     ASSERT_EQ(tokens, nullptr);
     ASSERT_EQ(error, ErrorCode::PREPARSER_STRING_ERROR);

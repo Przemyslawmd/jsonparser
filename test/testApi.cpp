@@ -16,14 +16,13 @@ class ApiTest : public testing::Test
 {
 protected:
 
-    TestUtils utils;
     std::unique_ptr<JsonApi> prepareApi(const std::string& file);
 };
 
 
 std::unique_ptr<JsonApi> ApiTest::prepareApi(const std::string& file)
 {
-    std::string jsonString = utils.getJsonFromFile(TEST_DATA, file);
+    std::string jsonString = TestUtils::getJsonFromFile(TEST_DATA, file);
     auto api = std::make_unique<JsonApi>();
     bool result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
@@ -40,7 +39,7 @@ TEST_F(ApiTest, AddSimpleNodeToObject)
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "add_simple_node_to_object_4.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "add_simple_node_to_object_4.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -63,7 +62,7 @@ TEST_F(ApiTest, AddObjectToObject)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "add_object_to_object_5.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "add_object_to_object_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -91,7 +90,7 @@ TEST_F(ApiTest, AddNestedObjectToObject)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "add_nested_object_to_object_5.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "add_nested_object_to_object_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -114,7 +113,7 @@ TEST_F(ApiTest, AddNestedObjectWithArrayToObject)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "add_nested_object_with_array_to_object_5.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "add_nested_object_with_array_to_object_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -134,7 +133,7 @@ TEST_F(ApiTest, AddArrayToObject)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "add_array_to_object_4.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "add_array_to_object_4.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -152,7 +151,7 @@ TEST_F(ApiTest, AddSimpleNodeIntoArray)
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "addSimpleNodeToArray_7.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "addSimpleNodeToArray_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -169,7 +168,7 @@ TEST_F(ApiTest, AddObjectIntoArray)
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "addObjectToArray_7.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "addObjectToArray_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -186,7 +185,7 @@ TEST_F(ApiTest, AddArrayIntoArray)
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "addArrayToArray_7.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "addArrayToArray_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -200,7 +199,7 @@ TEST_F(ApiTest, ChangeNodeInObjectIntoSimpleNode)
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "changeNodeInObjectIntoSimpleNode_3.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "changeNodeInObjectIntoSimpleNode_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -223,7 +222,7 @@ TEST_F(ApiTest, ChangeNodeInObjectIntoObject)
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "changeNodeInObjectIntoObject_3.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "changeNodeInObjectIntoObject_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -237,7 +236,7 @@ TEST_F(ApiTest, ChangeNodeInObjectIntoArray)
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "changeNodeInObjectIntoArray_3.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "changeNodeInObjectIntoArray_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -262,7 +261,7 @@ TEST_F(ApiTest, ChangeComplexJson)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "changeComplexJson_8.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "changeComplexJson_8.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -276,7 +275,7 @@ TEST_F(ApiTest, ChangeNodeInArrayIntoSimpleNode)
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "change_node_in_array_into_simple_node_2.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "change_node_in_array_into_simple_node_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -295,7 +294,7 @@ TEST_F(ApiTest, ChangeNodeInArrayIntoObject)
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "change_node_in_array_into_object_6.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "change_node_in_array_into_object_6.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -310,7 +309,7 @@ TEST_F(ApiTest, ChangeNodeInArrayIntoArray)
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "change_node_in_array_into_array_7.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "change_node_in_array_into_array_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -334,7 +333,7 @@ TEST_F(ApiTest, RemoveSimpleNodeFromObject)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "removeSimpleNodeFromObject_2.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "removeSimpleNodeFromObject_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -353,7 +352,7 @@ TEST_F(ApiTest, RemoveObjectFromObject)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "removeObjectFromObject_3.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "removeObjectFromObject_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -372,7 +371,7 @@ TEST_F(ApiTest, RemoveArrayFromObject)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "removeArrayFromObject_7.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "removeArrayFromObject_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -393,7 +392,7 @@ TEST_F(ApiTest, RemoveSimpleNodeFromArray)
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "removeSimpleNodeFromArray_7.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "removeSimpleNodeFromArray_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -412,7 +411,7 @@ TEST_F(ApiTest, RemoveObjectFromArray)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "removeObjectFromArray_6.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "removeObjectFromArray_6.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -431,7 +430,7 @@ TEST_F(ApiTest, RemoveArrayFromArray)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "removeArrayFromArray_7.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "removeArrayFromArray_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -449,11 +448,11 @@ TEST_F(ApiTest, ClearApi)
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "clear_api_7.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "clear_api_7.json");
     ASSERT_EQ(json, jsonExpected);
 
     api->clear();
-    std::string jsonString = utils.getJsonFromFile(TEST_DATA, "test_8_complex.json");
+    std::string jsonString = TestUtils::getJsonFromFile(TEST_DATA, "test_8_complex.json");
     result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
 
@@ -465,11 +464,11 @@ TEST_F(ApiTest, ClearApi)
     ASSERT_TRUE(result);
 
     json = api->parseJsonObjectToString().value();
-    jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "clear_api_8.json");
+    jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "clear_api_8.json");
     ASSERT_EQ(json, jsonExpected);
 
     api->clear();
-    jsonString = utils.getJsonFromFile(TEST_DATA, "test_7.json");
+    jsonString = TestUtils::getJsonFromFile(TEST_DATA, "test_7.json");
     result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
 
@@ -488,7 +487,7 @@ TEST_F(ApiTest, ClearApi)
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     }
-    jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "clear_api_7_2.json");
+    jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "clear_api_7_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -511,7 +510,7 @@ TEST_F(ApiTest, LoadJsonObject_1)
     api->loadJsonObject(Node{ .value = root });
 
     std::string json = api->parseJsonObjectToString().value();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "load_json_object_1.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "load_json_object_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -545,7 +544,7 @@ TEST_F(ApiTest, LoadJsonObject_2)
     api->loadJsonObject(Node{ .value = root });
 
     std::string json = api->parseJsonObjectToString().value();
-    std::string jsonExpected = utils.getJsonFromFile(std::string(TEST_DATA_API), "load_json_object_2.json");
+    std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "load_json_object_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
 

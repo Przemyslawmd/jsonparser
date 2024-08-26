@@ -44,8 +44,7 @@ protected:
 
     std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
     {
-        TestUtils utils;
-        std::string jsonString = utils.getJsonFromFile(std::string(TEST_DATA), jsonFile);
+        std::string jsonString = TestUtils::getJsonFromFile(TEST_DATA, jsonFile);
 
         auto tokens = preparser->parseJSON(jsonString);
         EXPECT_TRUE(tokens != nullptr);
@@ -53,7 +52,7 @@ protected:
         validator->validate(*tokens);
         tokens = keyParser->createKeyTokens(std::move(tokens));
 
-        const auto parser = std::make_unique<Parser>(*keyMapper.get());
+        const auto parser = std::make_unique<Parser>(*keyMapper);
         auto begin = std::chrono::high_resolution_clock::now();
         std::unique_ptr<ObjectNode> jsonObj = parser->parseTokens(*tokens);
 

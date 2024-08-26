@@ -11,12 +11,11 @@
 
 std::unique_ptr<Error> getValidatorError(const std::string& jsonFile)
 {
-    TestUtils utils;
-    std::string jsonString = utils.getJsonFromFile(std::string(TEST_DATA_IMPROPER), jsonFile);
+    std::string jsonString = TestUtils::getJsonFromFile(TEST_DATA_IMPROPER, jsonFile);
     auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
     Validator validator;
-    bool result = validator.validate(*tokens.get());
+    bool result = validator.validate(*tokens);
     EXPECT_FALSE(result);
     return validator.getError();
 }

@@ -7,7 +7,7 @@ class TestUtils
 {
 public:
 
-    std::string getJsonFromFile(const std::string& path, const std::string& file)
+    static std::string getJsonFromFile(const std::string& path, const std::string& file)
     {
         std::string filePath = path + file;
         std::ifstream jsonStream(filePath);
