@@ -37,7 +37,7 @@ class Parser
         void popDataFromStack();
 
         template <typename T>
-        bool pushInnerNodeOnStack(const std::string& key, State);
+        bool pushComplexNodeOnStack(const std::string& key, State);
 
         template <typename T>
         bool processData(const std::string& key, const Token&);
