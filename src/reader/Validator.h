@@ -18,7 +18,7 @@ class Validator
 
     private:
         bool validateBrackets(const std::vector<Token>& tokens);
-        bool checkRequirements(const std::vector<Token>& tokens);
+        bool checkTokensSequence(const std::vector<Token>& tokens);
 
         void createTypeAfterError(ErrorCode, TokenType first, TokenType second);
 

@@ -1,7 +1,6 @@
 
 #include "Validator.h"
 
-#include <algorithm>
 #include <format>
 #include <map>
 #include <set>
@@ -26,7 +25,7 @@ bool Validator::validate(const std::vector<Token>& tokens)
     if (validateBrackets(tokens) == false) {
         return false;
     }
-    return checkRequirements(tokens);
+    return checkTokensSequence(tokens);
 }
 
 
@@ -76,7 +75,7 @@ bool Validator::validateBrackets(const std::vector<Token>& tokens)
 }
 
 
-bool Validator::checkRequirements(const std::vector<Token>& tokens)
+bool Validator::checkTokensSequence(const std::vector<Token>& tokens)
 {
     std::stack<State> states;
 
