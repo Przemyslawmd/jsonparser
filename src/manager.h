@@ -69,7 +69,7 @@ private:
     ComplexNodePtr getNodeFromPath(const std::vector<Path>& path);
 
     template <typename T>
-    bool validateNode(ComplexNodePtr, ErrorCode potentialError);
+    bool validateComplexNode(ComplexNodePtr);
     
     std::unique_ptr<ObjectNode> root;
     std::unique_ptr<KeyMapper> keyMapper;
