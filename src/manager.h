@@ -49,8 +49,8 @@ public:
 private:
     bool isRootEmpty();
 
-    bool addObjectNodeInternally(ObjectNode*, const Node&);
-    bool addArrayNodeInternally(ArrayNode*, const Node&);
+    bool addObjectInternally(ObjectNode*, const Node&);
+    bool addArrayInternally(ArrayNode*, const Node&);
 
     ArrayNode* getArrayAndCheckIndex(const std::vector<Path>& path, size_t index);
 
