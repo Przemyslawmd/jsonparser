@@ -247,23 +247,23 @@ bool Manager::removeNodeFromObject(const std::vector<Path>& path, const std::str
         return false;
     }
 
-    auto [obj, keyID] = getObjectAndKeyID(path, keyStr);
-    if (obj == nullptr) {
+    auto [objectNode, keyID] = getObjectAndKeyID(path, keyStr);
+    if (objectNode == nullptr) {
         return false;
     }
 
-    NodeInternal nodeToRemove = obj->at(keyID);
+    NodeInternal nodeToRemove = objectNode->at(keyID);
     NodeType nodeType = utils->getNodeInternalType(nodeToRemove);
 
     if (nodeType == NodeType::OBJECT) {
-        const auto& objToRemove = std::get<ObjectNode>(obj->at(keyID).value);
+        const auto& objToRemove = std::get<ObjectNode>(objectNode->at(keyID).value);
         traverseObjectToRemoveKeyID(objToRemove);
     }
     else if (nodeType == NodeType::ARRAY) {
-        const auto& arrToRemove = std::get<ArrayNode>(obj->at(keyID).value);
+        const auto& arrToRemove = std::get<ArrayNode>(objectNode->at(keyID).value);
         traverseArrayToRemoveKeyID(arrToRemove);
     }
-    obj->erase(keyID);
+    objectNode->erase(keyID);
     keyMapper->removeKey(keyID);
     return true;
 }
@@ -275,23 +275,23 @@ bool Manager::removeNodeFromArray(const std::vector<Path>& path, size_t index)
         return false;
     }
 
-    ArrayNode* arr = getArrayAndCheckIndex(path, index);
-    if (arr == nullptr) {
+    ArrayNode* arrayNode = getArrayAndCheckIndex(path, index);
+    if (arrayNode == nullptr) {
         return false;
     }
 
-    NodeInternal nodeToRemove = arr->at(index);
+    NodeInternal nodeToRemove = arrayNode->at(index);
     NodeType nodeType = utils->getNodeInternalType(nodeToRemove);
 
     if (nodeType == NodeType::OBJECT) {
-        const auto& objToRemove = std::get<ObjectNode>(arr->at(index).value);
+        const auto& objToRemove = std::get<ObjectNode>(arrayNode->at(index).value);
         traverseObjectToRemoveKeyID(objToRemove);
     }
     else if (nodeType == NodeType::ARRAY) {
-        const auto& arrToRemove = std::get<ArrayNode>(arr->at(index).value);
+        const auto& arrToRemove = std::get<ArrayNode>(arrayNode->at(index).value);
         traverseArrayToRemoveKeyID(arrToRemove);
     }
-    arr->erase(arr->begin() + index);
+    arrayNode->erase(arrayNode->begin() + index);
     return true;
 }
 
@@ -372,51 +372,48 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
 }
 
 
-bool Manager::addObjectInternally(ObjectNode* obj, const Node& newNode)
+bool Manager::addObjectInternally(ObjectNode* objectNode, const Node& newNode)
 {
     uint32_t mapID = keyMapper->getNextMapID();
 
-    for (auto& [keyStr, val] : std::get<ObjectNodeApi>(newNode.value)) {
-        NodeType newNodeType = utils->getNodeType(val);
-
+    for (const auto& [keyStr, val] : std::get<ObjectNodeApi>(newNode.value)) {
         auto optKeyID = keyMapper->createAndPutKeyID(keyStr, mapID);
         if (optKeyID == std::nullopt) {
             return false;
         }
         uint32_t keyID = optKeyID.value();
 
+        NodeType newNodeType = utils->getNodeType(val);
         if (newNodeType == NodeType::SIMPLE) {
-            obj->emplace(std::make_pair(keyID, utils->getNodeInternal(val)));
+            objectNode->emplace(std::make_pair(keyID, utils->getNodeInternal(val)));
         }
         else if (newNodeType == NodeType::OBJECT) {
-            ObjectNode* objNew = putIntoObjectAndGet<ObjectNode>(obj, keyID);
-            if (addObjectInternally(objNew, val) == false) {
-                return false;
-            }
+            ObjectNode* objectNodeNew = putIntoObjectAndGet<ObjectNode>(objectNode, keyID);
+            addObjectInternally(objectNodeNew, val);
         }
-        else if (newNodeType == NodeType::ARRAY) {
-            ArrayNode* arrNew = putIntoObjectAndGet<ArrayNode>(obj, keyID);
-            addArrayInternally(arrNew, val);
+        else {
+            ArrayNode* arrayNodeNew = putIntoObjectAndGet<ArrayNode>(objectNode, keyID);
+            addArrayInternally(arrayNodeNew, val);
         }
     }
     return true;
 }
 
 
-bool Manager::addArrayInternally(ArrayNode* arr, const Node& newNode)
+bool Manager::addArrayInternally(ArrayNode* arrayNode, const Node& newNode)
 {
     for (auto& val : std::get<ArrayNodeApi>(newNode.value)) {
         NodeType newNodeType = utils->getNodeType(val);
         if (newNodeType == NodeType::SIMPLE) {
-            arr->emplace_back(utils->getNodeInternal(val));
+            arrayNode->emplace_back(utils->getNodeInternal(val));
         }
         else if (newNodeType == NodeType::ARRAY) {
-            ArrayNode* arrNew = putIntoArrayAndGet<ArrayNode>(arr);
-            addArrayInternally(arrNew, val);
+            ArrayNode* arrayNodeNew = putIntoArrayAndGet<ArrayNode>(arrayNode);
+            addArrayInternally(arrayNodeNew, val);
         }
         else if (newNodeType == NodeType::OBJECT) {
-            ObjectNode* objNew = putIntoArrayAndGet<ObjectNode>(arr);
-            addObjectInternally(objNew, val);
+            ObjectNode* objectNodeNew = putIntoArrayAndGet<ObjectNode>(arrayNode);
+            addObjectInternally(objectNodeNew, val);
         }
     }
     return true;
