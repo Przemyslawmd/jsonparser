@@ -218,24 +218,24 @@ bool Manager::changeNodeInArray(const std::vector<Path>& path, size_t index, con
         return false;
     }
 
-    ArrayNode* arr = getArrayAndCheckIndex(path, index);
-    if (arr == nullptr) {
+    ArrayNode* arrayNode = getArrayAndCheckIndex(path, index);
+    if (arrayNode == nullptr) {
         return false;
     }
 
     NodeType nodeType = utils->getNodeType(newNode);
     if (nodeType == NodeType::SIMPLE) {
-        arr->at(index) = utils->getNodeInternal(newNode);
+        arrayNode->at(index) = utils->getNodeInternal(newNode);
     }
     else if (nodeType == NodeType::OBJECT) {
-        arr->at(index) = NodeInternal{ .value = ObjectNode() };
-        ObjectNode* objNew = &std::get<ObjectNode>(arr->at(index).value);
-        addObjectInternally(objNew, newNode);
+        arrayNode->at(index) = NodeInternal{ .value = ObjectNode() };
+        ObjectNode* objectNodeNew = &std::get<ObjectNode>(arrayNode->at(index).value);
+        addObjectInternally(objectNodeNew, newNode);
     }
     else {
-        arr->at(index) = NodeInternal{ .value = ArrayNode() };
-        ArrayNode* arrNew = &std::get<ArrayNode>(arr->at(index).value);
-        addArrayInternally(arrNew, newNode);
+        arrayNode->at(index) = NodeInternal{ .value = ArrayNode() };
+        ArrayNode* arrayNodeNew = &std::get<ArrayNode>(arrayNode->at(index).value);
+        addArrayInternally(arrayNodeNew, newNode);
     }
     return true;
 }
@@ -440,18 +440,18 @@ bool Manager::validateComplexNode(ComplexNodePtr node)
 
 
 template <typename T>
-T* Manager::putIntoObjectAndGet(ObjectNode* obj, uint32_t keyID)
+T* Manager::putIntoObjectAndGet(ObjectNode* objectNode, uint32_t keyID)
 {
-    obj->emplace(std::make_pair(keyID, T()));
-    return &(std::get<T>(obj->at(keyID).value));
+    objectNode->emplace(std::make_pair(keyID, T()));
+    return &(std::get<T>(objectNode->at(keyID).value));
 }
 
 
 template <typename T>
-T* Manager::putIntoArrayAndGet(ArrayNode* arr)
+T* Manager::putIntoArrayAndGet(ArrayNode* arrayNode)
 {
-    arr->emplace_back(T());
-    return &(std::get<T>(arr->back().value));
+    arrayNode->emplace_back(T());
+    return &(std::get<T>(arrayNode->back().value));
 }
 
 
@@ -462,12 +462,12 @@ ArrayNode* Manager::getArrayAndCheckIndex(const std::vector<Path>& path, size_t 
         return nullptr;
     }
 
-    ArrayNode* arr = std::get<ArrayNode*>(node);
-    if (index > arr->size()) {
+    ArrayNode* arrayNode = std::get<ArrayNode*>(node);
+    if (index > arrayNode->size()) {
         error = std::make_unique<Error>(ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
         return nullptr;
     }
-    return arr;
+    return arrayNode;
 }
 
 
@@ -478,19 +478,19 @@ std::tuple<ObjectNode*, size_t> Manager::getObjectAndKeyID(const std::vector<Pat
         return { nullptr, 0 };
     }
 
-    ObjectNode* obj = std::get<ObjectNode*>(node);
+    ObjectNode* objectNode = std::get<ObjectNode*>(node);
 
-    std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
+    std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, objectNode->begin()->first);
     if (keyID == std::nullopt) {
         error = std::make_unique<Error>(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
         return { nullptr, 0 };
     }
 
-    if (obj->contains(keyID.value()) == false) {
+    if (objectNode->contains(keyID.value()) == false) {
         error = std::make_unique<Error>(ErrorCode::MANAGER_NOT_KEY_IN_INTERNAL_OBJECT);
         return { nullptr, 0 };
     }
-    return { obj, keyID.value() };
+    return { objectNode, keyID.value() };
 }
 
 
