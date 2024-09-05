@@ -28,6 +28,7 @@ add_executable(
   testWriter.cpp
   testApi.cpp
   testApiAddingNode.cpp
+  testApiChangingNode.cpp
   testApiRemovingNode.cpp
   testApiError.cpp
   ../src/jsonApi.cpp
@@ -40,7 +41,7 @@ add_executable(
   ../src/utils.cpp
   ../src/manager.cpp
   ../src/log/Error.cpp
- )
+)
 
 target_compile_features(jsonParserTest PRIVATE cxx_std_20)
 
