@@ -27,18 +27,19 @@ add_executable(
   testValidator.cpp
   testWriter.cpp
   testApi.cpp
+  testApiAddingNode.cpp
   testApiError.cpp
   ../src/jsonApi.cpp
   ../src/reader/Preparser.cpp
   ../src/reader/Parser.cpp
   ../src/reader/ParserKey.cpp
   ../src/reader/Validator.cpp
-  ../src/writer/Writer.cpp  
-  ../src/log/Error.cpp
+  ../src/writer/Writer.cpp
   ../src/keyMapper.cpp
   ../src/utils.cpp
   ../src/manager.cpp
-  )
+  ../src/log/Error.cpp
+)
 
 target_compile_features(jsonParserTest PRIVATE cxx_std_20)
 
