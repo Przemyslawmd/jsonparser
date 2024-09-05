@@ -1,5 +1,5 @@
 
-#include <fstream>
+#include <iostream>
 
 #include <gtest/gtest.h>
 
@@ -8,6 +8,10 @@
 #include "utils.h"
 #include <NodeValue.h>
 
+
+using std::chrono::high_resolution_clock;
+using std::chrono::duration_cast;
+using std::chrono::microseconds;
 
 constexpr std::string_view logPrefix = "             ###### microseconds: ";
 
@@ -46,13 +50,13 @@ TEST_F(ApiAddingNode, AddObjectToObject)
     newObject.emplace(std::make_pair("a", 123));
     newObject.emplace(std::make_pair("b", "AAA"));
 
-    const auto begin = std::chrono::high_resolution_clock::now();
+    const auto begin = high_resolution_clock::now();
     bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    const auto end = std::chrono::high_resolution_clock::now();
-    const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+    const auto end = high_resolution_clock::now();
+    const auto elapsed = duration_cast<microseconds>(end - begin);
     std::cout << logPrefix << elapsed.count() << std::endl;
     std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "add_object_to_object_5.json");
     ASSERT_EQ(json, jsonExpected);
@@ -71,13 +75,13 @@ TEST_F(ApiAddingNode, AddNestedObjectToObject)
     nestedObject.emplace(std::make_pair("asd", 345353));
     newObject.emplace(std::make_pair("internal", nestedObject));
 
-    const auto begin = std::chrono::high_resolution_clock::now();
+    const auto begin = high_resolution_clock::now();
     bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    const auto end = std::chrono::high_resolution_clock::now();
-    const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+    const auto end = high_resolution_clock::now();
+    const auto elapsed = duration_cast<microseconds>(end - begin);
     std::cout << logPrefix << elapsed.count() << std::endl;
     std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "add_nested_object_to_object_5.json");
     ASSERT_EQ(json, jsonExpected);
@@ -109,13 +113,13 @@ TEST_F(ApiAddingNode, AddArrayToObject)
     auto api = prepareApi("test_4.json");
     std::vector<Node> newArray{ { 232 }, { 234234 }, { 0 }, { 100 } };
 
-    const auto begin = std::chrono::high_resolution_clock::now();
+    const auto begin = high_resolution_clock::now();
     bool result = api->addNodeIntoObject({ "person2", "address" }, "dataArrayNode", { newArray });
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
-    const auto end = std::chrono::high_resolution_clock::now();
-    const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+    const auto end = high_resolution_clock::now();
+    const auto elapsed = duration_cast<microseconds>(end - begin);
     std::cout << logPrefix << elapsed.count() << std::endl;
     std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "add_array_to_object_4.json");
     ASSERT_EQ(json, jsonExpected);
