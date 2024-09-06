@@ -1,5 +1,5 @@
 
-#include <fstream>
+#include <iostream>
 
 #include <gtest/gtest.h>
 
@@ -8,35 +8,27 @@
 #include "utils.h"
 #include <NodeValue.h>
 
-
-constexpr bool measurement = true;
-constexpr std::string_view logPrefix = "             ###### microseconds: ";
+#include "baseTestApi.h"
 
 
-class ApiTest : public testing::Test
-{
-protected:
+using std::chrono::high_resolution_clock;
+using std::chrono::duration_cast;
+using std::chrono::microseconds;
 
-    std::unique_ptr<JsonApi> prepareApi(const std::string& file)
-    {
-        std::string jsonString = TestUtils::getJsonFromFile(TEST_DATA, file);
-        auto api = std::make_unique<JsonApi>();
-        bool result = api->parseJsonString(jsonString);
-        EXPECT_TRUE(result);
-        return api;
-    }
-};
+
+class ApiAddingNode : public ApiTest {};
 
 
 TEST_F(ApiTest, ClearApi)
 {
-    auto begin = std::chrono::high_resolution_clock::now();
     auto api = prepareApi("test_7.json");
 
     std::vector<Node> arr1{ { 1 }, { 2 }, { 3 } };
     std::vector<Node> arr2{ { "aa" }, { "b" } };
     std::vector<Node> arr3{ { true }, { false } };
     std::vector<Node> newArray{ { arr1 }, { arr2 }, { arr3 } };
+
+    const auto begin = high_resolution_clock::now();
     bool result = api->addNodeIntoArray({ "employees", size_t(1), "data" }, { newArray });
     ASSERT_TRUE(result);
 
@@ -75,11 +67,9 @@ TEST_F(ApiTest, ClearApi)
     ASSERT_TRUE(result);
 
     json = api->parseJsonObjectToString().value();
-    if (measurement) {
-        auto end = std::chrono::high_resolution_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::cout << logPrefix << elapsed.count() << std::endl;
-    }
+    auto end = high_resolution_clock::now();
+    auto elapsed = duration_cast<microseconds>(end - begin);
+    std::cout << PREFIX << elapsed.count() << std::endl;
     jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "clear_api_7_2.json");
     ASSERT_EQ(json, jsonExpected);
 }

@@ -26,7 +26,7 @@ add_executable(
   testParser.cpp
   testValidator.cpp
   testWriter.cpp
-  testApi.cpp
+  testApiOtherActions.cpp
   testApiAddingNode.cpp
   testApiChangingNode.cpp
   testApiRemovingNode.cpp

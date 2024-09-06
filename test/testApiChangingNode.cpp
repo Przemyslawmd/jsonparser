@@ -126,7 +126,6 @@ TEST_F(ApiChangingNode, ChangeNodeInArrayIntoObject)
 TEST_F(ApiChangingNode, ChangeNodeInArrayIntoArray)
 {
     auto api = prepareApi("test_7.json");
-
     std::vector<Node> newArray{ { 1 }, { -100 }, { 43212231231 } };
 
     bool result = api->changeNodeInArray({ "employees", size_t(1), "data", size_t(0) }, size_t(0), Node{ .value = newArray });
@@ -135,5 +134,84 @@ TEST_F(ApiChangingNode, ChangeNodeInArrayIntoArray)
     std::string json = api->parseJsonObjectToString().value();
     std::string jsonExpected = TestUtils::getJsonFromFile(TEST_DATA_API, "change_node_in_array_into_array_7.json");
     ASSERT_EQ(json, jsonExpected);
+}
+
+/*******************************************************************/
+/* ERRORS **********************************************************/
+
+TEST_F(ApiChangingNode, ErrorImproperKeyInPath)
+{
+    auto api = prepareApi("test_4.json");
+    Node newNode{ .value = "Cracow" };
+
+    bool result = api->changeNodeInObject({ "person2", "street" }, "address", newNode);
+    ASSERT_FALSE(result);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
+}
+
+
+TEST_F(ApiChangingNode, ErrorImproperKeyInNode)
+{
+    auto api = prepareApi("test_4.json");
+
+    Node newNode{ .value = false };
+    bool result = api->changeNodeInObject({ "person2", "address" }, "bbb", newNode);
+    ASSERT_FALSE(result);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
+}
+
+
+TEST_F(ApiChangingNode, ErrorOutOfIndexInPath)
+{
+    auto api = prepareApi("test_7.json");
+
+    Node newNode{ .value = "Spain" };
+    bool result = api->changeNodeInArray({ "employees", size_t(3), "data", size_t(3) }, 2, newNode);
+    ASSERT_FALSE(result);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
+}
+
+
+TEST_F(ApiChangingNode, OutOfIndexInNode)
+{
+    auto api = prepareApi("test_7.json");
+
+    Node newNode{ .value = 23.45 };
+    bool result = api->changeNodeInArray({ "employees", size_t(0), "data", size_t(1) }, 4, newNode);
+    ASSERT_FALSE(result);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
+}
+
+
+TEST_F(ApiChangingNode, ErrorImproperPath)
+{
+    auto api = prepareApi("test_4.json");
+
+    Node newNode{ .value = 12 };
+    bool result = api->changeNodeInObject({ "person2", size_t(0) }, "city", newNode);
+    ASSERT_FALSE(result);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_IMPROPER_PATH);
+}
+
+
+TEST_F(ApiChangingNode, ErrorImproperIndicatorForNode)
+{
+    auto api = prepareApi("test_4.json");
+
+    Node newNode{ .value = "ABC" };
+    bool result = api->changeNodeInArray({ "person2", "address" }, 1, newNode);
+    ASSERT_FALSE(result);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_NODE_NOT_ARRAY);
+}
+
+
+TEST_F(ApiChangingNode, ErrorEmptyRoot)
+{
+    auto api = std::make_unique<JsonApi>();
+    
+    Node newNode{ .value = "ABC" };
+    bool result = api->changeNodeInArray({ "person2", "address" }, 1, newNode);
+    ASSERT_FALSE(result);
+    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_EMPTY);
 }
 
