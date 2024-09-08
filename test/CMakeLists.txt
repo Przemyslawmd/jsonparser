@@ -34,7 +34,6 @@ add_executable(
   ../src/jsonApi.cpp
   ../src/reader/Preparser.cpp
   ../src/reader/Parser.cpp
-  ../src/reader/ParserKey.cpp
   ../src/reader/Validator.cpp
   ../src/writer/Writer.cpp
   ../src/keyMapper.cpp

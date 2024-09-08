@@ -15,31 +15,19 @@
 #include <NodeValue.h>
 #include "utils.h"
 
-constexpr bool measurement = true;
-
 
 class TestParser : public ::testing::Test
 {
 protected:
     std::unique_ptr<KeyMapper> keyMapper;
-    std::unique_ptr<ParserKey> keyParser;
     std::unique_ptr<Preparser> preparser;
     std::unique_ptr<Validator> validator;
 
     virtual void SetUp()
     {
         keyMapper = std::make_unique<KeyMapper>();
-        keyParser = std::make_unique<ParserKey>();
         preparser = std::make_unique<Preparser>();
         validator = std::make_unique<Validator>();
-    }
-
-    virtual void TearDown()
-    {
-        keyMapper.reset();
-        keyParser.reset();
-        preparser.reset();
-        validator.reset();
     }
 
     std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
@@ -50,17 +38,15 @@ protected:
         EXPECT_TRUE(tokens != nullptr);
 
         validator->validate(*tokens);
-        tokens = keyParser->createKeyTokens(std::move(tokens));
+        tokens = createKeyTokens(std::move(tokens));
 
         const auto parser = std::make_unique<Parser>(*keyMapper);
         auto begin = std::chrono::high_resolution_clock::now();
         std::unique_ptr<ObjectNode> jsonObj = parser->parseTokens(*tokens);
 
-        if (measurement) {
-            auto end = std::chrono::high_resolution_clock::now();
-            auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-            std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
-        }
+        const auto end = std::chrono::high_resolution_clock::now();
+        const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
         return jsonObj;
     }
 

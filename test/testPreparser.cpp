@@ -34,11 +34,10 @@ std::unique_ptr<std::vector<Token>> getTokens(const std::string& path, const std
     if (errorPreparser != nullptr) {
         *error = errorPreparser->getErrorCode();
     }
-    auto parserKey = std::make_unique<ParserKey>();
     if (tokens == nullptr) {
         return nullptr;
     }
-    tokens = parserKey->createKeyTokens(std::move(tokens));
+    tokens = createKeyTokens(std::move(tokens));
 
     if (measurement) {
         auto end = std::chrono::high_resolution_clock::now();

@@ -11,7 +11,6 @@ add_library(
     jsonApi.cpp
     keyMapper.cpp
     ${READER}Parser.cpp
-    ${READER}ParserKey.cpp
     ${READER}Preparser.cpp
     ${READER}Validator.cpp
     ${WRITER}Writer.cpp

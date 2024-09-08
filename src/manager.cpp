@@ -48,8 +48,7 @@ bool Manager::parseJsonString(const std::string& jsonString)
         return false;
     }
 
-    const auto parserKey = std::make_unique<ParserKey>();
-    tokens = parserKey->createKeyTokens(std::move(tokens));
+    tokens = createKeyTokens(std::move(tokens));
 
     const auto parser = std::make_unique<Parser>(*keyMapper);
     root = parser->parseTokens(*tokens);
