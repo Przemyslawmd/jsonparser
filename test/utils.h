@@ -7,17 +7,11 @@
 #include <string>
 
 
-class TestUtils
+static std::string getJsonFromFile(const std::string& path, const std::string& file)
 {
-public:
-
-    static std::string getJsonFromFile(const std::string& path, const std::string& file)
-    {
-        std::string filePath = path + file;
-        std::ifstream jsonStream(filePath);
-        return { (std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>() };
-    }
-};
+    std::ifstream jsonStream(path + file);
+    return { (std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>() };
+}
 
 #endif
 

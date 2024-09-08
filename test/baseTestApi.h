@@ -15,7 +15,7 @@ protected:
 
     std::unique_ptr<JsonApi> prepareApi(const std::string& file)
     {
-        std::string jsonString = TestUtils::getJsonFromFile(TEST_DATA, file);
+        std::string jsonString = getJsonFromFile(TEST_DATA, file);
         auto api = std::make_unique<JsonApi>();
         bool result = api->parseJsonString(jsonString);
         EXPECT_TRUE(result);
