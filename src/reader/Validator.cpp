@@ -205,6 +205,6 @@ void Validator::createTypeAfterError(ErrorCode errorCode, TokenType first, Token
 {
     error = std::make_unique<Error>(
         errorCode,
-        std::format("Error details: {} after {}", TokenStr::desc.at(second), TokenStr::desc.at(first)));
+        std::format("Error details: {} after {}", TokenDesc.at(second), TokenDesc.at(first)));
 }
 
