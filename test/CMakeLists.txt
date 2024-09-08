@@ -38,7 +38,6 @@ add_executable(
   ../src/reader/Validator.cpp
   ../src/writer/Writer.cpp
   ../src/keyMapper.cpp
-  ../src/utils.cpp
   ../src/manager.cpp
   ../src/log/Error.cpp
 )

@@ -6,6 +6,8 @@
 #include "../src/reader/Preparser.h"
 #include "../src/reader/Validator.h"
 #include "../src/writer/Writer.h"
+#include "utils.h"
+
 
 using ObjectNodeApi = std::map<std::string, Node>;
 using ArrayNodeApi = std::vector<Node>;
@@ -14,7 +16,6 @@ using ArrayNodeApi = std::vector<Node>;
 Manager::Manager()
 {
     keyMapper = std::make_unique<KeyMapper>();
-    utils = std::make_unique <Utils>();
 }
 
 
@@ -104,9 +105,9 @@ bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string
     }
     uint32_t keyID = optKeyID.value();
 
-    NodeType newNodeType = utils->getNodeType(newNode);
+    NodeType newNodeType = getNodeType(newNode);
     if (newNodeType == NodeType::SIMPLE) {
-        objectNode->emplace(std::make_pair(keyID, utils->getNodeInternal(newNode)));
+        objectNode->emplace(std::make_pair(keyID, getNodeInternal(newNode)));
     }
     else if (newNodeType == NodeType::OBJECT) {
         ObjectNode* objectNodeNew = putIntoObjectAndGet<ObjectNode>(objectNode, keyID);
@@ -132,10 +133,10 @@ bool Manager::addNodeIntoArray(const std::vector<Path>& path, const Node& newNod
     }
 
     ArrayNode* arr = std::get<ArrayNode*>(node);
-    NodeType newNodeType = utils->getNodeType(newNode);
+    NodeType newNodeType = getNodeType(newNode);
 
     if (newNodeType == NodeType::SIMPLE) {
-        arr->emplace_back(utils->getNodeInternal(newNode));
+        arr->emplace_back(getNodeInternal(newNode));
     }
     else if (newNodeType == NodeType::OBJECT) {
         ObjectNode* objNew = putIntoArrayAndGet<ObjectNode>(arr);
@@ -160,9 +161,9 @@ bool Manager::insertNodeIntoArray(const std::vector<Path>& path, size_t index, c
         return false;
     }
 
-    NodeType newNodeType = utils->getNodeType(newNode);
+    NodeType newNodeType = getNodeType(newNode);
     if (newNodeType == NodeType::SIMPLE) {
-        arr->insert(arr->begin() + index, utils->getNodeInternal(newNode));
+        arr->insert(arr->begin() + index, getNodeInternal(newNode));
         return true;
     }
     else if (newNodeType == NodeType::OBJECT) {
@@ -191,9 +192,9 @@ bool Manager::changeNodeInObject(const std::vector<Path>& path, const std::strin
         return false;
     }
 
-    NodeType nodeType = utils->getNodeType(newNode);
+    NodeType nodeType = getNodeType(newNode);
     if (nodeType == NodeType::SIMPLE) {
-        obj->at(keyID) = utils->getNodeInternal(newNode);
+        obj->at(keyID) = getNodeInternal(newNode);
         return true;
     }
 
@@ -223,9 +224,9 @@ bool Manager::changeNodeInArray(const std::vector<Path>& path, size_t index, con
         return false;
     }
 
-    NodeType nodeType = utils->getNodeType(newNode);
+    NodeType nodeType = getNodeType(newNode);
     if (nodeType == NodeType::SIMPLE) {
-        arrayNode->at(index) = utils->getNodeInternal(newNode);
+        arrayNode->at(index) = getNodeInternal(newNode);
     }
     else if (nodeType == NodeType::OBJECT) {
         arrayNode->at(index) = NodeInternal{ .value = ObjectNode() };
@@ -253,7 +254,7 @@ bool Manager::removeNodeFromObject(const std::vector<Path>& path, const std::str
     }
 
     NodeInternal nodeToRemove = objectNode->at(keyID);
-    NodeType nodeType = utils->getNodeInternalType(nodeToRemove);
+    NodeType nodeType = getNodeInternalType(nodeToRemove);
 
     if (nodeType == NodeType::OBJECT) {
         const auto& objToRemove = std::get<ObjectNode>(objectNode->at(keyID).value);
@@ -281,7 +282,7 @@ bool Manager::removeNodeFromArray(const std::vector<Path>& path, size_t index)
     }
 
     NodeInternal nodeToRemove = arrayNode->at(index);
-    NodeType nodeType = utils->getNodeInternalType(nodeToRemove);
+    NodeType nodeType = getNodeInternalType(nodeToRemove);
 
     if (nodeType == NodeType::OBJECT) {
         const auto& objToRemove = std::get<ObjectNode>(arrayNode->at(index).value);
@@ -383,9 +384,9 @@ bool Manager::addObjectInternally(ObjectNode* objectNode, const Node& newNode)
         }
         uint32_t keyID = optKeyID.value();
 
-        NodeType newNodeType = utils->getNodeType(val);
+        NodeType newNodeType = getNodeType(val);
         if (newNodeType == NodeType::SIMPLE) {
-            objectNode->emplace(std::make_pair(keyID, utils->getNodeInternal(val)));
+            objectNode->emplace(std::make_pair(keyID, getNodeInternal(val)));
         }
         else if (newNodeType == NodeType::OBJECT) {
             ObjectNode* objectNodeNew = putIntoObjectAndGet<ObjectNode>(objectNode, keyID);
@@ -403,9 +404,9 @@ bool Manager::addObjectInternally(ObjectNode* objectNode, const Node& newNode)
 bool Manager::addArrayInternally(ArrayNode* arrayNode, const Node& newNode)
 {
     for (auto& val : std::get<ArrayNodeApi>(newNode.value)) {
-        NodeType newNodeType = utils->getNodeType(val);
+        NodeType newNodeType = getNodeType(val);
         if (newNodeType == NodeType::SIMPLE) {
-            arrayNode->emplace_back(utils->getNodeInternal(val));
+            arrayNode->emplace_back(getNodeInternal(val));
         }
         else if (newNodeType == NodeType::ARRAY) {
             ArrayNode* arrayNodeNew = putIntoArrayAndGet<ArrayNode>(arrayNode);
@@ -497,7 +498,7 @@ std::tuple<ObjectNode*, size_t> Manager::getObjectAndKeyID(const std::vector<Pat
 void Manager::traverseObjectToRemoveKeyID(const ObjectNode& obj)
 {
     for (const auto& [keyID, data] : obj) {
-        NodeType nodeType = utils->getNodeInternalType(data);
+        NodeType nodeType = getNodeInternalType(data);
         if (nodeType == NodeType::OBJECT) {
             const auto& objToRemove = std::get<ObjectNode>(data.value);
             traverseObjectToRemoveKeyID(objToRemove);
@@ -514,7 +515,7 @@ void Manager::traverseObjectToRemoveKeyID(const ObjectNode& obj)
 void Manager::traverseArrayToRemoveKeyID(const ArrayNode& arr)
 {
     for (const auto& data : arr) {
-        NodeType nodeType = utils->getNodeInternalType(data);
+        NodeType nodeType = getNodeInternalType(data);
         if (nodeType == NodeType::OBJECT) {
             const auto& objToRemove = std::get<ObjectNode>(data.value);
             traverseObjectToRemoveKeyID(objToRemove);

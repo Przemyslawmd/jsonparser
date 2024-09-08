@@ -12,7 +12,6 @@
 #include "keyMapper.h"
 #include <NodeValue.h>
 #include <Error.h>
-#include "utils.h"
 
 
 /* Pointer to complex node: object (map) or array */
@@ -73,7 +72,6 @@ private:
     
     std::unique_ptr<ObjectNode> root;
     std::unique_ptr<KeyMapper> keyMapper;
-    std::unique_ptr<Utils> utils;
     std::unique_ptr<Error> error;
 };
 
