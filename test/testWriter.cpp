@@ -18,9 +18,6 @@
 #include "utils.h"
 
 
-constexpr bool measurement = true;
-
-
 std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, KeyMapper& keyMapper)
 {
     std::string jsonString = getJsonFromFile(TEST_DATA, jsonFile);
@@ -28,7 +25,6 @@ std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, KeyMapp
     const auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
     EXPECT_TRUE(tokens != nullptr);
-
     tokens = createKeyTokens(std::move(tokens));
 
     const auto parser = std::make_unique<Parser>(keyMapper);
@@ -45,11 +41,9 @@ void testJsonString(const std::string& file)
     Writer writer(*keyMapper);
     std::string json = writer.createJsonString(*root).value();
 
-    if (measurement) {
-        auto end = std::chrono::high_resolution_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
-    }
+    const auto end = std::chrono::high_resolution_clock::now();
+    const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+    std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     std::string jsonExpected = getJsonFromFile(TEST_DATA, file);
     ASSERT_EQ(json, jsonExpected);
 }

@@ -12,9 +12,6 @@
 #include "config.h"
 
 
-constexpr bool measurement = true;
-
-
 struct TestData 
 {
     TokenType type;
@@ -30,20 +27,16 @@ std::unique_ptr<std::vector<Token>> getTokens(const std::string& path, const std
     auto begin = std::chrono::high_resolution_clock::now();
     auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
-    std::unique_ptr<Error> errorPreparser = preparser->getError();
-    if (errorPreparser != nullptr) {
-        *error = errorPreparser->getErrorCode();
-    }
     if (tokens == nullptr) {
+        auto errorPreparser = preparser->getError();
+        *error = errorPreparser->getErrorCode();
         return nullptr;
     }
     tokens = createKeyTokens(std::move(tokens));
 
-    if (measurement) {
-        auto end = std::chrono::high_resolution_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
-    }
+    const auto end = std::chrono::high_resolution_clock::now();
+    const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+    std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
     return tokens;
 }
 
