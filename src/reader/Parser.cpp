@@ -13,7 +13,7 @@ std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens
     mapIDStack.push(0);
     pushDataOnStack(nodes.get(), State::OBJECT_PARSING);
 
-    for (auto& token : tokens | std::views::take(tokens.size() - 1) | std::views::drop(1)) {
+    for (const auto& token : tokens | std::views::take(tokens.size() - 1) | std::views::drop(1)) {
         result = true;
         switch (token.type) {
             case TokenType::CURLY_CLOSE:

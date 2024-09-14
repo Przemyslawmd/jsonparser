@@ -6,18 +6,18 @@
 #include <set>
 #include <stack>
 
-#include <defines.h>
+#include "defines.h"
 #include "../log/TokenDescription.h"
 
 
 bool Validator::validate(const std::vector<Token>& tokens)
 {
-    if (tokens.at(0).type != TokenType::CURLY_OPEN) {
-        error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_BEGINNING);
+    if (tokens.front().type != TokenType::CURLY_OPEN) {
+        error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_BEGIN);
         return false;
     }
 
-    if (tokens.at(tokens.size() - 1).type != TokenType::CURLY_CLOSE) {
+    if (tokens.back().type != TokenType::CURLY_CLOSE) {
         error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_END);
         return false;
     }

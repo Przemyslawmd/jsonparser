@@ -35,7 +35,7 @@ static const std::unordered_map<ErrorCode, std::optional<std::string>> ErrorDeta
     { ErrorCode::PREPARSER_UNKNOWN_SYMBOL,           std::nullopt },
     { ErrorCode::VALIDATOR_BRACKET_CURLY,            std::nullopt },
     { ErrorCode::VALIDATOR_BRACKET_SQUARE,           std::nullopt },
-    { ErrorCode::VALIDATOR_IMPROPER_BEGINNING,       std::nullopt },
+    { ErrorCode::VALIDATOR_IMPROPER_BEGIN,           std::nullopt },
     { ErrorCode::VALIDATOR_IMPROPER_END,             std::nullopt },
     { ErrorCode::VALIDATOR_TOKEN_AFTER_COMMA,        std::nullopt },
     { ErrorCode::VALIDATOR_TOKEN_AFTER_COLON,        std::nullopt },

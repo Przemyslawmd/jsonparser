@@ -24,7 +24,7 @@ std::unique_ptr<Error> getValidatorError(const std::string& jsonFile)
 TEST(ValidatorTest, ImproperBegin)
 {
     auto error = getValidatorError("improper_begin.json");
-    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_BEGINNING);
+    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_BEGIN);
 }
 
 
