@@ -6,8 +6,8 @@
 #include <memory>
 #include <vector>
 
-#include <defines.h>
-#include <Error.h>
+#include "defines.h"
+#include "Error.h"
 #include "Token.h"
 
 
