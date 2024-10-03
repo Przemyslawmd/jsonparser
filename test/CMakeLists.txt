@@ -39,6 +39,7 @@ add_executable(
   ../src/keyMapper.cpp
   ../src/manager.cpp
   ../src/log/Error.cpp
+  ../src/log/ErrorStorage.cpp
 )
 
 target_compile_features(jsonParserTest PRIVATE cxx_std_20)
