@@ -9,13 +9,13 @@
 Error::Error(ErrorCode errorCode, std::optional<std::string> details) : errorCode(errorCode), details(details) {}
 
 
-ErrorCode Error::getErrorCode() const
+ErrorCode Error::getCode() const
 {
     return errorCode;
 }
 
 
-std::string Error::getErrorDetails() const
+std::string Error::getDetails() const
 {
     if (ErrorDetails.contains(errorCode) == false) {
         return "Exception: no key for error description";

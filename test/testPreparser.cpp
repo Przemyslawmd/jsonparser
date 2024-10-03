@@ -334,7 +334,7 @@ TEST(PreparserTest, FirstImproperDataTest)
 
     ASSERT_EQ(tokens, nullptr);
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getErrorCode(), ErrorCode::PREPARSER_UNKNOWN_SYMBOL);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::PREPARSER_UNKNOWN_SYMBOL);
 }
 
 
@@ -345,6 +345,6 @@ TEST(PreparserTest, SecondImproperDataTest)
 
     ASSERT_EQ(tokens, nullptr);
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getErrorCode(), ErrorCode::PREPARSER_STRING_ERROR);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::PREPARSER_STRING_ERROR);
 }
 

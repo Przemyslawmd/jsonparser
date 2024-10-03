@@ -21,8 +21,6 @@ class Parser
 
         std::unique_ptr<ObjectNode> parseTokens(const std::vector<Token>&);
 
-        std::unique_ptr<Error> getError();
-
     private:
         std::stack<std::variant<ObjectNode*, ArrayNode*>> nodeStack;
         std::stack<State> stateStack;
@@ -30,8 +28,6 @@ class Parser
         uint32_t maxMapId = 0;
 
         KeyMapper& keyMapper;
-
-        std::unique_ptr<Error> error;
 
         void pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> nodeStack, State);
         void popDataFromStack();

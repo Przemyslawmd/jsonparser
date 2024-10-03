@@ -7,8 +7,6 @@
 #include <optional>
 #include <string>
 
-#include <Error.h>
-
 
 class KeyMapper
 {
@@ -22,13 +20,11 @@ public:
     std::optional<uint32_t> getKeyID(const std::string& keyStr, uint32_t mapID) const;
 
     uint32_t getNextMapID() const;
-    std::unique_ptr<Error> getError();
 
 private:
     uint32_t getMaxItemID(uint32_t mapID) const;
 
     std::map<uint32_t, std::string> keyMap;
-    std::unique_ptr<Error> error;
 
     const uint32_t MASK_MAP_ID = 0xFF'FF'00'00;
     const uint32_t MASK_ITEM_ID = 0x00'00'FF'FF;

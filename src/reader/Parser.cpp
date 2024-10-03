@@ -52,12 +52,6 @@ std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens
     return nodes;
 }
 
-
-std::unique_ptr<Error> Parser::getError()
-{
-    return std::move(error);
-}
-
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
@@ -69,7 +63,6 @@ bool Parser::pushComplexNodeOnStack(const std::string& keyStr, State state)
 
         auto optKeyID = keyMapper.createAndPutKeyID(keyStr, mapIDStack.top());
         if (optKeyID == std::nullopt) {
-            error = keyMapper.getError();
             return false;
         }
         uint32_t keyID = optKeyID.value();
@@ -94,7 +87,6 @@ bool Parser::processData(const std::string& keyStr, const Token& token)
     if (stateStack.top() == State::OBJECT_PARSING) {
         auto optKeyID = keyMapper.createAndPutKeyID(keyStr, mapIDStack.top());
         if (optKeyID == std::nullopt) {
-            error = keyMapper.getError();
             return false;
         }
         uint32_t keyID = optKeyID.value();

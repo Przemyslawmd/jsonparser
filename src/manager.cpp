@@ -54,7 +54,6 @@ bool Manager::parseJsonString(const std::string& jsonString)
     const auto parser = std::make_unique<Parser>(*keyMapper);
     root = parser->parseTokens(*tokens);
     if (root == nullptr) {
-        error = parser->getError();
         return false;
     }
     return true;

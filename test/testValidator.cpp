@@ -24,69 +24,69 @@ std::unique_ptr<Error> getValidatorError(const std::string& jsonFile)
 TEST(ValidatorTest, ImproperBegin)
 {
     auto error = getValidatorError("improper_begin.json");
-    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_BEGIN);
+    ASSERT_EQ(error->getCode(), ErrorCode::VALIDATOR_IMPROPER_BEGIN);
 }
 
 
 TEST(ValidatorTest, ImproperEnd)
 {
     auto error = getValidatorError("improper_end.json");
-    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_IMPROPER_END);
+    ASSERT_EQ(error->getCode(), ErrorCode::VALIDATOR_IMPROPER_END);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterCurlyOpen)
 {
     auto error = getValidatorError("not_allowed_after_curly_open.json");
-    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_CURLY_OPEN);
+    ASSERT_EQ(error->getCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_CURLY_OPEN);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterCurlyClose)
 {
     auto error = getValidatorError("not_allowed_after_curly_close.json");
-    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_CURLY_CLOSE);
+    ASSERT_EQ(error->getCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_CURLY_CLOSE);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterString)
 {
     auto error = getValidatorError("not_allowed_after_string.json");
-    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_STRING);
+    ASSERT_EQ(error->getCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_STRING);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterInt)
 {
     auto error = getValidatorError("not_allowed_after_int.json");
-    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_INT);
+    ASSERT_EQ(error->getCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_INT);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterDouble)
 {
     auto error = getValidatorError("not_allowed_after_double.json");
-    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_DOUBLE);
+    ASSERT_EQ(error->getCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_DOUBLE);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterBool)
 {
     auto error = getValidatorError("not_allowed_after_bool.json");
-    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_BOOL);
+    ASSERT_EQ(error->getCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_BOOL);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterColon)
 {
     auto error = getValidatorError("not_allowed_after_colon.json");
-    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_COLON);
+    ASSERT_EQ(error->getCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_COLON);
 }
 
 
 TEST(ValidatorTest, ImproperTokenAfterComma)
 {
     auto error = getValidatorError("not_allowed_after_comma.json");
-    ASSERT_EQ(error->getErrorCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_COMMA);
+    ASSERT_EQ(error->getCode(), ErrorCode::VALIDATOR_TOKEN_AFTER_COMMA);
 }
 

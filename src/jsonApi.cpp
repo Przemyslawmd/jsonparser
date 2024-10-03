@@ -77,6 +77,6 @@ bool JsonApi::removeNodeFromArray(const std::vector<Path>& path, size_t index)
 ErrorCode JsonApi::getErrorCode()
 {
     auto error = manager->getError();
-    return (error == nullptr) ? ErrorCode::NO_ERROR : error->getErrorCode();
+    return (error == nullptr) ? ErrorCode::NO_ERROR : error->getCode();
 }
 
