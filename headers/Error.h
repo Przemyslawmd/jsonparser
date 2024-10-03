@@ -13,7 +13,7 @@ class Error
 public:
     Error(ErrorCode, std::optional<std::string> info = std::nullopt);
 
-    ErrorCode getErrorCode() const; 
+    ErrorCode getErrorCode() const;
     std::string getErrorDetails() const;
 
 private:

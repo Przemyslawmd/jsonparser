@@ -9,6 +9,7 @@
 
 #include "../src/reader/ParserKey.h"
 #include "../src/reader/Preparser.h"
+#include "../src/log/ErrorStorage.h"
 #include "config.h"
 
 
@@ -21,6 +22,7 @@ struct TestData
 
 std::unique_ptr<std::vector<Token>> getTokens(const std::string& path, const std::string& file, ErrorCode* error)
 {
+    ErrorStorage::clear();
     std::ifstream jsonStream(path + file);
     std::string jsonString((std::istreambuf_iterator<char>(jsonStream)), std::istreambuf_iterator<char>());
 
@@ -28,8 +30,6 @@ std::unique_ptr<std::vector<Token>> getTokens(const std::string& path, const std
     auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
     if (tokens == nullptr) {
-        auto errorPreparser = preparser->getError();
-        *error = errorPreparser->getErrorCode();
         return nullptr;
     }
     tokens = createKeyTokens(std::move(tokens));
@@ -333,7 +333,8 @@ TEST(PreparserTest, FirstImproperDataTest)
     auto tokens = getTokens(TEST_DATA_IMPROPER, "string_not_ended_1.json", &error);
 
     ASSERT_EQ(tokens, nullptr);
-    ASSERT_EQ(error, ErrorCode::PREPARSER_UNKNOWN_SYMBOL);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getErrorCode(), ErrorCode::PREPARSER_UNKNOWN_SYMBOL);
 }
 
 
@@ -343,6 +344,7 @@ TEST(PreparserTest, SecondImproperDataTest)
     auto tokens = getTokens(TEST_DATA_IMPROPER, "string_not_ended_2.json", &error);
 
     ASSERT_EQ(tokens, nullptr);
-    ASSERT_EQ(error, ErrorCode::PREPARSER_STRING_ERROR);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getErrorCode(), ErrorCode::PREPARSER_STRING_ERROR);
 }
 

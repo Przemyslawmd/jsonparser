@@ -6,6 +6,7 @@
 #include "../src/reader/Preparser.h"
 #include "../src/reader/Validator.h"
 #include "../src/writer/Writer.h"
+#include "../src/log/ErrorStorage.h"
 #include "utils.h"
 
 
@@ -24,6 +25,7 @@ void Manager::clear()
     root.reset();
     error.reset();
     keyMapper->clear();
+    ErrorStorage::clear();
 }
 
 
@@ -38,7 +40,6 @@ bool Manager::parseJsonString(const std::string& jsonString)
     const auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
     if (tokens == nullptr) {
-        error = preparser->getError();
         return false;
     }
 

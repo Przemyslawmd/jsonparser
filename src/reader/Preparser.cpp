@@ -1,6 +1,8 @@
 
 #include "Preparser.h"
 
+#include "../log/ErrorStorage.h"
+
 #include <format>
 #include <iostream>
 #include <stack>
@@ -44,7 +46,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
                 index += (FalseLength - 1);
                 continue;
             }
-            error = std::make_unique<Error>(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
+            ErrorStorage::putError(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
             return nullptr;
         }
         if (symbol == 't') {
@@ -53,7 +55,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
                 index += (TrueLength -1);
                 continue;
             }
-            error = std::make_unique<Error>(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
+            ErrorStorage::putError(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
             return nullptr;
         }
         if (symbol == 'n') {
@@ -62,21 +64,16 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
                 index += (NullLength - 1);
                 continue;
             }
-            error = std::make_unique<Error>(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
+            ErrorStorage::putError(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
             return nullptr;
         }
-        error = std::make_unique<Error>(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
+        ErrorStorage::putError(ErrorCode::PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
         return nullptr;
     }
     tokens->shrink_to_fit();
     return std::move(tokens);
 }
 
-
-std::unique_ptr<Error> Preparser::getError()
-{
-    return std::move(error);
-}
 
 /*******************************************************************/
 /* PRIVATE *********************************************************/
@@ -126,7 +123,7 @@ size_t Preparser::parseString(const std::string& json, size_t index)
         }
         shift += 1;
     }
-    error = std::make_unique<Error>(ErrorCode::PREPARSER_STRING_ERROR);
+    ErrorStorage::putError(ErrorCode::PREPARSER_STRING_ERROR);
     return 0;
 }
 
