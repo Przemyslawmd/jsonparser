@@ -17,13 +17,13 @@ using ArrayNodeApi = std::vector<Node>;
 Manager::Manager()
 {
     keyMapper = std::make_unique<KeyMapper>();
+    ErrorStorage::clear();
 }
 
 
 void Manager::clear()
 {
     root.reset();
-    error.reset();
     keyMapper->clear();
     ErrorStorage::clear();
 }
@@ -31,9 +31,9 @@ void Manager::clear()
 
 bool Manager::parseJsonString(const std::string& jsonString)
 {
-    error.reset();
+    ErrorStorage::clear();
     if (root != nullptr) {
-        error = std::make_unique<Error>(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
+        ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
         return false;
     }
 
@@ -65,18 +65,14 @@ std::optional<std::string> Manager::parseObjectToString()
         return std::nullopt;
     }
     const auto writer = std::make_unique<Writer>(*keyMapper);
-    auto jsonStr = writer->createJsonString(*root);
-    if (jsonStr == std::nullopt) {
-        error = writer->getError();
-    }
-    return jsonStr;
+    return writer->createJsonString(*root);
 }
 
 
 bool Manager::loadJsonObject(const Node& node)
 {
     if (root != nullptr) {
-        error = std::make_unique<Error>(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
+        ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
         return false;
     }
     root = std::make_unique<ObjectNode>();
@@ -295,9 +291,9 @@ bool Manager::removeNodeFromArray(const std::vector<Path>& path, size_t index)
 }
 
 
-std::unique_ptr<Error> Manager::getError()
+const std::vector<Error>& Manager::getErrors()
 {
-    return std::move(error);
+    return ErrorStorage::getErrors();
 }
 
 /*******************************************************************/
@@ -306,7 +302,7 @@ std::unique_ptr<Error> Manager::getError()
 bool Manager::isRootEmpty()
 {
     if (root == nullptr) {
-        error = std::make_unique<Error>(ErrorCode::MANAGER_EMPTY);
+        ErrorStorage::putError(ErrorCode::MANAGER_EMPTY);
         return true;
     }
     return false;
@@ -341,11 +337,11 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
             std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
 
             if (keyID == std::nullopt) {
-                error = std::make_unique<Error>(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
+                ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
                 return nullptr;
             }
             if (obj->contains(keyID.value()) == false) {
-                error = std::make_unique<Error>(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
+                ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
                 return nullptr;
             }
             NodeInternal* node = &obj->at(keyID.value());
@@ -356,14 +352,14 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
             size_t index = std::get<size_t>(pathKey);
 
             if (index >= arr->size()) {
-                error = std::make_unique<Error>(ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
+                ErrorStorage::putError(ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
                 return nullptr;
             }
             NodeInternal* node = &arr->at(index);
             nodeComplexPtr = getNextNode(node);
         }
         else {
-            error = std::make_unique<Error>(ErrorCode::MANAGER_IMPROPER_PATH);
+            ErrorStorage::putError(ErrorCode::MANAGER_IMPROPER_PATH);
             return nullptr;
         }
     }
@@ -427,10 +423,10 @@ bool Manager::validateComplexNode(ComplexNodePtr node)
     }
     if (std::holds_alternative<T>(node) == false) {
         if (std::is_same<T, ObjectNode*>::value) {
-            error = std::make_unique<Error>(ErrorCode::MANAGER_NODE_NOT_OBJECT);
+            ErrorStorage::putError(ErrorCode::MANAGER_NODE_NOT_OBJECT);
         }
         else if (std::is_same<T, ArrayNode*>::value) {
-            error = std::make_unique<Error>(ErrorCode::MANAGER_NODE_NOT_ARRAY);
+            ErrorStorage::putError(ErrorCode::MANAGER_NODE_NOT_ARRAY);
         }
         return false;
     }
@@ -463,7 +459,7 @@ ArrayNode* Manager::getArrayAndCheckIndex(const std::vector<Path>& path, size_t 
 
     ArrayNode* arrayNode = std::get<ArrayNode*>(node);
     if (index > arrayNode->size()) {
-        error = std::make_unique<Error>(ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
+        ErrorStorage::putError(ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
         return nullptr;
     }
     return arrayNode;
@@ -481,12 +477,12 @@ std::tuple<ObjectNode*, size_t> Manager::getObjectAndKeyID(const std::vector<Pat
 
     std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, objectNode->begin()->first);
     if (keyID == std::nullopt) {
-        error = std::make_unique<Error>(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
+        ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
         return { nullptr, 0 };
     }
 
     if (objectNode->contains(keyID.value()) == false) {
-        error = std::make_unique<Error>(ErrorCode::MANAGER_NOT_KEY_IN_INTERNAL_OBJECT);
+        ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_INTERNAL_OBJECT);
         return { nullptr, 0 };
     }
     return { objectNode, keyID.value() };

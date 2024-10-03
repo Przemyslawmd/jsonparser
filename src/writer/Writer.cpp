@@ -5,6 +5,8 @@
 #include <optional>
 #include <variant>
 
+#include "../log/ErrorStorage.h"
+
 
 constexpr std::string_view DATA_END = ",\n";
 
@@ -12,10 +14,10 @@ constexpr std::string_view DATA_END = ",\n";
 std::optional<std::string> Writer::createJsonString(const ObjectNode& object)
 {
     processObjectNode(object);
-    if (error == nullptr) {
-        return stream.str();
+    if (stream.tellp() == 0) {
+        return std::nullopt;
     }
-    return std::nullopt;
+    return stream.str();
 }
 
 
@@ -24,11 +26,6 @@ void Writer::setIndent(size_t indentStep)
     this->indentStep = indentStep;
 }
 
-
-std::unique_ptr<Error> Writer::getError()
-{
-    return std::move(error);
-}
 
 /*******************************************************************/
 /* PRIVATE *********************************************************/
@@ -42,7 +39,8 @@ void Writer::processObjectNode(const ObjectNode& obj)
         std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
         auto keyStr = keyMapper.getKeyStr(idKey);
         if (keyStr == std::nullopt) {
-            error = std::make_unique<Error>(ErrorCode::WRITER_NOT_KEY_IN_MAP);
+            ErrorStorage::putError(ErrorCode::WRITER_NOT_KEY_IN_MAP);
+            stream.clear();
             return;
         }
         stream << "\"" << keyStr.value() << "\": ";

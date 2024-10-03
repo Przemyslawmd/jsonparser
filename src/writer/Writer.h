@@ -22,7 +22,6 @@ public:
     std::optional<std::string> createJsonString(const ObjectNode&);
 
     void setIndent(size_t);
-    std::unique_ptr<Error> getError();
 
 private:
 
@@ -36,7 +35,6 @@ private:
     void deleteLastChars(std::ostringstream& stream);
 
     const KeyMapper& keyMapper;
-    std::unique_ptr<Error> error;
 
     std::ostringstream stream;
     size_t indent = 0;

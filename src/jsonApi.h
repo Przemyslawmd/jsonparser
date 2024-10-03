@@ -38,7 +38,7 @@ public:
     bool removeNodeFromObject(const std::vector<Path>&, const std::string& keyStr);
     bool removeNodeFromArray(const std::vector<Path>&, size_t index);
 
-    ErrorCode getErrorCode();
+    const std::vector<Error>& getErrors();
 
 private:
     std::unique_ptr<Manager> manager;

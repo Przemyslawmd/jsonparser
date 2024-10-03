@@ -1,11 +1,11 @@
 
 #include "Preparser.h"
 
-#include "../log/ErrorStorage.h"
-
 #include <format>
 #include <iostream>
 #include <stack>
+
+#include "../log/ErrorStorage.h"
 
 
 constexpr size_t FalseLength = 5;

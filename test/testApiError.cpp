@@ -32,7 +32,8 @@ TEST_F(ApiTestError, parseObjectForEmptyRoot)
 {
     std::optional<std::string> json = api->parseJsonObjectToString();
     ASSERT_TRUE(json == std::nullopt);
-    ASSERT_EQ(api->getErrorCode(), ErrorCode::MANAGER_EMPTY);
+    const auto& errors = api->getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_EMPTY);
 }
 
 

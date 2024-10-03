@@ -43,7 +43,7 @@ public:
     bool removeNodeFromObject(const std::vector<Path>&, const std::string& keyStr);
     bool removeNodeFromArray(const std::vector<Path>&, size_t index);
 
-    std::unique_ptr<Error> getError();
+    const std::vector<Error>& getErrors();
 
 private:
     bool isRootEmpty();
@@ -69,10 +69,9 @@ private:
 
     template <typename T>
     bool validateComplexNode(ComplexNodePtr);
-    
+
     std::unique_ptr<ObjectNode> root;
     std::unique_ptr<KeyMapper> keyMapper;
-    std::unique_ptr<Error> error;
 };
 
 #endif
