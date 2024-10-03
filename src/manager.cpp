@@ -45,7 +45,6 @@ bool Manager::parseJsonString(const std::string& jsonString)
 
     const auto validator = std::make_unique<Validator>();
     if (validator->validate(*tokens) == false) {
-        error = validator->getError();
         return false;
     }
 

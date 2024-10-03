@@ -8,17 +8,18 @@
 
 #include "defines.h"
 #include "../log/TokenDescription.h"
+#include "../log/ErrorStorage.h"
 
 
 bool Validator::validate(const std::vector<Token>& tokens)
 {
     if (tokens.front().type != TokenType::CURLY_OPEN) {
-        error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_BEGIN);
+        ErrorStorage::putError(ErrorCode::VALIDATOR_IMPROPER_BEGIN);
         return false;
     }
 
     if (tokens.back().type != TokenType::CURLY_CLOSE) {
-        error = std::make_unique<Error>(ErrorCode::VALIDATOR_IMPROPER_END);
+        ErrorStorage::putError(ErrorCode::VALIDATOR_IMPROPER_END);
         return false;
     }
 
@@ -26,12 +27,6 @@ bool Validator::validate(const std::vector<Token>& tokens)
         return false;
     }
     return checkTokensSequence(tokens);
-}
-
-
-std::unique_ptr<Error> Validator::getError()
-{
-    return std::move(error);
 }
 
 /*******************************************************************/
@@ -51,24 +46,24 @@ bool Validator::validateBrackets(const std::vector<Token>& tokens)
         }
         else if (token.type == TokenType::CURLY_CLOSE) {
             if (--curlyCounter < 0) {
-                error = std::make_unique<Error>(ErrorCode::VALIDATOR_BRACKET_CURLY);
+                ErrorStorage::putError(ErrorCode::VALIDATOR_BRACKET_CURLY);
                 return false;
             }
         }
         else if (token.type == TokenType::SQUARE_CLOSE) {
             if (--squareCounter < 0) {
-                error = std::make_unique<Error>(ErrorCode::VALIDATOR_BRACKET_SQUARE);
+                ErrorStorage::putError(ErrorCode::VALIDATOR_BRACKET_SQUARE);
                 return false;
             }
         }
     }
 
     if (curlyCounter != 0) {
-        error = std::make_unique<Error>(ErrorCode::VALIDATOR_BRACKET_CURLY);
+        ErrorStorage::putError(ErrorCode::VALIDATOR_BRACKET_CURLY);
         return false;
     }
     if (squareCounter != 0) {
-        error = std::make_unique<Error>(ErrorCode::VALIDATOR_BRACKET_SQUARE);
+        ErrorStorage::putError(ErrorCode::VALIDATOR_BRACKET_SQUARE);
         return false;
     }
     return true;
@@ -203,7 +198,7 @@ bool Validator::checkTokensSequence(const std::vector<Token>& tokens)
 
 void Validator::createTypeAfterError(ErrorCode errorCode, TokenType first, TokenType second)
 {
-    error = std::make_unique<Error>(
+    ErrorStorage::putError(
         errorCode,
         std::format("Error details: {} after {}", TokenDesc.at(second), TokenDesc.at(first)));
 }
