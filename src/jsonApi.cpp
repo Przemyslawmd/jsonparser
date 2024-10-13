@@ -26,6 +26,12 @@ bool JsonApi::loadJsonObject(const Node& node)
 }
 
 
+bool JsonApi::isJsonObject()
+{
+    return manager->isJsonObject();
+}
+
+
 void JsonApi::clear()
 {
     manager->clear();

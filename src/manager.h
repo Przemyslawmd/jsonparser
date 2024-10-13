@@ -25,13 +25,15 @@ class Manager
 {
 public:
     Manager();
-    
+
     bool parseJsonString(const std::string& file);
     std::optional<std::string> parseObjectToString();
 
     bool loadJsonObject(const Node&);
+    bool isJsonObject();
 
     void clear();
+
 
     bool addNodeIntoObject(const std::vector<Path>&, const std::string& keyStr, const Node&);
     bool addNodeIntoArray(const std::vector<Path>&, const Node&);

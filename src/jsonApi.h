@@ -25,6 +25,7 @@ public:
     std::optional<std::string> parseJsonObjectToString();
 
     bool loadJsonObject(const Node&);
+    bool isJsonObject();
 
     void clear();
 

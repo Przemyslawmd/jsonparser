@@ -75,8 +75,20 @@ bool Manager::loadJsonObject(const Node& node)
         ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
         return false;
     }
+
+    if (std::holds_alternative<std::map<std::string, Node>>(node.value) == false) {
+        ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_OBJECT);
+        return false;
+    }
+
     root = std::make_unique<ObjectNode>();
     return addObjectInternally(root.get(), node);
+}
+
+
+bool Manager::isJsonObject()
+{
+    return isRootEmpty() == false;
 }
 
 

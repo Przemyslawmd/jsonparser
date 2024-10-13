@@ -3,10 +3,11 @@
 
 #include <gtest/gtest.h>
 
+#include "../src/log/ErrorStorage.h"
 #include "../src/jsonApi.h"
 #include "config.h"
 #include "utils.h"
-#include <NodeValue.h>
+#include "NodeValue.h"
 
 #include "baseTestApi.h"
 
@@ -129,5 +130,19 @@ TEST_F(ApiTest, LoadJsonObject_2)
     std::string json = api->parseJsonObjectToString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "load_json_object_2.json");
     ASSERT_EQ(json, jsonExpected);
+}
+
+
+TEST_F(ApiTest, LoadJsonObject_Error)
+{
+    std::vector<Node> arrayNode{ { 1 }, { 2 }, { 3 } };
+
+    auto api = std::make_unique<JsonApi>();
+    bool result = api->loadJsonObject(Node{ .value = arrayNode });
+    ASSERT_FALSE(result);
+    ASSERT_FALSE(api->isJsonObject());
+
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_ROOT_NOT_OBJECT);
 }
 
