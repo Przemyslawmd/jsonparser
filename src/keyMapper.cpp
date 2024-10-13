@@ -18,7 +18,7 @@ KeyMapper::createAndPutKeyID(const std::string& keyStr, uint32_t mapID)
         return std::nullopt;
     }
     uint32_t newKeyID = mapID + getMaxItemID(mapID) + 1;
-    keyMap.insert(std::make_pair(newKeyID, keyStr));
+    keyMap.emplace(newKeyID, keyStr);
     return newKeyID;
 }
 

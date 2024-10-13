@@ -101,7 +101,7 @@ bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string
 
     NodeType newNodeType = getNodeType(newNode);
     if (newNodeType == NodeType::SIMPLE) {
-        objectNode->emplace(std::make_pair(keyID, getNodeInternal(newNode)));
+        objectNode->emplace(keyID, getNodeInternal(newNode));
     }
     else if (newNodeType == NodeType::OBJECT) {
         ObjectNode* objectNodeNew = putIntoObjectAndGet<ObjectNode>(objectNode, keyID);
@@ -194,12 +194,12 @@ bool Manager::changeNodeInObject(const std::vector<Path>& path, const std::strin
 
     obj->erase(keyID);
     if (nodeType == NodeType::OBJECT) {
-        obj->insert(std::make_pair(keyID, ObjectNode()));
+        obj->emplace(keyID, ObjectNode());
         ObjectNode* objToAdd = &(std::get<ObjectNode>(obj->at(keyID).value));
         addObjectInternally(objToAdd, newNode);
     }
     else if (nodeType == NodeType::ARRAY) {
-        obj->insert(std::make_pair(keyID, ArrayNode()));
+        obj->emplace(keyID, ArrayNode());
         ArrayNode* arrToAdd = &(std::get<ArrayNode>(obj->at(keyID).value));
         addArrayInternally(arrToAdd, newNode);
     }
@@ -380,7 +380,7 @@ bool Manager::addObjectInternally(ObjectNode* objectNode, const Node& newNode)
 
         NodeType newNodeType = getNodeType(val);
         if (newNodeType == NodeType::SIMPLE) {
-            objectNode->emplace(std::make_pair(keyID, getNodeInternal(val)));
+            objectNode->emplace(keyID, getNodeInternal(val));
         }
         else if (newNodeType == NodeType::OBJECT) {
             ObjectNode* objectNodeNew = putIntoObjectAndGet<ObjectNode>(objectNode, keyID);
@@ -437,7 +437,7 @@ bool Manager::validateComplexNode(ComplexNodePtr node)
 template <typename T>
 T* Manager::putIntoObjectAndGet(ObjectNode* objectNode, uint32_t keyID)
 {
-    objectNode->emplace(std::make_pair(keyID, T()));
+    objectNode->emplace(keyID, T());
     return &(std::get<T>(objectNode->at(keyID).value));
 }
 

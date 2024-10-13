@@ -91,7 +91,7 @@ bool Parser::processData(const std::string& keyStr, const Token& token)
         }
         uint32_t keyID = optKeyID.value();
         ObjectNode* objectNode = std::get<ObjectNode*>(nodeStack.top());
-        objectNode->emplace(std::make_pair(keyID, std::get<T>(token.data)));
+        objectNode->emplace(keyID, std::get<T>(token.data));
     }
     else {
         ArrayNode* arrayNode = std::get<ArrayNode*>(nodeStack.top());

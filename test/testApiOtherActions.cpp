@@ -78,16 +78,16 @@ TEST_F(ApiTest, ClearApi)
 TEST_F(ApiTest, LoadJsonObject_1)
 {
     std::map<std::string, Node> internalObject;
-    internalObject.insert(std::make_pair("age", 39));
-    internalObject.insert(std::make_pair("country", "Poland"));
-    internalObject.insert(std::make_pair("employed", true));
-    internalObject.insert(std::make_pair("name", "John"));
-    internalObject.insert(std::make_pair("restricted", false));
-    internalObject.insert(std::make_pair("empty", nullptr));
-    internalObject.insert(std::make_pair("newValue", 23.1));
+    internalObject.emplace("age", 39);
+    internalObject.emplace("country", "Poland");
+    internalObject.emplace("employed", true);
+    internalObject.emplace("name", "John");
+    internalObject.emplace("restricted", false);
+    internalObject.emplace("empty", nullptr);
+    internalObject.emplace("newValue", 23.1);
 
     std::map<std::string, Node> root;
-    root.insert(std::make_pair("person", internalObject));
+    root.emplace("person", internalObject);
 
     auto api = std::make_unique<JsonApi>();
     api->loadJsonObject(Node{ .value = root });
@@ -105,16 +105,16 @@ TEST_F(ApiTest, LoadJsonObject_2)
     std::vector<Node> array_1{ { array_1_1 }, { array_1_2 } };
 
     std::map<std::string, Node> object_1;
-    object_1.emplace(std::make_pair("name", "Agata"));
-    object_1.emplace(std::make_pair("data", array_1));
+    object_1.emplace("name", "Agata");
+    object_1.emplace("data", array_1);
 
     std::vector<Node> array_2_1{ { "a" }, { "b" } };
     std::vector<Node> array_2_2{ { "c d e" } };
     std::vector<Node> array_2{ { array_2_1 }, { array_2_2 } };
 
     std::map<std::string, Node> object_2;
-    object_2.emplace(std::make_pair("name", "Anna"));
-    object_2.emplace(std::make_pair("data", array_2));
+    object_2.emplace("name", "Anna");
+    object_2.emplace("data", array_2);
 
     std::vector<Node> mainArray;
     mainArray.emplace_back(object_1);

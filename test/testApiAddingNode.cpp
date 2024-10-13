@@ -35,8 +35,8 @@ TEST_F(ApiAddingNode, AddObjectToObject)
 {
     auto api = prepareApi("test_5.json");
     std::map<std::string, Node> newObject;
-    newObject.emplace(std::make_pair("a", 123));
-    newObject.emplace(std::make_pair("b", "AAA"));
+    newObject.emplace("a", 123);
+    newObject.emplace("b", "AAA");
 
     const auto begin = high_resolution_clock::now();
     bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
@@ -55,13 +55,13 @@ TEST_F(ApiAddingNode, AddNestedObjectToObject)
 {
     auto api = prepareApi("test_5.json");
     std::map<std::string, Node> newObject;
-    newObject.emplace(std::make_pair("b", true));
-    newObject.emplace(std::make_pair("a", 12.45));
+    newObject.emplace("b", true);
+    newObject.emplace("a", 12.45);
 
     std::map<std::string, Node> nestedObject;
-    nestedObject.emplace(std::make_pair("qwe", "AA AA"));
-    nestedObject.emplace(std::make_pair("asd", 345353));
-    newObject.emplace(std::make_pair("internal", nestedObject));
+    nestedObject.emplace("qwe", "AA AA");
+    nestedObject.emplace("asd", 345353);
+    newObject.emplace("internal", nestedObject);
 
     const auto begin = high_resolution_clock::now();
     bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
@@ -80,8 +80,8 @@ TEST_F(ApiAddingNode, AddNestedObjectWithArrayToObject)
 {
     auto api = prepareApi("test_5.json");
     std::map<std::string, Node> newObject;
-    newObject.emplace(std::make_pair("b", true));
-    newObject.emplace(std::make_pair("a", std::vector<Node>{ { 0 }, { 100 }, { 200 } }));
+    newObject.emplace("b", true);
+    newObject.emplace("a", std::vector<Node>{ { 0 }, { 100 }, { 200 } });
 
     const auto begin = std::chrono::high_resolution_clock::now();
     bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
@@ -134,8 +134,8 @@ TEST_F(ApiAddingNode, AddObjectIntoArray)
 {
     auto api = prepareApi("test_7.json");
     std::map<std::string, Node> newObjectNode;
-    newObjectNode.emplace(std::make_pair("aa", "bb"));
-    newObjectNode.emplace(std::make_pair("cc", 12));
+    newObjectNode.emplace("aa", "bb");
+    newObjectNode.emplace("cc", 12);
 
     bool result = api->insertNodeIntoArray({ "employees" , size_t(1), "data", size_t(0) }, 1, { newObjectNode });
     ASSERT_TRUE(result);

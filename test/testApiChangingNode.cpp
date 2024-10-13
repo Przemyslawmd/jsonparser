@@ -36,14 +36,14 @@ TEST_F(ApiChangingNode, ChangeNodeInObjectIntoObject)
     auto api = prepareApi("test_3.json");
 
     std::map<std::string, Node> newObjectNode;
-    newObjectNode.emplace(std::make_pair("b", true));
-    newObjectNode.emplace(std::make_pair("a", 12.45));
-    newObjectNode.emplace(std::make_pair("--", "........."));
+    newObjectNode.emplace("b", true);
+    newObjectNode.emplace("a", 12.45);
+    newObjectNode.emplace("--", ".........");
 
     std::map<std::string, Node> nestedObjectNode;
-    nestedObjectNode.emplace(std::make_pair("**", "ccccccccc"));
-    nestedObjectNode.emplace(std::make_pair("^^", -12));
-    newObjectNode.emplace(std::make_pair("internal", nestedObjectNode));
+    nestedObjectNode.emplace("**", "ccccccccc");
+    nestedObjectNode.emplace("^^", -12);
+    newObjectNode.emplace("internal", nestedObjectNode);
 
     bool result = api->changeNodeInObject({ "person" }, "country", Node{ .value = newObjectNode });
     ASSERT_TRUE(result);
@@ -109,10 +109,10 @@ TEST_F(ApiChangingNode, ChangeNodeInArrayIntoObject)
     auto api = prepareApi("test_6.json");
 
     std::map<std::string, Node> newObject;
-    newObject.emplace(std::make_pair("aa", "bb"));
-    newObject.emplace(std::make_pair("xcd", true));
-    newObject.emplace(std::make_pair("qwe", 33.45));
-    newObject.emplace(std::make_pair("qaz", -12));
+    newObject.emplace("aa", "bb");
+    newObject.emplace("xcd", true);
+    newObject.emplace("qwe", 33.45);
+    newObject.emplace("qaz", -12);
 
     bool result = api->changeNodeInArray({ "employees" }, size_t(0), Node{ .value = newObject });
     ASSERT_TRUE(result);
