@@ -323,59 +323,60 @@ bool Manager::isRootEmpty()
 
 ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
 {
-    ComplexNodePtr nodeComplexPtr = root.get();
     if (path.empty()) {
-        return nodeComplexPtr;
+        return root.get();
     }
 
     NodeType nodeType = NodeType::OBJECT;
-
-    const auto getNextNode = [&nodeType](Node* node) -> ComplexNodePtr
-        {
-            if (std::holds_alternative<ObjectNode>(node->value)) {
-                nodeType = NodeType::OBJECT;
-                return std::get_if<ObjectNode>(&node->value);
-            }
-            else if (std::holds_alternative<ArrayNode>(node->value)) {
-                nodeType = NodeType::ARRAY;
-                return std::get_if<ArrayNode>(&node->value);
-            }
-        };
+    ObjectNode* objNode = root.get();
+    ArrayNode* arrNode = nullptr;
 
     for (const auto& pathKey : path) {
         if (nodeType == NodeType::OBJECT && std::holds_alternative<std::string>(pathKey)) {
-            ObjectNode* obj = std::get<ObjectNode*>(nodeComplexPtr);
             const auto& keyStr = std::get<std::string>(pathKey);
-            std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
+            std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, objNode->begin()->first);
 
             if (keyID == std::nullopt) {
                 ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
                 return nullptr;
             }
-            if (obj->contains(keyID.value()) == false) {
-                ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
-                return nullptr;
+
+            Node* node = &objNode->at(keyID.value());
+            if (std::holds_alternative<ObjectNode>(node->value)) {
+                nodeType = NodeType::OBJECT;
+                objNode = std::get_if<ObjectNode>(&node->value);
             }
-            Node* node = &obj->at(keyID.value());
-            nodeComplexPtr = getNextNode(node);
+            else if (std::holds_alternative<ArrayNode>(node->value)) {
+                nodeType = NodeType::ARRAY;
+                arrNode = std::get_if<ArrayNode>(&node->value);
+            }
         }
         else if (nodeType == NodeType::ARRAY && std::holds_alternative<size_t>(pathKey)) {
-            ArrayNode* arr = std::get<ArrayNode*>(nodeComplexPtr);
             size_t index = std::get<size_t>(pathKey);
-
-            if (index >= arr->size()) {
+            if (index >= arrNode->size()) {
                 ErrorStorage::putError(ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
                 return nullptr;
             }
-            Node* node = &arr->at(index);
-            nodeComplexPtr = getNextNode(node);
+
+            Node* node = &arrNode->at(index);
+            if (std::holds_alternative<ObjectNode>(node->value)) {
+                nodeType = NodeType::OBJECT;
+                objNode = std::get_if<ObjectNode>(&node->value);
+            }
+            else if (std::holds_alternative<ArrayNode>(node->value)) {
+                nodeType = NodeType::ARRAY;
+                arrNode = std::get_if<ArrayNode>(&node->value);
+            }
         }
         else {
             ErrorStorage::putError(ErrorCode::MANAGER_IMPROPER_PATH);
             return nullptr;
         }
     }
-    return nodeComplexPtr;
+    if (nodeType == NodeType::OBJECT) {
+        return objNode;
+    }
+    return arrNode;
 }
 
 
