@@ -18,7 +18,7 @@ enum class NodeType {
 };
 
 
-static Node getNodeInternal(const NodeApi& node)
+static Node createNode(const NodeApi& node)
 {
     if (std::holds_alternative<std::string>(node.value)) {
         return Node{ .value = std::get<std::string>(node.value) };
@@ -39,7 +39,7 @@ static Node getNodeInternal(const NodeApi& node)
 }
 
 
-static NodeType getNodeType(const NodeApi& node)
+static NodeType getNodeApiType(const NodeApi& node)
 {
     if (std::holds_alternative<std::map<std::string, NodeApi>>(node.value)) {
         return NodeType::OBJECT;
@@ -51,7 +51,7 @@ static NodeType getNodeType(const NodeApi& node)
 }
 
 
-static NodeType getNodeInternalType(const Node& node)
+static NodeType getNodeType(const Node& node)
 {
     if (std::holds_alternative<std::map<size_t, Node>>(node.value)) {
         return NodeType::OBJECT;

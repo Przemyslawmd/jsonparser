@@ -111,9 +111,9 @@ bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string
     }
     uint32_t keyID = optKeyID.value();
 
-    NodeType newNodeType = getNodeType(newNode);
+    NodeType newNodeType = getNodeApiType(newNode);
     if (newNodeType == NodeType::SIMPLE) {
-        objectNode->emplace(keyID, getNodeInternal(newNode));
+        objectNode->emplace(keyID, createNode(newNode));
     }
     else if (newNodeType == NodeType::OBJECT) {
         ObjectNode* objectNodeNew = putIntoObjectAndGet<ObjectNode>(objectNode, keyID);
@@ -139,10 +139,10 @@ bool Manager::addNodeIntoArray(const std::vector<Path>& path, const NodeApi& new
     }
 
     ArrayNode* arr = std::get<ArrayNode*>(node);
-    NodeType newNodeType = getNodeType(newNode);
+    NodeType newNodeType = getNodeApiType(newNode);
 
     if (newNodeType == NodeType::SIMPLE) {
-        arr->emplace_back(getNodeInternal(newNode));
+        arr->emplace_back(createNode(newNode));
     }
     else if (newNodeType == NodeType::OBJECT) {
         ObjectNode* objNew = putIntoArrayAndGet<ObjectNode>(arr);
@@ -167,9 +167,9 @@ bool Manager::insertNodeIntoArray(const std::vector<Path>& path, size_t index, c
         return false;
     }
 
-    NodeType newNodeType = getNodeType(newNode);
+    NodeType newNodeType = getNodeApiType(newNode);
     if (newNodeType == NodeType::SIMPLE) {
-        arr->insert(arr->begin() + index, getNodeInternal(newNode));
+        arr->insert(arr->begin() + index, createNode(newNode));
         return true;
     }
     else if (newNodeType == NodeType::OBJECT) {
@@ -198,9 +198,9 @@ bool Manager::changeNodeInObject(const std::vector<Path>& path, const std::strin
         return false;
     }
 
-    NodeType nodeType = getNodeType(newNode);
+    NodeType nodeType = getNodeApiType(newNode);
     if (nodeType == NodeType::SIMPLE) {
-        obj->at(keyID) = getNodeInternal(newNode);
+        obj->at(keyID) = createNode(newNode);
         return true;
     }
 
@@ -230,9 +230,9 @@ bool Manager::changeNodeInArray(const std::vector<Path>& path, size_t index, con
         return false;
     }
 
-    NodeType nodeType = getNodeType(newNode);
+    NodeType nodeType = getNodeApiType(newNode);
     if (nodeType == NodeType::SIMPLE) {
-        arrayNode->at(index) = getNodeInternal(newNode);
+        arrayNode->at(index) = createNode(newNode);
     }
     else if (nodeType == NodeType::OBJECT) {
         arrayNode->at(index) = Node{ .value = ObjectNode() };
@@ -260,7 +260,7 @@ bool Manager::removeNodeFromObject(const std::vector<Path>& path, const std::str
     }
 
     Node nodeToRemove = objectNode->at(keyID);
-    NodeType nodeType = getNodeInternalType(nodeToRemove);
+    NodeType nodeType = getNodeType(nodeToRemove);
 
     if (nodeType == NodeType::OBJECT) {
         const auto& objToRemove = std::get<ObjectNode>(objectNode->at(keyID).value);
@@ -288,7 +288,7 @@ bool Manager::removeNodeFromArray(const std::vector<Path>& path, size_t index)
     }
 
     Node nodeToRemove = arrayNode->at(index);
-    NodeType nodeType = getNodeInternalType(nodeToRemove);
+    NodeType nodeType = getNodeType(nodeToRemove);
 
     if (nodeType == NodeType::OBJECT) {
         const auto& objToRemove = std::get<ObjectNode>(arrayNode->at(index).value);
@@ -390,9 +390,9 @@ bool Manager::addObjectInternally(ObjectNode* objectNode, const NodeApi& newNode
         }
         uint32_t keyID = optKeyID.value();
 
-        NodeType newNodeType = getNodeType(val);
+        NodeType newNodeType = getNodeApiType(val);
         if (newNodeType == NodeType::SIMPLE) {
-            objectNode->emplace(keyID, getNodeInternal(val));
+            objectNode->emplace(keyID, createNode(val));
         }
         else if (newNodeType == NodeType::OBJECT) {
             ObjectNode* objectNodeNew = putIntoObjectAndGet<ObjectNode>(objectNode, keyID);
@@ -410,9 +410,9 @@ bool Manager::addObjectInternally(ObjectNode* objectNode, const NodeApi& newNode
 bool Manager::addArrayInternally(ArrayNode* arrayNode, const NodeApi& newNode)
 {
     for (auto& val : std::get<ArrayNodeApi>(newNode.value)) {
-        NodeType newNodeType = getNodeType(val);
+        NodeType newNodeType = getNodeApiType(val);
         if (newNodeType == NodeType::SIMPLE) {
-            arrayNode->emplace_back(getNodeInternal(val));
+            arrayNode->emplace_back(createNode(val));
         }
         else if (newNodeType == NodeType::ARRAY) {
             ArrayNode* arrayNodeNew = putIntoArrayAndGet<ArrayNode>(arrayNode);
@@ -504,7 +504,7 @@ std::tuple<ObjectNode*, size_t> Manager::getObjectAndKeyID(const std::vector<Pat
 void Manager::traverseObjectToRemoveKeyID(const ObjectNode& obj)
 {
     for (const auto& [keyID, data] : obj) {
-        NodeType nodeType = getNodeInternalType(data);
+        NodeType nodeType = getNodeType(data);
         if (nodeType == NodeType::OBJECT) {
             const auto& objToRemove = std::get<ObjectNode>(data.value);
             traverseObjectToRemoveKeyID(objToRemove);
@@ -521,7 +521,7 @@ void Manager::traverseObjectToRemoveKeyID(const ObjectNode& obj)
 void Manager::traverseArrayToRemoveKeyID(const ArrayNode& arr)
 {
     for (const auto& data : arr) {
-        NodeType nodeType = getNodeInternalType(data);
+        NodeType nodeType = getNodeType(data);
         if (nodeType == NodeType::OBJECT) {
             const auto& objToRemove = std::get<ObjectNode>(data.value);
             traverseObjectToRemoveKeyID(objToRemove);
