@@ -18,12 +18,5 @@ struct Node
 using ObjectNode = std::map<size_t, Node>;
 using ArrayNode = std::vector<Node>;
 
-
-struct NodeApi
-{
-    using Value = std::variant<std::string, int64_t, double, bool, nullptr_t, std::map<std::string, NodeApi>, std::vector<NodeApi>>;
-    Value value;
-};
-
 #endif
 

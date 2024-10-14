@@ -12,7 +12,7 @@
 #include "../src/reader/Validator.h"
 #include "../src/keyMapper.h"
 #include "config.h"
-#include <NodeValue.h>
+#include "Node.h"
 #include "utils.h"
 
 

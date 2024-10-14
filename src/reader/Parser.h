@@ -11,7 +11,7 @@
 #include "defines.h"
 #include "../keyMapper.h"
 #include "Token.h"
-#include "NodeValue.h"
+#include "Node.h"
 
 
 class Parser

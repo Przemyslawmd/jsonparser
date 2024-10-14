@@ -8,10 +8,11 @@
 #include <string>
 #include <vector>
 
-#include <defines.h>
+#include "defines.h"
 #include "keyMapper.h"
-#include <NodeValue.h>
-#include <Error.h>
+#include "Node.h"
+#include "NodeApi.h"
+#include "Error.h"
 
 
 /* Pointer to complex node: object (map) or array */

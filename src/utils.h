@@ -4,8 +4,8 @@
 
 #include <variant>
 
-#include <defines.h>
-#include <NodeValue.h>
+#include "defines.h"
+#include "Node.h"
 
 
 enum class NodeType {
