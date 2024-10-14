@@ -22,7 +22,7 @@ class ApiAddingNode : public ApiTest {};
 TEST_F(ApiAddingNode, AddSimpleNodeToObject)
 {
     auto api = prepareApi("test_4.json");
-    bool result = api->addNodeIntoObject({ "person2", "address" }, "post", Node{ .value = "Cracow" });
+    bool result = api->addNodeIntoObject({ "person2", "address" }, "post", NodeApi{ .value = "Cracow" });
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
@@ -34,7 +34,7 @@ TEST_F(ApiAddingNode, AddSimpleNodeToObject)
 TEST_F(ApiAddingNode, AddObjectToObject)
 {
     auto api = prepareApi("test_5.json");
-    std::map<std::string, Node> newObject;
+    std::map<std::string, NodeApi> newObject;
     newObject.emplace("a", 123);
     newObject.emplace("b", "AAA");
 
@@ -54,11 +54,11 @@ TEST_F(ApiAddingNode, AddObjectToObject)
 TEST_F(ApiAddingNode, AddNestedObjectToObject)
 {
     auto api = prepareApi("test_5.json");
-    std::map<std::string, Node> newObject;
+    std::map<std::string, NodeApi> newObject;
     newObject.emplace("b", true);
     newObject.emplace("a", 12.45);
 
-    std::map<std::string, Node> nestedObject;
+    std::map<std::string, NodeApi> nestedObject;
     nestedObject.emplace("qwe", "AA AA");
     nestedObject.emplace("asd", 345353);
     newObject.emplace("internal", nestedObject);
@@ -79,9 +79,9 @@ TEST_F(ApiAddingNode, AddNestedObjectToObject)
 TEST_F(ApiAddingNode, AddNestedObjectWithArrayToObject)
 {
     auto api = prepareApi("test_5.json");
-    std::map<std::string, Node> newObject;
+    std::map<std::string, NodeApi> newObject;
     newObject.emplace("b", true);
-    newObject.emplace("a", std::vector<Node>{ { 0 }, { 100 }, { 200 } });
+    newObject.emplace("a", std::vector<NodeApi>{ { 0 }, { 100 }, { 200 } });
 
     const auto begin = std::chrono::high_resolution_clock::now();
     bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
@@ -99,7 +99,7 @@ TEST_F(ApiAddingNode, AddNestedObjectWithArrayToObject)
 TEST_F(ApiAddingNode, AddArrayToObject)
 {
     auto api = prepareApi("test_4.json");
-    std::vector<Node> newArray{ { 232 }, { 234234 }, { 0 }, { 100 } };
+    std::vector<NodeApi> newArray{ { 232 }, { 234234 }, { 0 }, { 100 } };
 
     const auto begin = high_resolution_clock::now();
     bool result = api->addNodeIntoObject({ "person2", "address" }, "dataArrayNode", { newArray });
@@ -118,10 +118,10 @@ TEST_F(ApiAddingNode, AddSimpleNodeIntoArray)
 {
     auto api = prepareApi("test_7.json");
 
-    bool result = api->addNodeIntoArray({ "employees", size_t(0), "data", size_t(0) }, Node{ .value = 4 });
+    bool result = api->addNodeIntoArray({ "employees", size_t(0), "data", size_t(0) }, NodeApi{ .value = 4 });
     ASSERT_TRUE(result);
 
-    result = api->insertNodeIntoArray({ "employees", size_t(1), "data", size_t(0) }, 1, Node{ .value = "c c" });
+    result = api->insertNodeIntoArray({ "employees", size_t(1), "data", size_t(0) }, 1, NodeApi{ .value = "c c" });
     ASSERT_TRUE(result);
 
     std::string json = api->parseJsonObjectToString().value();
@@ -133,7 +133,7 @@ TEST_F(ApiAddingNode, AddSimpleNodeIntoArray)
 TEST_F(ApiAddingNode, AddObjectIntoArray)
 {
     auto api = prepareApi("test_7.json");
-    std::map<std::string, Node> newObjectNode;
+    std::map<std::string, NodeApi> newObjectNode;
     newObjectNode.emplace("aa", "bb");
     newObjectNode.emplace("cc", 12);
 
@@ -149,10 +149,10 @@ TEST_F(ApiAddingNode, AddObjectIntoArray)
 TEST_F(ApiAddingNode, AddArrayIntoArray)
 {
     auto api = prepareApi("test_7.json");
-    std::vector<Node> arr1{ { 1 }, { 2 }, { 3 } };
-    std::vector<Node> arr2{ { "aa" }, { "b" } };
-    std::vector<Node> arr3{ { true }, { false } };
-    std::vector<Node> newArrayNode{ { arr1 }, { arr2 }, { arr3 } };
+    std::vector<NodeApi> arr1{ { 1 }, { 2 }, { 3 } };
+    std::vector<NodeApi> arr2{ { "aa" }, { "b" } };
+    std::vector<NodeApi> arr3{ { true }, { false } };
+    std::vector<NodeApi> newArrayNode{ { arr1 }, { arr2 }, { arr3 } };
 
     bool result = api->addNodeIntoArray({ "employees", size_t(1), "data" }, { newArrayNode });
     ASSERT_TRUE(result);

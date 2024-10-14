@@ -24,10 +24,10 @@ TEST_F(ApiTest, ClearApi)
 {
     auto api = prepareApi("test_7.json");
 
-    std::vector<Node> arr1{ { 1 }, { 2 }, { 3 } };
-    std::vector<Node> arr2{ { "aa" }, { "b" } };
-    std::vector<Node> arr3{ { true }, { false } };
-    std::vector<Node> newArray{ { arr1 }, { arr2 }, { arr3 } };
+    std::vector<NodeApi> arr1{ { 1 }, { 2 }, { 3 } };
+    std::vector<NodeApi> arr2{ { "aa" }, { "b" } };
+    std::vector<NodeApi> arr3{ { true }, { false } };
+    std::vector<NodeApi> newArray{ { arr1 }, { arr2 }, { arr3 } };
 
     const auto begin = high_resolution_clock::now();
     bool result = api->addNodeIntoArray({ "employees", size_t(1), "data" }, { newArray });
@@ -42,11 +42,11 @@ TEST_F(ApiTest, ClearApi)
     result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
 
-    result = api->changeNodeInArray({ "employees", size_t(0), "data", size_t(1) }, 2, Node{ .value = 10 });
+    result = api->changeNodeInArray({ "employees", size_t(0), "data", size_t(1) }, 2, NodeApi{ .value = 10 });
     ASSERT_TRUE(result);
-    result = api->changeNodeInObject({ "employees", size_t(1), "employees", size_t(0) }, "name", Node{ .value = "Maria" });
+    result = api->changeNodeInObject({ "employees", size_t(1), "employees", size_t(0) }, "name", NodeApi{ .value = "Maria" });
     ASSERT_TRUE(result);
-    result = api->changeNodeInArray({ "employees", size_t(1), "data", size_t(2), size_t(0), "numbers" }, 0, Node{ .value = 0.12 });
+    result = api->changeNodeInArray({ "employees", size_t(1), "data", size_t(2), size_t(0), "numbers" }, 0, NodeApi{ .value = 0.12 });
     ASSERT_TRUE(result);
 
     json = api->parseJsonObjectToString().value();
@@ -78,7 +78,7 @@ TEST_F(ApiTest, ClearApi)
 
 TEST_F(ApiTest, LoadJsonObject_1)
 {
-    std::map<std::string, Node> internalObject;
+    std::map<std::string, NodeApi> internalObject;
     internalObject.emplace("age", 39);
     internalObject.emplace("country", "Poland");
     internalObject.emplace("employed", true);
@@ -87,11 +87,11 @@ TEST_F(ApiTest, LoadJsonObject_1)
     internalObject.emplace("empty", nullptr);
     internalObject.emplace("newValue", 23.1);
 
-    std::map<std::string, Node> root;
+    std::map<std::string, NodeApi> root;
     root.emplace("person", internalObject);
 
     auto api = std::make_unique<JsonApi>();
-    api->loadJsonObject(Node{ .value = root });
+    api->loadJsonObject(NodeApi{ .value = root });
 
     std::string json = api->parseJsonObjectToString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "load_json_object_1.json");
@@ -101,31 +101,31 @@ TEST_F(ApiTest, LoadJsonObject_1)
 
 TEST_F(ApiTest, LoadJsonObject_2)
 {
-    std::vector<Node> array_1_1{ { 1 }, { 2 }, { 3 } };
-    std::vector<Node> array_1_2{ { 4 }, { 5 }, { 6 } };
-    std::vector<Node> array_1{ { array_1_1 }, { array_1_2 } };
+    std::vector<NodeApi> array_1_1{ { 1 }, { 2 }, { 3 } };
+    std::vector<NodeApi> array_1_2{ { 4 }, { 5 }, { 6 } };
+    std::vector<NodeApi> array_1{ { array_1_1 }, { array_1_2 } };
 
-    std::map<std::string, Node> object_1;
+    std::map<std::string, NodeApi> object_1;
     object_1.emplace("name", "Agata");
     object_1.emplace("data", array_1);
 
-    std::vector<Node> array_2_1{ { "a" }, { "b" } };
-    std::vector<Node> array_2_2{ { "c d e" } };
-    std::vector<Node> array_2{ { array_2_1 }, { array_2_2 } };
+    std::vector<NodeApi> array_2_1{ { "a" }, { "b" } };
+    std::vector<NodeApi> array_2_2{ { "c d e" } };
+    std::vector<NodeApi> array_2{ { array_2_1 }, { array_2_2 } };
 
-    std::map<std::string, Node> object_2;
+    std::map<std::string, NodeApi> object_2;
     object_2.emplace("name", "Anna");
     object_2.emplace("data", array_2);
 
-    std::vector<Node> mainArray;
+    std::vector<NodeApi> mainArray;
     mainArray.emplace_back(object_1);
     mainArray.emplace_back(object_2);
 
-    std::map<std::string, Node> root;
+    std::map<std::string, NodeApi> root;
     root.emplace("employees", mainArray);
 
     auto api = std::make_unique<JsonApi>();
-    api->loadJsonObject(Node{ .value = root });
+    api->loadJsonObject(NodeApi{ .value = root });
 
     std::string json = api->parseJsonObjectToString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "load_json_object_2.json");
@@ -135,10 +135,10 @@ TEST_F(ApiTest, LoadJsonObject_2)
 
 TEST_F(ApiTest, LoadJsonObject_Error)
 {
-    std::vector<Node> arrayNode{ { 1 }, { 2 }, { 3 } };
+    std::vector<NodeApi> arrayNode{ { 1 }, { 2 }, { 3 } };
 
     auto api = std::make_unique<JsonApi>();
-    bool result = api->loadJsonObject(Node{ .value = arrayNode });
+    bool result = api->loadJsonObject(NodeApi{ .value = arrayNode });
     ASSERT_FALSE(result);
     ASSERT_FALSE(api->isJsonObject());
 

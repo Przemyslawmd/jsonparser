@@ -8,20 +8,20 @@
 #include <variant>
 
 
-struct NodeInternal
+struct Node
 {
-    using Value = std::variant<std::string, int64_t, double, bool, nullptr_t, std::map<size_t, NodeInternal>, std::vector<NodeInternal>>;
+    using Value = std::variant<std::string, int64_t, double, bool, nullptr_t, std::map<size_t, Node>, std::vector<Node>>;
     Value value;
 };
 
 
-using ObjectNode = std::map<size_t, NodeInternal>;
-using ArrayNode = std::vector<NodeInternal>;
+using ObjectNode = std::map<size_t, Node>;
+using ArrayNode = std::vector<Node>;
 
 
-struct Node
+struct NodeApi
 {
-    using Value = std::variant<std::string, int64_t, double, bool, nullptr_t, std::map<std::string, Node>, std::vector<Node>>;
+    using Value = std::variant<std::string, int64_t, double, bool, nullptr_t, std::map<std::string, NodeApi>, std::vector<NodeApi>>;
     Value value;
 };
 

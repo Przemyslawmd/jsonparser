@@ -24,17 +24,17 @@ public:
 
     std::optional<std::string> parseJsonObjectToString();
 
-    bool loadJsonObject(const Node&);
+    bool loadJsonObject(const NodeApi&);
     bool isJsonObject();
 
     void clear();
 
-    bool addNodeIntoObject(const std::vector<Path>&, const std::string& keyStr, const Node&);
-    bool addNodeIntoArray(const std::vector<Path>&, const Node&);
-    bool insertNodeIntoArray(const std::vector<Path>&, size_t index, const Node&);
+    bool addNodeIntoObject(const std::vector<Path>&, const std::string& keyStr, const NodeApi&);
+    bool addNodeIntoArray(const std::vector<Path>&, const NodeApi&);
+    bool insertNodeIntoArray(const std::vector<Path>&, size_t index, const NodeApi&);
 
-    bool changeNodeInObject(const std::vector<Path>&, const std::string& keyStr, const Node&);
-    bool changeNodeInArray(const std::vector<Path>&, size_t index, const Node&);
+    bool changeNodeInObject(const std::vector<Path>&, const std::string& keyStr, const NodeApi&);
+    bool changeNodeInArray(const std::vector<Path>&, size_t index, const NodeApi&);
 
     bool removeNodeFromObject(const std::vector<Path>&, const std::string& keyStr);
     bool removeNodeFromArray(const std::vector<Path>&, size_t index);

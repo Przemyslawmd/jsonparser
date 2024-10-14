@@ -63,7 +63,7 @@ TEST_F(ApiRemovingNode, RemoveObjectAndAddForTheSameKey)
     bool result = api->removeNodeFromObject({}, "person");
     ASSERT_TRUE(result);
 
-    result = api->addNodeIntoObject({}, "person", Node{ .value = "newPerson" });
+    result = api->addNodeIntoObject({}, "person", NodeApi{ .value = "newPerson" });
     const auto end = high_resolution_clock::now();
     ASSERT_TRUE(result);
 

@@ -29,18 +29,18 @@ public:
     bool parseJsonString(const std::string& file);
     std::optional<std::string> parseObjectToString();
 
-    bool loadJsonObject(const Node&);
+    bool loadJsonObject(const NodeApi&);
     bool isJsonObject();
 
     void clear();
 
 
-    bool addNodeIntoObject(const std::vector<Path>&, const std::string& keyStr, const Node&);
-    bool addNodeIntoArray(const std::vector<Path>&, const Node&);
-    bool insertNodeIntoArray(const std::vector<Path>&, size_t index, const Node&);
+    bool addNodeIntoObject(const std::vector<Path>&, const std::string& keyStr, const NodeApi&);
+    bool addNodeIntoArray(const std::vector<Path>&, const NodeApi&);
+    bool insertNodeIntoArray(const std::vector<Path>&, size_t index, const NodeApi&);
 
-    bool changeNodeInObject(const std::vector<Path>&, const std::string& keyStr, const Node&);
-    bool changeNodeInArray(const std::vector<Path>&, size_t index, const Node&);
+    bool changeNodeInObject(const std::vector<Path>&, const std::string& keyStr, const NodeApi&);
+    bool changeNodeInArray(const std::vector<Path>&, size_t index, const NodeApi&);
 
     bool removeNodeFromObject(const std::vector<Path>&, const std::string& keyStr);
     bool removeNodeFromArray(const std::vector<Path>&, size_t index);
@@ -50,8 +50,8 @@ public:
 private:
     bool isRootEmpty();
 
-    bool addObjectInternally(ObjectNode*, const Node&);
-    bool addArrayInternally(ArrayNode*, const Node&);
+    bool addObjectInternally(ObjectNode*, const NodeApi&);
+    bool addArrayInternally(ArrayNode*, const NodeApi&);
 
     ArrayNode* getArrayAndCheckIndex(const std::vector<Path>& path, size_t index);
 

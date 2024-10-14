@@ -27,7 +27,7 @@ private:
 
     void processObjectNode(const ObjectNode&);
     void processArrayNode(const ArrayNode&);
-    void parseData(const NodeInternal&);
+    void parseData(const Node&);
 
     void incIndent();
     void decIndent();

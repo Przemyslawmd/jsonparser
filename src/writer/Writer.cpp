@@ -75,7 +75,7 @@ void Writer::processArrayNode(const ArrayNode& arr)
 }
 
 
-void Writer::parseData(const NodeInternal& node)
+void Writer::parseData(const Node& node)
 {
     if (std::holds_alternative<std::string>(node.value)) {
         stream << "\"" << std::get<std::string>(node.value) << "\"" << DATA_END;

@@ -10,8 +10,8 @@
 #include "utils.h"
 
 
-using ObjectNodeApi = std::map<std::string, Node>;
-using ArrayNodeApi = std::vector<Node>;
+using ObjectNodeApi = std::map<std::string, NodeApi>;
+using ArrayNodeApi = std::vector<NodeApi>;
 
 
 Manager::Manager()
@@ -69,14 +69,14 @@ std::optional<std::string> Manager::parseObjectToString()
 }
 
 
-bool Manager::loadJsonObject(const Node& node)
+bool Manager::loadJsonObject(const NodeApi& node)
 {
     if (root != nullptr) {
         ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
         return false;
     }
 
-    if (std::holds_alternative<std::map<std::string, Node>>(node.value) == false) {
+    if (std::holds_alternative<std::map<std::string, NodeApi>>(node.value) == false) {
         ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_OBJECT);
         return false;
     }
@@ -92,7 +92,7 @@ bool Manager::isJsonObject()
 }
 
 
-bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string& keyStr, const Node& newNode)
+bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string& keyStr, const NodeApi& newNode)
 {
     if (isRootEmpty()) {
         return false;
@@ -127,7 +127,7 @@ bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string
 }
 
 
-bool Manager::addNodeIntoArray(const std::vector<Path>& path, const Node& newNode)
+bool Manager::addNodeIntoArray(const std::vector<Path>& path, const NodeApi& newNode)
 {
     if (isRootEmpty()) {
         return false;
@@ -156,7 +156,7 @@ bool Manager::addNodeIntoArray(const std::vector<Path>& path, const Node& newNod
 }
 
 
-bool Manager::insertNodeIntoArray(const std::vector<Path>& path, size_t index, const Node& newNode)
+bool Manager::insertNodeIntoArray(const std::vector<Path>& path, size_t index, const NodeApi& newNode)
 {
     if (isRootEmpty()) {
         return false;
@@ -173,13 +173,13 @@ bool Manager::insertNodeIntoArray(const std::vector<Path>& path, size_t index, c
         return true;
     }
     else if (newNodeType == NodeType::OBJECT) {
-        arr->insert(arr->begin() + index, NodeInternal{ .value = ObjectNode() });
+        arr->insert(arr->begin() + index, Node{ .value = ObjectNode() });
         ObjectNode* objToAdd = &std::get<ObjectNode>(arr->at(index).value);
         addObjectInternally(objToAdd, newNode);
         return true;
     }
     else {
-        arr->insert(arr->begin() + index, NodeInternal{ .value = ArrayNode() });
+        arr->insert(arr->begin() + index, Node{ .value = ArrayNode() });
         ArrayNode* arrToAdd = &std::get<ArrayNode>(arr->at(index).value);
         addArrayInternally(arrToAdd, newNode);
     }
@@ -187,7 +187,7 @@ bool Manager::insertNodeIntoArray(const std::vector<Path>& path, size_t index, c
 }
 
 
-bool Manager::changeNodeInObject(const std::vector<Path>& path, const std::string& key, const Node& newNode)
+bool Manager::changeNodeInObject(const std::vector<Path>& path, const std::string& key, const NodeApi& newNode)
 {
     if (isRootEmpty()) {
         return false;
@@ -219,7 +219,7 @@ bool Manager::changeNodeInObject(const std::vector<Path>& path, const std::strin
 }
 
 
-bool Manager::changeNodeInArray(const std::vector<Path>& path, size_t index, const Node& newNode)
+bool Manager::changeNodeInArray(const std::vector<Path>& path, size_t index, const NodeApi& newNode)
 {
     if (isRootEmpty()) {
         return false;
@@ -235,12 +235,12 @@ bool Manager::changeNodeInArray(const std::vector<Path>& path, size_t index, con
         arrayNode->at(index) = getNodeInternal(newNode);
     }
     else if (nodeType == NodeType::OBJECT) {
-        arrayNode->at(index) = NodeInternal{ .value = ObjectNode() };
+        arrayNode->at(index) = Node{ .value = ObjectNode() };
         ObjectNode* objectNodeNew = &std::get<ObjectNode>(arrayNode->at(index).value);
         addObjectInternally(objectNodeNew, newNode);
     }
     else {
-        arrayNode->at(index) = NodeInternal{ .value = ArrayNode() };
+        arrayNode->at(index) = Node{ .value = ArrayNode() };
         ArrayNode* arrayNodeNew = &std::get<ArrayNode>(arrayNode->at(index).value);
         addArrayInternally(arrayNodeNew, newNode);
     }
@@ -259,7 +259,7 @@ bool Manager::removeNodeFromObject(const std::vector<Path>& path, const std::str
         return false;
     }
 
-    NodeInternal nodeToRemove = objectNode->at(keyID);
+    Node nodeToRemove = objectNode->at(keyID);
     NodeType nodeType = getNodeInternalType(nodeToRemove);
 
     if (nodeType == NodeType::OBJECT) {
@@ -287,7 +287,7 @@ bool Manager::removeNodeFromArray(const std::vector<Path>& path, size_t index)
         return false;
     }
 
-    NodeInternal nodeToRemove = arrayNode->at(index);
+    Node nodeToRemove = arrayNode->at(index);
     NodeType nodeType = getNodeInternalType(nodeToRemove);
 
     if (nodeType == NodeType::OBJECT) {
@@ -330,7 +330,7 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
 
     NodeType nodeType = NodeType::OBJECT;
 
-    const auto getNextNode = [&nodeType](NodeInternal* node) -> ComplexNodePtr
+    const auto getNextNode = [&nodeType](Node* node) -> ComplexNodePtr
         {
             if (std::holds_alternative<ObjectNode>(node->value)) {
                 nodeType = NodeType::OBJECT;
@@ -356,7 +356,7 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
                 ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
                 return nullptr;
             }
-            NodeInternal* node = &obj->at(keyID.value());
+            Node* node = &obj->at(keyID.value());
             nodeComplexPtr = getNextNode(node);
         }
         else if (nodeType == NodeType::ARRAY && std::holds_alternative<size_t>(pathKey)) {
@@ -367,7 +367,7 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
                 ErrorStorage::putError(ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
                 return nullptr;
             }
-            NodeInternal* node = &arr->at(index);
+            Node* node = &arr->at(index);
             nodeComplexPtr = getNextNode(node);
         }
         else {
@@ -379,7 +379,7 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
 }
 
 
-bool Manager::addObjectInternally(ObjectNode* objectNode, const Node& newNode)
+bool Manager::addObjectInternally(ObjectNode* objectNode, const NodeApi& newNode)
 {
     uint32_t mapID = keyMapper->getNextMapID();
 
@@ -407,7 +407,7 @@ bool Manager::addObjectInternally(ObjectNode* objectNode, const Node& newNode)
 }
 
 
-bool Manager::addArrayInternally(ArrayNode* arrayNode, const Node& newNode)
+bool Manager::addArrayInternally(ArrayNode* arrayNode, const NodeApi& newNode)
 {
     for (auto& val : std::get<ArrayNodeApi>(newNode.value)) {
         NodeType newNodeType = getNodeType(val);
