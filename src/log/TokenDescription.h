@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <string>
 
-#include "../headers/defines.h"
+#include "defines.h"
 
 
 static const std::unordered_map<TokenType, std::string> TokenDesc =

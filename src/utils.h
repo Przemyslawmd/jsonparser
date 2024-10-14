@@ -2,10 +2,13 @@
 #ifndef JSONPARSER_UTILS_H
 #define JSONPARSER_UTILS_H
 
+#include <map>
+#include <string>
 #include <variant>
 
 #include "defines.h"
 #include "Node.h"
+#include "NodeApi.h"
 
 
 enum class NodeType {
