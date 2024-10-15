@@ -31,7 +31,7 @@ public:
     std::optional<std::string> parseObjectToString();
 
     bool loadJsonObject(const NodeApi&);
-    bool isJsonObject();
+    bool isJsonObject() const;
 
     void clear();
 
@@ -46,18 +46,19 @@ public:
     bool removeNodeFromObject(const std::vector<Path>&, const std::string& keyStr);
     bool removeNodeFromArray(const std::vector<Path>&, size_t index);
 
-    const std::vector<Error>& getErrors();
+    const std::vector<Error>& getErrors() const;
 
 private:
-    bool isRootEmpty();
+    bool isRootEmpty() const;
 
     bool addObjectInternally(ObjectNode*, const NodeApi&);
     bool addArrayInternally(ArrayNode*, const NodeApi&);
 
-    ArrayNode* getArrayAndCheckIndex(const std::vector<Path>& path, size_t index);
+    ArrayNode* 
+    getArrayFromPathAndCheckIndex(const std::vector<Path>& path, size_t index);
 
-    std::tuple<ObjectNode*, size_t>
-    getObjectAndKeyID(const std::vector<Path>& path, const std::string& keyStr);
+    std::tuple<ObjectNode*, size_t> 
+    getObjectFromPathAndKeyID(const std::vector<Path>& path, const std::string& keyStr);
 
     template <typename T>
     T* putIntoObjectAndGet(ObjectNode*, uint32_t keyID);

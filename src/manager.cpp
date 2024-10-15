@@ -86,7 +86,7 @@ bool Manager::loadJsonObject(const NodeApi& node)
 }
 
 
-bool Manager::isJsonObject()
+bool Manager::isJsonObject() const
 {
     return isRootEmpty() == false;
 }
@@ -162,7 +162,7 @@ bool Manager::insertNodeIntoArray(const std::vector<Path>& path, size_t index, c
         return false;
     }
 
-    ArrayNode* arr = getArrayAndCheckIndex(path, index);
+    ArrayNode* arr = getArrayFromPathAndCheckIndex(path, index);
     if (arr == nullptr) {
         return false;
     }
@@ -187,13 +187,13 @@ bool Manager::insertNodeIntoArray(const std::vector<Path>& path, size_t index, c
 }
 
 
-bool Manager::changeNodeInObject(const std::vector<Path>& path, const std::string& key, const NodeApi& newNode)
+bool Manager::changeNodeInObject(const std::vector<Path>& path, const std::string& keyStr, const NodeApi& newNode)
 {
     if (isRootEmpty()) {
         return false;
     }
 
-    auto [obj, keyID] = getObjectAndKeyID(path, key);
+    auto [obj, keyID] = getObjectFromPathAndKeyID(path, keyStr);
     if (obj == nullptr) {
         return false;
     }
@@ -225,7 +225,7 @@ bool Manager::changeNodeInArray(const std::vector<Path>& path, size_t index, con
         return false;
     }
 
-    ArrayNode* arrayNode = getArrayAndCheckIndex(path, index);
+    ArrayNode* arrayNode = getArrayFromPathAndCheckIndex(path, index);
     if (arrayNode == nullptr) {
         return false;
     }
@@ -254,7 +254,7 @@ bool Manager::removeNodeFromObject(const std::vector<Path>& path, const std::str
         return false;
     }
 
-    auto [objectNode, keyID] = getObjectAndKeyID(path, keyStr);
+    auto [objectNode, keyID] = getObjectFromPathAndKeyID(path, keyStr);
     if (objectNode == nullptr) {
         return false;
     }
@@ -282,7 +282,7 @@ bool Manager::removeNodeFromArray(const std::vector<Path>& path, size_t index)
         return false;
     }
 
-    ArrayNode* arrayNode = getArrayAndCheckIndex(path, index);
+    ArrayNode* arrayNode = getArrayFromPathAndCheckIndex(path, index);
     if (arrayNode == nullptr) {
         return false;
     }
@@ -303,7 +303,7 @@ bool Manager::removeNodeFromArray(const std::vector<Path>& path, size_t index)
 }
 
 
-const std::vector<Error>& Manager::getErrors()
+const std::vector<Error>& Manager::getErrors() const
 {
     return ErrorStorage::getErrors();
 }
@@ -311,7 +311,7 @@ const std::vector<Error>& Manager::getErrors()
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
-bool Manager::isRootEmpty()
+bool Manager::isRootEmpty() const
 {
     if (root == nullptr) {
         ErrorStorage::putError(ErrorCode::MANAGER_EMPTY);
@@ -463,7 +463,8 @@ T* Manager::putIntoArrayAndGet(ArrayNode* arrayNode)
 }
 
 
-ArrayNode* Manager::getArrayAndCheckIndex(const std::vector<Path>& path, size_t index)
+ArrayNode* 
+Manager::getArrayFromPathAndCheckIndex(const std::vector<Path>& path, size_t index)
 {
     ComplexNodePtr node = getNodeFromPath(path);
     if (validateComplexNode<ArrayNode*>(node) == false) {
@@ -479,7 +480,8 @@ ArrayNode* Manager::getArrayAndCheckIndex(const std::vector<Path>& path, size_t 
 }
 
 
-std::tuple<ObjectNode*, size_t> Manager::getObjectAndKeyID(const std::vector<Path>& path, const std::string& keyStr)
+std::tuple<ObjectNode*, size_t> 
+Manager::getObjectFromPathAndKeyID(const std::vector<Path>& path, const std::string& keyStr)
 {
     ComplexNodePtr node = getNodeFromPath(path);
     if (validateComplexNode<ObjectNode*>(node) == false) {
