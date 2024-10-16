@@ -15,8 +15,7 @@
 #include "Error.h"
 
 
-/* Pointer to complex node: object (map) or array */
-using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
+using ComplexNode = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 
 /* Path contains a key for an object (map) or index for an array */
 using Path = std::variant<std::string, size_t>;
@@ -54,6 +53,8 @@ private:
     bool addObjectInternally(ObjectNode*, const NodeApi&);
     bool addArrayInternally(ArrayNode*, const NodeApi&);
 
+    ComplexNode getNodeFromPath(const std::vector<Path>& path);
+
     ArrayNode* 
     getArrayFromPathAndCheckIndex(const std::vector<Path>& path, size_t index);
 
@@ -69,10 +70,8 @@ private:
     void traverseObjectToRemoveKeyID(const ObjectNode&);
     void traverseArrayToRemoveKeyID(const ArrayNode&);
 
-    ComplexNodePtr getNodeFromPath(const std::vector<Path>& path);
-
     template <typename T>
-    bool validateComplexNode(ComplexNodePtr);
+    T checkComplexNode(ComplexNode);
 
     std::unique_ptr<ObjectNode> root;
     std::unique_ptr<KeyMapper> keyMapper;
