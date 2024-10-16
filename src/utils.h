@@ -9,16 +9,21 @@
 #include "defines.h"
 #include "Node.h"
 #include "NodeApi.h"
+#include "log/ErrorStorage.h"
 
 
-enum class NodeType {
+using ComplexNode = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
+
+
+enum class NodeType
+{
     SIMPLE,
     OBJECT,
     ARRAY
 };
 
 
-static Node createNode(const NodeApi& node)
+Node createNode(const NodeApi& node)
 {
     if (std::holds_alternative<std::string>(node.value)) {
         return Node{ .value = std::get<std::string>(node.value) };
@@ -39,7 +44,7 @@ static Node createNode(const NodeApi& node)
 }
 
 
-static NodeType getNodeApiType(const NodeApi& node)
+NodeType getNodeApiType(const NodeApi& node)
 {
     if (std::holds_alternative<std::map<std::string, NodeApi>>(node.value)) {
         return NodeType::OBJECT;
@@ -51,7 +56,7 @@ static NodeType getNodeApiType(const NodeApi& node)
 }
 
 
-static NodeType getNodeType(const Node& node)
+NodeType getNodeType(const Node& node)
 {
     if (std::holds_alternative<std::map<size_t, Node>>(node.value)) {
         return NodeType::OBJECT;
@@ -62,6 +67,40 @@ static NodeType getNodeType(const Node& node)
     return NodeType::SIMPLE;
 }
 
+
+template <typename T>
+T checkComplexNode(ComplexNode node)
+{
+    if (std::holds_alternative<nullptr_t>(node)) {
+        return nullptr;
+    }
+    if (std::holds_alternative<T>(node) == false) {
+        if (std::is_same<T, ObjectNode*>::value) {
+            ErrorStorage::putError(ErrorCode::MANAGER_NODE_NOT_OBJECT);
+        }
+        else if (std::is_same<T, ArrayNode*>::value) {
+            ErrorStorage::putError(ErrorCode::MANAGER_NODE_NOT_ARRAY);
+        }
+        return nullptr;
+    }
+    return std::get<T>(node);
+}
+
+
+template <typename T>
+T* putIntoObjectAndGet(ObjectNode* objNode, uint32_t keyID)
+{
+    objNode->emplace(keyID, T());
+    return &(std::get<T>(objNode->at(keyID).value));
+}
+
+
+template <typename T>
+T* putIntoArrayAndGet(ArrayNode* arrNode)
+{
+    arrNode->emplace_back(T());
+    return &(std::get<T>(arrNode->back().value));
+}
 
 #endif
 

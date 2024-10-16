@@ -61,17 +61,8 @@ private:
     std::tuple<ObjectNode*, size_t> 
     getObjectFromPathAndKeyID(const std::vector<Path>& path, const std::string& keyStr);
 
-    template <typename T>
-    T* putIntoObjectAndGet(ObjectNode*, uint32_t keyID);
-
-    template <typename T>
-    T* putIntoArrayAndGet(ArrayNode*);
-
     void traverseObjectToRemoveKeyID(const ObjectNode&);
     void traverseArrayToRemoveKeyID(const ArrayNode&);
-
-    template <typename T>
-    T checkComplexNode(ComplexNode);
 
     std::unique_ptr<ObjectNode> root;
     std::unique_ptr<KeyMapper> keyMapper;

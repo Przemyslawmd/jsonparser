@@ -427,41 +427,6 @@ bool Manager::addArrayInternally(ArrayNode* arrNode, const NodeApi& newNode)
 }
 
 
-template <typename T>
-T Manager::checkComplexNode(ComplexNode node)
-{
-    if (std::holds_alternative<nullptr_t>(node)) {
-        return nullptr;
-    }
-    if (std::holds_alternative<T>(node) == false) {
-        if (std::is_same<T, ObjectNode*>::value) {
-            ErrorStorage::putError(ErrorCode::MANAGER_NODE_NOT_OBJECT);
-        }
-        else if (std::is_same<T, ArrayNode*>::value) {
-            ErrorStorage::putError(ErrorCode::MANAGER_NODE_NOT_ARRAY);
-        }
-        return nullptr;
-    }
-    return std::get<T>(node);
-}
-
-
-template <typename T>
-T* Manager::putIntoObjectAndGet(ObjectNode* objectNode, uint32_t keyID)
-{
-    objectNode->emplace(keyID, T());
-    return &(std::get<T>(objectNode->at(keyID).value));
-}
-
-
-template <typename T>
-T* Manager::putIntoArrayAndGet(ArrayNode* arrayNode)
-{
-    arrayNode->emplace_back(T());
-    return &(std::get<T>(arrayNode->back().value));
-}
-
-
 ArrayNode* 
 Manager::getArrayFromPathAndCheckIndex(const std::vector<Path>& path, size_t index)
 {
