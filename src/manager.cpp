@@ -348,6 +348,9 @@ ComplexNode Manager::getNodeFromPath(const std::vector<Path>& path)
             else if (std::holds_alternative<ArrayNode>(node->value)) {
                 nodeType = NodeType::ARRAY;
                 arr = std::get_if<ArrayNode>(&node->value);
+            } else {
+                ErrorStorage::putError(ErrorCode::MANAGER_IMPROPER_PATH);
+                return nullptr;
             }
         }
         else if (nodeType == NodeType::ARRAY && std::holds_alternative<size_t>(pathKey)) {
@@ -365,6 +368,10 @@ ComplexNode Manager::getNodeFromPath(const std::vector<Path>& path)
             else if (std::holds_alternative<ArrayNode>(node->value)) {
                 nodeType = NodeType::ARRAY;
                 arr = std::get_if<ArrayNode>(&node->value);
+            }
+            else {
+                ErrorStorage::putError(ErrorCode::MANAGER_IMPROPER_PATH);
+                return nullptr;
             }
         }
         else {
