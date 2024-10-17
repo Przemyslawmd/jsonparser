@@ -11,6 +11,9 @@
 
 static const std::unordered_map<ErrorCode, std::optional<std::string>> ErrorDetails = 
 {
+    { ErrorCode::EXCEPTION_MANAGER_NOT_KEY_IN_OBJECT,
+        "Exception: Key exists in the key mapper but not in the object" },
+
     { ErrorCode::KEY_MAPPER_KEY_STR_REPEAT,
         "KeyMapper: Key in JSON repeated" },
 
@@ -18,8 +21,6 @@ static const std::unordered_map<ErrorCode, std::optional<std::string>> ErrorDeta
         "There is no JSON object, parse JSON string or load JSON object" },
     { ErrorCode::MANAGER_NOT_KEY_IN_OBJECT,
         "There is no provided key in object" },
-    { ErrorCode::MANAGER_NOT_KEY_IN_INTERNAL_OBJECT,
-        "Internal error: Key exists in the key mapper but not in the object" },
     { ErrorCode::MANAGER_IMPROPER_PATH,
         "Using key for array or index for object" },
     { ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY,
