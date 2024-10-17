@@ -82,7 +82,8 @@ bool Manager::loadJsonObject(const NodeApi& node)
     }
 
     root = std::make_unique<ObjectNode>();
-    return addObjectInternally(root.get(), node);
+    addObjectInternally(root.get(), node);
+    return true;
 }
 
 
@@ -175,7 +176,6 @@ bool Manager::insertNodeIntoArray(const std::vector<Path>& path, size_t index, c
         arr->insert(arr->begin() + index, Node{ .value = ObjectNode() });
         ObjectNode* objToAdd = &std::get<ObjectNode>(arr->at(index).value);
         addObjectInternally(objToAdd, newNode);
-        return true;
     }
     else {
         arr->insert(arr->begin() + index, Node{ .value = ArrayNode() });
@@ -386,15 +386,12 @@ ComplexNode Manager::getNodeFromPath(const std::vector<Path>& path)
 }
 
 
-bool Manager::addObjectInternally(ObjectNode* obj, const NodeApi& newNode)
+void Manager::addObjectInternally(ObjectNode* obj, const NodeApi& newNode)
 {
     uint32_t mapID = keyMapper->getNextMapID();
 
     for (const auto& [keyStr, val] : std::get<ObjectNodeApi>(newNode.value)) {
         auto optKeyID = keyMapper->createAndPutKeyID(keyStr, mapID);
-        if (optKeyID == std::nullopt) {
-            return false;
-        }
         uint32_t keyID = optKeyID.value();
 
         NodeType newNodeType = getNodeApiType(val);
@@ -410,11 +407,10 @@ bool Manager::addObjectInternally(ObjectNode* obj, const NodeApi& newNode)
             addArrayInternally(arrNodeNew, val);
         }
     }
-    return true;
 }
 
 
-bool Manager::addArrayInternally(ArrayNode* arr, const NodeApi& newNode)
+void Manager::addArrayInternally(ArrayNode* arr, const NodeApi& newNode)
 {
     for (auto& val : std::get<ArrayNodeApi>(newNode.value)) {
         NodeType newNodeType = getNodeApiType(val);
@@ -430,7 +426,6 @@ bool Manager::addArrayInternally(ArrayNode* arr, const NodeApi& newNode)
             addObjectInternally(objNew, val);
         }
     }
-    return true;
 }
 
 

@@ -50,8 +50,8 @@ public:
 private:
     bool isRootEmpty() const;
 
-    bool addObjectInternally(ObjectNode*, const NodeApi&);
-    bool addArrayInternally(ArrayNode*, const NodeApi&);
+    void addObjectInternally(ObjectNode*, const NodeApi&);
+    void addArrayInternally(ArrayNode*, const NodeApi&);
 
     ComplexNode getNodeFromPath(const std::vector<Path>& path);
 
