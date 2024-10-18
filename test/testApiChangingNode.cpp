@@ -85,7 +85,8 @@ TEST_F(ApiChangingNode, ChangeComplexJson)
     std::string json = api->parseJsonObjectToString().value();
     const auto end = high_resolution_clock::now();
     const auto elapsed = duration_cast<microseconds>(end - begin);
-    std::cout << PREFIX << elapsed.count() << std::endl;
+    showDuration(begin, end);
+
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "changeComplexJson_8.json");
     ASSERT_EQ(json, jsonExpected);
 }

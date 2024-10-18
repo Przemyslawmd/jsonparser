@@ -1,0 +1,7 @@
+
+#ifndef TIME_TYPE_H_IN
+#define TIME_TYPE_H_IN
+
+#define TIME_TYPE @TIME_MEASUREMENT_TYPE@
+
+#endif

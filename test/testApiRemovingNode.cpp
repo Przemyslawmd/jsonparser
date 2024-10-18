@@ -29,10 +29,9 @@ TEST_F(ApiRemovingNode, RemoveSimpleNodeFromObject)
     result = api->removeNodeFromObject({ "shipTo" }, "address");
     const auto end = high_resolution_clock::now();
     ASSERT_TRUE(result);
+    showDuration(begin, end);
 
     std::string json = api->parseJsonObjectToString().value();
-    const auto elapsed = duration_cast<microseconds>(end - begin);
-    std::cout << PREFIX << elapsed.count() << std::endl;
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "removeSimpleNodeFromObject_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -46,10 +45,9 @@ TEST_F(ApiRemovingNode, RemoveObjectFromObject)
     bool result = api->removeNodeFromObject({}, "person");
     const auto end = high_resolution_clock::now();
     ASSERT_TRUE(result);
+    showDuration(begin, end);
 
     std::string json = api->parseJsonObjectToString().value();
-    const auto elapsed = duration_cast<microseconds>(end - begin);
-    std::cout << PREFIX << elapsed.count() << std::endl;
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "removeObjectFromObject_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -66,10 +64,9 @@ TEST_F(ApiRemovingNode, RemoveObjectAndAddForTheSameKey)
     result = api->addNodeIntoObject({}, "person", NodeApi{ .value = "newPerson" });
     const auto end = high_resolution_clock::now();
     ASSERT_TRUE(result);
+    showDuration(begin, end);
 
     std::string json = api->parseJsonObjectToString().value();
-    const auto elapsed = duration_cast<microseconds>(end - begin);
-    std::cout << PREFIX << elapsed.count() << std::endl;
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "removeObjectAndAddForTheSameKey_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -83,10 +80,9 @@ TEST_F(ApiRemovingNode, RemoveArrayFromObject)
     bool result = api->removeNodeFromObject({ "employees", size_t(1) }, "data");
     const auto end = high_resolution_clock::now();
     ASSERT_TRUE(result);
+    showDuration(begin, end);
 
     std::string json = api->parseJsonObjectToString().value();
-    const auto elapsed = duration_cast<microseconds>(end - begin);
-    std::cout << PREFIX << elapsed.count() << std::endl;
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "removeArrayFromObject_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -121,8 +117,7 @@ TEST_F(ApiRemovingNode, RemoveObjectFromArray)
 
     std::string json = api->parseJsonObjectToString().value();
     const auto end = high_resolution_clock::now();
-    const auto elapsed = duration_cast<microseconds>(end - begin);
-    std::cout << PREFIX << elapsed.count() << std::endl;
+    showDuration(begin, end);
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "removeObjectFromArray_6.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -138,8 +133,7 @@ TEST_F(ApiRemovingNode, RemoveArrayFromArray)
 
     std::string json = api->parseJsonObjectToString().value();
     const auto end = high_resolution_clock::now();
-    const auto elapsed = duration_cast<microseconds>(end - begin);
-    std::cout << PREFIX << elapsed.count() << std::endl;
+    showDuration(begin, end);
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "removeArrayFromArray_7.json");
     ASSERT_EQ(json, jsonExpected);
 }

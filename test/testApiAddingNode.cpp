@@ -44,8 +44,7 @@ TEST_F(ApiAddingNode, AddObjectToObject)
 
     std::string json = api->parseJsonObjectToString().value();
     const auto end = high_resolution_clock::now();
-    const auto elapsed = duration_cast<microseconds>(end - begin);
-    std::cout << PREFIX << elapsed.count() << std::endl;
+    showDuration(begin, end);
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "add_object_to_object_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -69,8 +68,7 @@ TEST_F(ApiAddingNode, AddNestedObjectToObject)
 
     std::string json = api->parseJsonObjectToString().value();
     const auto end = high_resolution_clock::now();
-    const auto elapsed = duration_cast<microseconds>(end - begin);
-    std::cout << PREFIX << elapsed.count() << std::endl;
+    showDuration(begin, end);
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "add_nested_object_to_object_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -89,8 +87,7 @@ TEST_F(ApiAddingNode, AddNestedObjectWithArrayToObject)
 
     std::string json = api->parseJsonObjectToString().value();
     const auto end = std::chrono::high_resolution_clock::now();
-    const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-    std::cout << PREFIX << elapsed.count() << std::endl;
+    showDuration(begin, end);
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "add_nested_object_with_array_to_object_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -107,8 +104,7 @@ TEST_F(ApiAddingNode, AddArrayToObject)
 
     std::string json = api->parseJsonObjectToString().value();
     const auto end = high_resolution_clock::now();
-    const auto elapsed = duration_cast<microseconds>(end - begin);
-    std::cout << PREFIX << elapsed.count() << std::endl;
+    showDuration(begin, end);
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "add_array_to_object_4.json");
     ASSERT_EQ(json, jsonExpected);
 }

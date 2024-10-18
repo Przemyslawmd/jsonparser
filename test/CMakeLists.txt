@@ -12,13 +12,18 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/config.h)
+
 
 if(UNIX)
     set(TIME_MEASUREMENT_TYPE std::chrono::system_clock::time_point)
 elseif(WIN32)
     set(TIME_MEASUREMENT_TYPE std::chrono::steady_clock::time_point)
 endif()
+
+
+configure_file (timeType.h.in ${CMAKE_CURRENT_SOURCE_DIR}/timeType.h @ONLY)
+configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/config.h)
+
 
 add_executable(
   jsonParserTest
@@ -41,6 +46,7 @@ add_executable(
   ../src/log/Error.cpp
   ../src/log/ErrorStorage.cpp
 )
+
 
 target_compile_features(jsonParserTest PRIVATE cxx_std_20)
 

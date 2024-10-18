@@ -68,9 +68,8 @@ TEST_F(ApiTest, ClearApi)
     ASSERT_TRUE(result);
 
     json = api->parseJsonObjectToString().value();
-    auto end = high_resolution_clock::now();
-    auto elapsed = duration_cast<microseconds>(end - begin);
-    std::cout << PREFIX << elapsed.count() << std::endl;
+    const auto end = high_resolution_clock::now();
+    showDuration(begin, end);
     jsonExpected = getJsonFromFile(TEST_DATA_API, "clear_api_7_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
