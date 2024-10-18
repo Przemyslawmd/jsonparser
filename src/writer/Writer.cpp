@@ -11,12 +11,9 @@
 constexpr std::string_view DATA_END = ",\n";
 
 
-std::optional<std::string> Writer::createJsonString(const ObjectNode& object)
+std::string Writer::createJsonString(const ObjectNode& object)
 {
     processObjectNode(object);
-    if (stream.tellp() == 0) {
-        return std::nullopt;
-    }
     return stream.str();
 }
 
@@ -38,11 +35,6 @@ void Writer::processObjectNode(const ObjectNode& obj)
     for (auto const& [idKey, val] : obj) {
         std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
         auto keyStr = keyMapper.getKeyStr(idKey);
-        if (keyStr == std::nullopt) {
-            ErrorStorage::putError(ErrorCode::WRITER_NOT_KEY_IN_MAP);
-            stream.clear();
-            return;
-        }
         stream << "\"" << keyStr.value() << "\": ";
         parseData(val);
     }

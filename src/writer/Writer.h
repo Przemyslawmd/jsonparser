@@ -19,7 +19,7 @@ public:
 
     Writer(const KeyMapper& keyMapper) : keyMapper(keyMapper) {}
 
-    std::optional<std::string> createJsonString(const ObjectNode&);
+    std::string createJsonString(const ObjectNode&);
 
     void setIndent(size_t);
 

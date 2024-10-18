@@ -39,7 +39,7 @@ void testJsonString(const std::string& file)
 
     auto begin = std::chrono::high_resolution_clock::now();
     Writer writer(*keyMapper);
-    std::string json = writer.createJsonString(*root).value();
+    std::string json = writer.createJsonString(*root);
 
     const auto end = std::chrono::high_resolution_clock::now();
     const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);

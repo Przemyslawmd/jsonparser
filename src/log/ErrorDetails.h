@@ -48,8 +48,6 @@ static const std::unordered_map<ErrorCode, std::optional<std::string>> ErrorDeta
     { ErrorCode::VALIDATOR_TOKEN_AFTER_SQUARE_CLOSE, std::nullopt },
     { ErrorCode::VALIDATOR_TOKEN_AFTER_SQUARE_OPEN,  std::nullopt },
     { ErrorCode::VALIDATOR_TOKEN_AFTER_STRING,       std::nullopt },
-    { ErrorCode::WRITER_NOT_KEY_IN_MAP, 
-        "Writer: There is no key id in object" },
 };
 
 #endif
