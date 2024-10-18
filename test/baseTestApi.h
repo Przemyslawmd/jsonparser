@@ -28,7 +28,7 @@ protected:
         const char* testCase = ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name();
         const char* testName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        std::cout << std::setw(20) << testCase << std::setw(12) << testName << " : time in microseconds : " << elapsed.count() << std::endl;
+        std::cout << "\n############ " << testCase << " : " << testName << " : time: " << elapsed.count() << std::endl << std::endl;
     }
 };
 
