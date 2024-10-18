@@ -34,7 +34,6 @@ public:
 
     void clear();
 
-
     bool addNodeIntoObject(const std::vector<Path>&, const std::string& keyStr, const NodeApi&);
     bool addNodeIntoArray(const std::vector<Path>&, const NodeApi&);
     bool insertNodeIntoArray(const std::vector<Path>&, size_t index, const NodeApi&);
@@ -50,8 +49,8 @@ public:
 private:
     bool isRootEmpty() const;
 
-    void addObjectInternally(ObjectNode*, const NodeApi&);
-    void addArrayInternally(ArrayNode*, const NodeApi&);
+    void addObjectInternally(ObjectNode&, const NodeApi&);
+    void addArrayInternally(ArrayNode&, const NodeApi&);
 
     ComplexNode getNodeFromPath(const std::vector<Path>& path);
 

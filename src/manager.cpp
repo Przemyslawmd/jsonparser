@@ -82,7 +82,7 @@ bool Manager::loadJsonObject(const NodeApi& node)
     }
 
     root = std::make_unique<ObjectNode>();
-    addObjectInternally(root.get(), node);
+    addObjectInternally(*root.get(), node);
     return true;
 }
 
@@ -116,12 +116,12 @@ bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string
         obj->emplace(keyID, createNode(newNode));
     }
     else if (newNodeType == NodeType::OBJECT) {
-        ObjectNode* objectNodeNew = putIntoObjectAndGet<ObjectNode>(obj, keyID);
-        addObjectInternally(objectNodeNew, newNode);
+        auto& objNew = putIntoObjectAndGet<ObjectNode>(*obj, keyID);
+        addObjectInternally(objNew, newNode);
     }
     else {
-        ArrayNode* arrayNodeNew = putIntoObjectAndGet<ArrayNode>(obj, keyID);
-        addArrayInternally(arrayNodeNew, newNode);
+        auto& arrNew = putIntoObjectAndGet<ArrayNode>(*obj, keyID);
+        addArrayInternally(arrNew, newNode);
     }
     return true;
 }
@@ -145,11 +145,11 @@ bool Manager::addNodeIntoArray(const std::vector<Path>& path, const NodeApi& new
         arr->emplace_back(createNode(newNode));
     }
     else if (newNodeType == NodeType::OBJECT) {
-        ObjectNode* objNew = putIntoArrayAndGet<ObjectNode>(arr);
+        auto& objNew = putIntoArrayAndGet<ObjectNode>(*arr);
         addObjectInternally(objNew, newNode);
     }
     else {
-        ArrayNode* arrNew = putIntoArrayAndGet<ArrayNode>(arr);
+        auto& arrNew = putIntoArrayAndGet<ArrayNode>(*arr);
         addArrayInternally(arrNew, newNode);
     }
     return true;
@@ -174,12 +174,12 @@ bool Manager::insertNodeIntoArray(const std::vector<Path>& path, size_t index, c
     }
     else if (newNodeType == NodeType::OBJECT) {
         arr->insert(arr->begin() + index, Node{ .value = ObjectNode() });
-        ObjectNode* objToAdd = &std::get<ObjectNode>(arr->at(index).value);
+        auto& objToAdd = std::get<ObjectNode>(arr->at(index).value);
         addObjectInternally(objToAdd, newNode);
     }
     else {
         arr->insert(arr->begin() + index, Node{ .value = ArrayNode() });
-        ArrayNode* arrToAdd = &std::get<ArrayNode>(arr->at(index).value);
+        auto& arrToAdd = std::get<ArrayNode>(arr->at(index).value);
         addArrayInternally(arrToAdd, newNode);
     }
     return true;
@@ -206,12 +206,12 @@ bool Manager::changeNodeInObject(const std::vector<Path>& path, const std::strin
     obj->erase(keyID);
     if (nodeType == NodeType::OBJECT) {
         obj->emplace(keyID, ObjectNode());
-        ObjectNode* objNew = &(std::get<ObjectNode>(obj->at(keyID).value));
+        auto& objNew = std::get<ObjectNode>(obj->at(keyID).value);
         addObjectInternally(objNew, newNode);
     }
     else if (nodeType == NodeType::ARRAY) {
         obj->emplace(keyID, ArrayNode());
-        ArrayNode* arrNew = &(std::get<ArrayNode>(obj->at(keyID).value));
+        auto& arrNew = std::get<ArrayNode>(obj->at(keyID).value);
         addArrayInternally(arrNew, newNode);
     }
     return true;
@@ -235,13 +235,13 @@ bool Manager::changeNodeInArray(const std::vector<Path>& path, size_t index, con
     }
     else if (nodeType == NodeType::OBJECT) {
         arr->at(index) = Node{ .value = ObjectNode() };
-        ObjectNode* objectNodeNew = &std::get<ObjectNode>(arr->at(index).value);
-        addObjectInternally(objectNodeNew, newNode);
+        auto& objNew = std::get<ObjectNode>(arr->at(index).value);
+        addObjectInternally(objNew, newNode);
     }
     else {
         arr->at(index) = Node{ .value = ArrayNode() };
-        ArrayNode* arrNodeNew = &std::get<ArrayNode>(arr->at(index).value);
-        addArrayInternally(arrNodeNew, newNode);
+        auto& arrNew = std::get<ArrayNode>(arr->at(index).value);
+        addArrayInternally(arrNew, newNode);
     }
     return true;
 }
@@ -386,7 +386,7 @@ ComplexNode Manager::getNodeFromPath(const std::vector<Path>& path)
 }
 
 
-void Manager::addObjectInternally(ObjectNode* obj, const NodeApi& newNode)
+void Manager::addObjectInternally(ObjectNode& obj, const NodeApi& newNode)
 {
     uint32_t mapID = keyMapper->getNextMapID();
 
@@ -396,33 +396,33 @@ void Manager::addObjectInternally(ObjectNode* obj, const NodeApi& newNode)
 
         NodeType newNodeType = getNodeApiType(val);
         if (newNodeType == NodeType::SIMPLE) {
-            obj->emplace(keyID, createNode(val));
+            obj.emplace(keyID, createNode(val));
         }
         else if (newNodeType == NodeType::OBJECT) {
-            ObjectNode* objNew = putIntoObjectAndGet<ObjectNode>(obj, keyID);
+            auto& objNew = putIntoObjectAndGet<ObjectNode>(obj, keyID);
             addObjectInternally(objNew, val);
         }
         else {
-            ArrayNode* arrNodeNew = putIntoObjectAndGet<ArrayNode>(obj, keyID);
-            addArrayInternally(arrNodeNew, val);
+            auto& arrNew = putIntoObjectAndGet<ArrayNode>(obj, keyID);
+            addArrayInternally(arrNew, val);
         }
     }
 }
 
 
-void Manager::addArrayInternally(ArrayNode* arr, const NodeApi& newNode)
+void Manager::addArrayInternally(ArrayNode& arr, const NodeApi& newNode)
 {
     for (auto& val : std::get<ArrayNodeApi>(newNode.value)) {
         NodeType newNodeType = getNodeApiType(val);
         if (newNodeType == NodeType::SIMPLE) {
-            arr->emplace_back(createNode(val));
+            arr.emplace_back(createNode(val));
         }
         else if (newNodeType == NodeType::ARRAY) {
-            ArrayNode* arrNew = putIntoArrayAndGet<ArrayNode>(arr);
+            auto& arrNew = putIntoArrayAndGet<ArrayNode>(arr);
             addArrayInternally(arrNew, val);
         }
         else if (newNodeType == NodeType::OBJECT) {
-            ObjectNode* objNew = putIntoArrayAndGet<ObjectNode>(arr);
+            auto& objNew = putIntoArrayAndGet<ObjectNode>(arr);
             addObjectInternally(objNew, val);
         }
     }

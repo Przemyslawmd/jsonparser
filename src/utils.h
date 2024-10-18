@@ -88,18 +88,18 @@ T checkComplexNode(ComplexNode node)
 
 
 template <typename T>
-T* putIntoObjectAndGet(ObjectNode* objNode, uint32_t keyID)
+T& putIntoObjectAndGet(ObjectNode& obj, uint32_t keyID)
 {
-    objNode->emplace(keyID, T());
-    return &(std::get<T>(objNode->at(keyID).value));
+    obj.emplace(keyID, T());
+    return std::get<T>(obj.at(keyID).value);
 }
 
 
 template <typename T>
-T* putIntoArrayAndGet(ArrayNode* arrNode)
+T& putIntoArrayAndGet(ArrayNode& arr)
 {
-    arrNode->emplace_back(T());
-    return &(std::get<T>(arrNode->back().value));
+    arr.emplace_back(T());
+    return std::get<T>(arr.back().value);
 }
 
 #endif
