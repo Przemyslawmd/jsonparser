@@ -6,7 +6,7 @@
 #include <string>
 #include <variant>
 
-#include "Node.h"
+#include "node.h"
 #include "NodeApi.h"
 #include "log/ErrorStorage.h"
 

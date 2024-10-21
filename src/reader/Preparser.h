@@ -8,7 +8,7 @@
 
 #include "state.h"
 #include "Error.h"
-#include "Token.h"
+#include "token.h"
 
 
 class Preparser

@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "state.h"
-#include "Token.h"
+#include "token.h"
 #include "Error.h"
 
 

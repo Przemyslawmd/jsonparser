@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "state.h"
-#include "Token.h"
+#include "token.h"
 
 
 static std::unique_ptr<std::vector<Token>> createKeyTokens(std::unique_ptr<std::vector<Token>> tokens)

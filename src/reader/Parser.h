@@ -10,7 +10,7 @@
 
 #include "state.h"
 #include "../keyMapper.h"
-#include "Token.h"
+#include "token.h"
 #include "node.h"
 
 
