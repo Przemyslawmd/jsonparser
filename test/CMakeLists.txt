@@ -2,12 +2,6 @@
 project(jsonParserTest)
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-set(HEADERS_API "../headers/")
-set(HEADERS "../src/headers/")
-set(SRC "../src")
-set(LOG "../src/log")
-set(READER "../src/reader")
-set(WRITER "../src/writer")
 
 include(FetchContent)
 FetchContent_Declare(
@@ -30,25 +24,25 @@ configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/config.h)
 
 
 add_executable(
-  jsonParserTest 
-  testPreparser.cpp 
-  testParser.cpp 
-  testValidator.cpp 
-  testWriter.cpp 
-  testApiOtherActions.cpp 
-  testApiAddingNode.cpp 
-  testApiChangingNode.cpp 
-  testApiRemovingNode.cpp 
-  testApiError.cpp 
-  ${READER}/Preparser.cpp 
-  ${READER}/Parser.cpp 
-  ${READER}/Validator.cpp 
-  ${WRITER}/Writer.cpp 
-  ${LOG}/Error.cpp 
-  ${LOG}/ErrorStorage.cpp 
-  ${SRC}/jsonApi.cpp 
-  ${SRC}/keyMapper.cpp 
-  ${SRC}/manager.cpp 
+  jsonParserTest
+  testPreparser.cpp
+  testParser.cpp
+  testValidator.cpp
+  testWriter.cpp
+  testApiOtherActions.cpp
+  testApiAddingNode.cpp
+  testApiChangingNode.cpp
+  testApiRemovingNode.cpp
+  testApiError.cpp
+  ../src/reader/Preparser.cpp
+  ../src/reader/Parser.cpp
+  ../src/reader/Validator.cpp
+  ../src/writer/Writer.cpp
+  ../src/log/Error.cpp
+  ../src/log/ErrorStorage.cpp
+  ../src/jsonApi.cpp
+  ../src/keyMapper.cpp
+  ../src/manager.cpp
 )
 
 
@@ -58,8 +52,8 @@ target_include_directories(
   jsonParserTest 
   PRIVATE 
   googletest/include 
-  ${HEADERS} 
-  ${HEADERS_API}
+  "../headers/" 
+  "../src/headers/" 
 )
 
 target_link_libraries(
