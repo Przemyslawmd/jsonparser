@@ -7,9 +7,8 @@
 #include <string>
 #include <variant>
 
-#include "defines.h"
 #include "Error.h"
-#include "Node.h"
+#include "node.h"
 #include "../keyMapper.h"
 
 

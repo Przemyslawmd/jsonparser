@@ -6,7 +6,7 @@
 #include <optional>
 #include <string>
 
-#include "defines.h"
+#include "Error.h"
 
 
 static const std::unordered_map<ErrorCode, std::optional<std::string>> ErrorDetails = 

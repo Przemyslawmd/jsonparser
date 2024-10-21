@@ -6,7 +6,6 @@
 #include <set>
 #include <stack>
 
-#include "defines.h"
 #include "../log/TokenDescription.h"
 #include "../log/ErrorStorage.h"
 

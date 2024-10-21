@@ -6,7 +6,7 @@
 #include "../src/jsonApi.h"
 #include "config.h"
 #include "utils.h"
-#include "Node.h"
+#include "node.h"
 
 #include "baseTestApi.h"
 

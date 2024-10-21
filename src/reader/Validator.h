@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-#include "defines.h"
+#include "state.h"
 #include "Token.h"
 #include "Error.h"
 

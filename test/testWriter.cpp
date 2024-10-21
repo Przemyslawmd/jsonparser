@@ -8,7 +8,7 @@
 
 #include <gtest/gtest.h>
 
-#include "Node.h"
+#include "node.h"
 #include "../src/reader/Parser.h"
 #include "../src/reader/ParserKey.h"
 #include "../src/reader/Preparser.h"

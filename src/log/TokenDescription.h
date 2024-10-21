@@ -1,12 +1,11 @@
 
-
 #ifndef JSONPARSER_TOKEN_DESCRIPTION_H
 #define JSONPARSER_TOKEN_DESCRIPTION_H
 
 #include <unordered_map>
 #include <string>
 
-#include "defines.h"
+#include "token.h"
 
 
 static const std::unordered_map<TokenType, std::string> TokenDesc =

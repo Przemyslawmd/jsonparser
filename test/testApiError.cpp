@@ -7,7 +7,7 @@
 #include "../src/log/ErrorStorage.h"
 #include "config.h"
 #include "utils.h"
-#include "Node.h"
+#include "node.h"
 
 
 class ApiTestError : public testing::Test

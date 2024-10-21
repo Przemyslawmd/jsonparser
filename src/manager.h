@@ -8,9 +8,9 @@
 #include <string>
 #include <vector>
 
-#include "defines.h"
+#include "state.h"
 #include "keyMapper.h"
-#include "Node.h"
+#include "node.h"
 #include "NodeApi.h"
 #include "Error.h"
 

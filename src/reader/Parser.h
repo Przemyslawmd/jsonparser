@@ -8,10 +8,10 @@
 #include <variant>
 #include <vector>
 
-#include "defines.h"
+#include "state.h"
 #include "../keyMapper.h"
 #include "Token.h"
-#include "Node.h"
+#include "node.h"
 
 
 class Parser
