@@ -32,7 +32,7 @@ add_executable(
   "testApiOtherActions.cpp"
   "testApiAddNode.cpp"
   "testApiChangeNode.cpp"
-  "testApiRemovingNode.cpp"
+  "testApiRemoveNode.cpp"
   "testApiError.cpp"
   "../src/reader/Preparser.cpp"
   "../src/reader/Parser.cpp"
@@ -54,6 +54,7 @@ target_include_directories(
   googletest/include 
   "../headers/" 
   "../src/headers/" 
+  "../src/"
 )
 
 target_link_libraries(

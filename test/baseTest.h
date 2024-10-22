@@ -10,7 +10,7 @@
 #include "timeType.h"
 
 
-class ApiTest : public testing::Test
+class BaseTest : public testing::Test
 {
 protected:
 

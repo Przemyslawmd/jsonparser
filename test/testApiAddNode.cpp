@@ -3,17 +3,18 @@
 
 #include <gtest/gtest.h>
 
-#include "../src/jsonApi.h"
+#include "jsonApi.h"
+
+#include "baseTest.h"
 #include "config.h"
 #include "utils.h"
 #include "node.h"
-#include "baseTestApi.h"
 
 
 using std::chrono::high_resolution_clock;
 
 
-class ApiAddNode : public ApiTest {};
+class ApiAddNode : public BaseTest {};
 
 
 TEST_F(ApiAddNode, AddSimpleNodeToObject)

@@ -3,17 +3,18 @@
 
 #include <gtest/gtest.h>
 
-#include "../src/jsonApi.h"
+#include "jsonApi.h"
+
+#include "baseTest.h"
 #include "config.h"
 #include "utils.h"
 #include "node.h"
-#include "baseTestApi.h"
 
 
 using std::chrono::high_resolution_clock;
 
 
-class ApiChangeNode : public ApiTest {};
+class ApiChangeNode : public BaseTest {};
 
 
 TEST_F(ApiChangeNode, ChangeNodeInObjectIntoSimpleNode)

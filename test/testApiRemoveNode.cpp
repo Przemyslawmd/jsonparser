@@ -3,11 +3,11 @@
 
 #include <gtest/gtest.h>
 
-#include "../src/jsonApi.h"
+#include "jsonApi.h"
+
+#include "baseTest.h"
 #include "config.h"
 #include "utils.h"
-
-#include "baseTestApi.h"
 
 
 using std::chrono::high_resolution_clock;
@@ -15,10 +15,10 @@ using std::chrono::duration_cast;
 using std::chrono::microseconds;
 
 
-class ApiRemovingNode : public ApiTest {};
+class ApiRemoveNode : public BaseTest {};
 
 
-TEST_F(ApiRemovingNode, RemoveSimpleNodeFromObject)
+TEST_F(ApiRemoveNode, RemoveSimpleNodeFromObject)
 {
     auto api = prepareApi("test_2.json");
 
@@ -37,7 +37,7 @@ TEST_F(ApiRemovingNode, RemoveSimpleNodeFromObject)
 }
 
 
-TEST_F(ApiRemovingNode, RemoveObjectFromObject)
+TEST_F(ApiRemoveNode, RemoveObjectFromObject)
 {
     auto api = prepareApi("test_3.json");
 
@@ -53,7 +53,7 @@ TEST_F(ApiRemovingNode, RemoveObjectFromObject)
 }
 
 
-TEST_F(ApiRemovingNode, RemoveObjectAndAddForTheSameKey)
+TEST_F(ApiRemoveNode, RemoveObjectAndAddForTheSameKey)
 {
     auto api = prepareApi("test_3.json");
 
@@ -72,7 +72,7 @@ TEST_F(ApiRemovingNode, RemoveObjectAndAddForTheSameKey)
 }
 
 
-TEST_F(ApiRemovingNode, RemoveArrayFromObject)
+TEST_F(ApiRemoveNode, RemoveArrayFromObject)
 {
     auto api = prepareApi("test_7.json");
 
@@ -88,7 +88,7 @@ TEST_F(ApiRemovingNode, RemoveArrayFromObject)
 }
 
 
-TEST_F(ApiRemovingNode, RemoveSimpleNodeFromArray)
+TEST_F(ApiRemoveNode, RemoveSimpleNodeFromArray)
 {
     auto api = prepareApi("test_7.json");
 
@@ -107,7 +107,7 @@ TEST_F(ApiRemovingNode, RemoveSimpleNodeFromArray)
 }
 
 
-TEST_F(ApiRemovingNode, RemoveObjectFromArray)
+TEST_F(ApiRemoveNode, RemoveObjectFromArray)
 {
     auto api = prepareApi("test_6.json");
 
@@ -123,7 +123,7 @@ TEST_F(ApiRemovingNode, RemoveObjectFromArray)
 }
 
 
-TEST_F(ApiRemovingNode, RemoveArrayFromArray)
+TEST_F(ApiRemoveNode, RemoveArrayFromArray)
 {
     auto api = prepareApi("test_7.json");
 

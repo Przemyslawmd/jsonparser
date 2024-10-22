@@ -8,19 +8,16 @@
 #include "config.h"
 #include "utils.h"
 #include "node.h"
-
-#include "baseTestApi.h"
+#include "baseTest.h"
 
 
 using std::chrono::high_resolution_clock;
-using std::chrono::duration_cast;
-using std::chrono::microseconds;
 
 
-class ApiAddingNode : public ApiTest {};
+class ApiOtherActions : public BaseTest {};
 
 
-TEST_F(ApiTest, ClearApi)
+TEST_F(ApiOtherActions, ClearApi)
 {
     auto api = prepareApi("test_7.json");
 
@@ -75,7 +72,7 @@ TEST_F(ApiTest, ClearApi)
 }
 
 
-TEST_F(ApiTest, LoadJsonObject_1)
+TEST_F(ApiOtherActions, LoadJsonObject_1)
 {
     std::map<std::string, NodeApi> internalObject;
     internalObject.emplace("age", 39);
@@ -98,7 +95,7 @@ TEST_F(ApiTest, LoadJsonObject_1)
 }
 
 
-TEST_F(ApiTest, LoadJsonObject_2)
+TEST_F(ApiOtherActions, LoadJsonObject_2)
 {
     std::vector<NodeApi> array_1_1{ { 1 }, { 2 }, { 3 } };
     std::vector<NodeApi> array_1_2{ { 4 }, { 5 }, { 6 } };
@@ -132,7 +129,7 @@ TEST_F(ApiTest, LoadJsonObject_2)
 }
 
 
-TEST_F(ApiTest, LoadJsonObject_Error)
+TEST_F(ApiOtherActions, LoadJsonObject_Error)
 {
     std::vector<NodeApi> arrayNode{ { 1 }, { 2 }, { 3 } };
 
