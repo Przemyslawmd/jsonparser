@@ -7,19 +7,16 @@
 #include "config.h"
 #include "utils.h"
 #include "node.h"
-
 #include "baseTestApi.h"
 
 
 using std::chrono::high_resolution_clock;
-using std::chrono::duration_cast;
-using std::chrono::microseconds;
 
 
-class ApiChangingNode : public ApiTest {};
+class ApiChangeNode : public ApiTest {};
 
 
-TEST_F(ApiChangingNode, ChangeNodeInObjectIntoSimpleNode)
+TEST_F(ApiChangeNode, ChangeNodeInObjectIntoSimpleNode)
 {
     auto api = prepareApi("test_3.json");
     bool result = api->changeNodeInObject({ "person" }, "country", NodeApi{ .value = "Spain" });
@@ -31,7 +28,7 @@ TEST_F(ApiChangingNode, ChangeNodeInObjectIntoSimpleNode)
 }
 
 
-TEST_F(ApiChangingNode, ChangeNodeInObjectIntoObject)
+TEST_F(ApiChangeNode, ChangeNodeInObjectIntoObject)
 {
     auto api = prepareApi("test_3.json");
 
@@ -54,7 +51,7 @@ TEST_F(ApiChangingNode, ChangeNodeInObjectIntoObject)
 }
 
 
-TEST_F(ApiChangingNode, ChangeNodeInObjectIntoArray)
+TEST_F(ApiChangeNode, ChangeNodeInObjectIntoArray)
 {
     auto api = prepareApi("test_3.json");
     std::vector<NodeApi> newArrayNode{ { true }, { "abv" }, { 0 }, { 1.01 } };
@@ -68,7 +65,7 @@ TEST_F(ApiChangingNode, ChangeNodeInObjectIntoArray)
 }
 
 
-TEST_F(ApiChangingNode, ChangeComplexJson)
+TEST_F(ApiChangeNode, ChangeComplexJson)
 {
     auto api = prepareApi("test_8_complex.json");
 
@@ -84,7 +81,6 @@ TEST_F(ApiChangingNode, ChangeComplexJson)
 
     std::string json = api->parseJsonObjectToString().value();
     const auto end = high_resolution_clock::now();
-    const auto elapsed = duration_cast<microseconds>(end - begin);
     showDuration(begin, end);
 
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "changeComplexJson_8.json");
@@ -92,7 +88,7 @@ TEST_F(ApiChangingNode, ChangeComplexJson)
 }
 
 
-TEST_F(ApiChangingNode, ChangeNodeInArrayIntoSimpleNode)
+TEST_F(ApiChangeNode, ChangeNodeInArrayIntoSimpleNode)
 {
     auto api = prepareApi("test_2.json");
 
@@ -105,7 +101,7 @@ TEST_F(ApiChangingNode, ChangeNodeInArrayIntoSimpleNode)
 }
 
 
-TEST_F(ApiChangingNode, ChangeNodeInArrayIntoObject)
+TEST_F(ApiChangeNode, ChangeNodeInArrayIntoObject)
 {
     auto api = prepareApi("test_6.json");
 
@@ -124,7 +120,7 @@ TEST_F(ApiChangingNode, ChangeNodeInArrayIntoObject)
 }
 
 
-TEST_F(ApiChangingNode, ChangeNodeInArrayIntoArray)
+TEST_F(ApiChangeNode, ChangeNodeInArrayIntoArray)
 {
     auto api = prepareApi("test_7.json");
     std::vector<NodeApi> newArray{ { 1 }, { -100 }, { 43212231231 } };
@@ -140,7 +136,7 @@ TEST_F(ApiChangingNode, ChangeNodeInArrayIntoArray)
 /*******************************************************************/
 /* ERRORS **********************************************************/
 
-TEST_F(ApiChangingNode, ErrorImproperKeyInPath)
+TEST_F(ApiChangeNode, ErrorImproperKeyInPath)
 {
     auto api = prepareApi("test_4.json");
     NodeApi newNode{ .value = "Cracow" };
@@ -152,7 +148,7 @@ TEST_F(ApiChangingNode, ErrorImproperKeyInPath)
 }
 
 
-TEST_F(ApiChangingNode, ErrorImproperKeyInNode)
+TEST_F(ApiChangeNode, ErrorImproperKeyInNode)
 {
     auto api = prepareApi("test_4.json");
 
@@ -164,7 +160,7 @@ TEST_F(ApiChangingNode, ErrorImproperKeyInNode)
 }
 
 
-TEST_F(ApiChangingNode, ErrorOutOfIndexInPath)
+TEST_F(ApiChangeNode, ErrorOutOfIndexInPath)
 {
     auto api = prepareApi("test_7.json");
 
@@ -176,7 +172,7 @@ TEST_F(ApiChangingNode, ErrorOutOfIndexInPath)
 }
 
 
-TEST_F(ApiChangingNode, OutOfIndexInNode)
+TEST_F(ApiChangeNode, OutOfIndexInNode)
 {
     auto api = prepareApi("test_7.json");
 
@@ -188,7 +184,7 @@ TEST_F(ApiChangingNode, OutOfIndexInNode)
 }
 
 
-TEST_F(ApiChangingNode, ErrorImproperPath)
+TEST_F(ApiChangeNode, ErrorImproperPath)
 {
     auto api = prepareApi("test_4.json");
 
@@ -200,7 +196,7 @@ TEST_F(ApiChangingNode, ErrorImproperPath)
 }
 
 
-TEST_F(ApiChangingNode, ErrorImproperIndicatorForNode)
+TEST_F(ApiChangeNode, ErrorImproperIndicatorForNode)
 {
     auto api = prepareApi("test_4.json");
 
@@ -212,7 +208,7 @@ TEST_F(ApiChangingNode, ErrorImproperIndicatorForNode)
 }
 
 
-TEST_F(ApiChangingNode, ErrorEmptyRoot)
+TEST_F(ApiChangeNode, ErrorEmptyRoot)
 {
     auto api = std::make_unique<JsonApi>();
 

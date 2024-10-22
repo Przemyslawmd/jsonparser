@@ -25,24 +25,24 @@ configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/config.h)
 
 add_executable(
   jsonParserTest
-  testPreparser.cpp
-  testParser.cpp
-  testValidator.cpp
-  testWriter.cpp
-  testApiOtherActions.cpp
-  testApiAddingNode.cpp
-  testApiChangingNode.cpp
-  testApiRemovingNode.cpp
-  testApiError.cpp
-  ../src/reader/Preparser.cpp
-  ../src/reader/Parser.cpp
-  ../src/reader/Validator.cpp
-  ../src/writer/Writer.cpp
-  ../src/log/Error.cpp
-  ../src/log/ErrorStorage.cpp
-  ../src/jsonApi.cpp
-  ../src/keyMapper.cpp
-  ../src/manager.cpp
+  "testPreparser.cpp"
+  "testParser.cpp"
+  "testValidator.cpp"
+  "testWriter.cpp"
+  "testApiOtherActions.cpp"
+  "testApiAddNode.cpp"
+  "testApiChangeNode.cpp"
+  "testApiRemovingNode.cpp"
+  "testApiError.cpp"
+  "../src/reader/Preparser.cpp"
+  "../src/reader/Parser.cpp"
+  "../src/reader/Validator.cpp"
+  "../src/writer/Writer.cpp"
+  "../src/log/Error.cpp"
+  "../src/log/ErrorStorage.cpp"
+  "../src/jsonApi.cpp"
+  "../src/keyMapper.cpp"
+  "../src/manager.cpp"
 )
 
 
