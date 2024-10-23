@@ -11,8 +11,8 @@
 #include "state.h"
 #include "keyMapper.h"
 #include "node.h"
-#include "NodeApi.h"
-#include "Error.h"
+#include "nodeApi.h"
+#include "error.h"
 
 
 using ComplexNode = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
