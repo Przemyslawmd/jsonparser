@@ -1,22 +1,24 @@
 
-#include <fstream>
+//#include <fstream>
 #include <memory>
 #include <vector>
 #include <variant>
 
 #include <gtest/gtest.h>
 
-#include "../src/reader/Parser.h"
-#include "../src/reader/ParserKey.h"
-#include "../src/reader/Preparser.h"
-#include "../src/reader/Validator.h"
-#include "../src/keyMapper.h"
+#include "reader/Parser.h"
+#include "reader/ParserKey.h"
+#include "reader/Preparser.h"
+#include "reader/Validator.h"
+#include "keyMapper.h"
+
 #include "config.h"
 #include "node.h"
 #include "utils.h"
+#include "baseTest.h"
 
 
-class TestParser : public ::testing::Test
+class TestParser : public BaseTest
 {
 protected:
     std::unique_ptr<KeyMapper> keyMapper;
@@ -36,25 +38,23 @@ protected:
 
         auto tokens = preparser->parseJSON(jsonString);
         EXPECT_TRUE(tokens != nullptr);
-
         validator->validate(*tokens);
         tokens = createKeyTokens(std::move(tokens));
 
         const auto parser = std::make_unique<Parser>(*keyMapper);
-        auto begin = std::chrono::high_resolution_clock::now();
+        const auto begin = std::chrono::high_resolution_clock::now();
         std::unique_ptr<ObjectNode> jsonObj = parser->parseTokens(*tokens);
-
         const auto end = std::chrono::high_resolution_clock::now();
-        const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::cout << "             ###### microseconds: " << elapsed.count() << std::endl;
+        showDuration(begin, end);
+
         return jsonObj;
     }
 
-    void checkKeyMapping(const std::map<uint32_t, std::string>& keyMapMock)
+    void checkKeyMapping(const std::map<uint32_t, std::string>& keyMapExpected)
     {
-        for (const auto& [keyIDMock, keyStrMock] : keyMapMock) {
-            ASSERT_TRUE(keyMapper->getKeyStr(keyIDMock) != std::nullopt);
-            ASSERT_TRUE(keyMapper->getKeyStr(keyIDMock).value() == keyStrMock);
+        for (const auto& [keyIDExpected, keyStrExpected] : keyMapExpected) {
+            ASSERT_TRUE(keyMapper->getKeyStr(keyIDExpected) != std::nullopt);
+            ASSERT_TRUE(keyMapper->getKeyStr(keyIDExpected).value() == keyStrExpected);
         }
     }
 };
