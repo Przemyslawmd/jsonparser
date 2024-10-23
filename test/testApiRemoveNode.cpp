@@ -1,5 +1,5 @@
 
-#include <iostream>
+#include <chrono>
 
 #include <gtest/gtest.h>
 
@@ -11,8 +11,6 @@
 
 
 using std::chrono::high_resolution_clock;
-using std::chrono::duration_cast;
-using std::chrono::microseconds;
 
 
 class ApiRemoveNode : public BaseTest {};

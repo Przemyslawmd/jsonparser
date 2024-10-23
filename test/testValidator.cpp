@@ -1,11 +1,10 @@
 
-#include <fstream>
-
 #include <gtest/gtest.h>
 
-#include "../src/reader/Preparser.h"
-#include "../src/reader/Validator.h"
-#include "../src/log/ErrorStorage.h"
+#include "reader/Preparser.h"
+#include "reader/Validator.h"
+#include "log/ErrorStorage.h"
+
 #include "config.h"
 #include "utils.h"
 

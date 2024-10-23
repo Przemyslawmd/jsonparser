@@ -1,10 +1,9 @@
 
-#include <fstream>
-
 #include <gtest/gtest.h>
 
-#include "../src/jsonApi.h"
-#include "../src/log/ErrorStorage.h"
+#include "jsonApi.h"
+#include "log/ErrorStorage.h"
+
 #include "config.h"
 #include "utils.h"
 #include "node.h"
