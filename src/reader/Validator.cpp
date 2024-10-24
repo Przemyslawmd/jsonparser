@@ -104,11 +104,8 @@ bool Validator::checkTokensSequence(const std::vector<Token>& tokens)
 
     const std::map<State, std::set<TokenType>> afterString
     {
-        { State::OBJECT_PARSING, { TokenType::COLON,
-                                   TokenType::COMMA,
-                                   TokenType::CURLY_CLOSE }},
-        { State::ARRAY_PARSING,  { TokenType::COMMA,
-                                   TokenType::SQUARE_CLOSE }}
+        { State::OBJECT_PARSING, { TokenType::COLON, TokenType::COMMA, TokenType::CURLY_CLOSE }},
+        { State::ARRAY_PARSING,  { TokenType::COMMA, TokenType::SQUARE_CLOSE }}
     };
 
     std::set<TokenType> afterColon
@@ -121,8 +118,7 @@ bool Validator::checkTokensSequence(const std::vector<Token>& tokens)
     std::map<State, std::set<TokenType>> afterComma
     {
         { State::OBJECT_PARSING, { TokenType::DATA_STR }},
-        { State::ARRAY_PARSING,  { TokenType::CURLY_OPEN,
-                                   TokenType::SQUARE_OPEN }}
+        { State::ARRAY_PARSING,  { TokenType::CURLY_OPEN, TokenType::SQUARE_OPEN }}
     };
     afterComma.at(State::ARRAY_PARSING).insert(tokenValue.begin(), tokenValue.end());
 
@@ -138,57 +134,63 @@ bool Validator::checkTokensSequence(const std::vector<Token>& tokens)
     for (auto it = tokens.begin() + 1; it != tokens.end() - 1; it++) {
 
         State state = states.top();
+        TokenType tokenType = it->type;
+        TokenType nextTokenType = (it + 1)-> type;
 
-        if (it->type == TokenType::CURLY_OPEN) {
+        if (tokenType == TokenType::CURLY_OPEN) {
             states.push(State::OBJECT_PARSING);
-            if (afterCurlyOpen.count((it + 1)->type) == 0) {
-                createTypeAfterError(ErrorCode::VALIDATOR_TOKEN_AFTER_CURLY_OPEN, it->type, (it + 1)->type);
+            if (afterCurlyOpen.contains(nextTokenType) == false) {
+                createError(ErrorCode::VALIDATOR_AFTER_CURLY_OPEN, tokenType, nextTokenType);
                 return false;
             }
+            continue;
         }
-        else if (it->type == TokenType::SQUARE_OPEN) {
+        if (tokenType == TokenType::SQUARE_OPEN) {
             states.push(State::ARRAY_PARSING);
-            if (afterSquareOpen.count((it + 1)->type) == 0) {
-                createTypeAfterError(ErrorCode::VALIDATOR_TOKEN_AFTER_SQUARE_OPEN, it->type, (it + 1)->type);
+            if (afterSquareOpen.contains(nextTokenType) == false) {
+                createError(ErrorCode::VALIDATOR_AFTER_SQUARE_OPEN, tokenType, nextTokenType);
                 return false;
             }
+            continue;
         }
-        else if (it->type == TokenType::CURLY_CLOSE) {
+        if (tokenType == TokenType::CURLY_CLOSE) {
             states.pop();
-            if (afterClose.count((it + 1)->type) == 0) {
-                createTypeAfterError(ErrorCode::VALIDATOR_TOKEN_AFTER_CURLY_CLOSE, it->type, (it + 1)->type);
+            if (afterClose.contains(nextTokenType) == false) {
+                createError(ErrorCode::VALIDATOR_AFTER_CURLY_CLOSE, tokenType, nextTokenType);
                 return false;
             }
+            continue;
         }
-        else if (it->type == TokenType::SQUARE_CLOSE) {
+        if (tokenType == TokenType::SQUARE_CLOSE) {
             states.pop();
-            if (afterClose.count((it + 1)->type) == 0) {
-                createTypeAfterError(ErrorCode::VALIDATOR_TOKEN_AFTER_CURLY_CLOSE, it->type, (it + 1)->type);
+            if (afterClose.contains(nextTokenType) == false) {
+                createError(ErrorCode::VALIDATOR_AFTER_CURLY_CLOSE, tokenType, nextTokenType);
                 return false;
             }
+            continue;
         }
-        else if (it->type == TokenType::COMMA && afterComma.at(state).count((it + 1)->type) == 0) {
-            createTypeAfterError(ErrorCode::VALIDATOR_TOKEN_AFTER_COMMA, it->type, (it + 1)->type);
+        if (tokenType == TokenType::COMMA && afterComma.at(state).contains(nextTokenType) == false) {
+            createError(ErrorCode::VALIDATOR_AFTER_COMMA, tokenType, nextTokenType);
             return false;
         }
-        else if (it->type == TokenType::COLON && (state == State::ARRAY_PARSING || afterColon.count((it + 1)->type) == 0)) {
-            createTypeAfterError(ErrorCode::VALIDATOR_TOKEN_AFTER_COLON, it->type, (it + 1)->type);
+        if (tokenType == TokenType::COLON && (state == State::ARRAY_PARSING || afterColon.contains(nextTokenType) == false)) {
+            createError(ErrorCode::VALIDATOR_AFTER_COLON, tokenType, nextTokenType);
             return false;
         }
-        else if (it->type == TokenType::DATA_STR && afterString.at(state).count((it + 1)->type) == 0) {
-            createTypeAfterError(ErrorCode::VALIDATOR_TOKEN_AFTER_STRING, it->type, (it + 1)->type);
+        if (tokenType == TokenType::DATA_STR && afterString.at(state).contains(nextTokenType) == false) {
+            createError(ErrorCode::VALIDATOR_AFTER_STRING, tokenType, nextTokenType);
             return false;
         }
-        else if (it->type == TokenType::DATA_INT && afterData.count((it + 1)->type) == 0) {
-            createTypeAfterError(ErrorCode::VALIDATOR_TOKEN_AFTER_INT, it->type, (it + 1)->type);
+        if (tokenType == TokenType::DATA_INT && afterData.contains(nextTokenType) == false) {
+            createError(ErrorCode::VALIDATOR_AFTER_INT, tokenType, nextTokenType);
             return false;
         }
-        else if (it->type == TokenType::DATA_DOUBLE && afterData.count((it + 1)->type) == 0) {
-            createTypeAfterError(ErrorCode::VALIDATOR_TOKEN_AFTER_DOUBLE, it->type, (it + 1)->type);
+        if (tokenType == TokenType::DATA_DOUBLE && afterData.contains(nextTokenType) == false) {
+            createError(ErrorCode::VALIDATOR_AFTER_DOUBLE, tokenType, nextTokenType);
             return false;
         }
-        else if (it->type == TokenType::DATA_BOOL && afterData.count((it + 1)->type) == 0) {
-            createTypeAfterError(ErrorCode::VALIDATOR_TOKEN_AFTER_BOOL, it->type, (it + 1)->type);
+        if (tokenType == TokenType::DATA_BOOL && afterData.contains(nextTokenType) == false) {
+            createError(ErrorCode::VALIDATOR_AFTER_BOOL, tokenType, nextTokenType);
             return false;
         }
     }
@@ -196,7 +198,7 @@ bool Validator::checkTokensSequence(const std::vector<Token>& tokens)
 }
 
 
-void Validator::createTypeAfterError(ErrorCode errorCode, TokenType first, TokenType second)
+void Validator::createError(ErrorCode errorCode, TokenType first, TokenType second)
 {
     ErrorStorage::putError(
         errorCode,
