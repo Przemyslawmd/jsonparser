@@ -2,6 +2,7 @@
 #ifndef JSONPARSER_KEY_MAPPER_H
 #define JSONPARSER_KEY_MAPPER_H
 
+#include <cstdint>
 #include <map> 
 #include <optional>
 #include <string>

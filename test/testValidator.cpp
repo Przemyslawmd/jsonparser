@@ -1,6 +1,7 @@
 
 #include <gtest/gtest.h>
 
+#include "error.h"
 #include "reader/Preparser.h"
 #include "reader/Validator.h"
 #include "log/ErrorStorage.h"
