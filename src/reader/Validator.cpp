@@ -139,35 +139,35 @@ bool Validator::checkTokensSequence(const std::vector<Token>& tokens)
 
         if (tokenType == TokenType::CURLY_OPEN) {
             states.push(State::OBJECT_PARSING);
-            if (afterCurlyOpen.contains(nextTokenType) == false) {
-                createError(ErrorCode::VALIDATOR_AFTER_CURLY_OPEN, tokenType, nextTokenType);
-                return false;
+            if (afterCurlyOpen.contains(nextTokenType)) {
+                continue;
             }
-            continue;
+            createError(ErrorCode::VALIDATOR_AFTER_CURLY_OPEN, tokenType, nextTokenType);
+            return false;
         }
         if (tokenType == TokenType::SQUARE_OPEN) {
             states.push(State::ARRAY_PARSING);
-            if (afterSquareOpen.contains(nextTokenType) == false) {
-                createError(ErrorCode::VALIDATOR_AFTER_SQUARE_OPEN, tokenType, nextTokenType);
-                return false;
+            if (afterSquareOpen.contains(nextTokenType)) {
+                continue;
             }
-            continue;
+            createError(ErrorCode::VALIDATOR_AFTER_SQUARE_OPEN, tokenType, nextTokenType);
+            return false;
         }
         if (tokenType == TokenType::CURLY_CLOSE) {
             states.pop();
-            if (afterClose.contains(nextTokenType) == false) {
-                createError(ErrorCode::VALIDATOR_AFTER_CURLY_CLOSE, tokenType, nextTokenType);
-                return false;
+            if (afterClose.contains(nextTokenType)) {
+                continue;
             }
-            continue;
+            createError(ErrorCode::VALIDATOR_AFTER_CURLY_CLOSE, tokenType, nextTokenType);
+            return false;
         }
         if (tokenType == TokenType::SQUARE_CLOSE) {
             states.pop();
-            if (afterClose.contains(nextTokenType) == false) {
-                createError(ErrorCode::VALIDATOR_AFTER_CURLY_CLOSE, tokenType, nextTokenType);
-                return false;
+            if (afterClose.contains(nextTokenType)) {
+                continue;
             }
-            continue;
+            createError(ErrorCode::VALIDATOR_AFTER_CURLY_CLOSE, tokenType, nextTokenType);
+            return false;
         }
         if (tokenType == TokenType::COMMA && afterComma.at(state).contains(nextTokenType) == false) {
             createError(ErrorCode::VALIDATOR_AFTER_COMMA, tokenType, nextTokenType);
