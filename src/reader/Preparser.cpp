@@ -2,9 +2,8 @@
 #include "Preparser.h"
 
 #include <format>
-#include <iostream>
-#include <stack>
 
+#include "error.h"
 #include "../log/ErrorStorage.h"
 
 
