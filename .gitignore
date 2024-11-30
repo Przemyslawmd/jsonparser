@@ -4,3 +4,4 @@ out/*
 test/config.h
 test/timeType.h
 test/data/output.txt
+test/data/performance.txt

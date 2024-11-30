@@ -2,6 +2,8 @@
 #ifndef JSONPARSER_TEST_BASE_API_H
 #define JSONPARSER_TEST_BASE_API_H
 
+#include <fstream>
+
 #include <gtest/gtest.h>
 
 #include "../src/jsonApi.h"
@@ -13,6 +15,17 @@
 class BaseTest : public testing::Test
 {
 protected:
+
+    BaseTest()
+    {
+        const auto fullPath = std::string(TEST_DATA) + "performance.txt";
+        performace.open(fullPath, std::ios::app);
+    }
+
+    ~BaseTest()
+    {
+        performace.close();
+    }
 
     std::unique_ptr<JsonApi> prepareApi(const std::string& file)
     {
@@ -29,7 +42,12 @@ protected:
         const char* testName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
         auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         std::cout << "\n############ " << testCase << " : " << testName << " : time: " << elapsed.count() << std::endl << std::endl;
+        performace << std::left << std::setw(20) << testCase << std::setw(35) << testName << "time: " << elapsed.count() << std::endl;
     }
+
+private:
+
+    std::ofstream performace;
 };
 
 #endif
