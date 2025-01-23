@@ -5,6 +5,8 @@
 
 
 constexpr uint32_t TWO_BYTES = 16;
+constexpr uint32_t MASK_MAP_ID = 0xFF'FF'00'00;
+constexpr uint32_t MASK_ITEM_ID = 0x00'00'FF'FF;
 
 
 std::optional<uint32_t>

@@ -1,6 +1,6 @@
 
-#ifndef JSONCPP_DEFINES_H
-#define JSONCPP_DEFINES_H
+#ifndef JSONPARSER_STATE_H
+#define JSONPARSER_STATE_H
 
 
 enum class State

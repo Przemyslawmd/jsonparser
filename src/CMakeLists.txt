@@ -1,6 +1,4 @@
 
-project(jsonParser)
-
 add_library(
     jsonParser
     SHARED
