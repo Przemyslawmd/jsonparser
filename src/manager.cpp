@@ -162,7 +162,7 @@ bool Manager::insertNodeIntoArray(const std::vector<Path>& path, size_t index, c
         return false;
     }
 
-    ArrayNode* arr = getArrayFromPathAndCheckIndex(path, index);
+    ArrayNode* arr = getArrayFromPath(path, index);
     if (arr == nullptr) {
         return false;
     }
@@ -192,7 +192,7 @@ bool Manager::changeNodeInObject(const std::vector<Path>& path, const std::strin
         return false;
     }
 
-    auto [obj, keyID] = getObjectFromPathAndKeyID(path, keyStr);
+    auto [obj, keyID] = getObjectAndKeyIDFromPath(path, keyStr);
     if (obj == nullptr) {
         return false;
     }
@@ -224,7 +224,7 @@ bool Manager::changeNodeInArray(const std::vector<Path>& path, size_t index, con
         return false;
     }
 
-    ArrayNode* arr = getArrayFromPathAndCheckIndex(path, index);
+    ArrayNode* arr = getArrayFromPath(path, index);
     if (arr == nullptr) {
         return false;
     }
@@ -253,7 +253,7 @@ bool Manager::removeNodeFromObject(const std::vector<Path>& path, const std::str
         return false;
     }
 
-    auto [obj, keyID] = getObjectFromPathAndKeyID(path, keyStr);
+    auto [obj, keyID] = getObjectAndKeyIDFromPath(path, keyStr);
     if (obj == nullptr) {
         return false;
     }
@@ -281,7 +281,7 @@ bool Manager::removeNodeFromArray(const std::vector<Path>& path, size_t index)
         return false;
     }
 
-    ArrayNode* arr = getArrayFromPathAndCheckIndex(path, index);
+    ArrayNode* arr = getArrayFromPath(path, index);
     if (arr == nullptr) {
         return false;
     }
@@ -430,7 +430,7 @@ void Manager::addArrayInternally(ArrayNode& arr, const NodeApi& newNode)
 
 
 ArrayNode* 
-Manager::getArrayFromPathAndCheckIndex(const std::vector<Path>& path, size_t index)
+Manager::getArrayFromPath(const std::vector<Path>& path, size_t index)
 {
     ComplexNode complexNode = getNodeFromPath(path);
     ArrayNode* arr = checkComplexNode<ArrayNode*>(complexNode);
@@ -447,7 +447,7 @@ Manager::getArrayFromPathAndCheckIndex(const std::vector<Path>& path, size_t ind
 
 
 std::tuple<ObjectNode*, size_t> 
-Manager::getObjectFromPathAndKeyID(const std::vector<Path>& path, const std::string& keyStr)
+Manager::getObjectAndKeyIDFromPath(const std::vector<Path>& path, const std::string& keyStr)
 {
     ComplexNode comNode = getNodeFromPath(path);
     ObjectNode* obj = checkComplexNode<ObjectNode*>(comNode);
@@ -469,18 +469,24 @@ Manager::getObjectFromPathAndKeyID(const std::vector<Path>& path, const std::str
 }
 
 
+void Manager::checkObjectToRemoveKeyID(const Node& node)
+{
+    NodeType nodeType = getNodeType(node);
+    if (nodeType == NodeType::OBJECT) {
+        const auto& objToRemove = std::get<ObjectNode>(node.value);
+        traverseObjectToRemoveKeyID(objToRemove);
+    }
+    else if (nodeType == NodeType::ARRAY) {
+        const auto& arrToRemove = std::get<ArrayNode>(node.value);
+        traverseArrayToRemoveKeyID(arrToRemove);
+    }
+}
+
+
 void Manager::traverseObjectToRemoveKeyID(const ObjectNode& obj)
 {
-    for (const auto& [keyID, data] : obj) {
-        NodeType nodeType = getNodeType(data);
-        if (nodeType == NodeType::OBJECT) {
-            const auto& objToRemove = std::get<ObjectNode>(data.value);
-            traverseObjectToRemoveKeyID(objToRemove);
-        }
-        else if (nodeType == NodeType::ARRAY) {
-            const auto& arrToRemove = std::get<ArrayNode>(data.value);
-            traverseArrayToRemoveKeyID(arrToRemove);
-        }
+    for (const auto& [keyID, node] : obj) {
+        checkObjectToRemoveKeyID(node);
         keyMapper->removeKey(keyID);
     }
 }
@@ -488,16 +494,8 @@ void Manager::traverseObjectToRemoveKeyID(const ObjectNode& obj)
 
 void Manager::traverseArrayToRemoveKeyID(const ArrayNode& arr)
 {
-    for (const auto& data : arr) {
-        NodeType nodeType = getNodeType(data);
-        if (nodeType == NodeType::OBJECT) {
-            const auto& objToRemove = std::get<ObjectNode>(data.value);
-            traverseObjectToRemoveKeyID(objToRemove);
-        }
-        else if (nodeType == NodeType::ARRAY) {
-            const auto& arrToRemove = std::get<ArrayNode>(data.value);
-            traverseArrayToRemoveKeyID(arrToRemove);
-        }
+    for (const auto& node : arr) {
+        checkObjectToRemoveKeyID(node);
     }
 }
 

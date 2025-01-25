@@ -55,13 +55,14 @@ private:
     ComplexNode getNodeFromPath(const std::vector<Path>& path);
 
     ArrayNode* 
-    getArrayFromPathAndCheckIndex(const std::vector<Path>& path, size_t index);
+    getArrayFromPath(const std::vector<Path>& path, size_t index);
 
     std::tuple<ObjectNode*, size_t> 
-    getObjectFromPathAndKeyID(const std::vector<Path>& path, const std::string& keyStr);
+    getObjectAndKeyIDFromPath(const std::vector<Path>& path, const std::string& keyStr);
 
     void traverseObjectToRemoveKeyID(const ObjectNode&);
     void traverseArrayToRemoveKeyID(const ArrayNode&);
+    void checkObjectToRemoveKeyID(const Node&);
 
     std::unique_ptr<ObjectNode> root;
     std::unique_ptr<KeyMapper> keyMapper;
