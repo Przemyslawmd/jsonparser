@@ -2,6 +2,7 @@
 #ifndef JSONPARSER_PARSER_H
 #define JSONPARSER_PARSER_H
 
+#include <concepts>
 #include <map>
 #include <memory>
 #include <stack>
@@ -12,6 +13,18 @@
 #include "../keyMapper.h"
 #include "token.h"
 #include "node.h"
+
+
+template <typename T>
+concept ComplexLimit = std::is_same<T, ObjectNode>::value || std::is_same<T, ArrayNode>::value;
+
+
+template <typename T>
+concept PrimitiveLimit = std::is_same<T, std::string>::value || 
+                         std::is_same<T, double>::value || 
+                         std::is_same<T, int64_t>::value || 
+                         std::is_same<T, bool>::value || 
+                         std::is_same<T, nullptr_t>::value;
 
 
 class Parser
@@ -32,10 +45,10 @@ class Parser
         void pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> nodeStack, State);
         void popDataFromStack();
 
-        template <typename T>
+        template <typename T> requires ComplexLimit<T>
         bool pushComplexNodeOnStack(const std::string& key, State);
 
-        template <typename T>
+        template <typename T> requires PrimitiveLimit<T>
         bool processData(const std::string& key, const Token&);
 };
 

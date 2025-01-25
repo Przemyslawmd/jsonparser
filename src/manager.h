@@ -54,8 +54,7 @@ private:
 
     ComplexNode getNodeFromPath(const std::vector<Path>& path);
 
-    ArrayNode* 
-    getArrayFromPath(const std::vector<Path>& path, size_t index);
+    ArrayNode* getArrayFromPath(const std::vector<Path>& path, size_t index);
 
     std::tuple<ObjectNode*, size_t> 
     getObjectAndKeyIDFromPath(const std::vector<Path>& path, const std::string& keyStr);

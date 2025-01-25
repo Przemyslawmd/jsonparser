@@ -2,7 +2,6 @@
 #include "Parser.h"
 
 #include <ranges>
-#include <stack>
 
 
 std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens)
@@ -55,7 +54,7 @@ std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
-template <typename T>
+template <typename T> requires ComplexLimit<T>
 bool Parser::pushComplexNodeOnStack(const std::string& keyStr, State state)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
@@ -81,7 +80,7 @@ bool Parser::pushComplexNodeOnStack(const std::string& keyStr, State state)
 }
 
 
-template <typename T>
+template <typename T> requires PrimitiveLimit<T>
 bool Parser::processData(const std::string& keyStr, const Token& token)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
