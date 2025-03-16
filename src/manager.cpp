@@ -1,12 +1,12 @@
 
 #include "manager.h"
 
-#include "../src/reader/Parser.h"
-#include "../src/reader/ParserKey.h"
-#include "../src/reader/Preparser.h"
-#include "../src/reader/Validator.h"
-#include "../src/writer/Writer.h"
-#include "../src/log/ErrorStorage.h"
+#include "reader/Parser.h"
+#include "reader/ParserKey.h"
+#include "reader/Preparser.h"
+#include "reader/Validator.h"
+#include "writer/Writer.h"
+#include "log/ErrorStorage.h"
 #include "utils.h"
 
 

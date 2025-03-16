@@ -6,18 +6,19 @@
 #include <map> 
 #include <optional>
 #include <string>
+#include <string_view>
 
 
 class KeyMapper
 {
 public:
-    std::optional<uint32_t> createAndPutKeyID(const std::string& keyStr, uint32_t mapID);
+    std::optional<uint32_t> createAndPutKeyID(std::string_view keyStr, uint32_t mapID);
 
     void clear();
     void removeKey(uint32_t keyID);
 
     std::optional<std::string> getKeyStr(uint32_t keyID) const;
-    std::optional<uint32_t> getKeyID(const std::string& keyStr, uint32_t mapID) const;
+    std::optional<uint32_t> getKeyID(std::string_view keyStr, uint32_t mapID) const;
 
     uint32_t getNextMapID() const;
 

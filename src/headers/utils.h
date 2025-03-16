@@ -8,7 +8,7 @@
 
 #include "node.h"
 #include "nodeApi.h"
-#include "../log/ErrorStorage.h"
+#include "log/ErrorStorage.h"
 
 
 using ComplexNode = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;

@@ -9,10 +9,10 @@
 #include <variant>
 #include <vector>
 
-#include "state.h"
-#include "../keyMapper.h"
-#include "token.h"
+#include "keyMapper.h"
 #include "node.h"
+#include "state.h"
+#include "token.h"
 
 
 template <typename T>

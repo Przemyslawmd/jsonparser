@@ -18,6 +18,7 @@ target_include_directories(
     PRIVATE
     "headers/"
     "../headers/"
+    "./"
 )
 
 target_compile_features(jsonParser PRIVATE cxx_std_20)

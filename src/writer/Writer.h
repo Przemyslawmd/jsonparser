@@ -8,7 +8,7 @@
 #include <variant>
 
 #include "node.h"
-#include "../keyMapper.h"
+#include "keyMapper.h"
 
 
 class Writer

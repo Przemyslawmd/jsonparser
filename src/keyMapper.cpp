@@ -1,6 +1,8 @@
 
 #include "keyMapper.h" 
 
+#include <ranges>
+
 #include "log/ErrorStorage.h"
 
 
@@ -10,7 +12,7 @@ constexpr uint32_t MASK_ITEM_ID = 0x00'00'FF'FF;
 
 
 std::optional<uint32_t>
-KeyMapper::createAndPutKeyID(const std::string& keyStr, uint32_t mapID)
+KeyMapper::createAndPutKeyID(std::string_view keyStr, uint32_t mapID)
 {
     mapID &= MASK_MAP_ID;
     if (getKeyID(keyStr, mapID) != std::nullopt) {
@@ -33,7 +35,7 @@ std::optional<std::string> KeyMapper::getKeyStr(uint32_t keyID) const
 
 
 std::optional<uint32_t> 
-KeyMapper::getKeyID(const std::string& keyString, uint32_t mapID) const
+KeyMapper::getKeyID(std::string_view keyString, uint32_t mapID) const
 {
     for (const auto& [keyID, keyStr] : keyMap) {
         if (keyStr.compare(keyString) == 0 && ((keyID & MASK_MAP_ID) == (mapID & MASK_MAP_ID))) {
@@ -47,7 +49,7 @@ KeyMapper::getKeyID(const std::string& keyString, uint32_t mapID) const
 uint32_t KeyMapper::getNextMapID() const
 {
     uint32_t maxMapID = 0;
-    for (const auto& [keyID, _] : keyMap) {
+    for (const auto keyID : keyMap | std::views::keys) {
         if (keyID > maxMapID) {
             maxMapID = keyID;
         }
@@ -74,7 +76,7 @@ void KeyMapper::removeKey(uint32_t keyID)
 uint32_t KeyMapper::getMaxItemID(uint32_t mapID) const
 {
     uint32_t maxItemID = 0;
-    for (const auto& [keyID, _] : keyMap) {
+    for (const auto keyID : keyMap | std::views::keys) {
         if ((keyID & MASK_MAP_ID) == mapID && (keyID & MASK_ITEM_ID) > maxItemID) {
             maxItemID = (keyID & MASK_ITEM_ID);
         }
