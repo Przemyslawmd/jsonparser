@@ -2,15 +2,15 @@
 #include <gtest/gtest.h>
 
 #include "error.h"
+#include "log/ErrorStorage.h"
 #include "reader/Preparser.h"
 #include "reader/Validator.h"
-#include "log/ErrorStorage.h"
 
 #include "config.h"
 #include "utils.h"
 
 
-void makeValidatorError(const std::string& jsonFile)
+static void makeValidatorError(const std::string& jsonFile)
 {
     ErrorStorage::clear();
     std::string jsonString = getJsonFromFile(TEST_DATA_IMPROPER, jsonFile);

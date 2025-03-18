@@ -6,19 +6,19 @@
 
 #include <gtest/gtest.h>
 
+#include "keyMapper.h"
 #include "node.h"
 #include "reader/Parser.h"
 #include "reader/ParserKey.h"
 #include "reader/Preparser.h"
 #include "writer/Writer.h"
-#include "keyMapper.h"
 
 #include "baseTest.h"
 #include "config.h"
 #include "utils.h"
 
 
-std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, KeyMapper& keyMapper)
+static std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, KeyMapper& keyMapper)
 {
     std::string jsonString = getJsonFromFile(TEST_DATA, jsonFile);
 

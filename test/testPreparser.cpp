@@ -6,9 +6,9 @@
 
 #include <gtest/gtest.h>
 
+#include "log/ErrorStorage.h"
 #include "reader/ParserKey.h"
 #include "reader/Preparser.h"
-#include "log/ErrorStorage.h"
 
 #include "baseTest.h"
 #include "config.h"
@@ -47,19 +47,20 @@ struct TestData
 void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestData>& testData)
 {
     ASSERT_EQ(tokens->size(), testData.size());
-    
+
+    using enum TokenType;
     for (int i = 0; i < tokens->size(); i++) {
         ASSERT_EQ(tokens->at(i).type, testData[i].type );
-        if (tokens->at(i).type == TokenType::DATA_INT) {
+        if (tokens->at(i).type == DATA_INT) {
             ASSERT_EQ(std::get<int64_t>(tokens->at(i).data), std::get<int64_t>(testData[i].data));
         }
-        else if (tokens->at(i).type == TokenType::DATA_STR || tokens->at(i).type == TokenType::KEY) {
+        else if (tokens->at(i).type == DATA_STR || tokens->at(i).type == KEY) {
             ASSERT_EQ(std::get<std::string>(tokens->at(i).data), std::get<std::string>(testData[i].data));
         }
-        else if (tokens->at(i).type == TokenType::DATA_BOOL) {
+        else if (tokens->at(i).type == DATA_BOOL) {
             ASSERT_EQ(std::get<bool>(tokens->at(i).data), std::get<bool>(testData[i].data));
         }
-        else if (tokens->at(i).type == TokenType::DATA_DOUBLE) {
+        else if (tokens->at(i).type == DATA_DOUBLE) {
             ASSERT_TRUE((std::get<double>(tokens->at(i).data) - std::get<double>(testData[i].data)) <= DBL_EPSILON);
         }
     }
