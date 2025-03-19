@@ -34,36 +34,38 @@ bool Validator::validate(const std::vector<Token>& tokens)
 
 bool Validator::validateBrackets(const std::vector<Token>& tokens)
 {
+    using enum ErrorCode;
+    using enum TokenType;
     int curlyCounter = 0;
     int squareCounter = 0;
 
     for (const auto& token : tokens) {
-        if (token.type == TokenType::CURLY_OPEN) {
+        if (token.type == CURLY_OPEN) {
             curlyCounter++;
         }
-        else if (token.type == TokenType::SQUARE_OPEN) {
+        else if (token.type == SQUARE_OPEN) {
             squareCounter++;
         }
-        else if (token.type == TokenType::CURLY_CLOSE) {
+        else if (token.type == CURLY_CLOSE) {
             if (--curlyCounter < 0) {
-                ErrorStorage::putError(ErrorCode::VALIDATOR_BRACKET_CURLY);
+                ErrorStorage::putError(VALIDATOR_BRACKET_CURLY);
                 return false;
             }
         }
-        else if (token.type == TokenType::SQUARE_CLOSE) {
+        else if (token.type == SQUARE_CLOSE) {
             if (--squareCounter < 0) {
-                ErrorStorage::putError(ErrorCode::VALIDATOR_BRACKET_SQUARE);
+                ErrorStorage::putError(VALIDATOR_BRACKET_SQUARE);
                 return false;
             }
         }
     }
 
     if (curlyCounter != 0) {
-        ErrorStorage::putError(ErrorCode::VALIDATOR_BRACKET_CURLY);
+        ErrorStorage::putError(VALIDATOR_BRACKET_CURLY);
         return false;
     }
     if (squareCounter != 0) {
-        ErrorStorage::putError(ErrorCode::VALIDATOR_BRACKET_SQUARE);
+        ErrorStorage::putError(VALIDATOR_BRACKET_SQUARE);
         return false;
     }
     return true;
