@@ -14,14 +14,6 @@
 using ComplexNode = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 
 
-enum class NodeType
-{
-    SIMPLE,
-    OBJECT,
-    ARRAY
-};
-
-
 Node createNode(const NodeApi& node)
 {
     if (std::holds_alternative<std::string>(node.value)) {
