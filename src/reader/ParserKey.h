@@ -13,21 +13,23 @@
 static std::unique_ptr<std::vector<Token>> createKeyTokens(std::unique_ptr<std::vector<Token>> tokens)
 {
     std::stack<State> states;
+    using enum TokenType;
+    using enum State;
 
     for (auto it = tokens->begin(); it != tokens->end(); it++) {
-        if (it->type == TokenType::CURLY_OPEN) {
-            states.emplace(State::OBJECT_PARSING);
+        if (it->type == CURLY_OPEN) {
+            states.emplace(OBJECT_PARSING);
         }
-        else if (it->type == TokenType::SQUARE_OPEN) {
-            states.emplace(State::ARRAY_PARSING);
+        else if (it->type == SQUARE_OPEN) {
+            states.emplace(ARRAY_PARSING);
         }
-        else if (it->type == TokenType::CURLY_CLOSE || it->type == TokenType::SQUARE_CLOSE) {
+        else if (it->type == CURLY_CLOSE || it->type == SQUARE_CLOSE) {
             states.pop();
         }
-        else if (it->type == TokenType::DATA_STR &&
-            states.top() == State::OBJECT_PARSING &&
-            ((it - 1)->type == TokenType::CURLY_OPEN || (it - 1)->type == TokenType::COMMA)) {
-            it->type = TokenType::KEY;
+        else if (it->type == DATA_STR &&
+                 states.top() == OBJECT_PARSING &&
+                 ((it - 1)->type == CURLY_OPEN || (it - 1)->type == COMMA)) {
+            it->type = KEY;
         }
     }
     return tokens;
