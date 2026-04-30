@@ -23,8 +23,6 @@ configure_file (timeType.h.in ${CMAKE_CURRENT_SOURCE_DIR}/timeType.h @ONLY)
 configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/config.h)
 
 
-set(TEST_FILES "")
-
 if (JSON_BUILD)
     list(APPEND TEST_FILES "testPreparser.cpp")
     list(APPEND TEST_FILES "testParser.cpp")
@@ -37,22 +35,29 @@ if (JSON_BUILD)
     list(APPEND TEST_FILES "testApiError.cpp")
 endif()
 
+if (JSON_BUILD)
+    list(APPEND SRC_FILES "../src/manager.cpp")
+    list(APPEND SRC_FILES "../src/reader/Preparser.cpp")
+    list(APPEND SRC_FILES "../src/reader/Validator.cpp")
+    list(APPEND SRC_FILES "../src/reader/Parser.cpp")
+    list(APPEND SRC_FILES "../src/writer/Writer.cpp")
+    list(APPEND SRC_FILES "../src/log/Error.cpp")
+    list(APPEND SRC_FILES "../src/log/ErrorStorage.cpp")
+    list(APPEND SRC_FILES "../src/jsonApi.cpp")
+    list(APPEND SRC_FILES "../src/keyMapper.cpp")
+endif()
+
 if (XML_BUILD)
     list(APPEND TEST_FILES "xml/testPreparserXML.cpp")
 endif()
 
+if (XML_BUILD)
+    list(APPEND SRC_FILES "../src/reader/xml/PreparserXML.cpp")
+endif()
 
 add_executable(
   jsonParserTest
-  "../src/manager.cpp"
-  "../src/reader/Preparser.cpp"
-  "../src/reader/Validator.cpp"
-  "../src/reader/Parser.cpp"
-  "../src/writer/Writer.cpp"
-  "../src/log/Error.cpp"
-  "../src/log/ErrorStorage.cpp"
-  "../src/jsonApi.cpp"
-  "../src/keyMapper.cpp"
+  ${SRC_FILES}
   ${TEST_FILES}
 )
 

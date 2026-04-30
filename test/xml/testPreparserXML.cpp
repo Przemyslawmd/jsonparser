@@ -5,6 +5,7 @@
 
 #include <gtest/gtest.h>
 
+#include "reader/xml/PreparserXML.h"
 #include "../headers/token.h"
 #include "../baseTest.h"
 #include "../config.h"
@@ -15,6 +16,12 @@ class TestPreparserXML : public BaseTest
 protected:
     std::unique_ptr<std::vector<TokenXML>> createTokens(const std::string& path, const std::string& file)
     {
+        std::string xmlString = getJsonFromFile(path, file);
+        auto preparser = std::make_unique<PreparserXML>();
+        auto tokens = preparser->parseXML(xmlString);
+        if (!tokens) {
+            return nullptr;
+        }
         return nullptr;
     }
 };

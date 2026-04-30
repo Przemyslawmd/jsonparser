@@ -38,6 +38,7 @@ enum class TokenTypeXML
 
     DATA_STR,
     DATA_INT,
+    DATA_DOUBLE,
 };
 
 
