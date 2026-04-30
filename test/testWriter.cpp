@@ -20,7 +20,7 @@
 
 static std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, KeyMapper& keyMapper)
 {
-    std::string jsonString = getJsonFromFile(TEST_DATA, jsonFile);
+    std::string jsonString = getJsonFromFile(TEST_DATA_JSON, jsonFile);
 
     const auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
@@ -46,7 +46,7 @@ protected:
 
         const auto end = std::chrono::high_resolution_clock::now();
         showDuration(begin, end);
-        std::string jsonExpected = getJsonFromFile(TEST_DATA, file);
+        std::string jsonExpected = getJsonFromFile(TEST_DATA_JSON, file);
         ASSERT_EQ(json, jsonExpected);
     }
 };

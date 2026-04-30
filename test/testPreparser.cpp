@@ -69,7 +69,7 @@ void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestDat
 
 TEST_F(TestPreparser, Test_File_1)
 {
-    auto tokens = createTokens(TEST_DATA, "test_1.json");
+    auto tokens = createTokens(TEST_DATA_JSON, "test_1.json");
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
@@ -108,7 +108,7 @@ TEST_F(TestPreparser, Test_File_1)
 
 TEST_F(TestPreparser, Test_File_2)
 {
-    auto tokens = createTokens(TEST_DATA, "test_2.json");
+    auto tokens = createTokens(TEST_DATA_JSON, "test_2.json");
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
@@ -212,7 +212,7 @@ TEST_F(TestPreparser, Test_File_2)
 
 TEST_F(TestPreparser, Test_File_6)
 {
-    auto tokens = createTokens(TEST_DATA, "test_6.json");
+    auto tokens = createTokens(TEST_DATA_JSON, "test_6.json");
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },
@@ -258,7 +258,7 @@ TEST_F(TestPreparser, Test_File_6)
 
 TEST_F(TestPreparser, Test_File_7)
 {
-    auto tokens = createTokens(TEST_DATA, "test_7.json");
+    auto tokens = createTokens(TEST_DATA_JSON, "test_7.json");
 
     std::vector<TestData> testData = {
        { TokenType::CURLY_OPEN },

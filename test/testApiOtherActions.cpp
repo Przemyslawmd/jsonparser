@@ -36,7 +36,7 @@ TEST_F(ApiOtherActions, ClearApi)
     ASSERT_EQ(json, jsonExpected);
 
     api->clear();
-    std::string jsonString = getJsonFromFile(TEST_DATA, "test_8_complex.json");
+    std::string jsonString = getJsonFromFile(TEST_DATA_JSON, "test_8_complex.json");
     result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
 
@@ -52,7 +52,7 @@ TEST_F(ApiOtherActions, ClearApi)
     ASSERT_EQ(json, jsonExpected);
 
     api->clear();
-    jsonString = getJsonFromFile(TEST_DATA, "test_7.json");
+    jsonString = getJsonFromFile(TEST_DATA_JSON, "test_7.json");
     result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
 
