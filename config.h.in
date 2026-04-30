@@ -1,0 +1,4 @@
+#pragma once
+
+#cmakedefine XML_BUILD
+#cmakedefine JSON_BUILD
