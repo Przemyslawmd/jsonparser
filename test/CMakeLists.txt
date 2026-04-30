@@ -23,26 +23,37 @@ configure_file (timeType.h.in ${CMAKE_CURRENT_SOURCE_DIR}/timeType.h @ONLY)
 configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/config.h)
 
 
+set(TEST_FILES "")
+
+if (JSON_BUILD)
+    list(APPEND TEST_FILES "testPreparser.cpp")
+    list(APPEND TEST_FILES "testParser.cpp")
+    list(APPEND TEST_FILES "testValidator.cpp")
+    list(APPEND TEST_FILES "testWriter.cpp")
+    list(APPEND TEST_FILES "testApiOtherActions.cpp")
+    list(APPEND TEST_FILES "testApiAddNode.cpp")
+    list(APPEND TEST_FILES "testApiChangeNode.cpp")
+    list(APPEND TEST_FILES "testApiRemoveNode.cpp")
+    list(APPEND TEST_FILES "testApiError.cpp")
+endif()
+
+if (XML_BUILD)
+    list(APPEND TEST_FILES "xml/testPreparserXML.cpp")
+endif()
+
+
 add_executable(
   jsonParserTest
-  "testPreparser.cpp"
-  "testParser.cpp"
-  "testValidator.cpp"
-  "testWriter.cpp"
-  "testApiOtherActions.cpp"
-  "testApiAddNode.cpp"
-  "testApiChangeNode.cpp"
-  "testApiRemoveNode.cpp"
-  "testApiError.cpp"
+  "../src/manager.cpp"
   "../src/reader/Preparser.cpp"
-  "../src/reader/Parser.cpp"
   "../src/reader/Validator.cpp"
+  "../src/reader/Parser.cpp"
   "../src/writer/Writer.cpp"
   "../src/log/Error.cpp"
   "../src/log/ErrorStorage.cpp"
   "../src/jsonApi.cpp"
   "../src/keyMapper.cpp"
-  "../src/manager.cpp"
+  ${TEST_FILES}
 )
 
 
