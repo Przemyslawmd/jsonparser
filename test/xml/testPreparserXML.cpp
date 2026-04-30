@@ -49,61 +49,83 @@ void checkTokens(std::unique_ptr<std::vector<TokenXML>> tokens, std::vector<Toke
 
 TEST_F(TestPreparserXML, Test_File_1)
 {
-    auto tokens = createTokens(TEST_DATA, "test_1.xml");
+    auto tokens = createTokens(TEST_DATA_XML, "test_1.xml");
     std::vector<TokenXML> testData = 
     {
         { TokenTypeXML::ANGLE_OPEN },
         { TokenTypeXML::QUESTION },
-        { TokenTypeXML::DATA_STR, std::string{ "xml" } },
-        { TokenTypeXML::DATA_STR, std::string{ "version" } },
+        { TokenTypeXML::DATA_STR, std::string{ "xml" }},
+        { TokenTypeXML::DATA_STR, std::string{ "version" }},
         { TokenTypeXML::EQUAL },
-        { TokenTypeXML::DATA_STR_QUOTA, std::string{ "1.0" } },
-        { TokenTypeXML::DATA_STR, std::string{ "encoding" } },
+        { TokenTypeXML::DATA_STR_QUOTA, std::string{ "1.0" }},
+        { TokenTypeXML::DATA_STR, std::string{ "encoding" }},
         { TokenTypeXML::EQUAL },
-        { TokenTypeXML::DATA_STR_QUOTA, std::string{ "UTF-8" } },
+        { TokenTypeXML::DATA_STR_QUOTA, std::string{ "UTF-8" }},
         { TokenTypeXML::QUESTION },
         { TokenTypeXML::ANGLE_CLOSE },
 
         { TokenTypeXML::ANGLE_OPEN },
-        { TokenTypeXML::DATA_STR, std::string{ "person" } },
+        { TokenTypeXML::DATA_STR, std::string{ "person" }},
         { TokenTypeXML::ANGLE_CLOSE },
 
         { TokenTypeXML::ANGLE_OPEN },
-        { TokenTypeXML::DATA_STR, std::string{ "name" } },
+        { TokenTypeXML::DATA_STR, std::string{ "name" }},
         { TokenTypeXML::ANGLE_CLOSE },
 
-        { TokenTypeXML::DATA_STR, std::string{ "Jan" } },
-
-        { TokenTypeXML::ANGLE_OPEN },
-        { TokenTypeXML::SLASH },
-        { TokenTypeXML::DATA_STR, std::string{ "name" } },
-        { TokenTypeXML::ANGLE_CLOSE },
-
-        { TokenTypeXML::ANGLE_OPEN },
-        { TokenTypeXML::DATA_STR, std::string{ "surname" } },
-        { TokenTypeXML::ANGLE_CLOSE },
-
-        { TokenTypeXML::DATA_STR, std::string{ "Kowalski" } },
+        { TokenTypeXML::DATA_STR, std::string{ "Jan" }},
 
         { TokenTypeXML::ANGLE_OPEN },
         { TokenTypeXML::SLASH },
-        { TokenTypeXML::DATA_STR, std::string{ "surname" } },
+        { TokenTypeXML::DATA_STR, std::string{ "name" }},
         { TokenTypeXML::ANGLE_CLOSE },
 
         { TokenTypeXML::ANGLE_OPEN },
-        { TokenTypeXML::DATA_STR, std::string{ "city" } },
+        { TokenTypeXML::DATA_STR, std::string{ "surname" }},
         { TokenTypeXML::ANGLE_CLOSE },
 
-        { TokenTypeXML::DATA_STR, std::string{ "Warszawa" } },
-
-        { TokenTypeXML::ANGLE_OPEN },
-        { TokenTypeXML::SLASH },
-        { TokenTypeXML::DATA_STR, std::string{ "city" } },
-        { TokenTypeXML::ANGLE_CLOSE },
+        { TokenTypeXML::DATA_STR, std::string{ "Kowalski" }},
 
         { TokenTypeXML::ANGLE_OPEN },
         { TokenTypeXML::SLASH },
-        { TokenTypeXML::DATA_STR, std::string{ "person" } },
+        { TokenTypeXML::DATA_STR, std::string{ "surname" }},
+        { TokenTypeXML::ANGLE_CLOSE },
+
+        { TokenTypeXML::ANGLE_OPEN },
+        { TokenTypeXML::DATA_STR, std::string{ "city" }},
+        { TokenTypeXML::ANGLE_CLOSE },
+
+        { TokenTypeXML::DATA_STR, std::string{ "Warszawa" }},
+
+        { TokenTypeXML::ANGLE_OPEN },
+        { TokenTypeXML::SLASH },
+        { TokenTypeXML::DATA_STR, std::string{ "city" }},
+        { TokenTypeXML::ANGLE_CLOSE },
+
+        { TokenTypeXML::ANGLE_OPEN },
+        { TokenTypeXML::DATA_STR, std::string{ "number" }},
+        { TokenTypeXML::ANGLE_CLOSE },
+
+        { TokenTypeXML::DATA_INT, 34567 },
+
+        { TokenTypeXML::ANGLE_OPEN },
+        { TokenTypeXML::SLASH },
+        { TokenTypeXML::DATA_STR, std::string{ "number" }},
+        { TokenTypeXML::ANGLE_CLOSE },
+
+        { TokenTypeXML::ANGLE_OPEN },
+        { TokenTypeXML::DATA_STR, std::string{ "result" }},
+        { TokenTypeXML::ANGLE_CLOSE },
+
+        { TokenTypeXML::DATA_DOUBLE, 12.45 },
+
+        { TokenTypeXML::ANGLE_OPEN },
+        { TokenTypeXML::SLASH },
+        { TokenTypeXML::DATA_STR, std::string{ "result" }},
+        { TokenTypeXML::ANGLE_CLOSE },
+
+        { TokenTypeXML::ANGLE_OPEN },
+        { TokenTypeXML::SLASH },
+        { TokenTypeXML::DATA_STR, std::string{ "person" }},
         { TokenTypeXML::ANGLE_CLOSE },
     };
     checkTokens(std::move(tokens), testData);
