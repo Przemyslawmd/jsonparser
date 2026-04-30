@@ -27,9 +27,30 @@ enum class TokenType
 };
 
 
+enum class TokenTypeXML
+{
+    TAG_OPEN,
+    TAG_CLOSE,
+
+    EQUAL,
+    SLASH,
+    QUESTION,
+
+    DATA_STR,
+    DATA_INT,
+};
+
+
 struct Token
 {
     TokenType type;
+    std::variant<std::string, int64_t, double, bool, nullptr_t> data;
+};
+
+
+struct TokenXML
+{
+    TokenTypeXML type;
     std::variant<std::string, int64_t, double, bool, nullptr_t> data;
 };
 
