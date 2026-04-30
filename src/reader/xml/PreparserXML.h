@@ -18,14 +18,18 @@ public:
 
 private:
     size_t parseNumber(const std::string& json, size_t index);
-    size_t parseString(const std::string& json, size_t index);
+    size_t parseStringOutQuotation(const std::string& json, size_t index);
+    size_t parseStringInQuotation(const std::string& json, size_t index);
 
     std::unique_ptr<std::vector<TokenXML>> tokens;
 
-    const std::map<char, TokenTypeXML> tokensMap {
-        { '<', TokenTypeXML::TAG_OPEN },
-        { '>', TokenTypeXML::TAG_CLOSE },
+    const std::map<char, TokenTypeXML> tokensMap 
+    {
+        { '=', TokenTypeXML::EQUAL },
+        { '?', TokenTypeXML::QUESTION },
         { '/', TokenTypeXML::SLASH },
+        { '<', TokenTypeXML::ANGLE_OPEN },
+        { '>', TokenTypeXML::ANGLE_CLOSE },
     };
 };
 

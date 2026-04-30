@@ -7,11 +7,6 @@
 #include "log/ErrorStorage.h"
 
 
-constexpr size_t FALSE_WORD_LEN = 5;
-constexpr size_t TRUE_WORD_LEN = 4;
-constexpr size_t NULL_WORD_LEN = 4;
-
-
 std::unique_ptr<std::vector<TokenXML>> PreparserXML::parseXML(const std::string& xml)
 {
     tokens = std::make_unique<std::vector<TokenXML>>();
@@ -24,7 +19,7 @@ std::unique_ptr<std::vector<TokenXML>> PreparserXML::parseXML(const std::string&
             continue;
         }
         if (symbol == '\"') {
-            size_t shift = parseString(xml, index);
+            size_t shift = parseStringInQuotation(xml, index);
             if (shift == 0) {
                 return nullptr;
             }
@@ -39,7 +34,12 @@ std::unique_ptr<std::vector<TokenXML>> PreparserXML::parseXML(const std::string&
             tokens->emplace_back(tokensMap.at(symbol), nullptr);
             continue;
         }
-        return nullptr;
+        size_t shift = parseStringOutQuotation(xml, index);
+        if (shift == 0) {
+            return nullptr;
+        }
+        index += shift;
+        continue;
     }
     tokens->shrink_to_fit();
     return std::move(tokens);
@@ -84,13 +84,27 @@ size_t PreparserXML::parseNumber(const std::string& json, size_t index)
 }
 
 
-size_t PreparserXML::parseString(const std::string& json, size_t index)
+size_t PreparserXML::parseStringInQuotation(const std::string& json, size_t index)
 {
     size_t shift = 1;
     while (index + shift < json.length()) {
         if (json[index + shift] == '\"') {
-            tokens->emplace_back(TokenTypeXML::DATA_STR, json.substr(index + 1, shift - 1));
+            tokens->emplace_back(TokenTypeXML::DATA_STR_QUOTA, json.substr(index + 1, shift - 1));
             return shift;
+        }
+        shift += 1;
+    }
+    return 0;
+}
+
+
+size_t PreparserXML::parseStringOutQuotation(const std::string& json, size_t index)
+{
+    size_t shift = 0;
+    while (index + shift < json.length()) {
+        if (json[index + shift] == ' ' || tokensMap.contains(json[index + shift])) {
+            tokens->emplace_back(TokenTypeXML::DATA_STR, json.substr(index, shift));
+            return shift - 1;
         }
         shift += 1;
     }

@@ -29,14 +29,15 @@ enum class TokenType
 
 enum class TokenTypeXML
 {
-    TAG_OPEN,
-    TAG_CLOSE,
+    ANGLE_OPEN,
+    ANGLE_CLOSE,
 
     EQUAL,
     SLASH,
     QUESTION,
 
     DATA_STR,
+    DATA_STR_QUOTA,
     DATA_INT,
     DATA_DOUBLE,
 };
