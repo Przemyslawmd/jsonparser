@@ -18,9 +18,6 @@ public:
     std::unique_ptr<std::vector<Token>> parseJSON(const std::string& json);
 
 private:
-    size_t parseNumber(const std::string& json, size_t index);
-    size_t parseString(const std::string& json, size_t index);
-
     std::unique_ptr<std::vector<Token>> tokens;
 
     const std::map<char, TokenType> tokensMap {

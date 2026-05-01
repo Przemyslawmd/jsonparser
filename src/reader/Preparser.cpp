@@ -5,6 +5,7 @@
 
 #include "error.h"
 #include "log/ErrorStorage.h"
+#include "utilsReader.h"
 
 
 constexpr size_t FALSE_WORD_LEN = 5;
@@ -24,7 +25,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             continue;
         }
         if (symbol == '\"') {
-            size_t shift = parseString(json, index);
+            size_t shift = parseString<Token, TokenType>(json, index, *tokens, TokenType::DATA_STR);
             if (shift == 0) {
                 return nullptr;
             }
@@ -32,7 +33,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             continue;
         }
         if (isdigit(symbol) || symbol == '-') {
-            index = parseNumber(json, index);
+            index = parseNumber<Token, TokenType>(json, index, *tokens);
             continue;
         }
         if (tokensMap.count(symbol)) {
@@ -71,58 +72,5 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
     }
     tokens->shrink_to_fit();
     return std::move(tokens);
-}
-
-
-/*******************************************************************/
-/* PRIVATE *********************************************************/
-
-size_t Preparser::parseNumber(const std::string& json, size_t index)
-{
-    int64_t number = 0;
-    bool isMinus = false;
-
-    if (isdigit(json[index])) {
-        number = json[index] - '0';
-    }
-    else {
-        isMinus = true;
-    }
-
-    index++;
-    while (index < json.length() && isdigit(json[index])) {
-        number = number * 10 + json[index] - '0';
-        index++;
-    }
-    if (json[index] != '.') {
-        tokens->emplace_back(TokenType::DATA_INT, isMinus ? number * -1 : number);
-        return index - 1;
-    }
-
-    index++;
-    size_t divider = 1;
-    while (index < json.length() && isdigit(json[index])) {
-        number = number * 10 + (json[index] - '0');
-        index++;
-        divider *= 10;
-    }
-    double numberFloat = (double) number / divider;
-    tokens->emplace_back(TokenType::DATA_DOUBLE, isMinus ? numberFloat * -1.0 : numberFloat);
-    return index - 1;
-}
-
-
-size_t Preparser::parseString(const std::string& json, size_t index)
-{
-    size_t shift = 1;
-    while (index + shift < json.length()) {
-        if (json[index + shift] == '\"') {
-            tokens->emplace_back(TokenType::DATA_STR, json.substr(index + 1, shift - 1));
-            return shift;
-        }
-        shift += 1;
-    }
-    ErrorStorage::putError(ErrorCode::PREPARSER_STRING_ERROR);
-    return 0;
 }
 
