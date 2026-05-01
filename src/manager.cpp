@@ -3,7 +3,7 @@
 
 #include "reader/Parser.h"
 #include "reader/ParserKey.h"
-#include "reader/Preparser.h"
+#include "reader/json/PreparserJSON.h"
 #include "reader/Validator.h"
 #include "writer/Writer.h"
 #include "log/ErrorStorage.h"
@@ -37,7 +37,7 @@ bool Manager::parseJsonString(const std::string& jsonString)
         return false;
     }
 
-    const auto preparser = std::make_unique<Preparser>();
+    const auto preparser = std::make_unique<PreparserJSON>();
     auto tokens = preparser->parseJSON(jsonString);
     if (tokens == nullptr) {
         return false;

@@ -8,7 +8,7 @@
 
 #include "log/ErrorStorage.h"
 #include "reader/ParserKey.h"
-#include "reader/Preparser.h"
+#include "reader/json/PreparserJSON.h"
 
 #include "baseTest.h"
 #include "config.h"
@@ -23,7 +23,7 @@ protected:
         std::string jsonString = getJsonFromFile(path, file);
 
         const auto begin = std::chrono::high_resolution_clock::now();
-        auto preparser = std::make_unique<Preparser>();
+        auto preparser = std::make_unique<PreparserJSON>();
         auto tokens = preparser->parseJSON(jsonString);
         if (tokens == nullptr) {
             return nullptr;

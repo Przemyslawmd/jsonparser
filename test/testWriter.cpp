@@ -10,7 +10,7 @@
 #include "node.h"
 #include "reader/Parser.h"
 #include "reader/ParserKey.h"
-#include "reader/Preparser.h"
+#include "reader/json/PreparserJSON.h"
 #include "writer/Writer.h"
 
 #include "baseTest.h"
@@ -22,7 +22,7 @@ static std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, 
 {
     std::string jsonString = getJsonFromFile(TEST_DATA_JSON, jsonFile);
 
-    const auto preparser = std::make_unique<Preparser>();
+    const auto preparser = std::make_unique<PreparserJSON>();
     auto tokens = preparser->parseJSON(jsonString);
     EXPECT_TRUE(tokens != nullptr);
     tokens = createKeyTokens(std::move(tokens));

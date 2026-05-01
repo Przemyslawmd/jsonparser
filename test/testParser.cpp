@@ -8,7 +8,7 @@
 
 #include "reader/Parser.h"
 #include "reader/ParserKey.h"
-#include "reader/Preparser.h"
+#include "reader/json/PreparserJSON.h"
 #include "reader/Validator.h"
 #include "keyMapper.h"
 
@@ -22,13 +22,13 @@ class TestParser : public BaseTest
 {
 protected:
     std::unique_ptr<KeyMapper> keyMapper;
-    std::unique_ptr<Preparser> preparser;
+    std::unique_ptr<PreparserJSON> preparser;
     std::unique_ptr<Validator> validator;
 
     virtual void SetUp()
     {
         keyMapper = std::make_unique<KeyMapper>();
-        preparser = std::make_unique<Preparser>();
+        preparser = std::make_unique<PreparserJSON>();
         validator = std::make_unique<Validator>();
     }
 

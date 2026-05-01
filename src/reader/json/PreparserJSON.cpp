@@ -1,11 +1,11 @@
 
-#include "Preparser.h"
+#include "PreparserJSON.h"
 
 #include <format>
 
-#include "error.h"
-#include "log/ErrorStorage.h"
-#include "utilsReader.h"
+#include "../error.h"
+#include "../log/ErrorStorage.h"
+#include "../utilsReader.h"
 
 
 constexpr size_t FALSE_WORD_LEN = 5;
@@ -13,7 +13,7 @@ constexpr size_t TRUE_WORD_LEN = 4;
 constexpr size_t NULL_WORD_LEN = 4;
 
 
-std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json)
+std::unique_ptr<std::vector<Token>> PreparserJSON::parseJSON(const std::string& json)
 {
     tokens = std::make_unique<std::vector<Token>>();
     tokens->reserve(100);

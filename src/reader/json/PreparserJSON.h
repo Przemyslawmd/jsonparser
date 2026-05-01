@@ -10,10 +10,10 @@
 #include "token.h"
 
 
-class Preparser
+class PreparserJSON
 {
 public:
-    Preparser() = default;
+    PreparserJSON() = default;
 
     std::unique_ptr<std::vector<Token>> parseJSON(const std::string& json);
 

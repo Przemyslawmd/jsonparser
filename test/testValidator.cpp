@@ -3,7 +3,7 @@
 
 #include "error.h"
 #include "log/ErrorStorage.h"
-#include "reader/Preparser.h"
+#include "reader/json/PreparserJSON.h"
 #include "reader/Validator.h"
 
 #include "config.h"
@@ -14,7 +14,7 @@ static void makeValidatorError(const std::string& jsonFile)
 {
     ErrorStorage::clear();
     std::string jsonString = getJsonFromFile(TEST_DATA_IMPROPER, jsonFile);
-    auto preparser = std::make_unique<Preparser>();
+    auto preparser = std::make_unique<PreparserJSON>();
     auto tokens = preparser->parseJSON(jsonString);
     Validator validator;
     bool result = validator.validate(*tokens);
