@@ -7,7 +7,7 @@
 #include "reader/Validator.h"
 
 #include "config.h"
-#include "utils.h"
+#include "utilsTest.h"
 
 
 static void makeValidatorError(const std::string& jsonFile)

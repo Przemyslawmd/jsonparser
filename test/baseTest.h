@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 
 #include "../src/jsonApi.h"
-#include "utils.h"
+#include "utilsTest.h"
 #include "config.h"
 #include "timeType.h"
 

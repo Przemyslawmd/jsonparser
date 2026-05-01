@@ -12,9 +12,10 @@
 
 #include "baseTest.h"
 #include "config.h"
+#include "utilsTest.h"
 
 
-class TestPreparser : public BaseTest
+class TestPreparserJSON : public BaseTest
 {
 protected:
     std::unique_ptr<std::vector<Token>> createTokens(const std::string& path, const std::string& file)
@@ -37,41 +38,34 @@ protected:
 };
 
 
-struct TestData 
+void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<Token>&& expected)
 {
-    TokenType type;
-    std::variant<std::string, int64_t, double, bool, nullptr_t> data;
-};
-
-
-void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<TestData>& testData)
-{
-    ASSERT_EQ(tokens->size(), testData.size());
+    ASSERT_EQ(tokens->size(), expected.size());
 
     using enum TokenType;
     for (int i = 0; i < tokens->size(); i++) {
-        ASSERT_EQ(tokens->at(i).type, testData[i].type );
+        ASSERT_EQ(tokens->at(i).type, expected[i].type );
         if (tokens->at(i).type == DATA_INT) {
-            ASSERT_EQ(std::get<int64_t>(tokens->at(i).data), std::get<int64_t>(testData[i].data));
+            ASSERT_EQ(std::get<int64_t>(tokens->at(i).data), std::get<int64_t>(expected[i].data));
         }
         else if (tokens->at(i).type == DATA_STR || tokens->at(i).type == KEY) {
-            ASSERT_EQ(std::get<std::string>(tokens->at(i).data), std::get<std::string>(testData[i].data));
+            ASSERT_EQ(std::get<std::string>(tokens->at(i).data), std::get<std::string>(expected[i].data));
         }
         else if (tokens->at(i).type == DATA_BOOL) {
-            ASSERT_EQ(std::get<bool>(tokens->at(i).data), std::get<bool>(testData[i].data));
+            ASSERT_EQ(std::get<bool>(tokens->at(i).data), std::get<bool>(expected[i].data));
         }
         else if (tokens->at(i).type == DATA_DOUBLE) {
-            ASSERT_TRUE((std::get<double>(tokens->at(i).data) - std::get<double>(testData[i].data)) <= DBL_EPSILON);
+            ASSERT_TRUE((std::get<double>(tokens->at(i).data) - std::get<double>(expected[i].data)) <= DBL_EPSILON);
         }
     }
 }
 
 
-TEST_F(TestPreparser, Test_File_1)
+TEST_F(TestPreparserJSON, Test_File_1)
 {
     auto tokens = createTokens(TEST_DATA_JSON, "test_1.json");
 
-    std::vector<TestData> testData = {
+    std::vector<Token> expected = {
        { TokenType::CURLY_OPEN },
        { TokenType::KEY, std::string{ "person" }},
        { TokenType::COLON } ,
@@ -102,15 +96,15 @@ TEST_F(TestPreparser, Test_File_1)
        { TokenType::CURLY_CLOSE },
        { TokenType::CURLY_CLOSE },
     };
-    checkTokens(std::move(tokens), testData);
+    checkTokens(std::move(tokens), std::move(expected));
 }
 
 
-TEST_F(TestPreparser, Test_File_2)
+TEST_F(TestPreparserJSON, Test_File_2)
 {
     auto tokens = createTokens(TEST_DATA_JSON, "test_2.json");
 
-    std::vector<TestData> testData = {
+    std::vector<Token> expected = {
        { TokenType::CURLY_OPEN },
        
        { TokenType::KEY, std::string{ "name" }},
@@ -206,15 +200,15 @@ TEST_F(TestPreparser, Test_File_2)
        { TokenType::CURLY_CLOSE },
        { TokenType::CURLY_CLOSE },
     };
-    checkTokens(std::move(tokens), testData);
+    checkTokens(std::move(tokens), std::move(expected));
 }
 
 
-TEST_F(TestPreparser, Test_File_6)
+TEST_F(TestPreparserJSON, Test_File_6)
 {
     auto tokens = createTokens(TEST_DATA_JSON, "test_6.json");
 
-    std::vector<TestData> testData = {
+    std::vector<Token> expected = {
        { TokenType::CURLY_OPEN },
        { TokenType::KEY, std::string{ "employees" }},
        { TokenType::COLON } ,
@@ -252,15 +246,15 @@ TEST_F(TestPreparser, Test_File_6)
        { TokenType::SQUARE_CLOSE },
        { TokenType::CURLY_CLOSE },
     };
-    checkTokens(std::move(tokens), testData);
+    checkTokens(std::move(tokens), std::move(expected));
 }
 
 
-TEST_F(TestPreparser, Test_File_7)
+TEST_F(TestPreparserJSON, Test_File_7)
 {
     auto tokens = createTokens(TEST_DATA_JSON, "test_7.json");
 
-    std::vector<TestData> testData = {
+    std::vector<Token> expected = {
        { TokenType::CURLY_OPEN },
        { TokenType::KEY, std::string{ "employees" }},
        { TokenType::COLON },
@@ -315,18 +309,18 @@ TEST_F(TestPreparser, Test_File_7)
        { TokenType::SQUARE_CLOSE },
        { TokenType::CURLY_CLOSE },
     };
-    checkTokens(std::move(tokens), testData);
+    checkTokens(std::move(tokens), std::move(expected));
 }
 
 
-TEST_F(TestPreparser, Test_File_8)
+TEST_F(TestPreparserJSON, Test_File_8)
 {
     auto tokens = createTokens(TEST_DATA, "test_8_complex.json");
     ASSERT_TRUE(tokens != nullptr);
 }
 
 
-TEST_F(TestPreparser, FirstImproperDataTest)
+TEST_F(TestPreparserJSON, FirstImproperDataTest)
 {
     auto tokens = createTokens(TEST_DATA_IMPROPER, "string_not_ended_1.json");
 
@@ -336,7 +330,7 @@ TEST_F(TestPreparser, FirstImproperDataTest)
 }
 
 
-TEST_F(TestPreparser, SecondImproperDataTest)
+TEST_F(TestPreparserJSON, SecondImproperDataTest)
 {
     auto tokens = createTokens(TEST_DATA_IMPROPER, "string_not_ended_2.json");
 

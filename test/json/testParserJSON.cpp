@@ -15,10 +15,10 @@
 #include "baseTest.h"
 #include "config.h"
 #include "node.h"
-#include "utils.h"
+#include "utilsTest.h"
 
 
-class TestParser : public BaseTest
+class TestParserJSON : public BaseTest
 {
 protected:
     std::unique_ptr<KeyMapper> keyMapper;
@@ -83,7 +83,7 @@ void checkArrayValue(ArrayNode* arrayPointer, size_t index, T dataExpected)
 }
 
 
-TEST_F(TestParser, Test_File_1)
+TEST_F(TestParserJSON, Test_File_1)
 {
     auto root = parseJSON("test_1.json");
 
@@ -108,7 +108,7 @@ TEST_F(TestParser, Test_File_1)
 }
 
 
-TEST_F(TestParser, Test_File_3)
+TEST_F(TestParserJSON, Test_File_3)
 {
     auto root = parseJSON("test_3.json");
 
@@ -138,7 +138,7 @@ TEST_F(TestParser, Test_File_3)
 }
 
 
-TEST_F(TestParser, Test_File_6)
+TEST_F(TestParserJSON, Test_File_6)
 {
     auto root = parseJSON("test_6.json");
 
@@ -169,7 +169,7 @@ TEST_F(TestParser, Test_File_6)
 }
 
 
-TEST_F(TestParser, Test_File_7)
+TEST_F(TestParserJSON, Test_File_7)
 {
     auto root = parseJSON("test_7.json");
 

@@ -15,7 +15,7 @@
 
 #include "baseTest.h"
 #include "config.h"
-#include "utils.h"
+#include "utilsTest.h"
 
 
 static std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, KeyMapper& keyMapper)
@@ -32,7 +32,7 @@ static std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, 
 }
 
 
-class TestWriter : public BaseTest
+class TestWriterJSON : public BaseTest
 {
 protected:
     void testJsonString(const std::string& file)
@@ -52,49 +52,49 @@ protected:
 };
 
 
-TEST_F(TestWriter, Test_File_1)
+TEST_F(TestWriterJSON, Test_File_1)
 {
     testJsonString("test_1.json");
 }
 
 
-TEST_F(TestWriter, Test_File_2)
+TEST_F(TestWriterJSON, Test_File_2)
 {
     testJsonString("test_2.json");
 }
 
 
-TEST_F(TestWriter, Test_File_3)
+TEST_F(TestWriterJSON, Test_File_3)
 {
     testJsonString("test_3.json");
 }
 
 
-TEST_F(TestWriter, Test_File_4)
+TEST_F(TestWriterJSON, Test_File_4)
 {
     testJsonString("test_4.json");
 }
 
 
-TEST_F(TestWriter, Test_File_5)
+TEST_F(TestWriterJSON, Test_File_5)
 {
     testJsonString("test_5.json");
 }
 
 
-TEST_F(TestWriter, Test_File_6)
+TEST_F(TestWriterJSON, Test_File_6)
 {
     testJsonString("test_6.json");
 }
 
 
-TEST_F(TestWriter, Test_File_7)
+TEST_F(TestWriterJSON, Test_File_7)
 {
     testJsonString("test_7.json");
 }
 
 
-TEST_F(TestWriter, Test_File_8)
+TEST_F(TestWriterJSON, Test_File_8)
 {
     testJsonString("test_8_complex.json");
 }

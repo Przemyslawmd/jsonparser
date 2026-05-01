@@ -24,10 +24,10 @@ configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/config.h)
 
 
 if (JSON_BUILD)
-    list(APPEND TEST_FILES "testPreparser.cpp")
-    list(APPEND TEST_FILES "testParser.cpp")
-    list(APPEND TEST_FILES "testValidator.cpp")
-    list(APPEND TEST_FILES "testWriter.cpp")
+    list(APPEND TEST_FILES "json/testPreparserJSON.cpp")
+    list(APPEND TEST_FILES "json/testParserJSON.cpp")
+    list(APPEND TEST_FILES "json/testValidatorJSON.cpp")
+    list(APPEND TEST_FILES "json/testWriterJSON.cpp")
     list(APPEND TEST_FILES "testApiOtherActions.cpp")
     list(APPEND TEST_FILES "testApiAddNode.cpp")
     list(APPEND TEST_FILES "testApiChangeNode.cpp")
@@ -71,11 +71,12 @@ target_include_directories(
   "../headers/" 
   "../src/headers/" 
   "../src/"
+  "./"
 )
 
 target_link_libraries(
   jsonParserTest
-  GTest::gtest_main  
+  GTest::gtest_main
 )
 
 enable_testing()
