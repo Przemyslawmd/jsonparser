@@ -13,7 +13,7 @@
 static void makeValidatorError(const std::string& jsonFile)
 {
     ErrorStorage::clear();
-    std::string jsonString = getJsonFromFile(TEST_DATA_IMPROPER, jsonFile);
+    std::string jsonString = getJsonFromFile(TEST_DATA_IMPROPER_JSON, jsonFile);
     auto preparser = std::make_unique<PreparserJSON>();
     auto tokens = preparser->parseJSON(jsonString);
     Validator validator;

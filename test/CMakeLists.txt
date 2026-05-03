@@ -33,9 +33,7 @@ if (JSON_BUILD)
     list(APPEND TEST_FILES "testApiChangeNode.cpp")
     list(APPEND TEST_FILES "testApiRemoveNode.cpp")
     list(APPEND TEST_FILES "testApiError.cpp")
-endif()
 
-if (JSON_BUILD)
     list(APPEND SRC_FILES "../src/manager.cpp")
     list(APPEND SRC_FILES "../src/reader/json/PreparserJSON.cpp")
     list(APPEND SRC_FILES "../src/reader/Validator.cpp")
@@ -49,9 +47,8 @@ endif()
 
 if (XML_BUILD)
     list(APPEND TEST_FILES "xml/testPreparserXML.cpp")
-endif()
+    list(APPEND TEST_FILES "xml/testValidatorXML.cpp")
 
-if (XML_BUILD)
     list(APPEND SRC_FILES "../src/reader/xml/PreparserXML.cpp")
 endif()
 

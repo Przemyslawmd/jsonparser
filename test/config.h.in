@@ -1,9 +1,10 @@
 
 #pragma once
 
+#define TEST_DATA_API "${PROJECT_SOURCE_DIR}/data/api/"
 #define TEST_DATA "${PROJECT_SOURCE_DIR}/data/"
 #define TEST_DATA_JSON "${PROJECT_SOURCE_DIR}/data/json/"
 #define TEST_DATA_XML "${PROJECT_SOURCE_DIR}/data/xml/"
-#define TEST_DATA_API "${PROJECT_SOURCE_DIR}/data/api/"
-#define TEST_DATA_IMPROPER "${PROJECT_SOURCE_DIR}/dataImproper/"
+#define TEST_DATA_IMPROPER_JSON "${PROJECT_SOURCE_DIR}/dataImproperJson/"
+#define TEST_DATA_IMPROPER_XML "${PROJECT_SOURCE_DIR}/dataImproperXml/"
 

@@ -322,7 +322,7 @@ TEST_F(TestPreparserJSON, Test_File_8)
 
 TEST_F(TestPreparserJSON, FirstImproperDataTest)
 {
-    auto tokens = createTokens(TEST_DATA_IMPROPER, "string_not_ended_1.json");
+    auto tokens = createTokens(TEST_DATA_IMPROPER_JSON, "string_not_ended_1.json");
 
     ASSERT_EQ(tokens, nullptr);
     const auto& errors = ErrorStorage::getErrors();
@@ -332,7 +332,7 @@ TEST_F(TestPreparserJSON, FirstImproperDataTest)
 
 TEST_F(TestPreparserJSON, SecondImproperDataTest)
 {
-    auto tokens = createTokens(TEST_DATA_IMPROPER, "string_not_ended_2.json");
+    auto tokens = createTokens(TEST_DATA_IMPROPER_JSON, "string_not_ended_2.json");
 
     ASSERT_EQ(tokens, nullptr);
     const auto& errors = ErrorStorage::getErrors();
