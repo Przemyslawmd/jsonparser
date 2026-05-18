@@ -47,9 +47,10 @@ endif()
 
 if (XML_BUILD)
     list(APPEND TEST_FILES "xml/testPreparserXML.cpp")
-    list(APPEND TEST_FILES "xml/testValidatorXML.cpp")
+    list(APPEND TEST_FILES "xml/testParserItem.cpp")
 
     list(APPEND SRC_FILES "../src/reader/xml/PreparserXML.cpp")
+    list(APPEND SRC_FILES "../src/reader/xml/ParserItem.cpp")
 endif()
 
 add_executable(
