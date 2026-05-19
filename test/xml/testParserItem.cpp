@@ -1,5 +1,4 @@
 #include <memory>
-#include <variant>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -15,7 +14,7 @@
 class TestParserItemXML : public BaseTest
 {
 protected:
-    std::unique_ptr<std::vector<Item>> createItems(const std::string& path, const std::string& file)
+    std::unique_ptr<std::vector<Item>> createTags(const std::string& path, const std::string& file)
     {
         std::string xmlString = getJsonFromFile(path, file);
         auto preparser = std::make_unique<PreparserXML>();
@@ -30,22 +29,32 @@ protected:
 };
 
 
-TEST_F(TestParserItemXML, Test_File_1)
+TEST_F(TestParserItemXML, Test_File_2)
 {
-    auto items = createItems(TEST_DATA_XML, "test_2.xml");
+    auto tags = createTags(TEST_DATA_XML, "test_2.xml");
 
-    ASSERT_EQ(items->size(), 3);
+    ASSERT_EQ(tags->size(), 4);
+    
+    ASSERT_EQ(tags->at(0).type, ItemType::DECLARATION);
+    ASSERT_EQ(tags->at(0).data.size(), 7);
+    ASSERT_EQ(tags->at(0).data[0], "xml");
+    ASSERT_EQ(tags->at(0).data[1], "version");
+    ASSERT_EQ(tags->at(0).data[2], "=");
+    ASSERT_EQ(tags->at(0).data[3], "1.0");
+    ASSERT_EQ(tags->at(0).data[4], "encoding");
+    ASSERT_EQ(tags->at(0).data[5], "=");
+    ASSERT_EQ(tags->at(0).data[6], "UTF-8");
 
-    ASSERT_EQ(items->at(0).type, ItemType::TAG_OPEN);
-    ASSERT_EQ(items->at(0).name, "person");
-    ASSERT_TRUE(items->at(0).data.empty());
+    ASSERT_EQ(tags->at(1).type, ItemType::TAG_OPEN);
+    ASSERT_EQ(tags->at(1).name, "person");
+    ASSERT_TRUE(tags->at(1).data.empty());
 
-    ASSERT_EQ(items->at(1).type, ItemType::VALUE);
-    ASSERT_EQ(items->at(1).name, std::nullopt);
-    ASSERT_EQ(items->at(1).data[0], "John");
+    ASSERT_EQ(tags->at(2).type, ItemType::VALUE);
+    ASSERT_EQ(tags->at(2).name, std::nullopt);
+    ASSERT_EQ(tags->at(2).data[0], "John");
 
-    ASSERT_EQ(items->at(2).type, ItemType::TAG_CLOSE);
-    ASSERT_EQ(items->at(2).name, "person");
-    ASSERT_TRUE(items->at(2).data.empty());
+    ASSERT_EQ(tags->at(3).type, ItemType::TAG_CLOSE);
+    ASSERT_EQ(tags->at(3).name, "person");
+    ASSERT_TRUE(tags->at(3).data.empty());
 }
 
