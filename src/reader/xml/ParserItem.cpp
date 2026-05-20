@@ -1,11 +1,14 @@
 
 #include "ParserItem.h"
 
+#include "error.h"
+#include "log/ErrorStorage.h"
 
-std::unique_ptr<std::vector<Item>> ParserTokens::parseTokens(std::unique_ptr<std::vector<TokenXML>> tokens)
+
+std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std::vector<TokenXML>> tokens)
 {
     using enum ParsingState;
-    items = std::make_unique<std::vector<Item>>();
+    elems = std::make_unique<std::vector<Elem>>();
     ParsingState state = ParsingState::STATE_NONE;
 
     for (auto token : *tokens) {
@@ -13,6 +16,7 @@ std::unique_ptr<std::vector<Item>> ParserTokens::parseTokens(std::unique_ptr<std
         {
             case TokenTypeXML::ANGLE_OPEN:
                 if (state == STATE_TAG_INITIAL || state == STATE_TAG_OPEN_PARSING) {
+                    ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_OPEN_ANGLE);
                     return nullptr;
                 }
                 state = STATE_TAG_INITIAL;
@@ -39,7 +43,7 @@ std::unique_ptr<std::vector<Item>> ParserTokens::parseTokens(std::unique_ptr<std
                 break;
             case TokenTypeXML::QUESTION:
                 if (state == STATE_TAG_INITIAL) {
-                    items->emplace_back(ItemType::DECLARATION, std::nullopt, std::vector<std::string>{});
+                    elems->emplace_back(ElemType::DECLARATION, std::nullopt, std::vector<std::string>{});
                     state = STATE_DECLARATION_PARSING;
                 }
                 else if (state == STATE_DECLARATION_PARSING) {
@@ -50,27 +54,27 @@ std::unique_ptr<std::vector<Item>> ParserTokens::parseTokens(std::unique_ptr<std
             case TokenTypeXML::DATA_STR_QUOTA:
                 if (state == STATE_TAG_INITIAL) {
                     state = STATE_TAG_OPEN_PARSING;
-                    items->emplace_back(ItemType::TAG_OPEN, std::get<std::string>(token.data), std::vector<std::string>{});
+                    elems->emplace_back(ElemType::TAG_OPEN, std::get<std::string>(token.data), std::vector<std::string>{});
                 }
                 else if (state == STATE_TAG_CLOSE_PARSING) {
                     state = STATE_TAG_CLOSE_NAMED;
-                    items->emplace_back(ItemType::TAG_CLOSE, std::get<std::string>(token.data), std::vector<std::string>{});
+                    elems->emplace_back(ElemType::TAG_CLOSE, std::get<std::string>(token.data), std::vector<std::string>{});
                 }
                 else if (state == STATE_TAG_CLOSE_COMPLETED || state == STATE_TAG_OPEN_COMPLETED) {
                     state = STATE_VALUE;
-                    items->emplace_back(ItemType::VALUE, std::nullopt, std::vector<std::string>{ std::get<std::string>(token.data) });
+                    elems->emplace_back(ElemType::CONTENT, std::nullopt, std::vector<std::string>{ std::get<std::string>(token.data) });
                 }
                 else if (state == STATE_DECLARATION_PARSING) {
-                    auto& tag = items->back();
+                    auto& tag = elems->back();
                     tag.data.push_back(std::get<std::string>(token.data));
                 }
                 break;
             case TokenTypeXML::EQUAL:
-                auto& tag = items->back();
+                auto& tag = elems->back();
                 tag.data.push_back("=");
                 break;
         }
     }
-    return std::move(items);
+    return std::move(elems);
 }
 

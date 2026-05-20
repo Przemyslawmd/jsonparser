@@ -7,18 +7,18 @@
 #include <vector>
 
 
-enum class ItemType
+enum class ElemType
 {
     DECLARATION,
     TAG_OPEN,
     TAG_CLOSE,
-    VALUE
+    CONTENT
 };
 
 
-struct Item
+struct Elem
 {
-    ItemType type;
+    ElemType type;
     std::optional<std::string> name;
     std::vector<std::string> data;
 };
