@@ -50,7 +50,7 @@ if (XML_BUILD)
     list(APPEND TEST_FILES "xml/testParserItem.cpp")
 
     list(APPEND SRC_FILES "../src/reader/xml/PreparserXML.cpp")
-    list(APPEND SRC_FILES "../src/reader/xml/ParserItem.cpp")
+    list(APPEND SRC_FILES "../src/reader/xml/ParserTokensXML.cpp")
 endif()
 
 add_executable(

@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 
 #include "reader/xml/PreparserXML.h"
-#include "reader/xml/ParserItem.h"
+#include "reader/xml/ParserTokensXML.h"
 #include "reader/xml/item.h"
 
 #include "error.h"
@@ -24,9 +24,6 @@ protected:
         std::string xmlString = getJsonFromFile(path, file);
         auto preparser = std::make_unique<PreparserXML>();
         auto tokens = preparser->parseXML(xmlString);
-        if (!tokens) {
-            return nullptr;
-        }
         auto parser = std::make_unique<ParserTokens>();
         return parser->parseTokens(std::move(tokens));
     }
@@ -62,13 +59,27 @@ TEST_F(TestParserTokensXML, Test_File_2)
     ASSERT_TRUE(elems->at(3).data.empty());
 }
 
-
-TEST_F(TestParserTokensXML, Incorrect_angle_open)
+TEST_F(TestParserTokensXML, Error_angle_open)
 {
     auto elems = createElements(TEST_DATA_IMPROPER_XML, "angleOpen.xml");
-
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_OPEN_ANGLE);
+}
+
+TEST_F(TestParserTokensXML, Error_invalid_begin)
+{
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "begin.xml");
+    ASSERT_EQ(elems, nullptr);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_INVALID_BEGIN);
+}
+
+TEST_F(TestParserTokensXML, Error_invalid_end)
+{
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "end.xml");
+    ASSERT_EQ(elems, nullptr);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_INVALID_END);
 }
 

@@ -1,5 +1,5 @@
-#ifndef JSONPARSER_PARSER_ITEM_XML_H
-#define JSONPARSER_PARSER_ITEM_XML_H
+#ifndef JSONPARSER_PARSER_TOKENS_XML_H
+#define JSONPARSER_PARSER_TOKENS_XML_H
 
 #include <map>
 #include <memory>

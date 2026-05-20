@@ -1,5 +1,5 @@
 
-#include "ParserItem.h"
+#include "ParserTokensXML.h"
 
 #include "error.h"
 #include "log/ErrorStorage.h"
@@ -7,6 +7,19 @@
 
 std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std::vector<TokenXML>> tokens)
 {
+    if (tokens == nullptr || tokens->empty()) {
+        ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_NO_TOKENS);
+        return nullptr;
+    }
+    if (tokens->at(0).type != TokenTypeXML::ANGLE_OPEN) {
+        ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_INVALID_BEGIN);
+        return nullptr;
+    }
+    if (tokens->at(tokens->size() - 1).type != TokenTypeXML::ANGLE_CLOSE) {
+        ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_INVALID_END);
+        return nullptr;
+    }
+
     using enum ParsingState;
     elems = std::make_unique<std::vector<Elem>>();
     ParsingState state = ParsingState::STATE_NONE;
