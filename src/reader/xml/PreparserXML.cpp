@@ -36,7 +36,8 @@ std::unique_ptr<std::vector<TokenXML>> PreparserXML::parseXML(const std::string&
             continue;
         }
         size_t shift = parseStringOutQuotation(xml, index);
-        if (shift == 0) {
+        if (shift < 0) {
+            ErrorStorage::putError(ErrorCode::XML_PREPARSER_STRING_ERROR);
             return nullptr;
         }
         index += shift;
@@ -59,6 +60,6 @@ size_t PreparserXML::parseStringOutQuotation(const std::string& json, size_t ind
         }
         shift += 1;
     }
-    return 0;
+    return -1;
 }
 

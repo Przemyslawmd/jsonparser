@@ -49,7 +49,8 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
                 }
                 break;
             case TokenTypeXML::SLASH:
-                if (state != STATE_TAG_INITIAL) {
+                if (state != STATE_TAG_INITIAL && state != STATE_CONTENT) {
+                    ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_SLASH);
                     return nullptr;
                 }
                 state = STATE_TAG_CLOSE_PARSING;
@@ -74,7 +75,7 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
                     elems->emplace_back(ElemType::TAG_CLOSE, std::get<std::string>(token.data), std::vector<std::string>{});
                 }
                 else if (state == STATE_TAG_CLOSE_COMPLETED || state == STATE_TAG_OPEN_COMPLETED) {
-                    state = STATE_VALUE;
+                    state = STATE_CONTENT;
                     elems->emplace_back(ElemType::CONTENT, std::nullopt, std::vector<std::string>{ std::get<std::string>(token.data) });
                 }
                 else if (state == STATE_DECLARATION_PARSING) {
