@@ -59,6 +59,7 @@ TEST_F(TestParserTokensXML, Test_File_2)
     ASSERT_TRUE(elems->at(3).data.empty());
 }
 
+
 TEST_F(TestParserTokensXML, Error_angle_open)
 {
     auto elems = createElements(TEST_DATA_IMPROPER_XML, "angleOpen.xml");
@@ -66,6 +67,7 @@ TEST_F(TestParserTokensXML, Error_angle_open)
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_OPEN_ANGLE);
 }
+
 
 TEST_F(TestParserTokensXML, Error_invalid_begin)
 {
@@ -75,11 +77,30 @@ TEST_F(TestParserTokensXML, Error_invalid_begin)
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_INVALID_BEGIN);
 }
 
+
 TEST_F(TestParserTokensXML, Error_invalid_end)
 {
     auto elems = createElements(TEST_DATA_IMPROPER_XML, "end.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_INVALID_END);
+}
+
+
+TEST_F(TestParserTokensXML, Invalid_slash_1)
+{
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "slashImproper_1.xml");
+    ASSERT_EQ(elems, nullptr);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_SLASH);
+}
+
+
+TEST_F(TestParserTokensXML, Invalid_slash_2)
+{
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "slashImproper_2.xml");
+    ASSERT_EQ(elems, nullptr);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_SLASH);
 }
 
