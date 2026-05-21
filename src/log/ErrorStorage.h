@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "error.h"
+#include "errorCode.h"
 
 
 class ErrorStorage

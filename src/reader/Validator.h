@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "token.h"
-#include "error.h"
+#include "errorCode.h"
 
 
 class Validator

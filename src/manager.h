@@ -12,7 +12,7 @@
 #include "keyMapper.h"
 #include "node.h"
 #include "nodeApi.h"
-#include "error.h"
+#include "errorCode.h"
 
 
 using ComplexNode = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
