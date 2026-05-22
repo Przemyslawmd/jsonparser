@@ -1,5 +1,5 @@
+
 #include <memory>
-#include <vector>
 
 #include <gtest/gtest.h>
 
@@ -39,5 +39,16 @@ TEST_F(TestValidatorXML, Declaration_not_start)
     ASSERT_FALSE(res);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_VALIDATOR_DECLARATION_NOT_START);
+}
+
+
+TEST_F(TestValidatorXML, MismatchedTag)
+{
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "mismatchedTag.xml");
+    ASSERT_NE(elems, nullptr);
+    bool res = ValidateElems(*elems);
+    ASSERT_FALSE(res);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_VALIDATOR_MISMATCHED_TAG);
 }
 

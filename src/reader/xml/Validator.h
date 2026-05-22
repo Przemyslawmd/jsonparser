@@ -28,13 +28,14 @@ static bool ValidateElems(std::vector<Elem>& elems)
         }
         if (elems[i].type == ElemType::TAG_CLOSE) {
             if (elems[i].name != tags.top()) {
+                ErrorStorage::putError(ErrorCode::XML_VALIDATOR_MISMATCHED_TAG);
                 return false;
             }
             tags.pop();
             continue;
         }
         if (elems[i - 1].type != ElemType::TAG_OPEN || elems[i + 1].type != ElemType::TAG_CLOSE) {
-                return false;
+            return false;
         }
     }
     return tags.empty() ? true : false;
