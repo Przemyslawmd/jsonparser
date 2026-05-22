@@ -48,6 +48,7 @@ endif()
 if (XML_BUILD)
     list(APPEND TEST_FILES "xml/testPreparserXML.cpp")
     list(APPEND TEST_FILES "xml/testParserTokens.cpp")
+    list(APPEND TEST_FILES "xml/testValidator.cpp")
 
     list(APPEND SRC_FILES "../src/reader/xml/PreparserXML.cpp")
     list(APPEND SRC_FILES "../src/reader/xml/ParserTokensXML.cpp")
