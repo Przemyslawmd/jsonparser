@@ -133,9 +133,9 @@ TEST_F(TestPreparserXML, Test_File_1)
 }
 
 
-TEST_F(TestPreparserXML, Test_File_3)
+TEST_F(TestPreparserXML, Test_one_letter)
 {
-    auto tokens = createTokens(TEST_DATA_XML, "test_one_letter_in_content.xml");
+    auto tokens = createTokens(TEST_DATA_XML, "test_one_letter.xml");
     std::vector<TokenXML> testData =
     {
         { TokenTypeXML::ANGLE_OPEN },
@@ -152,6 +152,9 @@ TEST_F(TestPreparserXML, Test_File_3)
 
         { TokenTypeXML::ANGLE_OPEN },
         { TokenTypeXML::DATA_STR, std::string{ "person" }},
+        { TokenTypeXML::DATA_STR, std::string{ "data" }},
+        { TokenTypeXML::EQUAL },
+        { TokenTypeXML::DATA_STR_QUOTA, std::string{ "x" }},
         { TokenTypeXML::ANGLE_CLOSE },
 
         { TokenTypeXML::ANGLE_OPEN },
