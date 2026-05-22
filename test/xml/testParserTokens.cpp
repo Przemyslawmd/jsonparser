@@ -104,3 +104,12 @@ TEST_F(TestParserTokensXML, Invalid_slash_2)
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_SLASH);
 }
 
+
+TEST_F(TestParserTokensXML, AngleClose)
+{
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "angleClose.xml");
+    ASSERT_EQ(elems, nullptr);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_CLOSE_ANGLE);
+}
+

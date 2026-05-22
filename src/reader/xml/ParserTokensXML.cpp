@@ -5,6 +5,14 @@
 #include "log/ErrorStorage.h"
 
 
+const std::map<ParsingState, ParsingState> angleCloseTransision = 
+{
+        { ParsingState::STATE_TAG_OPEN_PARSING, ParsingState::STATE_TAG_OPEN_COMPLETED },
+        { ParsingState::STATE_TAG_CLOSE_NAMED, ParsingState::STATE_TAG_CLOSE_COMPLETED },
+        { ParsingState::STATE_DECLARATION_CLOSING, ParsingState::STATE_DECLARATION_CLOSED },
+};
+
+
 std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std::vector<TokenXML>> tokens)
 {
     if (tokens == nullptr || tokens->empty()) {
@@ -35,18 +43,11 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
                 state = STATE_TAG_INITIAL;
                 break;
             case TokenTypeXML::ANGLE_CLOSE:
-                if (state == STATE_TAG_OPEN_PARSING) {
-                    state = STATE_TAG_OPEN_COMPLETED;
-                }
-                else if (state == STATE_TAG_CLOSE_NAMED) {
-                    state = STATE_TAG_CLOSE_COMPLETED;
-                }
-                else if (state == STATE_DECLARATION_CLOSING) {
-                    state = STATE_DECLARATION_CLOSED;
-                }
-                else {
+                if (!angleCloseTransision.contains(state)) {
+                    ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_CLOSE_ANGLE);
                     return nullptr;
                 }
+                state = angleCloseTransision.at(state);
                 break;
             case TokenTypeXML::SLASH:
                 if (state != STATE_TAG_INITIAL && state != STATE_CONTENT) {
