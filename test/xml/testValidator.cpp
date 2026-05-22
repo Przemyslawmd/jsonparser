@@ -42,9 +42,42 @@ TEST_F(TestValidatorXML, Declaration_not_start)
 }
 
 
-TEST_F(TestValidatorXML, MismatchedTag)
+TEST_F(TestValidatorXML, MismatchedTag_1)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "mismatchedTag.xml");
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "mismatchedTag_1.xml");
+    ASSERT_NE(elems, nullptr);
+    bool res = ValidateElems(*elems);
+    ASSERT_FALSE(res);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_VALIDATOR_MISMATCHED_TAG);
+}
+
+
+TEST_F(TestValidatorXML, MismatchedTag_2)
+{
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "mismatchedTag_2.xml");
+    ASSERT_NE(elems, nullptr);
+    bool res = ValidateElems(*elems);
+    ASSERT_FALSE(res);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_VALIDATOR_MISMATCHED_TAG);
+}
+
+
+TEST_F(TestValidatorXML, MismatchedTag_3)
+{
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "mismatchedTag_3.xml");
+    ASSERT_NE(elems, nullptr);
+    bool res = ValidateElems(*elems);
+    ASSERT_FALSE(res);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_VALIDATOR_MISMATCHED_TAG);
+}
+
+
+TEST_F(TestValidatorXML, MismatchedTag_4)
+{
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "mismatchedTag_4.xml");
     ASSERT_NE(elems, nullptr);
     bool res = ValidateElems(*elems);
     ASSERT_FALSE(res);
