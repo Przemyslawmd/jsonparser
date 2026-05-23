@@ -5,7 +5,7 @@
 
 #include "reader/xml/preparserXML.h"
 #include "reader/xml/parserTokensXML.h"
-#include "reader/xml/item.h"
+#include "reader/xml/elem.h"
 
 #include "error.h"
 #include "log/ErrorStorage.h"
@@ -38,13 +38,13 @@ TEST_F(TestParserTokensXML, Test_File_2)
 
     ASSERT_EQ(elems->at(0).type, ElemType::DECLARATION);
     ASSERT_EQ(elems->at(0).data.size(), 7);
-    ASSERT_EQ(elems->at(0).data[0], "xml");
-    ASSERT_EQ(elems->at(0).data[1], "version");
-    ASSERT_EQ(elems->at(0).data[2], "=");
-    ASSERT_EQ(elems->at(0).data[3], "1.0");
-    ASSERT_EQ(elems->at(0).data[4], "encoding");
-    ASSERT_EQ(elems->at(0).data[5], "=");
-    ASSERT_EQ(elems->at(0).data[6], "UTF-8");
+    ASSERT_EQ(std::get<std::string>(elems->at(0).data[0].data), "xml");
+    ASSERT_EQ(std::get<std::string>(elems->at(0).data[1].data), "version");
+    ASSERT_EQ(elems->at(0).data[2].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(std::get<std::string>(elems->at(0).data[3].data), "1.0");
+    ASSERT_EQ(std::get<std::string>(elems->at(0).data[4].data), "encoding");
+    ASSERT_EQ(elems->at(0).data[5].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(std::get<std::string>(elems->at(0).data[6].data), "UTF-8");
 
     ASSERT_EQ(elems->at(1).type, ElemType::TAG_OPEN);
     ASSERT_EQ(elems->at(1).name, "person");
@@ -52,7 +52,7 @@ TEST_F(TestParserTokensXML, Test_File_2)
 
     ASSERT_EQ(elems->at(2).type, ElemType::CONTENT);
     ASSERT_EQ(elems->at(2).name, std::nullopt);
-    ASSERT_EQ(elems->at(2).data[0], "John");
+    ASSERT_EQ(std::get<std::string>(elems->at(2).data[0].data), "John");
 
     ASSERT_EQ(elems->at(3).type, ElemType::TAG_CLOSE);
     ASSERT_EQ(elems->at(3).name, "person");
@@ -76,7 +76,7 @@ TEST_F(TestParserTokensXML, Test_File_No_declaration)
 
     ASSERT_EQ(elems->at(2).type, ElemType::CONTENT);
     ASSERT_EQ(elems->at(2).name, std::nullopt);
-    ASSERT_EQ(elems->at(2).data[0], "Jan");
+    ASSERT_EQ(std::get<std::string>(elems->at(2).data[0].data), "Jan");
 
     ASSERT_EQ(elems->at(3).type, ElemType::TAG_CLOSE);
     ASSERT_EQ(elems->at(3).name, "name");

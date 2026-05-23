@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "token.h"
+
 
 enum class ElemType
 {
@@ -20,7 +22,7 @@ struct Elem
 {
     ElemType type;
     std::optional<std::string> name;
-    std::vector<std::string> data;
+    std::vector<TokenXML> data;
 };
 
 #endif

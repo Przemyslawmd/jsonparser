@@ -3,7 +3,7 @@
 #include <ranges>
 #include <stack>
 
-#include "item.h"
+#include "elem.h"
 #include "error.h"
 #include "log/ErrorStorage.h"
 
@@ -46,5 +46,5 @@ static bool ValidateElems(std::vector<Elem>& elems)
 
 static bool ValidateAttributes(Elem& elem)
 {
-    return false;
+    return true;
 }

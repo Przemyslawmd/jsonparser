@@ -5,7 +5,7 @@
 
 #include "reader/xml/preparserXML.h"
 #include "reader/xml/parserTokensXML.h"
-#include "reader/xml/item.h"
+#include "reader/xml/elem.h"
 
 #include "error.h"
 #include "log/ErrorStorage.h"

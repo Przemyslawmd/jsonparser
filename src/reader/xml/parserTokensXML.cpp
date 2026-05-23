@@ -58,7 +58,7 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
                 break;
             case TokenTypeXML::QUESTION:
                 if (state == STATE_TAG_INITIAL) {
-                    elems->emplace_back(ElemType::DECLARATION, std::nullopt, std::vector<std::string>{});
+                    elems->emplace_back(ElemType::DECLARATION, std::nullopt, std::vector<TokenXML>{});
                     state = STATE_DECLARATION_PARSING;
                 }
                 else if (state == STATE_DECLARATION_PARSING) {
@@ -69,24 +69,24 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
             case TokenTypeXML::DATA_STR_QUOTA:
                 if (state == STATE_TAG_INITIAL) {
                     state = STATE_TAG_OPEN_PARSING;
-                    elems->emplace_back(ElemType::TAG_OPEN, std::get<std::string>(token.data), std::vector<std::string>{});
+                    elems->emplace_back(ElemType::TAG_OPEN, std::get<std::string>(token.data), std::vector<TokenXML>{});
                 }
                 else if (state == STATE_TAG_CLOSE_PARSING) {
                     state = STATE_TAG_CLOSE_NAMED;
-                    elems->emplace_back(ElemType::TAG_CLOSE, std::get<std::string>(token.data), std::vector<std::string>{});
+                    elems->emplace_back(ElemType::TAG_CLOSE, std::get<std::string>(token.data), std::vector<TokenXML>{});
                 }
                 else if (state == STATE_TAG_CLOSE_COMPLETED || state == STATE_TAG_OPEN_COMPLETED) {
                     state = STATE_CONTENT;
-                    elems->emplace_back(ElemType::CONTENT, std::nullopt, std::vector<std::string>{ std::get<std::string>(token.data) });
+                    elems->emplace_back(ElemType::CONTENT, std::nullopt, std::vector<TokenXML>{{ token.type, token.data }});
                 }
                 else if (state == STATE_DECLARATION_PARSING) {
                     auto& tag = elems->back();
-                    tag.data.push_back(std::get<std::string>(token.data));
+                    tag.data.emplace_back(token.type, token.data);
                 }
                 break;
             case TokenTypeXML::EQUAL:
                 auto& tag = elems->back();
-                tag.data.push_back("=");
+                tag.data.emplace_back(token.type, token.data);
                 break;
         }
     }
