@@ -43,8 +43,3 @@ static bool ValidateElems(std::vector<Elem>& elems)
     return false;
 }
 
-
-static bool ValidateAttributes(Elem& elem)
-{
-    return true;
-}

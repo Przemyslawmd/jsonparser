@@ -5,11 +5,20 @@
 #include "log/ErrorStorage.h"
 
 
+using enum ParsingState;
+
 const std::map<ParsingState, ParsingState> angleCloseTransision = 
 {
-        { ParsingState::STATE_TAG_OPEN_PARSING, ParsingState::STATE_TAG_OPEN_COMPLETED },
-        { ParsingState::STATE_TAG_CLOSE_NAMED, ParsingState::STATE_TAG_CLOSE_COMPLETED },
-        { ParsingState::STATE_DECLARATION_CLOSING, ParsingState::STATE_DECLARATION_CLOSED },
+        { STATE_TAG_OPEN_PARSING,    STATE_TAG_OPEN_COMPLETED },
+        { STATE_TAG_CLOSE_NAMED,     STATE_TAG_CLOSE_COMPLETED },
+        { STATE_DECLARATION_CLOSING, STATE_DECLARATION_CLOSED },
+};
+
+
+const std::map<ParsingState, ParsingState> questionTransision = 
+{
+        { STATE_TAG_INITIAL,         STATE_DECLARATION_START },
+        { STATE_DECLARATION_PARSING, STATE_DECLARATION_CLOSING },
 };
 
 
@@ -28,7 +37,6 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
         return nullptr;
     }
 
-    using enum ParsingState;
     elems = std::make_unique<std::vector<Elem>>();
     ParsingState state = ParsingState::STATE_NONE;
 
@@ -57,13 +65,11 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
                 state = STATE_TAG_CLOSE_PARSING;
                 break;
             case TokenTypeXML::QUESTION:
-                if (state == STATE_TAG_INITIAL) {
-                    elems->emplace_back(ElemType::DECLARATION, std::nullopt, std::vector<TokenXML>{});
-                    state = STATE_DECLARATION_PARSING;
+                if (!questionTransision.contains(state)) {
+                    ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_QUESTION);
+                    return nullptr;
                 }
-                else if (state == STATE_DECLARATION_PARSING) {
-                    state = STATE_DECLARATION_CLOSING;
-                }
+                state = questionTransision.at(state);
                 break;
             case TokenTypeXML::DATA_STR:
             case TokenTypeXML::DATA_STR_QUOTA:
@@ -81,12 +87,17 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
                 }
                 else if (state == STATE_DECLARATION_PARSING) {
                     auto& tag = elems->back();
-                    tag.data.emplace_back(token.type, token.data);
+                    tag.attr.emplace_back(token.type, token.data);
+
+                }
+                else if (state == STATE_DECLARATION_START) {
+                    elems->emplace_back(ElemType::DECLARATION, std::get<std::string>(token.data), std::vector<TokenXML>{});
+                    state = STATE_DECLARATION_PARSING;
                 }
                 break;
             case TokenTypeXML::EQUAL:
                 auto& tag = elems->back();
-                tag.data.emplace_back(token.type, token.data);
+                tag.attr.emplace_back(token.type, token.data);
                 break;
         }
     }
