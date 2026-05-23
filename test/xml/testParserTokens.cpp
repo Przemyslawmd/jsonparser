@@ -3,8 +3,8 @@
 
 #include <gtest/gtest.h>
 
-#include "reader/xml/PreparserXML.h"
-#include "reader/xml/ParserTokensXML.h"
+#include "reader/xml/preparserXML.h"
+#include "reader/xml/parserTokensXML.h"
 #include "reader/xml/item.h"
 
 #include "error.h"
@@ -57,6 +57,34 @@ TEST_F(TestParserTokensXML, Test_File_2)
     ASSERT_EQ(elems->at(3).type, ElemType::TAG_CLOSE);
     ASSERT_EQ(elems->at(3).name, "person");
     ASSERT_TRUE(elems->at(3).data.empty());
+}
+
+
+TEST_F(TestParserTokensXML, Test_File_No_declaration)
+{
+    auto elems = createElements(TEST_DATA_XML, "test_no_declaration.xml");
+
+    ASSERT_EQ(elems->size(), 5);
+
+    ASSERT_EQ(elems->at(0).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems->at(0).name, "person");
+    ASSERT_TRUE(elems->at(0).data.empty());
+
+    ASSERT_EQ(elems->at(1).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems->at(1).name, "name");
+    ASSERT_TRUE(elems->at(1).data.empty());
+
+    ASSERT_EQ(elems->at(2).type, ElemType::CONTENT);
+    ASSERT_EQ(elems->at(2).name, std::nullopt);
+    ASSERT_EQ(elems->at(2).data[0], "Jan");
+
+    ASSERT_EQ(elems->at(3).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems->at(3).name, "name");
+    ASSERT_TRUE(elems->at(3).data.empty());
+
+    ASSERT_EQ(elems->at(4).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems->at(4).name, "person");
+    ASSERT_TRUE(elems->at(4).data.empty());
 }
 
 

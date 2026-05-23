@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 
-#include "reader/xml/PreparserXML.h"
+#include "reader/xml/preparserXML.h"
 #include "../headers/token.h"
 #include "../baseTest.h"
 #include "../config.h"

@@ -16,18 +16,18 @@ static bool ValidateElems(std::vector<Elem>& elems)
     }
 
     std::stack<std::string> tags;
-    for (size_t i = skipFirst; i < elems.size(); i++) 
+    for (const auto& elem : elems | std::views::drop(skipFirst)) 
     {
-        if (elems[i].type == ElemType::DECLARATION) {
+        if (elem.type == ElemType::DECLARATION) {
             ErrorStorage::putError(ErrorCode::XML_VALIDATOR_DECLARATION_NOT_START);
             return false;
         }
-        if (elems[i].type == ElemType::TAG_OPEN) {
-            tags.push(elems[i].name.value());
+        if (elem.type == ElemType::TAG_OPEN) {
+            tags.push(elem.name.value());
             continue;
         }
-        if (elems[i].type == ElemType::TAG_CLOSE) {
-            if (elems[i].name != tags.top()) {
+        if (elem.type == ElemType::TAG_CLOSE) {
+            if (elem.name != tags.top()) {
                 ErrorStorage::putError(ErrorCode::XML_VALIDATOR_MISMATCHED_TAG);
                 return false;
             }
@@ -43,3 +43,8 @@ static bool ValidateElems(std::vector<Elem>& elems)
     return false;
 }
 
+
+static bool ValidateAttributes(Elem& elem)
+{
+    return false;
+}

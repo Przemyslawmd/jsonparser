@@ -3,13 +3,13 @@
 
 #include <gtest/gtest.h>
 
-#include "reader/xml/PreparserXML.h"
-#include "reader/xml/ParserTokensXML.h"
+#include "reader/xml/preparserXML.h"
+#include "reader/xml/parserTokensXML.h"
 #include "reader/xml/item.h"
 
 #include "error.h"
 #include "log/ErrorStorage.h"
-#include "reader/xml/Validator.h"
+#include "reader/xml/validator.h"
 
 #include "../headers/token.h"
 #include "../baseTest.h"
