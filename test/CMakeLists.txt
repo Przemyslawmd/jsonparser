@@ -49,9 +49,11 @@ if (XML_BUILD)
     list(APPEND TEST_FILES "xml/testPreparserXML.cpp")
     list(APPEND TEST_FILES "xml/testParserTokens.cpp")
     list(APPEND TEST_FILES "xml/testValidator.cpp")
+    list(APPEND TEST_FILES "xml/testObjectCreator.cpp")
 
     list(APPEND SRC_FILES "../src/reader/xml/preparserXML.cpp")
     list(APPEND SRC_FILES "../src/reader/xml/parserTokensXML.cpp")
+    list(APPEND SRC_FILES "../src/reader/xml/objectCreator.cpp")
 endif()
 
 add_executable(
