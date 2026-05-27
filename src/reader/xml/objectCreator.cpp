@@ -7,53 +7,67 @@
 std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
 {
     uint firstTag = elems.at(0).type == ElemType::DECLARATION ? 1 : 0;
-    size_t key = 0;
 
     nodes = std::make_unique<ObjectNode>();
+    mapIDStack.push(0);
     pushDataOnStack(nodes.get());
 
     using enum ElemType;
     for (const auto& elem : elems | std::views::drop(firstTag + 1)) {
         switch (elem.type) {
             case TAG_OPEN:
-                processTagOpen(key);
+                processTagOpen(elem.name.value());
                 break;
             case TAG_CLOSE:
                 popDataFromStack();
                 break;
             case CONTENT:
-                processContent(key);
+                processContent("X");
                 break;
         }
     }
     return std::move(nodes);
 }
 
-void ObjectCreator::processTagOpen(uint key)
+void ObjectCreator::processTagOpen(const std::string& keyStr)
 {
     ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
-    obj->emplace(key, ObjectNode());
-    auto *currentNode = &(std::get<ObjectNode>(obj->at(key).value));
+    auto optKeyID = keyMapper.createAndPutKeyID(keyStr, mapIDStack.top());
+    if (optKeyID == std::nullopt) {
+        return;
+    }
+    uint32_t keyID = optKeyID.value();
+
+    obj->emplace(keyID, ObjectNode());
+    auto *currentNode = &(std::get<ObjectNode>(obj->at(keyID).value));
     pushDataOnStack(currentNode);
-    key++;
 }
 
 
-void ObjectCreator::processContent(uint key)
+void ObjectCreator::processContent(const std::string& keyStr)
 {
+    auto optKeyID = keyMapper.createAndPutKeyID(keyStr, mapIDStack.top());
+    if (optKeyID == std::nullopt) {
+        return;
+    }
+    uint32_t keyID = optKeyID.value();
+
     ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
-    obj->emplace(key, "QAZ");
+    obj->emplace(keyID, "QAZ");
 }
 
 
 void ObjectCreator::pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> node)
 {
     nodeStack.push(node);
+    maxMapId += (1 << 16);
+    mapIDStack.push(maxMapId);
 }
 
 
 void ObjectCreator::popDataFromStack()
 {
+    mapIDStack.pop();
     nodeStack.pop();
 }
 

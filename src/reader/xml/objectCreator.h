@@ -6,7 +6,6 @@
 #include <memory>
 #include <stack>
 #include <variant>
-#include <vector>
 
 #include "../keyMapper.h"
 #include "elem.h"
@@ -18,7 +17,7 @@
 class ObjectCreator
 {
     public:
-        ObjectCreator() = default;
+        ObjectCreator(KeyMapper& keyMapper) : keyMapper(keyMapper) {};
 
         std::unique_ptr<ObjectNode> parseElems(std::vector<Elem>&);
 
@@ -26,10 +25,14 @@ class ObjectCreator
         std::stack<std::variant<ObjectNode*, ArrayNode*>> nodeStack;
         std::unique_ptr<ObjectNode> nodes;
 
+        KeyMapper& keyMapper;
+        std::stack<uint32_t> mapIDStack;
+        uint32_t maxMapId = 0;
+
         void pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> nodeStack);
         void popDataFromStack();
-        void processTagOpen(uint key);
-        void processContent(uint key);
+        void processTagOpen(const std::string& key);
+        void processContent(const std::string& key);
 };
 
 #endif
