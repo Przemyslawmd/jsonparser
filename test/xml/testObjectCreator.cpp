@@ -10,7 +10,6 @@
 
 #include "error.h"
 #include "log/ErrorStorage.h"
-#include "reader/xml/validator.h"
 
 #include "../headers/token.h"
 #include "../baseTest.h"
@@ -20,9 +19,15 @@
 class TestObjectCreator : public BaseTest
 {
 protected:
+    std::unique_ptr<KeyMapper> keyMapper;
+
+    virtual void SetUp()
+    {
+        keyMapper = std::make_unique<KeyMapper>();
+    }
+
     std::unique_ptr<ObjectNode> createObjects(const std::string& path, const std::string& file)
     {
-        std::unique_ptr<KeyMapper> keyMapper = std::make_unique<KeyMapper>();
         ErrorStorage::clear();
         std::string xmlString = getJsonFromFile(path, file);
         auto preparser = std::make_unique<PreparserXML>();
@@ -33,20 +38,35 @@ protected:
         auto node = objCreator->parseElems(*elems);
         return node;
     }
+
+    void checkKeyMapping(const std::map<uint32_t, std::string>& keyMapExpected)
+    {
+        for (const auto& [keyIDExpected, keyStrExpected] : keyMapExpected) {
+            ASSERT_TRUE(keyMapper->getKeyStr(keyIDExpected) != std::nullopt);
+            ASSERT_TRUE(keyMapper->getKeyStr(keyIDExpected).value() == keyStrExpected);
+        }
+    }
 };
 
 
 TEST_F(TestObjectCreator, test_1)
 {
-    auto node = createObjects(TEST_DATA_XML, "test_3.xml");
-    ASSERT_NE(node, nullptr);
+    auto root = createObjects(TEST_DATA_XML, "test_3.xml");
+    ASSERT_NE(root, nullptr);
 
-    ASSERT_TRUE(node->find(0x00'01'00'01) != node->end());
-    auto* nodeValue = std::get_if<ObjectNode>(&node->at(0x00'01'00'01).value);
-    ASSERT_TRUE(nodeValue != nullptr);
+    std::map <uint32_t, std::string> keyMap 
+    {
+        { 0x00'01'00'01, "person" },
+        { 0x00'02'00'01, "name" }
+    };
+    checkKeyMapping(keyMap);
 
-    auto* nodeValue_1 = std::get_if<std::string>(&nodeValue->at(0x00'02'00'01).value);
-    ASSERT_EQ(*nodeValue_1, "QAZ");
+    ASSERT_TRUE(root->find(0x00'01'00'01) != root->end());
+    auto* nodeName = std::get_if<ObjectNode>(&root->at(0x00'01'00'01).value);
+    ASSERT_TRUE(nodeName != nullptr);
+
+    auto* nodeNameContent = std::get_if<std::string>(&nodeName->at(0x00'02'00'01).value);
+    ASSERT_EQ(*nodeNameContent, "John");
 }
 
 

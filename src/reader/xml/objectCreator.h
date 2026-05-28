@@ -27,12 +27,13 @@ class ObjectCreator
 
         KeyMapper& keyMapper;
         std::stack<uint32_t> mapIDStack;
+        std::stack<std::string> keyStack;
         uint32_t maxMapId = 0;
 
         void pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> nodeStack);
         void popDataFromStack();
         void processTagOpen(const std::string& key);
-        void processContent(const std::string& key);
+        void processContent(const std::vector<TokenXML>& attrs);
 };
 
 #endif

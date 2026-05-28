@@ -10,6 +10,7 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
 
     nodes = std::make_unique<ObjectNode>();
     mapIDStack.push(0);
+    keyStack.push(elems.at(firstTag).name.value());
     pushDataOnStack(nodes.get());
 
     using enum ElemType;
@@ -22,17 +23,19 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
                 popDataFromStack();
                 break;
             case CONTENT:
-                processContent("X");
+                processContent(elem.attr);
                 break;
         }
     }
     return std::move(nodes);
 }
 
+
 void ObjectCreator::processTagOpen(const std::string& keyStr)
 {
     ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
-    auto optKeyID = keyMapper.createAndPutKeyID(keyStr, mapIDStack.top());
+
+    auto optKeyID = keyMapper.createAndPutKeyID(keyStack.top(), mapIDStack.top());
     if (optKeyID == std::nullopt) {
         return;
     }
@@ -41,19 +44,20 @@ void ObjectCreator::processTagOpen(const std::string& keyStr)
     obj->emplace(keyID, ObjectNode());
     auto *currentNode = &(std::get<ObjectNode>(obj->at(keyID).value));
     pushDataOnStack(currentNode);
+    keyStack.push(keyStr);
 }
 
 
-void ObjectCreator::processContent(const std::string& keyStr)
+void ObjectCreator::processContent(const std::vector<TokenXML>& attrs)
 {
-    auto optKeyID = keyMapper.createAndPutKeyID(keyStr, mapIDStack.top());
+    auto optKeyID = keyMapper.createAndPutKeyID(keyStack.top(), mapIDStack.top());
     if (optKeyID == std::nullopt) {
         return;
     }
     uint32_t keyID = optKeyID.value();
 
     ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
-    obj->emplace(keyID, "QAZ");
+    obj->emplace(keyID, std::get<std::string>(attrs[0].data));
 }
 
 
