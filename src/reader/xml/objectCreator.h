@@ -31,7 +31,7 @@ class ObjectCreator
 
         void pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> nodeStack);
         void popDataFromStack();
-        void processTagOpen(const std::string& key);
+        void processTagOpen(const std::string& key, const std::vector<TokenXML>& attrs);
         void processContent(const std::vector<TokenXML>& attrs);
 };
 

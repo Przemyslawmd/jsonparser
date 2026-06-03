@@ -17,7 +17,7 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
     for (const auto& elem : elems | std::views::drop(firstTag + 1)) {
         switch (elem.type) {
             case TAG_OPEN:
-                processTagOpen(elem.name.value());
+                processTagOpen(elem.name.value(), elem.attr);
                 break;
             case TAG_CLOSE:
                 popDataFromStack();
@@ -31,7 +31,7 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
 }
 
 
-void ObjectCreator::processTagOpen(const std::string& keyStr)
+void ObjectCreator::processTagOpen(const std::string& keyStr, const std::vector<TokenXML>& attrs)
 {
     ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
 
