@@ -52,7 +52,12 @@ protected:
 };
 
 
-TEST_F(TestWriterXML, Test_File_No_Declaration)
+TEST_F(TestWriterXML, Test_File_No_Declaration_1)
 {
-    testJsonString("test_no_declaration.xml");
+    testJsonString("test_no_declaration_1.xml");
+}
+
+TEST_F(TestWriterXML, Test_File_No_Declaration_2)
+{
+    testJsonString("test_no_declaration_two_values.xml");
 }

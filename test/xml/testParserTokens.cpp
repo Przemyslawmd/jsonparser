@@ -61,9 +61,9 @@ TEST_F(TestParserTokensXML, Test_File_2)
 }
 
 
-TEST_F(TestParserTokensXML, Test_File_No_declaration)
+TEST_F(TestParserTokensXML, Test_File_No_Declaration_1)
 {
-    auto elems = createElements(TEST_DATA_XML, "test_no_declaration.xml");
+    auto elems = createElements(TEST_DATA_XML, "test_no_declaration_1.xml");
 
     ASSERT_EQ(elems->size(), 5);
 

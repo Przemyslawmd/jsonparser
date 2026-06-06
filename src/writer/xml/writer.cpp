@@ -12,6 +12,7 @@ using namespace xml;
 
 std::string Writer::createXmlString(const ObjectNode& object)
 {
+    
     processObjectNode(object);
     return stream.str();
 }
@@ -27,6 +28,7 @@ void Writer::setIndent(size_t indentStep)
 
 void Writer::processObjectNode(const ObjectNode& obj)
 {
+    size_t iteration = 0;
     incIndent();
     for (auto const& [idKey, val] : obj) {
         std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
@@ -37,8 +39,8 @@ void Writer::processObjectNode(const ObjectNode& obj)
         if (indent != 0) {
             stream << "\n";
         }
+        iteration++;
     }
-
     decIndent();
     std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
 }
