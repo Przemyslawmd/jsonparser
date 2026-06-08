@@ -23,7 +23,6 @@ class ObjectCreator
     private:
         std::stack<std::variant<ObjectNode*, ArrayNode*>> nodeStack;
         std::unique_ptr<ObjectNode> nodes;
-        bool flagContent;
 
         KeyMapper& keyMapper;
         std::stack<uint32_t> mapIDStack;

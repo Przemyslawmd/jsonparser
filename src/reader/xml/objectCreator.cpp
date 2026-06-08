@@ -12,7 +12,6 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
     mapIDStack.push(0);
     keyStack.push(elems.at(firstTag).name.value());
     pushDataOnStack(nodes.get());
-    flagContent = false;
 
     using enum ElemType;
     for (const auto& elem : elems | std::views::drop(firstTag + 1)) {
@@ -36,17 +35,22 @@ void ObjectCreator::processTagOpen(const std::string& keyStr, const std::vector<
 {
     ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
 
-    auto optKeyID = keyMapper.createAndPutKeyID(keyStack.top(), mapIDStack.top());
+    auto optKeyID = keyMapper.getKeyID(keyStack.top(), mapIDStack.top());
+    if (optKeyID != std::nullopt) {
+        auto *currentNode = &(std::get<ObjectNode>(obj->at(optKeyID.value()).value));
+        pushDataOnStack(currentNode);
+        keyStack.push(keyStr);
+        return;
+    }
+
+    optKeyID = keyMapper.createAndPutKeyID(keyStack.top(), mapIDStack.top());
     if (optKeyID == std::nullopt) {
         return;
     }
     uint32_t keyID = optKeyID.value();
-
-    if (obj->empty()) {
-        obj->emplace(keyID, ObjectNode());
-        auto *currentNode = &(std::get<ObjectNode>(obj->at(keyID).value));
-        pushDataOnStack(currentNode);
-    }
+    obj->emplace(keyID, ObjectNode());
+    auto *currentNode = &(std::get<ObjectNode>(obj->at(keyID).value));
+    pushDataOnStack(currentNode);
     keyStack.push(keyStr);
 }
 
@@ -58,10 +62,8 @@ void ObjectCreator::processContent(const std::vector<TokenXML>& attrs)
         return;
     }
     uint32_t keyID = optKeyID.value();
-
     ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
     obj->emplace(keyID, std::get<std::string>(attrs[0].data));
-    flagContent = true;
 }
 
 
@@ -75,11 +77,6 @@ void ObjectCreator::pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> node)
 
 void ObjectCreator::popDataFromStack()
 {
-    if (flagContent) {
-        flagContent = false;
-        keyStack.pop();
-        return;
-    }
     nodeStack.pop();
     keyStack.pop();
     mapIDStack.pop();
