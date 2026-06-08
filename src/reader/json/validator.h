@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_VALIDATOR_H
-#define JSONPARSER_VALIDATOR_H
+#ifndef READER_JSON_VALIDATOR_H
+#define READER_JSON_VALIDATOR_H
 
 #include <vector>
 

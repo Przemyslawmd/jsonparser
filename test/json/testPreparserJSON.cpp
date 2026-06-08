@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 
 #include "log/ErrorStorage.h"
-#include "reader/ParserKey.h"
+#include "reader/json/parserKey.h"
 #include "reader/json/PreparserJSON.h"
 
 #include "baseTest.h"

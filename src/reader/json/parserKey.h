@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_PARSERKEY_H
-#define JSONPARSER_PARSERKEY_H
+#ifndef READER_JSON_PARSERKEY_H
+#define READER_JSON_PARSERKEY_H
 
 #include <memory>
 #include <stack>

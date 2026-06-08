@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_PREPARSER_H
-#define JSONPARSER_PREPARSER_H
+#ifndef READER_JSON_PREPARSER_H
+#define READER_JSON_PREPARSER_H
 
 #include <map>
 #include <memory>

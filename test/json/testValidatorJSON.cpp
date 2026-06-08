@@ -4,7 +4,7 @@
 #include "error.h"
 #include "log/ErrorStorage.h"
 #include "reader/json/PreparserJSON.h"
-#include "reader/Validator.h"
+#include "reader/json/validator.h"
 
 #include "config.h"
 #include "utilsTest.h"

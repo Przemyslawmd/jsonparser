@@ -9,7 +9,7 @@
 #include "keyMapper.h"
 #include "node.h"
 #include "reader/Parser.h"
-#include "reader/ParserKey.h"
+#include "reader/json/parserKey.h"
 #include "reader/json/PreparserJSON.h"
 #include "writer/Writer.h"
 
