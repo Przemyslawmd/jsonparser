@@ -9,11 +9,12 @@
 
 #include "token.h"
 
-
-class PreparserJSON
+namespace json
+{
+class Preparser
 {
 public:
-    PreparserJSON() = default;
+    Preparser() = default;
 
     std::unique_ptr<std::vector<Token>> parseJSON(const std::string& json);
 
@@ -29,5 +30,6 @@ private:
         { ',', TokenType::COMMA },
     };
 };
+}
 
 #endif

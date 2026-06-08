@@ -1,5 +1,5 @@
 
-#include "PreparserJSON.h"
+#include "preparser.h"
 
 #include <format>
 
@@ -13,7 +13,9 @@ constexpr size_t TRUE_WORD_LEN = 4;
 constexpr size_t NULL_WORD_LEN = 4;
 
 
-std::unique_ptr<std::vector<Token>> PreparserJSON::parseJSON(const std::string& json)
+using namespace json;
+
+std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json)
 {
     tokens = std::make_unique<std::vector<Token>>();
     tokens->reserve(100);
