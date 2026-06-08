@@ -12,7 +12,7 @@
 class KeyMapper
 {
 public:
-    std::optional<uint32_t> createAndPutKeyID(std::string_view keyStr, uint32_t mapID);
+    std::optional<uint32_t> createKeyID(std::string_view keyStr, uint32_t mapID);
 
     void clear();
     void removeKey(uint32_t keyID);

@@ -61,7 +61,7 @@ bool Parser::pushComplexNodeOnStack(const std::string& keyStr, State state)
     if (stateStack.top() == State::OBJECT_PARSING) {
         ObjectNode* objectNode = std::get<ObjectNode*>(nodeStack.top());
 
-        auto optKeyID = keyMapper.createAndPutKeyID(keyStr, mapIDStack.top());
+        auto optKeyID = keyMapper.createKeyID(keyStr, mapIDStack.top());
         if (optKeyID == std::nullopt) {
             return false;
         }
@@ -85,7 +85,7 @@ template <typename T> requires PrimitiveLimit<T>
 bool Parser::processData(const std::string& keyStr, const Token& token)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
-        auto optKeyID = keyMapper.createAndPutKeyID(keyStr, mapIDStack.top());
+        auto optKeyID = keyMapper.createKeyID(keyStr, mapIDStack.top());
         if (optKeyID == std::nullopt) {
             return false;
         }

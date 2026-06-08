@@ -12,7 +12,7 @@ constexpr uint32_t MASK_ITEM_ID = 0x00'00'FF'FF;
 
 
 std::optional<uint32_t>
-KeyMapper::createAndPutKeyID(std::string_view keyStr, uint32_t mapID)
+KeyMapper::createKeyID(std::string_view keyStr, uint32_t mapID)
 {
     mapID &= MASK_MAP_ID;
     if (getKeyID(keyStr, mapID) != std::nullopt) {

@@ -105,7 +105,7 @@ bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string
         return false;
     }
 
-    auto optKeyID = keyMapper->createAndPutKeyID(keyStr, obj->begin()->first);
+    auto optKeyID = keyMapper->createKeyID(keyStr, obj->begin()->first);
     if (optKeyID == std::nullopt) {
         return false;
     }
@@ -391,7 +391,7 @@ void Manager::addObjectInternally(ObjectNode& obj, const NodeApi& newNode)
     uint32_t mapID = keyMapper->getNextMapID();
 
     for (const auto& [keyStr, val] : std::get<ObjectNodeApi>(newNode.value)) {
-        auto optKeyID = keyMapper->createAndPutKeyID(keyStr, mapID);
+        auto optKeyID = keyMapper->createKeyID(keyStr, mapID);
         uint32_t keyID = optKeyID.value();
 
         NodeType newNodeType = getNodeApiType(val);

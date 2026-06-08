@@ -43,7 +43,7 @@ void ObjectCreator::processTagOpen(const std::string& keyStr, const std::vector<
         return;
     }
 
-    optKeyID = keyMapper.createAndPutKeyID(keyStack.top(), mapIDStack.top());
+    optKeyID = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
     if (optKeyID == std::nullopt) {
         return;
     }
@@ -57,7 +57,7 @@ void ObjectCreator::processTagOpen(const std::string& keyStr, const std::vector<
 
 void ObjectCreator::processContent(const std::vector<TokenXML>& attrs)
 {
-    auto optKeyID = keyMapper.createAndPutKeyID(keyStack.top(), mapIDStack.top());
+    auto optKeyID = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
     if (optKeyID == std::nullopt) {
         return;
     }
