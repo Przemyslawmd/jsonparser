@@ -35,9 +35,9 @@ protected:
         return node;
     }
 
-    void checkKeyMapping(const std::map<uint32_t, std::string>& mapExpected)
+    void checkKeyMapping(const std::map<std::string, uint32_t>& mapExpected)
     {
-        for (const auto& [idExpected, strExpected] : mapExpected) {
+        for (const auto& [strExpected, idExpected] : mapExpected) {
             ASSERT_TRUE(keyMapper->getKeyStr(idExpected) != std::nullopt);
             ASSERT_TRUE(keyMapper->getKeyStr(idExpected).value() == strExpected);
         }
@@ -50,50 +50,19 @@ TEST_F(TestObjectCreator, test_1)
     auto root = createObjects(TEST_DATA_XML, "test_3.xml");
     ASSERT_NE(root, nullptr);
 
-    std::map <uint32_t, std::string> keyMap 
+    std::map <std::string, uint32_t> keys 
     {
-        { 0x00'01'00'01, "person" },
-        { 0x00'02'00'01, "name" }
+        { "person", 0x00'01'00'01,  },
+        { "name", 0x00'02'00'01,  }
     };
-    checkKeyMapping(keyMap);
+    checkKeyMapping(keys);
 
-    ASSERT_TRUE(root->find(0x00'01'00'01) != root->end());
-    auto* nodeName = std::get_if<ObjectNode>(&root->at(0x00'01'00'01).value);
+    ASSERT_TRUE(root->find(keys["person"]) != root->end());
+    auto* nodeName = std::get_if<ObjectNode>(&root->at(keys["person"]).value);
     ASSERT_TRUE(nodeName != nullptr);
 
-    auto* nodeNameContent = std::get_if<std::string>(&nodeName->at(0x00'02'00'01).value);
+    auto* nodeNameContent = std::get_if<std::string>(&nodeName->at(keys["name"]).value);
     ASSERT_EQ(*nodeNameContent, "John");
-}
-
-
-TEST_F(TestObjectCreator, test_x)
-{
-    auto root = createObjects(TEST_DATA_XML, "test_no_declaration_two_values.xml");
-    ASSERT_NE(root, nullptr);
-
-    auto x = *root;
-
-    for (const auto& [key, val] : x)
-    {
-        std::cout << std::hex << key << std::endl;
-    }    
-
-    std::map <std::string, uint32_t> keyMap 
-    {
-        { "aa", 0x00'01'00'01 },
-        { "dd", 0x00'02'00'01 },
-        { "ff", 0x00'03'00'01 }
-    };
-    //checkKeyMapping(keyMap);
-
-    ASSERT_TRUE(root->find(keyMap.at("aa")) != root->end());
-    ASSERT_EQ(root->size(), 1);
-    //ASSERT_TRUE(root->find(0x00'01'00'01) != root->end());
-    //auto* nodeName = std::get_if<ObjectNode>(&root->at(0x00'01'00'01).value);
-    //ASSERT_TRUE(nodeName != nullptr);
-
-    //auto* nodeNameContent = std::get_if<std::string>(&nodeName->at(0x00'02'00'01).value);
-    //ASSERT_EQ(*nodeNameContent, "John");
 }
 
 
@@ -102,45 +71,43 @@ TEST_F(TestObjectCreator, test_4)
     auto root = createObjects(TEST_DATA_XML, "test_4.xml");
     ASSERT_NE(root, nullptr);
 
-    std::map <uint32_t, std::string> keyMap 
+    std::map <std::string, uint32_t> keys 
     {
-        { 0x00'01'00'01, "aa" },
-        { 0x00'02'00'01, "bb" },
-        { 0x00'03'00'01, "cc" },
-        { 0x00'04'00'01, "dd" },
-        { 0x00'05'00'01, "ee" },
-        { 0x00'06'00'01, "ff" }
+        { "aa", 0x00'01'00'01 },
+        { "bb", 0x00'02'00'01 },
+        { "cc", 0x00'03'00'01 },
+        { "dd", 0x00'04'00'01 },
+        { "ee", 0x00'05'00'01 },
+        { "ff", 0x00'06'00'01 }
 
     };
-    checkKeyMapping(keyMap);
+    checkKeyMapping(keys);
 
-    //ASSERT_TRUE(root->find(0x00'01'00'01) != root->end());
+    ASSERT_TRUE(root->find(keys["aa"]) != root->end());
     ASSERT_EQ(root->size(), 1);
-    
-    auto* nodeBB = std::get_if<ObjectNode>(&root->at(0x00'01'00'01).value);
+
+    auto* nodeAA = std::get_if<ObjectNode>(&root->at(keys["aa"]).value);
+    ASSERT_TRUE(nodeAA != nullptr);
+    ASSERT_EQ(nodeAA->size(), 1);
+
+    auto* nodeBB = std::get_if<ObjectNode>(&nodeAA->at(keys["bb"]).value);
     ASSERT_TRUE(nodeBB != nullptr);
-    ASSERT_EQ(nodeBB->size(), 1);
+    ASSERT_EQ(nodeBB->size(), 2);
 
-    auto* nodeCC = std::get_if<ObjectNode>(&nodeBB->at(0x00'02'00'01).value);
+    auto* nodeCC = std::get_if<ObjectNode>(&nodeBB->at(keys["cc"]).value);
     ASSERT_TRUE(nodeCC != nullptr);
-    ASSERT_EQ(nodeCC->size(), 2);
+    ASSERT_EQ(nodeCC->size(), 1);
 
-    auto* nodeDD = std::get_if<ObjectNode>(&nodeCC->at(0x00'03'00'01).value);
-    ASSERT_TRUE(nodeDD != nullptr);
-    ASSERT_EQ(nodeDD->size(), 1);
-
-    auto* nodeDDContent = std::get_if<std::string>(&nodeDD->at(0x00'04'00'01).value);
-    ASSERT_EQ(*nodeDDContent, "ddContent");
-
-    auto* nodeEE = std::get_if<ObjectNode>(&nodeBB->at(0x00'02'00'02).value);
+    auto* nodeEE = std::get_if<ObjectNode>(&nodeBB->at(keys["ee"]).value);
     ASSERT_TRUE(nodeEE != nullptr);
     ASSERT_EQ(nodeEE->size(), 1);
 
-    auto* nodeFF = std::get_if<ObjectNode>(&nodeEE->at(0x00'05'00'01).value);
-    ASSERT_TRUE(nodeFF != nullptr);
-    ASSERT_EQ(nodeFF->size(), 1);
+    auto* nodeDD = std::get_if<std::string>(&nodeCC->at(keys["dd"]).value);
+    ASSERT_TRUE(nodeDD != nullptr);
+    ASSERT_EQ(*nodeDD, "ddContent");
 
-    auto* nodeFFContent = std::get_if<std::string>(&nodeFF->at(0x00'06'00'01).value);
-    ASSERT_EQ(*nodeFFContent, "ffContent");
+    auto* nodeFF = std::get_if<std::string>(&nodeEE->at(keys["ff"]).value);
+    ASSERT_TRUE(nodeFF != nullptr);
+    ASSERT_EQ(*nodeFF, "ffContent");
 }
 
