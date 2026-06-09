@@ -10,8 +10,7 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
 
     nodes = std::make_unique<ObjectNode>();
     mapIDStack.push(0);
-    keyStack.push(elems.at(firstTag).name.value());
-    pushDataOnStack(nodes.get());
+    pushDataOnStack(nodes.get(), elems.at(firstTag).name.value());
 
     using enum ElemType;
     for (const auto& elem : elems | std::views::drop(firstTag + 1)) {
@@ -36,29 +35,27 @@ void ObjectCreator::processTagOpen(const std::string& keyStr, const std::vector<
     ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
 
     auto optKeyID = keyMapper.getKeyID(keyStack.top(), mapIDStack.top());
-    if (optKeyID != std::nullopt) {
+    if (optKeyID.has_value()) {
         auto *currentNode = &(std::get<ObjectNode>(obj->at(optKeyID.value()).value));
-        pushDataOnStack(currentNode);
-        keyStack.push(keyStr);
+        pushDataOnStack(currentNode, keyStr);
         return;
     }
 
     optKeyID = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
-    if (optKeyID == std::nullopt) {
+    if (!optKeyID.has_value()) {
         return;
     }
     uint32_t keyID = optKeyID.value();
     obj->emplace(keyID, ObjectNode());
     auto *currentNode = &(std::get<ObjectNode>(obj->at(keyID).value));
-    pushDataOnStack(currentNode);
-    keyStack.push(keyStr);
+    pushDataOnStack(currentNode, keyStr);
 }
 
 
 void ObjectCreator::processContent(const std::vector<TokenXML>& attrs)
 {
     auto optKeyID = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
-    if (optKeyID == std::nullopt) {
+    if (!optKeyID.has_value()) {
         return;
     }
     uint32_t keyID = optKeyID.value();
@@ -67,11 +64,12 @@ void ObjectCreator::processContent(const std::vector<TokenXML>& attrs)
 }
 
 
-void ObjectCreator::pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> node)
+void ObjectCreator::pushDataOnStack(NodePtr node, const std::string& keyStr)
 {
     nodeStack.push(node);
     maxMapId += (1 << 16);
     mapIDStack.push(maxMapId);
+    keyStack.push(keyStr);
 }
 
 

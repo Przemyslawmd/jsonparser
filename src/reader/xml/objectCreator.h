@@ -1,38 +1,41 @@
 
-#ifndef JSONPARSER_OBJECT_CREATOR_H
-#define JSONPARSER_OBJECT_CREATOR_H
+#ifndef JX_READER_XML_OBJECT_CREATOR_H
+#define JX_READER_XML_OBJECT_CREATOR_H
 
 #include <map>
 #include <memory>
 #include <stack>
 #include <variant>
+#include <vector>
 
-#include "../keyMapper.h"
+#include "keyMapper.h"
 #include "elem.h"
 #include "node.h"
 #include "token.h"
 
 
+using NodePtr = std::variant<ObjectNode*, ArrayNode*>;
+
 class ObjectCreator
 {
-    public:
-        ObjectCreator(KeyMapper& keyMapper) : keyMapper(keyMapper) {};
+public:
+    ObjectCreator(KeyMapper& keyMapper) : keyMapper(keyMapper) {};
 
-        std::unique_ptr<ObjectNode> parseElems(std::vector<Elem>&);
+    std::unique_ptr<ObjectNode> parseElems(std::vector<Elem>&);
 
-    private:
-        std::stack<std::variant<ObjectNode*, ArrayNode*>> nodeStack;
-        std::unique_ptr<ObjectNode> nodes;
+private:
+    std::stack<NodePtr> nodeStack;
+    std::unique_ptr<ObjectNode> nodes;
 
-        KeyMapper& keyMapper;
-        std::stack<uint32_t> mapIDStack;
-        std::stack<std::string> keyStack;
-        uint32_t maxMapId = 0;
+    KeyMapper& keyMapper;
+    std::stack<uint32_t> mapIDStack;
+    std::stack<std::string> keyStack;
+    uint32_t maxMapId = 0;
 
-        void pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> nodeStack);
-        void popDataFromStack();
-        void processTagOpen(const std::string& key, const std::vector<TokenXML>& attrs);
-        void processContent(const std::vector<TokenXML>& attrs);
+    void pushDataOnStack(NodePtr node, const std::string& keyStr);
+    void popDataFromStack();
+    void processTagOpen(const std::string& key, const std::vector<TokenXML>& attrs);
+    void processContent(const std::vector<TokenXML>& attrs);
 };
 
 #endif
