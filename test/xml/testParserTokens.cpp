@@ -89,6 +89,61 @@ TEST_F(TestParserTokensXML, Test_File_No_Declaration_1)
 }
 
 
+TEST_F(TestParserTokensXML, Test_File_5_attrs)
+{
+    auto elems = createElements(TEST_DATA_XML, "test_5_attrs.xml");
+
+    ASSERT_EQ(elems->size(), 9);
+
+    ASSERT_EQ(elems->at(0).type, ElemType::DECLARATION);
+    ASSERT_EQ(elems->at(0).name, "xml");
+    ASSERT_EQ(elems->at(0).attr.size(), 6);
+    ASSERT_EQ(std::get<std::string>(elems->at(0).attr[0].data), "version");
+    ASSERT_EQ(elems->at(0).attr[1].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(std::get<std::string>(elems->at(0).attr[2].data), "1.0");
+    ASSERT_EQ(std::get<std::string>(elems->at(0).attr[3].data), "encoding");
+    ASSERT_EQ(elems->at(0).attr[4].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(std::get<std::string>(elems->at(0).attr[5].data), "UTF-8");
+    
+    ASSERT_EQ(elems->at(1).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems->at(1).name, "city");
+    
+    ASSERT_FALSE(elems->at(1).attr.empty());
+    ASSERT_EQ(std::get<std::string>(elems->at(1).attr[0].data), "state");
+    ASSERT_EQ(elems->at(1).attr[1].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(std::get<std::string>(elems->at(1).attr[2].data), "Italy");
+
+    ASSERT_EQ(elems->at(2).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems->at(2).name, "name");
+    ASSERT_TRUE(elems->at(2).attr.empty());
+
+    ASSERT_EQ(elems->at(3).type, ElemType::CONTENT);
+    ASSERT_EQ(elems->at(3).name, std::nullopt);
+    ASSERT_EQ(std::get<std::string>(elems->at(3).attr[0].data), "Milan");
+
+    ASSERT_EQ(elems->at(4).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems->at(4).name, "name");
+    ASSERT_TRUE(elems->at(4).attr.empty());
+
+    
+    ASSERT_EQ(elems->at(5).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems->at(5).name, "province");
+    ASSERT_TRUE(elems->at(5).attr.empty());
+
+    ASSERT_EQ(elems->at(6).type, ElemType::CONTENT);
+    ASSERT_EQ(elems->at(6).name, std::nullopt);
+    ASSERT_EQ(std::get<std::string>(elems->at(6).attr[0].data), "Lombardy");
+
+    ASSERT_EQ(elems->at(7).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems->at(7).name, "province");
+    ASSERT_TRUE(elems->at(7).attr.empty());
+        
+    ASSERT_EQ(elems->at(8).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems->at(8).name, "city");
+    ASSERT_TRUE(elems->at(8).attr.empty());
+}
+
+
 TEST_F(TestParserTokensXML, Error_angle_open)
 {
     auto elems = createElements(TEST_DATA_IMPROPER_XML, "angleOpen.xml");
