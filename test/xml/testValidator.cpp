@@ -1,34 +1,14 @@
 
+#include "testBaseXML.h"
+
 #include <memory>
 
 #include <gtest/gtest.h>
 
-#include "reader/xml/preparserXML.h"
-#include "reader/xml/parserTokensXML.h"
-#include "reader/xml/elem.h"
-
-#include "error.h"
-#include "log/ErrorStorage.h"
 #include "reader/xml/validator.h"
 
-#include "../headers/token.h"
-#include "../baseTest.h"
-#include "../config.h"
 
-
-class TestValidatorXML : public BaseTest
-{
-protected:
-    std::unique_ptr<std::vector<Elem>> createElements(const std::string& path, const std::string& file)
-    {
-        ErrorStorage::clear();
-        std::string xmlString = getJsonFromFile(path, file);
-        auto preparser = std::make_unique<PreparserXML>();
-        auto tokens = preparser->parseXML(xmlString);
-        auto parser = std::make_unique<ParserTokens>();
-        return parser->parseTokens(std::move(tokens));
-    }
-};
+class TestValidatorXML : public TestBaseXML {};
 
 
 TEST_F(TestValidatorXML, Declaration_not_start)

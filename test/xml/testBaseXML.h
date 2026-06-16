@@ -32,6 +32,11 @@ protected:
         performace.close();
     }
     
+    virtual void SetUp()
+    {
+        ErrorStorage::clear();
+    }
+
     std::unique_ptr<std::vector<TokenXML>> createTokens(const std::string& path, const std::string& file)
     {
         std::string xmlString = getJsonFromFile(path, file);
@@ -41,7 +46,7 @@ protected:
     
     std::unique_ptr<std::vector<Elem>> createElements(const std::string& path, const std::string& file)
     {
-        ErrorStorage::clear();
+        //ErrorStorage::clear();
         auto tokens = createTokens(path, file);;
         auto parser = std::make_unique<ParserTokens>();
         return parser->parseTokens(std::move(tokens));
