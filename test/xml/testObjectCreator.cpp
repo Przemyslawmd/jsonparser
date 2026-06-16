@@ -1,38 +1,19 @@
 
+#include "testBaseXML.h"
+
 #include <memory>
 
 #include <gtest/gtest.h>
 
-#include "reader/xml/objectCreator.h"
-#include "reader/xml/preparserXML.h"
-#include "reader/xml/parserTokensXML.h"
-#include "reader/xml/elem.h"
 
-#include "../headers/token.h"
-#include "../baseTest.h"
-#include "../config.h"
-
-
-class TestObjectCreator : public BaseTest
+class TestObjectCreator : public TestBaseXML
 {
 protected:
     std::unique_ptr<KeyMapper> keyMapper;
-
+    
     virtual void SetUp()
     {
         keyMapper = std::make_unique<KeyMapper>();
-    }
-
-    std::unique_ptr<ObjectNode> createObjects(const std::string& path, const std::string& file)
-    {
-        std::string xmlString = getJsonFromFile(path, file);
-        auto preparser = std::make_unique<PreparserXML>();
-        auto tokens = preparser->parseXML(xmlString);
-        auto parser = std::make_unique<ParserTokens>();
-        auto elems = parser->parseTokens(std::move(tokens));
-        auto objCreator = std::make_unique<ObjectCreator>(*keyMapper);
-        auto node = objCreator->parseElems(*elems);
-        return node;
     }
 
     void checkKeyMapping(const std::map<std::string, uint32_t>& mapExpected)
@@ -47,7 +28,7 @@ protected:
 
 TEST_F(TestObjectCreator, test_1)
 {
-    auto root = createObjects(TEST_DATA_XML, "test_3.xml");
+    auto root = createObjects(TEST_DATA_XML, "test_3.xml", *keyMapper);
     ASSERT_NE(root, nullptr);
 
     std::map <std::string, uint32_t> keys 
@@ -68,7 +49,7 @@ TEST_F(TestObjectCreator, test_1)
 
 TEST_F(TestObjectCreator, test_4)
 {
-    auto root = createObjects(TEST_DATA_XML, "test_4.xml");
+    auto root = createObjects(TEST_DATA_XML, "test_4.xml", *keyMapper);
     ASSERT_NE(root, nullptr);
 
     std::map <std::string, uint32_t> keys 

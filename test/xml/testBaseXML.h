@@ -6,6 +6,7 @@
 
 #include <gtest/gtest.h>
 
+#include "reader/xml/objectCreator.h"
 #include "reader/xml/elem.h"
 #include "reader/xml/preparserXML.h"
 #include "reader/xml/parserTokensXML.h"
@@ -44,6 +45,14 @@ protected:
         auto tokens = createTokens(path, file);;
         auto parser = std::make_unique<ParserTokens>();
         return parser->parseTokens(std::move(tokens));
+    }
+
+    std::unique_ptr<ObjectNode> createObjects(const std::string& path, const std::string& file, KeyMapper& keyMapper)
+    {
+        auto elems = createElements(path, file);
+        auto objCreator = std::make_unique<ObjectCreator>(keyMapper);
+        auto node = objCreator->parseElems(*elems);
+        return node;
     }
 
     void showDuration(const TIME_TYPE start, const TIME_TYPE end)
