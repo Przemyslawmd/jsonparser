@@ -1,0 +1,63 @@
+
+#ifndef JX_TEST_XML_BASE_H
+#define JX_TEST_XML_BASE_H
+
+#include <fstream>
+
+#include <gtest/gtest.h>
+
+#include "reader/xml/elem.h"
+#include "reader/xml/preparserXML.h"
+#include "reader/xml/parserTokensXML.h"
+#include "log/ErrorStorage.h"
+
+#include "utilsTest.h"
+#include "config.h"
+#include "timeType.h"
+
+
+class TestBaseXML : public testing::Test
+{
+protected:
+
+    TestBaseXML()
+    {
+        const auto fullPath = std::string(TEST_DATA) + "performance.txt";
+        performace.open(fullPath, std::ios::app);
+    }
+
+    ~TestBaseXML()
+    {
+        performace.close();
+    }
+    
+    std::unique_ptr<std::vector<TokenXML>> createTokens(const std::string& path, const std::string& file)
+    {
+        std::string xmlString = getJsonFromFile(path, file);
+        auto preparser = std::make_unique<PreparserXML>();
+        return preparser->parseXML(xmlString);
+    }
+    
+    std::unique_ptr<std::vector<Elem>> createElements(const std::string& path, const std::string& file)
+    {
+        ErrorStorage::clear();
+        auto tokens = createTokens(path, file);;
+        auto parser = std::make_unique<ParserTokens>();
+        return parser->parseTokens(std::move(tokens));
+    }
+
+    void showDuration(const TIME_TYPE start, const TIME_TYPE end)
+    {
+        const char* testCase = ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name();
+        const char* testName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        std::cout << "\n############ " << testCase << " : " << testName << " : time: " << elapsed.count() << std::endl << std::endl;
+        performace << std::left << std::setw(20) << testCase << std::setw(35) << testName << "time: " << elapsed.count() << std::endl;
+    }
+
+private:
+    std::ofstream performace;
+};
+
+#endif
+

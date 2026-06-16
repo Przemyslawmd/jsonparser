@@ -1,30 +1,14 @@
 
+#include "testBaseXML.h"
+
 #include <memory>
 #include <variant>
 #include <vector>
 
 #include <gtest/gtest.h>
 
-#include "reader/xml/preparserXML.h"
-#include "../headers/token.h"
-#include "../baseTest.h"
-#include "../config.h"
 
-
-class TestPreparserXML : public BaseTest
-{
-protected:
-    std::unique_ptr<std::vector<TokenXML>> createTokens(const std::string& path, const std::string& file)
-    {
-        std::string xmlString = getJsonFromFile(path, file);
-        auto preparser = std::make_unique<PreparserXML>();
-        auto tokens = preparser->parseXML(xmlString);
-        if (!tokens || tokens->empty()) {
-            return nullptr;
-        }
-        return tokens;
-    }
-};
+class TestPreparserXML : public TestBaseXML {};
 
 
 void checkTokens(std::unique_ptr<std::vector<TokenXML>> tokens, std::vector<TokenXML>& testData)

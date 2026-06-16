@@ -1,33 +1,13 @@
+
+#include "testBaseXML.h"
+
 #include <memory>
 #include <vector>
 
 #include <gtest/gtest.h>
 
-#include "reader/xml/preparserXML.h"
-#include "reader/xml/parserTokensXML.h"
-#include "reader/xml/elem.h"
 
-#include "error.h"
-#include "log/ErrorStorage.h"
-
-#include "../headers/token.h"
-#include "../baseTest.h"
-#include "../config.h"
-
-
-class TestParserTokensXML : public BaseTest
-{
-protected:
-    std::unique_ptr<std::vector<Elem>> createElements(const std::string& path, const std::string& file)
-    {
-        ErrorStorage::clear();
-        std::string xmlString = getJsonFromFile(path, file);
-        auto preparser = std::make_unique<PreparserXML>();
-        auto tokens = preparser->parseXML(xmlString);
-        auto parser = std::make_unique<ParserTokens>();
-        return parser->parseTokens(std::move(tokens));
-    }
-};
+class TestParserTokensXML : public TestBaseXML {};
 
 
 TEST_F(TestParserTokensXML, Test_File_2)
@@ -36,28 +16,32 @@ TEST_F(TestParserTokensXML, Test_File_2)
 
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 4);
-
-    ASSERT_EQ(elems->at(0).type, ElemType::DECLARATION);
-    ASSERT_EQ(elems->at(0).name, "xml");
-    ASSERT_EQ(elems->at(0).attr.size(), 6);
+    
+    uint index = 0;
+    ASSERT_EQ(elems->at(index).type, ElemType::DECLARATION);
+    ASSERT_EQ(elems->at(index).name, "xml");
+    ASSERT_EQ(elems->at(index).attr.size(), 6);
     ASSERT_EQ(std::get<std::string>(elems->at(0).attr[0].data), "version");
-    ASSERT_EQ(elems->at(0).attr[1].type, TokenTypeXML::EQUAL);
-    ASSERT_EQ(std::get<std::string>(elems->at(0).attr[2].data), "1.0");
-    ASSERT_EQ(std::get<std::string>(elems->at(0).attr[3].data), "encoding");
+    ASSERT_EQ(elems->at(index).attr[1].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[2].data), "1.0");
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[3].data), "encoding");
     ASSERT_EQ(elems->at(0).attr[4].type, TokenTypeXML::EQUAL);
-    ASSERT_EQ(std::get<std::string>(elems->at(0).attr[5].data), "UTF-8");
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[5].data), "UTF-8");
 
-    ASSERT_EQ(elems->at(1).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(1).name, "person");
-    ASSERT_TRUE(elems->at(1).attr.empty());
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems->at(index).name, "person");
+    ASSERT_TRUE(elems->at(index).attr.empty());
 
-    ASSERT_EQ(elems->at(2).type, ElemType::CONTENT);
-    ASSERT_EQ(elems->at(2).name, std::nullopt);
-    ASSERT_EQ(std::get<std::string>(elems->at(2).attr[0].data), "John");
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
+    ASSERT_EQ(elems->at(index).name, std::nullopt);
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "John");
 
-    ASSERT_EQ(elems->at(3).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(3).name, "person");
-    ASSERT_TRUE(elems->at(3).attr.empty());
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems->at(index).name, "person");
+    ASSERT_TRUE(elems->at(index).attr.empty());
 }
 
 
@@ -65,27 +49,33 @@ TEST_F(TestParserTokensXML, Test_File_No_Declaration_1)
 {
     auto elems = createElements(TEST_DATA_XML, "test_no_declaration_1.xml");
 
+    ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 5);
 
-    ASSERT_EQ(elems->at(0).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(0).name, "person");
-    ASSERT_TRUE(elems->at(0).attr.empty());
+    uint index = 0;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems->at(index).name, "person");
+    ASSERT_TRUE(elems->at(index).attr.empty());
 
-    ASSERT_EQ(elems->at(1).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(1).name, "name");
-    ASSERT_TRUE(elems->at(1).attr.empty());
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems->at(index).name, "name");
+    ASSERT_TRUE(elems->at(index).attr.empty());
 
-    ASSERT_EQ(elems->at(2).type, ElemType::CONTENT);
-    ASSERT_EQ(elems->at(2).name, std::nullopt);
-    ASSERT_EQ(std::get<std::string>(elems->at(2).attr[0].data), "Jan");
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
+    ASSERT_EQ(elems->at(index).name, std::nullopt);
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "Jan");
 
-    ASSERT_EQ(elems->at(3).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(3).name, "name");
-    ASSERT_TRUE(elems->at(3).attr.empty());
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems->at(index).name, "name");
+    ASSERT_TRUE(elems->at(index).attr.empty());
 
-    ASSERT_EQ(elems->at(4).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(4).name, "person");
-    ASSERT_TRUE(elems->at(4).attr.empty());
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems->at(index).name, "person");
+    ASSERT_TRUE(elems->at(index).attr.empty());
 }
 
 
@@ -93,54 +83,67 @@ TEST_F(TestParserTokensXML, Test_File_5_attrs)
 {
     auto elems = createElements(TEST_DATA_XML, "test_5_attrs.xml");
 
+    ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 9);
 
-    ASSERT_EQ(elems->at(0).type, ElemType::DECLARATION);
-    ASSERT_EQ(elems->at(0).name, "xml");
-    ASSERT_EQ(elems->at(0).attr.size(), 6);
-    ASSERT_EQ(std::get<std::string>(elems->at(0).attr[0].data), "version");
-    ASSERT_EQ(elems->at(0).attr[1].type, TokenTypeXML::EQUAL);
-    ASSERT_EQ(std::get<std::string>(elems->at(0).attr[2].data), "1.0");
-    ASSERT_EQ(std::get<std::string>(elems->at(0).attr[3].data), "encoding");
-    ASSERT_EQ(elems->at(0).attr[4].type, TokenTypeXML::EQUAL);
-    ASSERT_EQ(std::get<std::string>(elems->at(0).attr[5].data), "UTF-8");
+    uint index = 0;
+    ASSERT_EQ(elems->at(index).type, ElemType::DECLARATION);
+    ASSERT_EQ(elems->at(index).name, "xml");
+    ASSERT_EQ(elems->at(index).attr.size(), 6);
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "version");
+    ASSERT_EQ(elems->at(index).attr[1].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[2].data), "1.0");
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[3].data), "encoding");
+    ASSERT_EQ(elems->at(index).attr[4].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[5].data), "UTF-8");
     
-    ASSERT_EQ(elems->at(1).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(1).name, "city");
-    
-    ASSERT_FALSE(elems->at(1).attr.empty());
-    ASSERT_EQ(std::get<std::string>(elems->at(1).attr[0].data), "state");
-    ASSERT_EQ(elems->at(1).attr[1].type, TokenTypeXML::EQUAL);
-    ASSERT_EQ(std::get<std::string>(elems->at(1).attr[2].data), "Italy");
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems->at(index).name, "city");    
+    ASSERT_FALSE(elems->at(index).attr.empty());
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "state");
+    ASSERT_EQ(elems->at(index).attr[1].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[2].data), "Italy");
 
-    ASSERT_EQ(elems->at(2).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(2).name, "name");
-    ASSERT_TRUE(elems->at(2).attr.empty());
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems->at(index).name, "name");
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "code");
+    ASSERT_EQ(elems->at(index).attr[1].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[2].data), "ML");
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[3].data), "post");
+    ASSERT_EQ(elems->at(index).attr[4].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[5].data), "_ML");
 
-    ASSERT_EQ(elems->at(3).type, ElemType::CONTENT);
-    ASSERT_EQ(elems->at(3).name, std::nullopt);
-    ASSERT_EQ(std::get<std::string>(elems->at(3).attr[0].data), "Milan");
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
+    ASSERT_EQ(elems->at(index).name, std::nullopt);
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "Milan");
 
-    ASSERT_EQ(elems->at(4).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(4).name, "name");
-    ASSERT_TRUE(elems->at(4).attr.empty());
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems->at(index).name, "name");
+    ASSERT_TRUE(elems->at(index).attr.empty());
 
-    
-    ASSERT_EQ(elems->at(5).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(5).name, "province");
-    ASSERT_TRUE(elems->at(5).attr.empty());
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems->at(index).name, "province");
+    ASSERT_TRUE(elems->at(index).attr.empty());
 
-    ASSERT_EQ(elems->at(6).type, ElemType::CONTENT);
-    ASSERT_EQ(elems->at(6).name, std::nullopt);
-    ASSERT_EQ(std::get<std::string>(elems->at(6).attr[0].data), "Lombardy");
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
+    ASSERT_EQ(elems->at(index).name, std::nullopt);
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "Lombardy");
 
-    ASSERT_EQ(elems->at(7).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(7).name, "province");
-    ASSERT_TRUE(elems->at(7).attr.empty());
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems->at(index).name, "province");
+    ASSERT_TRUE(elems->at(index).attr.empty());
         
-    ASSERT_EQ(elems->at(8).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(8).name, "city");
-    ASSERT_TRUE(elems->at(8).attr.empty());
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems->at(index).name, "city");
+    ASSERT_TRUE(elems->at(index).attr.empty());
 }
 
 
