@@ -19,7 +19,7 @@ using NodePtr = std::variant<ObjectNode*, ArrayNode*>;
 class ObjectCreator
 {
 public:
-    ObjectCreator(KeyMapper& keyMapper) : keyMapper(keyMapper) {};
+    ObjectCreator(KeyMapper& keyMapper) : keyMapper(keyMapper), maxMapId(0), attrs(nullptr) {};
 
     std::unique_ptr<ObjectNode> parseElems(std::vector<Elem>&);
 
@@ -30,7 +30,7 @@ private:
     KeyMapper& keyMapper;
     std::stack<uint32_t> mapIDStack;
     std::stack<std::string> keyStack;
-    uint32_t maxMapId = 0;
+    uint32_t maxMapId;
 
     void pushContext(NodePtr node, const std::string& keyStr);
     void popContext();
