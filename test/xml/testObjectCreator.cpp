@@ -33,8 +33,8 @@ TEST_F(TestObjectCreator, test_1)
 
     std::map <std::string, uint32_t> keys 
     {
-        { "person", 0x00'01'00'01,  },
-        { "name", 0x00'02'00'01,  }
+        { "person", 0x00'01'00'01, },
+        { "name",   0x00'02'00'01, }
     };
     checkKeyMapping(keys);
 
@@ -92,3 +92,31 @@ TEST_F(TestObjectCreator, test_4)
     ASSERT_EQ(*nodeFF, "ffContent");
 }
 
+
+TEST_F(TestObjectCreator, Test_File_3_Attr)
+{
+    auto root = createObjects(TEST_DATA_XML, "test_3_attr.xml", *keyMapper);
+    ASSERT_NE(root, nullptr);
+
+    std::map <std::string, uint32_t> keys
+    {
+        { "person", 0x00'01'00'01, },
+        { "name",   0x00'02'00'01, },
+        { "city",   0x00'02'00'02  },
+        { "__text", 0x00'02'00'03  }
+    };
+    checkKeyMapping(keys);
+
+    ASSERT_TRUE(root->find(keys["person"]) != root->end());
+    auto* nodePerson = std::get_if<ObjectNode>(&root->at(keys["person"]).value);
+    ASSERT_EQ(nodePerson->size(), 1);
+
+    auto* nodeName = std::get_if<ObjectNode>(&nodePerson->at(keys["name"]).value);
+    ASSERT_EQ(nodeName->size(), 2);
+
+    auto* nodeNameCity = std::get_if<std::string>(&nodeName->at(keys["city"]).value);
+    ASSERT_EQ(*nodeNameCity, "Paris");
+
+    auto* nodeNameText = std::get_if<std::string>(&nodeName->at(keys["__text"]).value);
+    ASSERT_EQ(*nodeNameText, "John");
+}
