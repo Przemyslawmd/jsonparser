@@ -31,26 +31,23 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
 }
 
 
-void ObjectCreator::processTagOpen(const std::string& keyStr)
+void ObjectCreator::processTagOpen(const std::string& currKeyStr)
 {
     ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
 
-    auto optKeyID = keyMapper.getKeyID(keyStack.top(), mapIDStack.top());
-    if (optKeyID.has_value()) {
-        auto *currentNode = std::get_if<ObjectNode>(&obj->at(optKeyID.value()).value);
-        pushContext(currentNode, keyStr);
+    auto optPrevKey = keyMapper.getKeyID(keyStack.top(), mapIDStack.top());
+    if (optPrevKey.has_value()) {
+        auto *currNode = std::get_if<ObjectNode>(&obj->at(optPrevKey.value()).value);
+        pushContext(currNode, currKeyStr);
         return;
     }
 
-    optKeyID = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
-    if (!optKeyID.has_value()) {
-        return;
-    }
+    optPrevKey = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
+    uint32_t prevKey = optPrevKey.value();
 
-    uint32_t keyID = optKeyID.value();
-    obj->emplace(keyID, ObjectNode());
-    auto *currentNode = std::get_if<ObjectNode>(&obj->at(keyID).value);
-    pushContext(currentNode, keyStr);
+    obj->emplace(prevKey, ObjectNode());
+    auto *currNode = std::get_if<ObjectNode>(&obj->at(prevKey).value);
+    pushContext(currNode, currKeyStr);
 }
 
 
