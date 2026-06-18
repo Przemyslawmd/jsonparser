@@ -25,8 +25,6 @@ public:
 
 private:
     std::stack<NodePtr> nodeStack;
-    std::unique_ptr<ObjectNode> nodes;
-
     std::vector<TokenXML>* attrs;
 
     KeyMapper& keyMapper;
@@ -34,8 +32,8 @@ private:
     std::stack<std::string> keyStack;
     uint32_t maxMapId = 0;
 
-    void pushDataOnStack(NodePtr node, const std::string& keyStr);
-    void popDataFromStack();
+    void pushContext(NodePtr node, const std::string& keyStr);
+    void popContext();
 
     void processTagOpen(const std::string& key);
     void processContent(std::vector<TokenXML>& attrs);
