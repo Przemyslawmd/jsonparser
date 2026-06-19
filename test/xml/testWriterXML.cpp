@@ -66,3 +66,5 @@ TEST_F(TestWriterXML, Test_File_No_Declaration_4)
 {
     testJsonString("test_4_no_declaration.xml");
 }
+
+

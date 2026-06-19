@@ -93,9 +93,9 @@ TEST_F(TestObjectCreator, test_4)
 }
 
 
-TEST_F(TestObjectCreator, Test_File_3_Attr)
+TEST_F(TestObjectCreator, Test_File_3_1_Attr)
 {
-    auto root = createObjects(TEST_DATA_XML, "test_3_attr.xml", *keyMapper);
+    auto root = createObjects(TEST_DATA_XML, "test_3_attr_1.xml", *keyMapper);
     ASSERT_NE(root, nullptr);
 
     std::map <std::string, uint32_t> keys
@@ -120,3 +120,30 @@ TEST_F(TestObjectCreator, Test_File_3_Attr)
     auto* nodeNameText = std::get_if<std::string>(&nodeName->at(keys["__text"]).value);
     ASSERT_EQ(*nodeNameText, "John");
 }
+
+
+TEST_F(TestObjectCreator, Test_File_3_2_Attr)
+{
+    auto root = createObjects(TEST_DATA_XML, "test_3_attr_2.xml", *keyMapper);
+    ASSERT_NE(root, nullptr);
+
+    std::map <std::string, uint32_t> keys
+    {
+        { "person", 0x00'01'00'01 },
+        { "name",   0x00'02'00'01 },
+        { "state",  0x00'01'00'02 },
+    };
+    checkKeyMapping(keys);
+
+    ASSERT_TRUE(root->find(keys["person"]) != root->end());
+
+    auto* nodePerson = std::get_if<ObjectNode>(&root->at(keys["person"]).value);
+    ASSERT_EQ(nodePerson->size(), 2);
+
+    auto* nodeName = std::get_if<std::string>(&nodePerson->at(keys["name"]).value);
+    ASSERT_EQ(*nodeName, "John");
+
+    auto* nodeState = std::get_if<std::string>(&nodePerson->at(keys["state"]).value);
+    ASSERT_EQ(*nodeState, "Spain");
+}
+

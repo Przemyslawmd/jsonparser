@@ -11,6 +11,7 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
     auto document = std::make_unique<ObjectNode>();
     mapIDStack.push(0);
     pushContext(document.get(), elems.at(firstTag).name.value());
+    attrs = &elems.at(firstTag).attr;
 
     using enum ElemType;
     for (auto& elem : elems | std::views::drop(firstTag + 1)) {
@@ -47,6 +48,10 @@ void ObjectCreator::processTagOpen(const std::string& currKeyStr)
 
     obj->emplace(prevKey, ObjectNode());
     auto *currNode = std::get_if<ObjectNode>(&obj->at(prevKey).value);
+
+    if (attrs && !attrs->empty()) {
+        insertAttrs(*currNode, *attrs);
+    }
     pushContext(currNode, currKeyStr);
 }
 
