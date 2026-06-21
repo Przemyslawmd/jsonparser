@@ -29,7 +29,7 @@ private:
     void incIndent();
     void decIndent();
 
-    void deleteLastChars(std::ostringstream& stream);
+    void deleteLastChars(std::ostringstream& stream, uint noOfChars);
 
     const KeyMapper& keyMapper;
     std::ostringstream stream;
