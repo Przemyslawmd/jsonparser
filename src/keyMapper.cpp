@@ -1,6 +1,7 @@
 
 #include "keyMapper.h" 
 
+#include <bits/stdc++.h>
 #include <ranges>
 
 #include "log/ErrorStorage.h"
@@ -22,6 +23,18 @@ KeyMapper::createKeyID(std::string_view keyStr, uint32_t mapID)
     uint32_t newKeyID = mapID + getMaxItemID(mapID) + 1;
     keyMap.emplace(newKeyID, keyStr);
     return newKeyID;
+}
+
+
+std::optional<uint32_t>
+KeyMapper::createKeyIDAttr(std::string_view keyStr, uint32_t mapID)
+{
+    auto keyID = createKeyID(keyStr, mapID);
+    if (keyID == std::nullopt) {
+        return std::nullopt;
+    }
+    attrs.push_back(keyID.value());
+    return keyID;
 }
 
 
@@ -69,6 +82,11 @@ void KeyMapper::removeKey(uint32_t keyID)
     keyMap.erase(keyID);
 }
 
+
+bool KeyMapper::isAttrKey(uint32_t keyID) const
+{
+    return std::count(attrs.begin(), attrs.end(), keyID);
+}
 
 /*******************************************************************/
 /* PRIVATE *********************************************************/
