@@ -31,11 +31,19 @@ void Writer::processObjectNode(const ObjectNode& obj)
     for (auto const& [idKey, val] : obj) {
         if (keyMapper.isAttrKey(idKey)) {
             deleteLastChars(stream, 2);
-            stream << " " << keyMapper.getKeyStr(idKey).value() << "=" << std::get<std::string>(val.value) << DATA_END;
+            stream << " " << keyMapper.getKeyStr(idKey).value() << "=" << "\"" << std::get<std::string>(val.value) << "\">" ;
             continue;
         }
-        std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
+
         auto keyStr = keyMapper.getKeyStr(idKey);
+        if (keyStr.value() == "__text") {
+            parseData(val);
+            enableIndent = false;
+            decIndent();
+            continue;
+        }
+
+        std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
         stream << "<" << keyStr.value() << ">";
         parseData(val);
         stream << "</" << keyStr.value() << ">";
@@ -43,8 +51,11 @@ void Writer::processObjectNode(const ObjectNode& obj)
             stream << "\n";
         }
     }
-    decIndent();
-    std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
+    if (enableIndent) {
+        decIndent();
+        std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
+    }
+    enableIndent = true;
 }
 
 
