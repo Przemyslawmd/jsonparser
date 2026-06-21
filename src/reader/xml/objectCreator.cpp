@@ -85,7 +85,7 @@ void ObjectCreator::insertAttrs(ObjectNode& node, std::vector<TokenXML>& attrs)
 
     for (uint i = FIRST_ATTR_VALUE_INDEX; i < attrs.size(); i++) {
         if (i % 2 == 0) {
-            keyId = keyMapper.createKeyID(std::get<std::string>(attrs[i - 2].data), mapIDStack.top());
+            keyId = keyMapper.createKeyIDAttr(std::get<std::string>(attrs[i - 2].data), mapIDStack.top());
             node.emplace(keyId.value(), std::get<std::string>(attrs[i].data));
         }
     }
