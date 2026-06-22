@@ -7,6 +7,7 @@
 #include <string>
 #include <variant>
 
+#include "reader/xml/elem.h"
 #include "node.h"
 #include "keyMapper.h"
 
@@ -36,6 +37,7 @@ private:
     int indent;
     int indentStep;
     bool enableIndent;
+    std::vector<Elem> elems;
 };
 }
 

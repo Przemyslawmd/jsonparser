@@ -56,6 +56,7 @@ if (XML_BUILD)
     list(APPEND SRC_FILES "../src/reader/xml/parserTokensXML.cpp")
     list(APPEND SRC_FILES "../src/reader/xml/objectCreator.cpp")
     list(APPEND SRC_FILES "../src/writer/xml/writer.cpp")
+    list(APPEND SRC_FILES "../src/writer/xml/elemWriterCreator.cpp")
 endif()
 
 add_executable(
