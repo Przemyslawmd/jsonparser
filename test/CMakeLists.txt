@@ -51,6 +51,7 @@ if (XML_BUILD)
     list(APPEND TEST_FILES "xml/testValidator.cpp")
     list(APPEND TEST_FILES "xml/testObjectCreator.cpp")
     list(APPEND TEST_FILES "xml/testWriterXML.cpp")
+    list(APPEND TEST_FILES "xml/testWriterElemCreator.cpp")
 
     list(APPEND SRC_FILES "../src/reader/xml/preparserXML.cpp")
     list(APPEND SRC_FILES "../src/reader/xml/parserTokensXML.cpp")

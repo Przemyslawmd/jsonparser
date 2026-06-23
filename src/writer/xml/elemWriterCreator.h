@@ -1,6 +1,6 @@
 
-#ifndef JX_WRITER_XML_ELEM_WRITER_CREATOR_H
-#define JX_WRITER_XML_ELEM_WRITER_CREATOR_H
+#ifndef JX_WRITER_XML_WRITER_ELEM_WRITER_CREATOR_H
+#define JX_WRITER_XML_WRITER_ELEM_WRITER_CREATOR_H
 
 #include <memory>
 #include <string>
@@ -16,17 +16,15 @@ namespace xml
 class ElemWriterCreator
 {
 public:
-    ElemWriterCreator() = default;
+    ElemWriterCreator(const KeyMapper& keyMapper): keyMapper(keyMapper) {} 
 
     std::vector<ElemWriter> createElems(const ObjectNode&);
 
 private:
     void processObjectNode(const ObjectNode&);
-    void processArrayNode(const ArrayNode&);
     void parseData(const Node&);
-
-    const KeyMapper& keyMapper;
     
+    const KeyMapper& keyMapper;
     std::vector<ElemWriter> elems;
 };
 }
