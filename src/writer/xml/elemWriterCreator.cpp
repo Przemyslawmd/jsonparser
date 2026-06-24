@@ -18,7 +18,7 @@ std::vector<ElemWriter> ElemWriterCreator::createElems(const ObjectNode& object)
 
 void ElemWriterCreator::processObjectNode(const ObjectNode& obj)
 {
-    for (auto const& [idKey, val] : obj) {
+    for (const auto& [idKey, val] : obj) {
         auto keyStr = keyMapper.getKeyStr(idKey);
         if (keyMapper.isAttrKey(idKey)) {
             elems.at(elems.size() - 1).attr.emplace(keyStr.value(), std::get<std::string>(val.value));
@@ -29,9 +29,9 @@ void ElemWriterCreator::processObjectNode(const ObjectNode& obj)
             continue;
         }
 
-        elems.push_back({ ElemType::TAG_OPEN, keyStr, {}});
+        elems.push_back({ ElemType::TAG_OPEN, keyStr.value(), {}});
         parseData(val);
-        elems.push_back({ ElemType::TAG_CLOSE, keyStr, {}});
+        elems.push_back({ ElemType::TAG_CLOSE, keyStr.value(), {}});
     }
 }
 

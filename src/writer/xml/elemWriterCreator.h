@@ -4,7 +4,6 @@
 
 #include <memory>
 #include <string>
-#include <variant>
 
 #include "reader/xml/elem.h"
 #include "node.h"

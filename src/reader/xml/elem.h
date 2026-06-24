@@ -30,7 +30,7 @@ struct Elem
 struct ElemWriter
 {
     ElemType type;
-    std::optional<std::string> name;
+    std::string name;
     std::map<std::string, std::string> attr;
 };
 
