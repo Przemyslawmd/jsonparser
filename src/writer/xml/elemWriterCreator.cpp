@@ -29,9 +29,9 @@ void ElemWriterCreator::processObjectNode(const ObjectNode& obj)
             continue;
         }
 
-        elems.push_back({ ElemType::TAG_OPEN, keyStr.value(), {}});
+        elems.emplace_back(ElemType::TAG_OPEN, keyStr.value());
         parseData(val);
-        elems.push_back({ ElemType::TAG_CLOSE, keyStr.value(), {}});
+        elems.emplace_back(ElemType::TAG_CLOSE, keyStr.value());
     }
 }
 
@@ -39,7 +39,7 @@ void ElemWriterCreator::processObjectNode(const ObjectNode& obj)
 void ElemWriterCreator::parseData(const Node& node)
 {
     if (std::holds_alternative<std::string>(node.value)) {
-        elems.push_back({ ElemType::CONTENT, std::get<std::string>(node.value), {}});
+        elems.emplace_back(ElemType::CONTENT, std::get<std::string>(node.value));
     }
     else if (std::holds_alternative<ObjectNode>(node.value)) {
         processObjectNode(std::get<ObjectNode>(node.value));

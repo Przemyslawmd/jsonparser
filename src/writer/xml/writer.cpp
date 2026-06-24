@@ -6,8 +6,6 @@
 #include <variant>
 
 
-constexpr std::string_view DATA_END = ">\n";
-
 using namespace xml;
 
 #include <iostream>
