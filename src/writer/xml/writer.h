@@ -2,8 +2,6 @@
 #ifndef JX_WRITER_XML_WRITER_H
 #define JX_WRITER_XML_WRITER_H
 
-#include <memory>
-#include <sstream> 
 #include <string>
 #include <variant>
 
@@ -29,7 +27,6 @@ private:
     void deleteLastChars(std::ostringstream& stream, uint noOfChars);
 
     const KeyMapper& keyMapper;
-    std::ostringstream stream;
     int indent;
     int indentStep;
     std::vector<Elem> elems;

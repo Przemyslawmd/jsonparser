@@ -8,9 +8,6 @@
 
 #include "keyMapper.h"
 #include "node.h"
-#include "reader/xml/parserTokensXML.h"
-#include "reader/xml/preparserXML.h"
-#include "reader/xml/objectCreator.h"
 #include "writer/xml/writer.h"
 #include "writer/xml/elemWriterCreator.h"
 
