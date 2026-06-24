@@ -12,37 +12,28 @@
 #include "reader/xml/preparserXML.h"
 #include "reader/xml/objectCreator.h"
 #include "writer/xml/writer.h"
+#include "writer/xml/elemWriterCreator.h"
 
-#include "baseTest.h"
+#include "testBaseXML.h"
 #include "config.h"
 #include "utilsTest.h"
 
 
-static std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, KeyMapper& keyMapper)
-{
-    std::string xmlString = getJsonFromFile(TEST_DATA_XML, jsonFile);
-    auto preparser = std::make_unique<PreparserXML>();
-    auto tokens = preparser->parseXML(xmlString);
-    auto parser = std::make_unique<ParserTokens>();
-    auto elems = parser->parseTokens(std::move(tokens));
-    auto objCreator = std::make_unique<ObjectCreator>(keyMapper);
-    auto node = objCreator->parseElems(*elems);
-    return node;
-}
-
 using namespace xml;
 
-class TestWriterXML : public BaseTest
+class TestWriterXML : public TestBaseXML
 {
 protected:
     void testJsonString(const std::string& file)
     {
         auto keyMapper = std::make_unique<KeyMapper>();
-        auto root = writerParseJSON(file, *keyMapper);
+        auto root = createObjects(TEST_DATA_XML, file, *keyMapper);
+        ElemWriterCreator elemWtiter(*keyMapper);
+        auto elems = elemWtiter.createElems(*root);
 
         auto begin = std::chrono::high_resolution_clock::now();
         Writer writer(*keyMapper);
-        std::string json = writer.createXmlString(*root);
+        std::string json = writer.createXmlString(elems);
 
         const auto end = std::chrono::high_resolution_clock::now();
         showDuration(begin, end);
@@ -50,7 +41,6 @@ protected:
         ASSERT_EQ(json, jsonExpected);
     }
 };
-
 
 TEST_F(TestWriterXML, Test_File_No_Declaration_1)
 {
@@ -70,5 +60,10 @@ TEST_F(TestWriterXML, Test_File_No_Declaration_4)
 TEST_F(TestWriterXML, Test_File_3_Attr_1)
 {
     testJsonString("test_3_attr_1.xml");
+}
+
+TEST_F(TestWriterXML, Test_File_3_Attr_2)
+{
+    testJsonString("test_3_attr_2.xml");
 }
 

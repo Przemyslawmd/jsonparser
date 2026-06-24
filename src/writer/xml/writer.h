@@ -17,16 +17,12 @@ namespace xml
 class Writer
 {
 public:
-    Writer(const KeyMapper& keyMapper) : keyMapper(keyMapper), indent(-2), indentStep(2), enableIndent(true) {}
+    Writer(const KeyMapper& keyMapper) : keyMapper(keyMapper), indent(-2), indentStep(2) {}
 
-    std::string createXmlString(const ObjectNode&);
+    std::string createXmlString(const std::vector<ElemWriter>& elems);
     void setIndent(size_t);
 
 private:
-    void processObjectNode(const ObjectNode&);
-    void processArrayNode(const ArrayNode&);
-    void parseData(const Node&);
-
     void incIndent();
     void decIndent();
 
@@ -36,7 +32,6 @@ private:
     std::ostringstream stream;
     int indent;
     int indentStep;
-    bool enableIndent;
     std::vector<Elem> elems;
 };
 }
