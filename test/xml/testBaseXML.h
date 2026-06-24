@@ -46,7 +46,6 @@ protected:
     
     std::unique_ptr<std::vector<Elem>> createElements(const std::string& path, const std::string& file)
     {
-        //ErrorStorage::clear();
         auto tokens = createTokens(path, file);;
         auto parser = std::make_unique<ParserTokens>();
         return parser->parseTokens(std::move(tokens));

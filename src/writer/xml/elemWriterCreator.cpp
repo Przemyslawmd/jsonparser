@@ -20,6 +20,15 @@ void ElemWriterCreator::processObjectNode(const ObjectNode& obj)
 {
     for (auto const& [idKey, val] : obj) {
         auto keyStr = keyMapper.getKeyStr(idKey);
+        if (keyMapper.isAttrKey(idKey)) {
+            elems.at(elems.size() - 1).attr.emplace(keyStr.value(), std::get<std::string>(val.value));
+            continue;
+        }
+        if (keyStr == "__text") {
+            parseData(val);
+            continue;
+        }
+
         elems.push_back({ ElemType::TAG_OPEN, keyStr, {}});
         parseData(val);
         elems.push_back({ ElemType::TAG_CLOSE, keyStr, {}});

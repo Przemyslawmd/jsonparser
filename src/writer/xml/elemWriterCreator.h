@@ -23,7 +23,7 @@ public:
 private:
     void processObjectNode(const ObjectNode&);
     void parseData(const Node&);
-    
+
     const KeyMapper& keyMapper;
     std::vector<ElemWriter> elems;
 };
