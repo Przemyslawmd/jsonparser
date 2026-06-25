@@ -10,14 +10,14 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
 
     auto document = std::make_unique<ObjectNode>();
     mapIDStack.push(0);
-    pushContext(document.get(), elems.at(firstTag).name.value());
+    pushContext(document.get(), elems.at(firstTag).name);
     attrs = &elems.at(firstTag).attr;
 
     using enum ElemType;
     for (auto& elem : elems | std::views::drop(firstTag + 1)) {
         switch (elem.type) {
             case TAG_OPEN:
-                processTagOpen(elem.name.value());
+                processTagOpen(elem.name);
                 attrs = &elem.attr;
                 break;
             case TAG_CLOSE:

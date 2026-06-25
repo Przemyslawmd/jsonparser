@@ -83,7 +83,7 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
                 }
                 else if (state == STATE_TAG_CLOSE_COMPLETED || state == STATE_TAG_OPEN_COMPLETED) {
                     state = STATE_CONTENT;
-                    elems->emplace_back(ElemType::CONTENT, std::nullopt, std::vector<TokenXML>{{ token.type, token.data }});
+                    elems->emplace_back(ElemType::CONTENT, std::get<std::string>(token.data), std::vector<TokenXML>{{ token.type, token.data }});
                 }
                 else if (state == STATE_DECLARATION_PARSING || state == STATE_TAG_OPEN_PARSING) {
                     auto& tag = elems->back();

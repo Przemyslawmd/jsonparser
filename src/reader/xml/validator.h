@@ -58,7 +58,7 @@ static bool ValidateElems(std::vector<Elem>& elems)
             if (!elem.attr.empty() && !ValidateAttrs(elem.attr)) {
                 return false;
             }
-            tags.push(elem.name.value());
+            tags.push(elem.name);
             continue;
         }
         if (elem.type == ElemType::TAG_CLOSE) {

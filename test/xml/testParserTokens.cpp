@@ -35,7 +35,7 @@ TEST_F(TestParserTokensXML, Test_File_2)
 
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
-    ASSERT_EQ(elems->at(index).name, std::nullopt);
+    ASSERT_EQ(elems->at(index).name, "John");
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "John");
 
     index++;
@@ -64,7 +64,7 @@ TEST_F(TestParserTokensXML, Test_File_No_Declaration_1)
 
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
-    ASSERT_EQ(elems->at(index).name, std::nullopt);
+    ASSERT_EQ(elems->at(index).name, "Jan");
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "Jan");
 
     index++;
@@ -117,7 +117,7 @@ TEST_F(TestParserTokensXML, Test_File_5_attrs)
 
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
-    ASSERT_EQ(elems->at(index).name, std::nullopt);
+    ASSERT_EQ(elems->at(index).name, "Milan");
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "Milan");
 
     index++;
@@ -132,7 +132,7 @@ TEST_F(TestParserTokensXML, Test_File_5_attrs)
 
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
-    ASSERT_EQ(elems->at(index).name, std::nullopt);
+    ASSERT_EQ(elems->at(index).name, "Lombardy");
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "Lombardy");
 
     index++;

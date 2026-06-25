@@ -22,7 +22,7 @@ enum class ElemType
 struct Elem
 {
     ElemType type;
-    std::optional<std::string> name;
+    std::string name;
     std::vector<TokenXML> attr;
 };
 
