@@ -14,10 +14,10 @@
 using std::chrono::high_resolution_clock;
 
 
-class ApiChangeNode : public BaseTest {};
+class ApiChangeNodeJSON : public BaseTest {};
 
 
-TEST_F(ApiChangeNode, ChangeNodeInObjectIntoSimpleNode)
+TEST_F(ApiChangeNodeJSON, ChangeNodeInObjectIntoSimpleNode)
 {
     auto api = prepareApi("test_3.json");
     bool result = api->changeNodeInObject({ "person" }, "country", NodeApi{ .value = "Spain" });
@@ -29,7 +29,7 @@ TEST_F(ApiChangeNode, ChangeNodeInObjectIntoSimpleNode)
 }
 
 
-TEST_F(ApiChangeNode, ChangeNodeInObjectIntoObject)
+TEST_F(ApiChangeNodeJSON, ChangeNodeInObjectIntoObject)
 {
     auto api = prepareApi("test_3.json");
 
@@ -52,7 +52,7 @@ TEST_F(ApiChangeNode, ChangeNodeInObjectIntoObject)
 }
 
 
-TEST_F(ApiChangeNode, ChangeNodeInObjectIntoArray)
+TEST_F(ApiChangeNodeJSON, ChangeNodeInObjectIntoArray)
 {
     auto api = prepareApi("test_3.json");
     std::vector<NodeApi> newArrayNode{ { true }, { "abv" }, { 0 }, { 1.01 } };
@@ -66,7 +66,7 @@ TEST_F(ApiChangeNode, ChangeNodeInObjectIntoArray)
 }
 
 
-TEST_F(ApiChangeNode, ChangeComplexJson)
+TEST_F(ApiChangeNodeJSON, ChangeComplexJson)
 {
     auto api = prepareApi("test_8_complex.json");
 
@@ -89,7 +89,7 @@ TEST_F(ApiChangeNode, ChangeComplexJson)
 }
 
 
-TEST_F(ApiChangeNode, ChangeNodeInArrayIntoSimpleNode)
+TEST_F(ApiChangeNodeJSON, ChangeNodeInArrayIntoSimpleNode)
 {
     auto api = prepareApi("test_2.json");
 
@@ -102,7 +102,7 @@ TEST_F(ApiChangeNode, ChangeNodeInArrayIntoSimpleNode)
 }
 
 
-TEST_F(ApiChangeNode, ChangeNodeInArrayIntoObject)
+TEST_F(ApiChangeNodeJSON, ChangeNodeInArrayIntoObject)
 {
     auto api = prepareApi("test_6.json");
 
@@ -121,7 +121,7 @@ TEST_F(ApiChangeNode, ChangeNodeInArrayIntoObject)
 }
 
 
-TEST_F(ApiChangeNode, ChangeNodeInArrayIntoArray)
+TEST_F(ApiChangeNodeJSON, ChangeNodeInArrayIntoArray)
 {
     auto api = prepareApi("test_7.json");
     std::vector<NodeApi> newArray{ { 1 }, { -100 }, { 43212231231 } };
@@ -137,7 +137,7 @@ TEST_F(ApiChangeNode, ChangeNodeInArrayIntoArray)
 /*******************************************************************/
 /* ERRORS **********************************************************/
 
-TEST_F(ApiChangeNode, ErrorImproperKeyInPath)
+TEST_F(ApiChangeNodeJSON, ErrorImproperKeyInPath)
 {
     auto api = prepareApi("test_4.json");
     NodeApi newNode{ .value = "Cracow" };
@@ -149,7 +149,7 @@ TEST_F(ApiChangeNode, ErrorImproperKeyInPath)
 }
 
 
-TEST_F(ApiChangeNode, ErrorImproperKeyInNode)
+TEST_F(ApiChangeNodeJSON, ErrorImproperKeyInNode)
 {
     auto api = prepareApi("test_4.json");
 
@@ -161,7 +161,7 @@ TEST_F(ApiChangeNode, ErrorImproperKeyInNode)
 }
 
 
-TEST_F(ApiChangeNode, ErrorOutOfIndexInPath)
+TEST_F(ApiChangeNodeJSON, ErrorOutOfIndexInPath)
 {
     auto api = prepareApi("test_7.json");
 
@@ -173,7 +173,7 @@ TEST_F(ApiChangeNode, ErrorOutOfIndexInPath)
 }
 
 
-TEST_F(ApiChangeNode, OutOfIndexInNode)
+TEST_F(ApiChangeNodeJSON, OutOfIndexInNode)
 {
     auto api = prepareApi("test_7.json");
 
@@ -185,7 +185,7 @@ TEST_F(ApiChangeNode, OutOfIndexInNode)
 }
 
 
-TEST_F(ApiChangeNode, ErrorImproperPath)
+TEST_F(ApiChangeNodeJSON, ErrorImproperPath)
 {
     auto api = prepareApi("test_4.json");
 
@@ -197,7 +197,7 @@ TEST_F(ApiChangeNode, ErrorImproperPath)
 }
 
 
-TEST_F(ApiChangeNode, ErrorImproperIndicatorForNode)
+TEST_F(ApiChangeNodeJSON, ErrorImproperIndicatorForNode)
 {
     auto api = prepareApi("test_4.json");
 
@@ -209,7 +209,7 @@ TEST_F(ApiChangeNode, ErrorImproperIndicatorForNode)
 }
 
 
-TEST_F(ApiChangeNode, ErrorEmptyRoot)
+TEST_F(ApiChangeNodeJSON, ErrorEmptyRoot)
 {
     auto api = std::make_unique<JsonApi>();
 

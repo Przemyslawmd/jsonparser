@@ -14,10 +14,10 @@
 using std::chrono::high_resolution_clock;
 
 
-class ApiAddNode : public BaseTest {};
+class ApiAddNodeJSON : public BaseTest {};
 
 
-TEST_F(ApiAddNode, AddSimpleNodeToObject)
+TEST_F(ApiAddNodeJSON, AddSimpleNodeToObject)
 {
     auto api = prepareApi("test_4.json");
     bool result = api->addNodeIntoObject({ "person2", "address" }, "post", NodeApi{ .value = "Cracow" });
@@ -29,7 +29,7 @@ TEST_F(ApiAddNode, AddSimpleNodeToObject)
 }
 
 
-TEST_F(ApiAddNode, AddObjectToObject)
+TEST_F(ApiAddNodeJSON, AddObjectToObject)
 {
     auto api = prepareApi("test_5.json");
     std::map<std::string, NodeApi> newObject;
@@ -48,7 +48,7 @@ TEST_F(ApiAddNode, AddObjectToObject)
 }
 
 
-TEST_F(ApiAddNode, AddNestedObjectToObject)
+TEST_F(ApiAddNodeJSON, AddNestedObjectToObject)
 {
     auto api = prepareApi("test_5.json");
     std::map<std::string, NodeApi> newObject;
@@ -72,7 +72,7 @@ TEST_F(ApiAddNode, AddNestedObjectToObject)
 }
 
 
-TEST_F(ApiAddNode, AddNestedObjectWithArrayToObject)
+TEST_F(ApiAddNodeJSON, AddNestedObjectWithArrayToObject)
 {
     auto api = prepareApi("test_5.json");
     std::map<std::string, NodeApi> newObject;
@@ -91,7 +91,7 @@ TEST_F(ApiAddNode, AddNestedObjectWithArrayToObject)
 }
 
 
-TEST_F(ApiAddNode, AddArrayToObject)
+TEST_F(ApiAddNodeJSON, AddArrayToObject)
 {
     auto api = prepareApi("test_4.json");
     std::vector<NodeApi> newArray{ { 232 }, { 234234 }, { 0 }, { 100 } };
@@ -108,7 +108,7 @@ TEST_F(ApiAddNode, AddArrayToObject)
 }
 
 
-TEST_F(ApiAddNode, AddSimpleNodeIntoArray)
+TEST_F(ApiAddNodeJSON, AddSimpleNodeIntoArray)
 {
     auto api = prepareApi("test_7.json");
 
@@ -124,7 +124,7 @@ TEST_F(ApiAddNode, AddSimpleNodeIntoArray)
 }
 
 
-TEST_F(ApiAddNode, AddObjectIntoArray)
+TEST_F(ApiAddNodeJSON, AddObjectIntoArray)
 {
     auto api = prepareApi("test_7.json");
     std::map<std::string, NodeApi> newObjectNode;
@@ -140,7 +140,7 @@ TEST_F(ApiAddNode, AddObjectIntoArray)
 }
 
 
-TEST_F(ApiAddNode, AddArrayIntoArray)
+TEST_F(ApiAddNodeJSON, AddArrayIntoArray)
 {
     auto api = prepareApi("test_7.json");
     std::vector<NodeApi> arr1{ { 1 }, { 2 }, { 3 } };

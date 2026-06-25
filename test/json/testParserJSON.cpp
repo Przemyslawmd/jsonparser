@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 
-#include "reader/Parser.h"
+#include "reader/json/parser.h"
 #include "reader/json/parserKey.h"
 #include "reader/json/preparser.h"
 #include "reader/json/validator.h"
