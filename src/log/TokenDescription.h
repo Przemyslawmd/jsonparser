@@ -8,6 +8,8 @@
 #include "token.h"
 
 
+using namespace json;
+
 static const std::unordered_map<TokenType, std::string> TokenDesc =
 {
     { TokenType::CURLY_OPEN,   "Opening curly bracket" },

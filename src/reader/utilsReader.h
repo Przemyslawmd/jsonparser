@@ -11,7 +11,7 @@
 
 template <typename T, typename U>
 concept ConceptToken = std::is_same<T, json::Token>::value || std::is_same<T, xml::Token>::value &&
-                       std::is_same<U, TokenType>::value || std::is_same<U, TokenTypeXML>::value;
+                       std::is_same<U, json::TokenType>::value || std::is_same<U, TokenTypeXML>::value;
 
 
 template <typename T, typename U> requires ConceptToken<T, U>

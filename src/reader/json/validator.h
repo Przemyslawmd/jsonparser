@@ -17,7 +17,7 @@ class Validator
         ErrorCode validateBrackets(const std::vector<json::Token>& tokens);
         bool checkTokensSequence(const std::vector<json::Token>& tokens);
 
-        void createError(ErrorCode, TokenType first, TokenType second);
+        void createError(ErrorCode, json::TokenType first, json::TokenType second);
 };
 
 #endif

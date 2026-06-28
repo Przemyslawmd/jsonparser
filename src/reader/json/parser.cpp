@@ -4,7 +4,9 @@
 #include <ranges>
 
 
-std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<json::Token>& tokens)
+using namespace json;
+
+std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens)
 {
     std::string key;
     bool result;
