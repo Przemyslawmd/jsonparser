@@ -14,11 +14,9 @@ class TestValidatorXML : public TestBaseXML {};
 TEST_F(TestValidatorXML, Declaration_not_start)
 {
     auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_not_start.xml");
-    ASSERT_NE(elems, nullptr);
-    bool res = ValidateElems(*elems);
-    ASSERT_FALSE(res);
+    ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_VALIDATOR_DECLARATION_NOT_START);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_QUESTION);
 }
 
 

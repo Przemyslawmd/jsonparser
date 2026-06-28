@@ -1,5 +1,5 @@
-#ifndef JSONPARSER_PARSER_TOKENS_XML_H
-#define JSONPARSER_PARSER_TOKENS_XML_H
+#ifndef JX_READER_XML_PARSER_TOKENS_XML_H
+#define JX_READER_XML_PARSER_TOKENS_XML_H
 
 #include <map>
 #include <memory>
@@ -14,13 +14,7 @@ enum class ParsingState
 {
     STATE_NONE,
 
-    STATE_DECLARATION_START,
-    STATE_DECLARATION_PARSING,
-    STATE_DECLARATION_CLOSING,
-    STATE_DECLARATION_CLOSED,
-
     STATE_TAG_INITIAL,
-
     STATE_TAG_OPEN_PARSING,
     STATE_TAG_OPEN_COMPLETED,
 
@@ -41,6 +35,8 @@ public:
 
 private:
     std::unique_ptr<std::vector<Elem>> elems;
+
+    std::optional<uint> parseDeclaration(const std::vector<TokenXML>& tokens);
 };
 
 #endif

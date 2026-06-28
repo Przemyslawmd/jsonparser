@@ -1,5 +1,5 @@
 
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.30)
 project(jsonParserProject)
 
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
