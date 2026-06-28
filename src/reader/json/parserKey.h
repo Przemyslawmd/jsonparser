@@ -1,6 +1,6 @@
 
-#ifndef READER_JSON_PARSERKEY_H
-#define READER_JSON_PARSERKEY_H
+#ifndef JX_READER_JSON_PARSERKEY_H
+#define JX_READER_JSON_PARSERKEY_H
 
 #include <memory>
 #include <stack>
@@ -10,7 +10,7 @@
 #include "token.h"
 
 
-static std::unique_ptr<std::vector<Token>> createKeyTokens(std::unique_ptr<std::vector<Token>> tokens)
+static std::unique_ptr<std::vector<json::Token>> createKeyTokens(std::unique_ptr<std::vector<json::Token>> tokens)
 {
     std::stack<State> states;
     using enum TokenType;

@@ -14,12 +14,12 @@ class PreparserXML
 public:
     PreparserXML() = default;
 
-    std::unique_ptr<std::vector<TokenXML>> parseXML(const std::string& json);
+    std::unique_ptr<std::vector<xml::Token>> parseXML(const std::string& json);
 
 private:
     size_t parseStringOutQuotation(const std::string& json, size_t index);
 
-    std::unique_ptr<std::vector<TokenXML>> tokens;
+    std::unique_ptr<std::vector<xml::Token>> tokens;
 
     const std::map<char, TokenTypeXML> tokensMap 
     {

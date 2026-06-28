@@ -25,7 +25,7 @@ public:
 
 private:
     std::stack<NodePtr> nodeStack;
-    std::vector<TokenXML>* attrs;
+    std::vector<xml::Token>* attrs;
 
     KeyMapper& keyMapper;
     std::stack<uint32_t> mapIDStack;
@@ -38,7 +38,7 @@ private:
     void processTagOpen(const std::string& key);
     void processContent(const std::string& contentName);
 
-    void insertAttrs(ObjectNode& node, std::vector<TokenXML>& attrs);
+    void insertAttrs(ObjectNode& node, std::vector<xml::Token>& attrs);
 };
 
 #endif

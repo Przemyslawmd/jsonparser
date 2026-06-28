@@ -4,7 +4,7 @@
 #include <ranges>
 
 
-std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens)
+std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<json::Token>& tokens)
 {
     std::string key;
     bool result;
@@ -82,7 +82,7 @@ bool Parser::pushComplexNodeOnStack(const std::string& keyStr, State state)
 
 
 template <typename T> requires PrimitiveLimit<T>
-bool Parser::processData(const std::string& keyStr, const Token& token)
+bool Parser::processData(const std::string& keyStr, const json::Token& token)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
         auto optKeyID = keyMapper.createKeyID(keyStr, mapIDStack.top());

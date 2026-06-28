@@ -32,7 +32,7 @@ class Parser
     public:
         Parser(KeyMapper& keyMapper) : keyMapper(keyMapper) {};
 
-        std::unique_ptr<ObjectNode> parseTokens(const std::vector<Token>&);
+        std::unique_ptr<ObjectNode> parseTokens(const std::vector<json::Token>&);
 
     private:
         std::stack<std::variant<ObjectNode*, ArrayNode*>> nodeStack;
@@ -49,7 +49,7 @@ class Parser
         bool pushComplexNodeOnStack(const std::string& key, State);
 
         template <typename T> requires PrimitiveLimit<T>
-        bool processData(const std::string& key, const Token&);
+        bool processData(const std::string& key, const json::Token&);
 };
 
 #endif

@@ -8,7 +8,7 @@
 #include "log/ErrorStorage.h"
 
 
-static bool ValidateAttrs(const std::vector<TokenXML>& attrs)
+static bool ValidateAttrs(const std::vector<xml::Token>& attrs)
 {
     using enum TokenTypeXML;
 

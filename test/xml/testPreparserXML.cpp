@@ -7,11 +7,12 @@
 
 #include <gtest/gtest.h>
 
+using namespace xml;
 
 class TestPreparserXML : public TestBaseXML {};
 
 
-void checkTokens(std::unique_ptr<std::vector<TokenXML>> tokens, std::vector<TokenXML>& testData)
+void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<Token>& testData)
 {
     ASSERT_NE(tokens, nullptr);
     ASSERT_EQ(tokens->size(), testData.size());
@@ -35,7 +36,7 @@ void checkTokens(std::unique_ptr<std::vector<TokenXML>> tokens, std::vector<Toke
 TEST_F(TestPreparserXML, Test_File_1)
 {
     auto tokens = createTokens(TEST_DATA_XML, "test_1.xml");
-    std::vector<TokenXML> testData =
+    std::vector<Token> testData =
     {
         { TokenTypeXML::ANGLE_OPEN },
         { TokenTypeXML::QUESTION },
@@ -120,7 +121,7 @@ TEST_F(TestPreparserXML, Test_File_1)
 TEST_F(TestPreparserXML, Test_one_letter)
 {
     auto tokens = createTokens(TEST_DATA_XML, "test_one_letter.xml");
-    std::vector<TokenXML> testData =
+    std::vector<Token> testData =
     {
         { TokenTypeXML::ANGLE_OPEN },
         { TokenTypeXML::QUESTION },

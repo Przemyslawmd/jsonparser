@@ -8,9 +8,11 @@
 #include "../utilsReader.h"
 
 
-std::unique_ptr<std::vector<TokenXML>> PreparserXML::parseXML(const std::string& xml)
+using namespace xml;
+
+std::unique_ptr<std::vector<Token>> PreparserXML::parseXML(const std::string& xml)
 {
-    tokens = std::make_unique<std::vector<TokenXML>>();
+    tokens = std::make_unique<std::vector<Token>>();
     tokens->reserve(100);
 
     for (size_t index = 0; index < xml.length(); index++)
@@ -20,7 +22,7 @@ std::unique_ptr<std::vector<TokenXML>> PreparserXML::parseXML(const std::string&
             continue;
         }
         if (symbol == '\"') {
-            size_t shift = parseString<TokenXML,TokenTypeXML>(xml, index, *tokens, TokenTypeXML::DATA_STR_QUOTA);
+            size_t shift = parseString<Token,TokenTypeXML>(xml, index, *tokens, TokenTypeXML::DATA_STR_QUOTA);
             if (shift == 0) {
                 return nullptr;
             }
@@ -28,7 +30,7 @@ std::unique_ptr<std::vector<TokenXML>> PreparserXML::parseXML(const std::string&
             continue;
         }
         if (isdigit(symbol) || symbol == '-') {
-            index = parseNumber<TokenXML, TokenTypeXML>(xml, index, *tokens);
+            index = parseNumber<Token, TokenTypeXML>(xml, index, *tokens);
             continue;
         }
         if (tokensMap.count(symbol)) {

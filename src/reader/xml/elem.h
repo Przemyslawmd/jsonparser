@@ -23,7 +23,7 @@ struct Elem
 {
     ElemType type;
     std::string name;
-    std::vector<TokenXML> attr;
+    std::vector<xml::Token> attr;
 };
 
 

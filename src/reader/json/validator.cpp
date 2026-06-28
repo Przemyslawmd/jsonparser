@@ -11,6 +11,8 @@
 #include "log/ErrorStorage.h"
 
 
+using namespace json;
+
 bool Validator::validate(const std::vector<Token>& tokens)
 {
     if (tokens.front().type != TokenType::CURLY_OPEN) {

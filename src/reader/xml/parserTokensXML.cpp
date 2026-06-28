@@ -7,6 +7,8 @@
 #include "log/ErrorStorage.h"
 
 
+using namespace xml;
+
 using enum ParsingState;
 using enum TokenTypeXML;
 
@@ -17,7 +19,7 @@ const std::map<ParsingState, ParsingState> angleCloseTransision =
 };
 
 
-std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std::vector<TokenXML>> tokens)
+std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std::vector<Token>> tokens)
 {
     if (tokens == nullptr || tokens->empty()) {
         ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_NO_TOKENS);
@@ -67,15 +69,15 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
             case DATA_STR_QUOTA:
                 if (state == STATE_TAG_INITIAL) {
                     state = STATE_TAG_OPEN_PARSING;
-                    elems->emplace_back(ElemType::TAG_OPEN, std::get<std::string>(token.data), std::vector<TokenXML>{});
+                    elems->emplace_back(ElemType::TAG_OPEN, std::get<std::string>(token.data), std::vector<Token>{});
                 }
                 else if (state == STATE_TAG_CLOSE_PARSING) {
                     state = STATE_TAG_CLOSE_NAMED;
-                    elems->emplace_back(ElemType::TAG_CLOSE, std::get<std::string>(token.data), std::vector<TokenXML>{});
+                    elems->emplace_back(ElemType::TAG_CLOSE, std::get<std::string>(token.data), std::vector<Token>{});
                 }
                 else if (state == STATE_TAG_CLOSE_COMPLETED || state == STATE_TAG_OPEN_COMPLETED) {
                     state = STATE_CONTENT;
-                    elems->emplace_back(ElemType::CONTENT, std::get<std::string>(token.data), std::vector<TokenXML>{});
+                    elems->emplace_back(ElemType::CONTENT, std::get<std::string>(token.data), std::vector<Token>{});
                 }
                 else if (state == STATE_TAG_OPEN_PARSING) {
                     auto& tag = elems->back();
@@ -95,7 +97,7 @@ constexpr std::string XML = "xml";
 constexpr std::string VER = "version";
 constexpr std::string ENC = "encoding";
 
-std::optional<uint> ParserTokens::parseDeclaration(const std::vector<TokenXML>& tokens)
+std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tokens)
 {
     if (tokens.at(1).type != QUESTION) {
         return 0;
@@ -110,11 +112,11 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<TokenXML>& 
         tokens.at(5).type != DATA_STR_QUOTA) {
             return std::nullopt;
     }
-    elems->emplace_back(ElemType::DECLARATION, XML, std::vector<TokenXML> {{ TokenTypeXML::DATA_STR, VER }, 
-                                                                           { TokenTypeXML::EQUAL, nullptr }, 
-                                                                           { TokenTypeXML::DATA_STR_QUOTA, std::get<std::string>(tokens.at(5).data) }});
+    elems->emplace_back(ElemType::DECLARATION, XML, std::vector<Token> {{ TokenTypeXML::DATA_STR, VER }, 
+                                                                        { TokenTypeXML::EQUAL, nullptr }, 
+                                                                        { TokenTypeXML::DATA_STR_QUOTA, std::get<std::string>(tokens.at(5).data) }});
 
-    const auto checkAttrs = [](const std::vector<TokenXML>& tokens, uint questionIndex) 
+    const auto checkAttrs = [](const std::vector<Token>& tokens, uint questionIndex) 
     {
         return tokens.at(questionIndex).type == QUESTION && tokens.at(questionIndex + 1).type == ANGLE_CLOSE;
     };

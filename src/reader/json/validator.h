@@ -11,11 +11,11 @@
 class Validator
 {
     public:
-        bool validate(const std::vector<Token>& tokens);
+        bool validate(const std::vector<json::Token>& tokens);
 
     private:
-        ErrorCode validateBrackets(const std::vector<Token>& tokens);
-        bool checkTokensSequence(const std::vector<Token>& tokens);
+        ErrorCode validateBrackets(const std::vector<json::Token>& tokens);
+        bool checkTokensSequence(const std::vector<json::Token>& tokens);
 
         void createError(ErrorCode, TokenType first, TokenType second);
 };

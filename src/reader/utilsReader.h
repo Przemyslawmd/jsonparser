@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_UTILS_READER_H
-#define JSONPARSER_UTILS_READER_H
+#ifndef JX_READER_UTILS_READER_H
+#define JX_READER_UTILS_READER_H
 
 #include <string>
 
@@ -10,7 +10,7 @@
 
 
 template <typename T, typename U>
-concept ConceptToken = std::is_same<T, Token>::value || std::is_same<T, TokenXML>::value &&
+concept ConceptToken = std::is_same<T, json::Token>::value || std::is_same<T, xml::Token>::value &&
                        std::is_same<U, TokenType>::value || std::is_same<U, TokenTypeXML>::value;
 
 

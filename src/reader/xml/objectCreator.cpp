@@ -78,7 +78,7 @@ void ObjectCreator::processContent(const std::string& contentName)
 }
 
 
-void ObjectCreator::insertAttrs(ObjectNode& node, std::vector<TokenXML>& attrs)
+void ObjectCreator::insertAttrs(ObjectNode& node, std::vector<xml::Token>& attrs)
 {
     constexpr uint FIRST_ATTR_VALUE_INDEX = 2;
     std::optional<uint> keyId;

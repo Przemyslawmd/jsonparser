@@ -43,17 +43,23 @@ enum class TokenTypeXML
 };
 
 
+namespace json
+{
 struct Token
 {
     TokenType type;
     std::variant<std::string, int64_t, double, bool, nullptr_t> data;
 };
+}
 
 
-struct TokenXML
+namespace xml
+{
+struct Token
 {
     TokenTypeXML type;
     std::variant<std::string, int64_t, double, bool, nullptr_t> data;
 };
+}
 
 #endif

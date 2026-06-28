@@ -37,7 +37,7 @@ protected:
         ErrorStorage::clear();
     }
 
-    std::unique_ptr<std::vector<TokenXML>> createTokens(const std::string& path, const std::string& file)
+    std::unique_ptr<std::vector<xml::Token>> createTokens(const std::string& path, const std::string& file)
     {
         std::string xmlString = getJsonFromFile(path, file);
         auto preparser = std::make_unique<PreparserXML>();
