@@ -91,42 +91,42 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
     return std::move(elems);
 }
 
+constexpr std::string XML = "xml";
+constexpr std::string VER = "version";
+constexpr std::string ENC = "encoding";
 
 std::optional<uint> ParserTokens::parseDeclaration(const std::vector<TokenXML>& tokens)
 {
     if (tokens.at(1).type != QUESTION) {
         return 0;
     }
-    if (tokens.at(2).type != DATA_STR) {
-        return std::nullopt;
-    }
-    if (std::get<std::string>(tokens.at(2).data) != "xml") {
+    if (tokens.at(2).type != DATA_STR || std::get<std::string>(tokens.at(2).data) != XML) {
         return std::nullopt;
     }
 
-    if (tokens.at(3).type != DATA_STR) {
-        return std::nullopt;
+    if (tokens.at(3).type != DATA_STR || 
+        std::get<std::string>(tokens.at(3).data) != VER || 
+        tokens.at(4).type != EQUAL || 
+        tokens.at(5).type != DATA_STR_QUOTA) {
+            return std::nullopt;
     }
-    if (std::get<std::string>(tokens.at(3).data) != "version") {
-        return std::nullopt;
-    }
-    if (tokens.at(4).type != EQUAL) {
-        return std::nullopt;
-    }
-    if (tokens.at(5).type != DATA_STR_QUOTA) {
-        return std::nullopt;
-    }
-    elems->emplace_back(ElemType::DECLARATION, "xml", std::vector<TokenXML>
-        {{ TokenTypeXML::DATA_STR, "version" }, { TokenTypeXML::EQUAL, nullptr }, { TokenTypeXML::DATA_STR_QUOTA, std::get<std::string>(tokens.at(5).data) }});
+    elems->emplace_back(ElemType::DECLARATION, XML, std::vector<TokenXML> {{ TokenTypeXML::DATA_STR, VER }, 
+                                                                           { TokenTypeXML::EQUAL, nullptr }, 
+                                                                           { TokenTypeXML::DATA_STR_QUOTA, std::get<std::string>(tokens.at(5).data) }});
+
+    const auto checkAttrs = [](const std::vector<TokenXML>& tokens, uint questionIndex) 
+    {
+        return tokens.at(questionIndex).type == QUESTION && tokens.at(questionIndex + 1).type == ANGLE_CLOSE;
+    };
 
     uint countOfAttrs;
-    if (tokens.at(7).type == QUESTION && tokens.at(8).type == ANGLE_CLOSE) {
+    if (checkAttrs(tokens, 6)) {
         countOfAttrs = 1;
     }
-    else if (tokens.at(9).type == QUESTION && tokens.at(10).type == ANGLE_CLOSE) {
+    else if (checkAttrs(tokens, 9)) {
         countOfAttrs = 2;
     }
-    else if (tokens.at(12).type == QUESTION && tokens.at(13).type == ANGLE_CLOSE) {
+    else if (checkAttrs(tokens, 12)) {
         countOfAttrs = 3;
     }
     else {
@@ -134,28 +134,22 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<TokenXML>& 
     }
 
     if (countOfAttrs == 2) {
-        if (tokens.at(6).type != DATA_STR) {
-        return std::nullopt;
+        if (tokens.at(6).type != DATA_STR || 
+            std::get<std::string>(tokens.at(6).data) != ENC || 
+            tokens.at(7).type != EQUAL || 
+            tokens.at(8).type != DATA_STR_QUOTA) {
+                return std::nullopt;
         }
-        if (std::get<std::string>(tokens.at(6).data) != "encoding") {
-            return std::nullopt;
-        }
-        if (tokens.at(7).type != EQUAL) {
-            return std::nullopt;
-        }
-        if (tokens.at(8).type != DATA_STR_QUOTA) {
-            return std::nullopt;
-        }
-        elems->back().attr.emplace_back(TokenTypeXML::DATA_STR, "encoding");
+        elems->back().attr.emplace_back(TokenTypeXML::DATA_STR, ENC);
         elems->back().attr.emplace_back(TokenTypeXML::EQUAL, nullptr);
         elems->back().attr.emplace_back(TokenTypeXML::DATA_STR_QUOTA, std::get<std::string>(tokens.at(8).data));
     }
 
     if (countOfAttrs == 2) {
-        return 10 + 1;
+        return 11;
     }
     if (countOfAttrs == 3) {
-        return 13 + 1;
+        return 14;
     }
     return std::nullopt;
 }
