@@ -9,6 +9,8 @@
 #include "token.h"
 
 
+using namespace xml;
+
 class PreparserXML
 {
 public:
@@ -21,13 +23,13 @@ private:
 
     std::unique_ptr<std::vector<xml::Token>> tokens;
 
-    const std::map<char, TokenTypeXML> tokensMap 
+    const std::map<char, TokenType> tokensMap 
     {
-        { '=', TokenTypeXML::EQUAL },
-        { '?', TokenTypeXML::QUESTION },
-        { '/', TokenTypeXML::SLASH },
-        { '<', TokenTypeXML::ANGLE_OPEN },
-        { '>', TokenTypeXML::ANGLE_CLOSE },
+        { '=', TokenType::EQUAL },
+        { '?', TokenType::QUESTION },
+        { '/', TokenType::SLASH },
+        { '<', TokenType::ANGLE_OPEN },
+        { '>', TokenType::ANGLE_CLOSE },
     };
 };
 

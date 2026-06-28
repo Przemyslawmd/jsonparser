@@ -10,14 +10,14 @@
 
 static bool ValidateAttrs(const std::vector<xml::Token>& attrs)
 {
-    using enum TokenTypeXML;
+    using enum xml::TokenType;
 
     if (attrs[0].type != DATA_STR) {
         ErrorStorage::putError(ErrorCode::XML_VALIDATOR_ATTR);
         return false;
     }
 
-    TokenTypeXML prev = DATA_STR;
+    TokenType prev = DATA_STR;
     for (const auto& attr : attrs | std::views::drop(1)) {
         if ((attr.type == DATA_STR && prev != DATA_STR_QUOTA) ||
             (attr.type == EQUAL && prev != DATA_STR) ||

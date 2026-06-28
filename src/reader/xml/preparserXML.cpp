@@ -22,7 +22,7 @@ std::unique_ptr<std::vector<Token>> PreparserXML::parseXML(const std::string& xm
             continue;
         }
         if (symbol == '\"') {
-            size_t shift = parseString<Token,TokenTypeXML>(xml, index, *tokens, TokenTypeXML::DATA_STR_QUOTA);
+            size_t shift = parseString<Token,TokenType>(xml, index, *tokens, TokenType::DATA_STR_QUOTA);
             if (shift == 0) {
                 return nullptr;
             }
@@ -30,7 +30,7 @@ std::unique_ptr<std::vector<Token>> PreparserXML::parseXML(const std::string& xm
             continue;
         }
         if (isdigit(symbol) || symbol == '-') {
-            index = parseNumber<Token, TokenTypeXML>(xml, index, *tokens);
+            index = parseNumber<Token, TokenType>(xml, index, *tokens);
             continue;
         }
         if (tokensMap.count(symbol)) {
@@ -57,7 +57,7 @@ size_t PreparserXML::parseStringOutQuotation(const std::string& json, size_t ind
     size_t shift = 0;
     while (index + shift < json.length()) {
         if (json[index + shift] == ' ' || tokensMap.contains(json[index + shift])) {
-            tokens->emplace_back(TokenTypeXML::DATA_STR, json.substr(index, shift));
+            tokens->emplace_back(TokenType::DATA_STR, json.substr(index, shift));
             return shift - 1;
         }
         shift += 1;

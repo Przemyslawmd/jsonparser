@@ -12,15 +12,11 @@ namespace json
     {
         CURLY_OPEN,
         CURLY_CLOSE,
-
         SQUARE_OPEN,
         SQUARE_CLOSE,
-
         COLON,
         COMMA,
-
         KEY,
-
         DATA_STR,
         DATA_BOOL,
         DATA_INT,
@@ -36,32 +32,27 @@ namespace json
 }
 
 
-enum class TokenTypeXML
-{
-    ANGLE_OPEN,
-    ANGLE_CLOSE,
-
-    EQUAL,
-    SLASH,
-    QUESTION,
-
-    DATA_STR,
-    DATA_STR_QUOTA,
-    DATA_INT,
-    DATA_DOUBLE,
-};
-
-
-
-
-
 namespace xml
 {
-struct Token
-{
-    TokenTypeXML type;
-    std::variant<std::string, int64_t, double, bool, nullptr_t> data;
-};
+    enum class TokenType
+    {
+        ANGLE_OPEN,
+        ANGLE_CLOSE,
+        EQUAL,
+        SLASH,
+        QUESTION,
+        DATA_STR,
+        DATA_STR_QUOTA,
+        DATA_INT,
+        DATA_DOUBLE,
+    };
+
+    struct Token
+    {
+        TokenType type;
+        std::variant<std::string, int64_t, double, bool, nullptr_t> data;
+    };
 }
 
 #endif
+

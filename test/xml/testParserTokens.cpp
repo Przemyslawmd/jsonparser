@@ -7,6 +7,8 @@
 #include <gtest/gtest.h>
 
 
+using namespace xml;
+
 class TestParserTokensXML : public TestBaseXML {};
 
 
@@ -22,10 +24,10 @@ TEST_F(TestParserTokensXML, Test_File_2)
     ASSERT_EQ(elems->at(index).name, "xml");
     ASSERT_EQ(elems->at(index).attr.size(), 6);
     ASSERT_EQ(std::get<std::string>(elems->at(0).attr[0].data), "version");
-    ASSERT_EQ(elems->at(index).attr[1].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(elems->at(index).attr[1].type, TokenType::EQUAL);
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[2].data), "1.0");
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[3].data), "encoding");
-    ASSERT_EQ(elems->at(0).attr[4].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(elems->at(0).attr[4].type, TokenType::EQUAL);
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[5].data), "UTF-8");
 
     index++;
@@ -91,10 +93,10 @@ TEST_F(TestParserTokensXML, Test_File_5_attrs)
     ASSERT_EQ(elems->at(index).name, "xml");
     ASSERT_EQ(elems->at(index).attr.size(), 6);
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "version");
-    ASSERT_EQ(elems->at(index).attr[1].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(elems->at(index).attr[1].type, TokenType::EQUAL);
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[2].data), "1.0");
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[3].data), "encoding");
-    ASSERT_EQ(elems->at(index).attr[4].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(elems->at(index).attr[4].type, TokenType::EQUAL);
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[5].data), "UTF-8");
     
     index++;
@@ -102,17 +104,17 @@ TEST_F(TestParserTokensXML, Test_File_5_attrs)
     ASSERT_EQ(elems->at(index).name, "city");    
     ASSERT_FALSE(elems->at(index).attr.empty());
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "state");
-    ASSERT_EQ(elems->at(index).attr[1].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(elems->at(index).attr[1].type, TokenType::EQUAL);
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[2].data), "Italy");
 
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
     ASSERT_EQ(elems->at(index).name, "name");
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "code");
-    ASSERT_EQ(elems->at(index).attr[1].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(elems->at(index).attr[1].type, TokenType::EQUAL);
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[2].data), "ML");
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[3].data), "post");
-    ASSERT_EQ(elems->at(index).attr[4].type, TokenTypeXML::EQUAL);
+    ASSERT_EQ(elems->at(index).attr[4].type, TokenType::EQUAL);
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[5].data), "_ML");
 
     index++;

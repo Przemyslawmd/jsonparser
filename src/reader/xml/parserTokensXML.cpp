@@ -10,7 +10,7 @@
 using namespace xml;
 
 using enum ParsingState;
-using enum TokenTypeXML;
+using enum TokenType;
 
 const std::map<ParsingState, ParsingState> angleCloseTransision = 
 {
@@ -112,9 +112,9 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tok
         tokens.at(5).type != DATA_STR_QUOTA) {
             return std::nullopt;
     }
-    elems->emplace_back(ElemType::DECLARATION, XML, std::vector<Token> {{ TokenTypeXML::DATA_STR, VER }, 
-                                                                        { TokenTypeXML::EQUAL, nullptr }, 
-                                                                        { TokenTypeXML::DATA_STR_QUOTA, std::get<std::string>(tokens.at(5).data) }});
+    elems->emplace_back(ElemType::DECLARATION, XML, std::vector<Token> {{ TokenType::DATA_STR, VER }, 
+                                                                        { TokenType::EQUAL, nullptr }, 
+                                                                        { TokenType::DATA_STR_QUOTA, std::get<std::string>(tokens.at(5).data) }});
 
     const auto checkAttrs = [](const std::vector<Token>& tokens, uint questionIndex) 
     {
@@ -132,9 +132,9 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tok
             tokens.at(8).type != DATA_STR_QUOTA) {
                 return std::nullopt;
         }
-        elems->back().attr.emplace_back(TokenTypeXML::DATA_STR, ENC);
-        elems->back().attr.emplace_back(TokenTypeXML::EQUAL, nullptr);
-        elems->back().attr.emplace_back(TokenTypeXML::DATA_STR_QUOTA, std::get<std::string>(tokens.at(8).data));
+        elems->back().attr.emplace_back(TokenType::DATA_STR, ENC);
+        elems->back().attr.emplace_back(TokenType::EQUAL, nullptr);
+        elems->back().attr.emplace_back(TokenType::DATA_STR_QUOTA, std::get<std::string>(tokens.at(8).data));
         return 11;
     }
     else if (checkAttrs(tokens, 12)) {
