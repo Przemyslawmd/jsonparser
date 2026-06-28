@@ -36,7 +36,7 @@ private:
     void popContext();
 
     void processTagOpen(const std::string& key);
-    void processContent(std::vector<TokenXML>& attrs);
+    void processContent(const std::string& contentName);
 
     void insertAttrs(ObjectNode& node, std::vector<TokenXML>& attrs);
 };

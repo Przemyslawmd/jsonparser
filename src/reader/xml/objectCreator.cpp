@@ -24,7 +24,7 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
                 popContext();
                 break;
             case CONTENT:
-                processContent(elem.attr);
+                processContent(elem.name);
                 break;
         }
     }
@@ -56,7 +56,7 @@ void ObjectCreator::processTagOpen(const std::string& currKeyStr)
 }
 
 
-void ObjectCreator::processContent(std::vector<TokenXML>& currentAttrs)
+void ObjectCreator::processContent(const std::string& contentName)
 {
     auto optKeyID = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
     if (!optKeyID.has_value()) {
@@ -66,7 +66,7 @@ void ObjectCreator::processContent(std::vector<TokenXML>& currentAttrs)
     ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
 
     if (attrs->empty()) {
-        obj->emplace(keyID, std::get<std::string>(currentAttrs[0].data));
+        obj->emplace(keyID, contentName);
         return;
     }
 
@@ -74,7 +74,7 @@ void ObjectCreator::processContent(std::vector<TokenXML>& currentAttrs)
     auto *currentNode = std::get_if<ObjectNode>(&obj->at(keyID).value);
     insertAttrs(*currentNode, *attrs);
     auto newKeyID = keyMapper.createKeyID("__text", mapIDStack.top());
-    currentNode->emplace(newKeyID.value(), std::get<std::string>(currentAttrs[0].data));
+    currentNode->emplace(newKeyID.value(), contentName);
 }
 
 

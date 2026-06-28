@@ -75,7 +75,7 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
                 }
                 else if (state == STATE_TAG_CLOSE_COMPLETED || state == STATE_TAG_OPEN_COMPLETED) {
                     state = STATE_CONTENT;
-                    elems->emplace_back(ElemType::CONTENT, std::get<std::string>(token.data), std::vector<TokenXML>{{ token.type, token.data }});
+                    elems->emplace_back(ElemType::CONTENT, std::get<std::string>(token.data), std::vector<TokenXML>{});
                 }
                 else if (state == STATE_TAG_OPEN_PARSING) {
                     auto& tag = elems->back();
@@ -124,16 +124,6 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<TokenXML>& 
         countOfAttrs = 1;
     }
     else if (checkAttrs(tokens, 9)) {
-        countOfAttrs = 2;
-    }
-    else if (checkAttrs(tokens, 12)) {
-        countOfAttrs = 3;
-    }
-    else {
-        return std::nullopt;
-    }
-
-    if (countOfAttrs == 2) {
         if (tokens.at(6).type != DATA_STR || 
             std::get<std::string>(tokens.at(6).data) != ENC || 
             tokens.at(7).type != EQUAL || 
@@ -143,11 +133,15 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<TokenXML>& 
         elems->back().attr.emplace_back(TokenTypeXML::DATA_STR, ENC);
         elems->back().attr.emplace_back(TokenTypeXML::EQUAL, nullptr);
         elems->back().attr.emplace_back(TokenTypeXML::DATA_STR_QUOTA, std::get<std::string>(tokens.at(8).data));
-    }
-
-    if (countOfAttrs == 2) {
         return 11;
     }
+    else if (checkAttrs(tokens, 12)) {
+        countOfAttrs = 3;
+    }
+    else {
+        return std::nullopt;
+    }
+
     if (countOfAttrs == 3) {
         return 14;
     }

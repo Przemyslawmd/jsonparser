@@ -1,5 +1,6 @@
-#ifndef JX_READER_XML_PARSER_TOKENS_XML_H
-#define JX_READER_XML_PARSER_TOKENS_XML_H
+
+#ifndef JX_READER_XML_PARSER_TOKENS_H
+#define JX_READER_XML_PARSER_TOKENS_H
 
 #include <map>
 #include <memory>

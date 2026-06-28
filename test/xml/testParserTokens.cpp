@@ -36,7 +36,7 @@ TEST_F(TestParserTokensXML, Test_File_2)
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
     ASSERT_EQ(elems->at(index).name, "John");
-    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "John");
+    ASSERT_TRUE(elems->at(index).attr.empty());
 
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
@@ -65,7 +65,7 @@ TEST_F(TestParserTokensXML, Test_File_No_Declaration_1)
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
     ASSERT_EQ(elems->at(index).name, "Jan");
-    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "Jan");
+    ASSERT_TRUE(elems->at(index).attr.empty());
 
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
@@ -118,7 +118,7 @@ TEST_F(TestParserTokensXML, Test_File_5_attrs)
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
     ASSERT_EQ(elems->at(index).name, "Milan");
-    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "Milan");
+    ASSERT_TRUE(elems->at(index).attr.empty());
 
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
@@ -133,7 +133,7 @@ TEST_F(TestParserTokensXML, Test_File_5_attrs)
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
     ASSERT_EQ(elems->at(index).name, "Lombardy");
-    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "Lombardy");
+    ASSERT_TRUE(elems->at(index).attr.empty());
 
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
