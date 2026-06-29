@@ -8,7 +8,8 @@
 #include <gtest/gtest.h>
 
 
-using enum xml::TokenType;
+using namespace xml;
+using enum TokenType;
 
 class TestPreparserXML : public TestBaseXML {};
 

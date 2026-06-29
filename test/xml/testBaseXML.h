@@ -17,6 +17,8 @@
 #include "timeType.h"
 
 
+namespace xml
+{
 class TestBaseXML : public testing::Test
 {
 protected:
@@ -71,6 +73,7 @@ protected:
 private:
     std::ofstream performace;
 };
+}
 
 #endif
 

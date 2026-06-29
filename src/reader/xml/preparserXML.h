@@ -1,5 +1,5 @@
-#ifndef JSONPARSER_PREPARSER_XML_H
-#define JSONPARSER_PREPARSER_XML_H
+#ifndef JX_READER_XML_PREPARSER_H
+#define JX_READER_XML_PREPARSER_H
 
 #include <map>
 #include <memory>
@@ -9,8 +9,8 @@
 #include "token.h"
 
 
-using namespace xml;
-
+namespace xml
+{
 class PreparserXML
 {
 public:
@@ -32,6 +32,7 @@ private:
         { '>', TokenType::ANGLE_CLOSE },
     };
 };
+}
 
 #endif
 

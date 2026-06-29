@@ -8,6 +8,8 @@
 #include "reader/xml/validator.h"
 
 
+using namespace xml;
+
 class TestValidatorXML : public TestBaseXML {};
 
 

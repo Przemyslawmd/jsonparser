@@ -4,13 +4,16 @@
 #include <stack>
 
 #include "elem.h"
+#include "token.h"
 #include "error.h"
 #include "log/ErrorStorage.h"
 
 
+namespace xml
+{
 static bool ValidateAttrs(const std::vector<xml::Token>& attrs)
 {
-    using enum xml::TokenType;
+    using enum TokenType;
 
     if (attrs[0].type != DATA_STR) {
         ErrorStorage::putError(ErrorCode::XML_VALIDATOR_ATTR);
@@ -76,5 +79,6 @@ static bool ValidateElems(std::vector<Elem>& elems)
     }
     ErrorStorage::putError(ErrorCode::XML_VALIDATOR_MISMATCHED_TAG);
     return false;
+}
 }
 

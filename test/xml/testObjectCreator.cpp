@@ -6,6 +6,8 @@
 #include <gtest/gtest.h>
 
 
+using namespace xml;
+
 class TestObjectCreator : public TestBaseXML
 {
 protected:
