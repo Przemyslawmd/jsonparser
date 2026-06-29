@@ -1,5 +1,5 @@
 
-#include "preparserXML.h"
+#include "preparser.h"
 
 #include <format>
 
@@ -10,7 +10,7 @@
 
 using namespace xml;
 
-std::unique_ptr<std::vector<Token>> PreparserXML::parseXML(const std::string& xml)
+std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
 {
     tokens = std::make_unique<std::vector<Token>>();
     tokens->reserve(100);
@@ -52,7 +52,7 @@ std::unique_ptr<std::vector<Token>> PreparserXML::parseXML(const std::string& xm
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
-size_t PreparserXML::parseStringOutQuotation(const std::string& json, size_t index)
+size_t Preparser::parseStringOutQuotation(const std::string& json, size_t index)
 {
     size_t shift = 0;
     while (index + shift < json.length()) {

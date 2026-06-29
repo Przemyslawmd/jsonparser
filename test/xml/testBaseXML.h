@@ -8,7 +8,7 @@
 
 #include "reader/xml/objectCreator.h"
 #include "reader/xml/elem.h"
-#include "reader/xml/preparserXML.h"
+#include "reader/xml/preparser.h"
 #include "reader/xml/parserTokensXML.h"
 #include "log/ErrorStorage.h"
 
@@ -42,11 +42,11 @@ protected:
     std::unique_ptr<std::vector<xml::Token>> createTokens(const std::string& path, const std::string& file)
     {
         std::string xmlString = getJsonFromFile(path, file);
-        auto preparser = std::make_unique<PreparserXML>();
+        auto preparser = std::make_unique<Preparser>();
         return preparser->parseXML(xmlString);
     }
     
-    std::unique_ptr<std::vector<Elem>> createElements(const std::string& path, const std::string& file)
+    std::unique_ptr<std::vector<ElemReader>> createElements(const std::string& path, const std::string& file)
     {
         auto tokens = createTokens(path, file);;
         auto parser = std::make_unique<ParserTokens>();

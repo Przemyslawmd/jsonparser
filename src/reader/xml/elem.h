@@ -19,7 +19,7 @@ enum class ElemType
 };
 
 
-struct Elem
+struct ElemReader
 {
     ElemType type;
     std::string name;

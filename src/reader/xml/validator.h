@@ -39,7 +39,7 @@ static bool ValidateAttrs(const std::vector<xml::Token>& attrs)
 }
 
 
-static bool ValidateElems(std::vector<Elem>& elems)
+static bool ValidateElems(std::vector<ElemReader>& elems)
 {
     uint skipFirst = 0;
     if (elems.at(0).type == ElemType::DECLARATION) {

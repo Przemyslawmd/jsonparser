@@ -11,10 +11,10 @@
 
 namespace xml
 {
-class PreparserXML
+class Preparser
 {
 public:
-    PreparserXML() = default;
+    Preparser() = default;
 
     std::unique_ptr<std::vector<xml::Token>> parseXML(const std::string& json);
 

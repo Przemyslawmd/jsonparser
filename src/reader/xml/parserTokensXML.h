@@ -32,10 +32,10 @@ class ParserTokens
 public:
     ParserTokens() = default;
 
-    std::unique_ptr<std::vector<Elem>> parseTokens(std::unique_ptr<std::vector<xml::Token>> tokens);
+    std::unique_ptr<std::vector<ElemReader>> parseTokens(std::unique_ptr<std::vector<xml::Token>> tokens);
 
 private:
-    std::unique_ptr<std::vector<Elem>> elems;
+    std::unique_ptr<std::vector<ElemReader>> elems;
 
     std::optional<uint> parseDeclaration(const std::vector<xml::Token>& tokens);
 };

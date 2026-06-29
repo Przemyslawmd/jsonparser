@@ -21,7 +21,7 @@ class ObjectCreator
 public:
     ObjectCreator(KeyMapper& keyMapper) : keyMapper(keyMapper), maxMapId(0), attrs(nullptr) {};
 
-    std::unique_ptr<ObjectNode> parseElems(std::vector<Elem>&);
+    std::unique_ptr<ObjectNode> parseElems(std::vector<ElemReader>&);
 
 private:
     std::stack<NodePtr> nodeStack;

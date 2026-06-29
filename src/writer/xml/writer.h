@@ -29,7 +29,7 @@ private:
     const KeyMapper& keyMapper;
     int indent;
     int indentStep;
-    std::vector<Elem> elems;
+    std::vector<ElemReader> elems;
 };
 }
 
