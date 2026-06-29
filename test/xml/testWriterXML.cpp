@@ -21,7 +21,7 @@ using namespace xml;
 class TestWriterXML : public TestBaseXML
 {
 protected:
-    void testJsonString(const std::string& file)
+    void testWriter(const std::string& file)
     {
         auto keyMapper = std::make_unique<KeyMapper>();
         auto root = createObjects(TEST_DATA_XML, file, *keyMapper);
@@ -42,27 +42,31 @@ protected:
 
 TEST_F(TestWriterXML, Test_File_No_Declaration_1)
 {
-    testJsonString("test_no_declaration_1.xml");
+    testWriter("test_no_declaration_1.xml");
 }
 
 TEST_F(TestWriterXML, Test_File_No_Declaration_2)
 {
-    testJsonString("test_no_declaration_two_values.xml");
+    testWriter("test_no_declaration_two_values.xml");
 }
 
 TEST_F(TestWriterXML, Test_File_No_Declaration_4)
 {
-    testJsonString("test_4_no_declaration.xml");
+    testWriter("test_4_no_declaration.xml");
 }
 
 TEST_F(TestWriterXML, Test_File_3_Attr_1)
 {
-    testJsonString("test_3_attr_1.xml");
+    testWriter("test_3_attr_1.xml");
 }
 
 TEST_F(TestWriterXML, Test_File_3_Attr_2)
 {
-    testJsonString("test_3_attr_2.xml");
+    testWriter("test_3_attr_2.xml");
 }
 
+TEST_F(TestWriterXML, Test_Content_Few_Words)
+{
+    testWriter("test_content_few_words.xml");
+}
 

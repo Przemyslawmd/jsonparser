@@ -101,7 +101,7 @@ TEST_F(TestParserTokensXML, Test_File_5_attrs)
     
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(index).name, "city");    
+    ASSERT_EQ(elems->at(index).name, "city");
     ASSERT_FALSE(elems->at(index).attr.empty());
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "state");
     ASSERT_EQ(elems->at(index).attr[1].type, TokenType::EQUAL);
@@ -145,6 +145,40 @@ TEST_F(TestParserTokensXML, Test_File_5_attrs)
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
     ASSERT_EQ(elems->at(index).name, "city");
+    ASSERT_TRUE(elems->at(index).attr.empty());
+}
+
+
+TEST_F(TestParserTokensXML, Test_Content_Few_Words)
+{
+    auto elems = createElements(TEST_DATA_XML, "test_content_few_words.xml");
+
+    ASSERT_NE(elems, nullptr);
+    ASSERT_EQ(elems->size(), 5);
+
+    uint index = 0;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems->at(index).name, "person");
+    ASSERT_TRUE(elems->at(index).attr.empty());
+
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems->at(index).name, "name");
+    ASSERT_TRUE(elems->at(index).attr.empty());
+
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
+    ASSERT_EQ(elems->at(index).name, "John Wick Paris");
+    ASSERT_TRUE(elems->at(index).attr.empty());
+
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems->at(index).name, "name");
+    ASSERT_TRUE(elems->at(index).attr.empty());
+
+    index++;
+    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems->at(index).name, "person");
     ASSERT_TRUE(elems->at(index).attr.empty());
 }
 

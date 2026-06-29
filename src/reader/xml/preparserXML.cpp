@@ -22,7 +22,7 @@ std::unique_ptr<std::vector<Token>> PreparserXML::parseXML(const std::string& xm
             continue;
         }
         if (symbol == '\"') {
-            size_t shift = parseString<Token,TokenType>(xml, index, *tokens, TokenType::DATA_STR_QUOTA);
+            size_t shift = parseString<Token, TokenType>(xml, index, *tokens, TokenType::DATA_STR_QUOTA);
             if (shift == 0) {
                 return nullptr;
             }

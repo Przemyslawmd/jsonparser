@@ -100,4 +100,3 @@ TEST_F(TestWriterJSON, Test_File_8)
 {
     testJsonString("test_8_complex.json");
 }
-

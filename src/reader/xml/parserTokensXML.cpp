@@ -83,6 +83,10 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
                     auto& tag = elems->back();
                     tag.attr.emplace_back(token.type, token.data);
                 }
+                else if (state == STATE_CONTENT) {
+                   auto& contentName = elems->back().name;
+                   elems->back().name = contentName + " " + std::get<std::string>(token.data);
+                }
                 break;
             case EQUAL:
                 auto& tag = elems->back();
