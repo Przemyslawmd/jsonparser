@@ -23,7 +23,7 @@ TEST_F(ApiChangeNodeJSON, ChangeNodeInObjectIntoSimpleNode)
     bool result = api->changeNodeInObject({ "person" }, "country", NodeApi{ .value = "Spain" });
     ASSERT_TRUE(result);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "changeNodeInObjectIntoSimpleNode_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -46,7 +46,7 @@ TEST_F(ApiChangeNodeJSON, ChangeNodeInObjectIntoObject)
     bool result = api->changeNodeInObject({ "person" }, "country", NodeApi{ .value = newObjectNode });
     ASSERT_TRUE(result);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "changeNodeInObjectIntoObject_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -60,7 +60,7 @@ TEST_F(ApiChangeNodeJSON, ChangeNodeInObjectIntoArray)
     bool result = api->changeNodeInObject({ "person" }, "country", NodeApi{ .value = newArrayNode });
     ASSERT_TRUE(result);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "changeNodeInObjectIntoArray_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -80,7 +80,7 @@ TEST_F(ApiChangeNodeJSON, ChangeComplexJson)
     result = api->changeNodeInArray({ "employees", size_t(1), "data", size_t(2), size_t(0), "numbers" }, 0, NodeApi{ .value = 0.12 });
     ASSERT_TRUE(result);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     const auto end = high_resolution_clock::now();
     showDuration(begin, end);
 
@@ -96,7 +96,7 @@ TEST_F(ApiChangeNodeJSON, ChangeNodeInArrayIntoSimpleNode)
     bool result = api->changeNodeInArray({ "shipTo", "cities" }, 2, NodeApi{ .value = "Cracow" });
     ASSERT_TRUE(result);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "change_node_in_array_into_simple_node_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -115,7 +115,7 @@ TEST_F(ApiChangeNodeJSON, ChangeNodeInArrayIntoObject)
     bool result = api->changeNodeInArray({ "employees" }, size_t(0), NodeApi{ .value = newObject });
     ASSERT_TRUE(result);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "change_node_in_array_into_object_6.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -129,7 +129,7 @@ TEST_F(ApiChangeNodeJSON, ChangeNodeInArrayIntoArray)
     bool result = api->changeNodeInArray({ "employees", size_t(1), "data", size_t(0) }, size_t(0), NodeApi{ .value = newArray });
     ASSERT_TRUE(result);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "change_node_in_array_into_array_7.json");
     ASSERT_EQ(json, jsonExpected);
 }

@@ -28,7 +28,7 @@ TEST_F(ApiRemoveNode, RemoveSimpleNodeFromObject)
     ASSERT_TRUE(result);
     showDuration(begin, end);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "removeSimpleNodeFromObject_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -44,7 +44,7 @@ TEST_F(ApiRemoveNode, RemoveObjectFromObject)
     ASSERT_TRUE(result);
     showDuration(begin, end);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "removeObjectFromObject_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -63,7 +63,7 @@ TEST_F(ApiRemoveNode, RemoveObjectAndAddForTheSameKey)
     ASSERT_TRUE(result);
     showDuration(begin, end);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "removeObjectAndAddForTheSameKey_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -79,7 +79,7 @@ TEST_F(ApiRemoveNode, RemoveArrayFromObject)
     ASSERT_TRUE(result);
     showDuration(begin, end);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "removeArrayFromObject_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -98,7 +98,7 @@ TEST_F(ApiRemoveNode, RemoveSimpleNodeFromArray)
     result = api->removeNodeFromArray({ "employees", size_t(1), "data", size_t(0) }, 1);
     ASSERT_TRUE(result);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "removeSimpleNodeFromArray_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -112,7 +112,7 @@ TEST_F(ApiRemoveNode, RemoveObjectFromArray)
     bool result = api->removeNodeFromArray({ "employees" }, size_t(0));
     ASSERT_TRUE(result);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     const auto end = high_resolution_clock::now();
     showDuration(begin, end);
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "removeObjectFromArray_6.json");
@@ -128,7 +128,7 @@ TEST_F(ApiRemoveNode, RemoveArrayFromArray)
     bool result = api->removeNodeFromArray({ "employees", size_t(0), "data" }, size_t(1));
     ASSERT_TRUE(result);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     const auto end = high_resolution_clock::now();
     showDuration(begin, end);
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "removeArrayFromArray_7.json");

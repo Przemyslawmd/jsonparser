@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_MANAGER_H
-#define JSONPARSER_MANAGER_H
+#ifndef JX_MANAGER_H
+#define JX_MANAGER_H
 
 #include <map>
 #include <memory>
@@ -27,7 +27,10 @@ public:
     Manager();
 
     bool parseJsonString(const std::string& file);
-    std::optional<std::string> parseObjectToString();
+    bool parseXmlString(const std::string& file);
+
+    std::optional<std::string> objectToJsonString();
+    std::optional<std::string> objectToXmlString();
 
     bool loadJsonObject(const NodeApi&);
     bool isJsonObject() const;

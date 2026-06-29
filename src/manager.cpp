@@ -59,13 +59,25 @@ bool Manager::parseJsonString(const std::string& jsonString)
 }
 
 
-std::optional<std::string> Manager::parseObjectToString()
+std::optional<std::string> Manager::objectToJsonString()
 {
     if (isRootEmpty()) {
         return std::nullopt;
     }
     const auto writer = std::make_unique<Writer>(*keyMapper);
     return writer->createJsonString(*root);
+}
+
+
+bool Manager::parseXmlString(const std::string& jsonString)
+{
+    return false;
+}
+
+
+std::optional<std::string> Manager::objectToXmlString()
+{
+    return std::nullopt;
 }
 
 

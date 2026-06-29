@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_API_H
-#define JSONPARSER_API_H
+#ifndef JX_API_H
+#define JX_API_H
 
 #include <memory>
 #include <optional>
@@ -21,8 +21,10 @@ public:
     JsonApi();
 
     bool parseJsonString(const std::string& file);
+    std::optional<std::string> objectToJsonString();
 
-    std::optional<std::string> parseJsonObjectToString();
+    bool parseXmlString(const std::string& file);
+    std::optional<std::string> objectToXmlString();
 
     bool loadJsonObject(const NodeApi&);
     bool isJsonObject();

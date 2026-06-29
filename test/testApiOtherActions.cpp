@@ -31,7 +31,7 @@ TEST_F(ApiOtherActions, ClearApi)
     bool result = api->addNodeIntoArray({ "employees", size_t(1), "data" }, { newArray });
     ASSERT_TRUE(result);
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "clear_api_7.json");
     ASSERT_EQ(json, jsonExpected);
 
@@ -47,7 +47,7 @@ TEST_F(ApiOtherActions, ClearApi)
     result = api->changeNodeInArray({ "employees", size_t(1), "data", size_t(2), size_t(0), "numbers" }, 0, NodeApi{ .value = 0.12 });
     ASSERT_TRUE(result);
 
-    json = api->parseJsonObjectToString().value();
+    json = api->objectToJsonString().value();
     jsonExpected = getJsonFromFile(TEST_DATA_API, "clear_api_8.json");
     ASSERT_EQ(json, jsonExpected);
 
@@ -65,7 +65,7 @@ TEST_F(ApiOtherActions, ClearApi)
     result = api->removeNodeFromArray({ "employees", size_t(1), "data" }, 1);
     ASSERT_TRUE(result);
 
-    json = api->parseJsonObjectToString().value();
+    json = api->objectToJsonString().value();
     const auto end = high_resolution_clock::now();
     showDuration(begin, end);
     jsonExpected = getJsonFromFile(TEST_DATA_API, "clear_api_7_2.json");
@@ -90,7 +90,7 @@ TEST_F(ApiOtherActions, LoadJsonObject_1)
     auto api = std::make_unique<JsonApi>();
     api->loadJsonObject(NodeApi{ .value = root });
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "load_json_object_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -124,7 +124,7 @@ TEST_F(ApiOtherActions, LoadJsonObject_2)
     auto api = std::make_unique<JsonApi>();
     api->loadJsonObject(NodeApi{ .value = root });
 
-    std::string json = api->parseJsonObjectToString().value();
+    std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "load_json_object_2.json");
     ASSERT_EQ(json, jsonExpected);
 }

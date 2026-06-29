@@ -29,7 +29,7 @@ protected:
 
 TEST_F(ApiTestError, parseObjectForEmptyRoot)
 {
-    std::optional<std::string> json = api->parseJsonObjectToString();
+    std::optional<std::string> json = api->objectToJsonString();
     ASSERT_TRUE(json == std::nullopt);
     const auto& errors = api->getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_EMPTY);
