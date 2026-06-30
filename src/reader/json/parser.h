@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_READER_JSON_PARSER_H
-#define JSONPARSER_READER_JSON_PARSER_H
+#ifndef JX_READER_JSON_PARSER_H
+#define JX_READER_JSON_PARSER_H
 
 #include <concepts>
 #include <map>
@@ -27,6 +27,8 @@ concept PrimitiveLimit = std::is_same<T, std::string>::value ||
                          std::is_same<T, nullptr_t>::value;
 
 
+namespace json
+{
 class Parser
 {
     public:
@@ -51,6 +53,7 @@ class Parser
         template <typename T> requires PrimitiveLimit<T>
         bool processData(const std::string& key, const json::Token&);
 };
+}
 
 #endif
 

@@ -10,9 +10,9 @@
 #include "token.h"
 
 
-using namespace json;
-
-static std::unique_ptr<std::vector<json::Token>> createKeyTokens(std::unique_ptr<std::vector<Token>> tokens)
+namespace json
+{
+static std::unique_ptr<std::vector<Token>> createKeyTokens(std::unique_ptr<std::vector<Token>> tokens)
 {
     std::stack<State> states;
     using enum TokenType;
@@ -35,6 +35,7 @@ static std::unique_ptr<std::vector<json::Token>> createKeyTokens(std::unique_ptr
         }
     }
     return tokens;
+}
 }
 
 #endif

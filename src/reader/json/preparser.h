@@ -1,6 +1,6 @@
 
-#ifndef READER_JSON_PREPARSER_H
-#define READER_JSON_PREPARSER_H
+#ifndef JX_READER_JSON_PREPARSER_H
+#define JX_READER_JSON_PREPARSER_H
 
 #include <map>
 #include <memory>
@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "token.h"
+
 
 namespace json
 {

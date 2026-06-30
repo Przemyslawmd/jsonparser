@@ -37,13 +37,15 @@ void Manager::clear()
 
 bool Manager::parseJsonString(const std::string& jsonString)
 {
+    using namespace json;
+
     ErrorStorage::clear();
     if (root != nullptr) {
         ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
         return false;
     }
 
-    const auto preparser = std::make_unique<json::Preparser>();
+    const auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
     if (tokens == nullptr) {
         return false;
@@ -77,13 +79,15 @@ std::optional<std::string> Manager::objectToJsonString()
 
 bool Manager::parseXmlString(const std::string& xmlString)
 {
+    using namespace xml;
+
     ErrorStorage::clear();
     if (root) {
         ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
         return false;
     }
 
-    const auto preparser = std::make_unique<xml::Preparser>();
+    const auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseXML(xmlString);
     if (!tokens) {
         return false;
