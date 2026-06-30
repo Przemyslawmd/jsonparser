@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_ERROR_H
-#define JSONPARSER_ERROR_H
+#ifndef JX_ERROR_CODE_H
+#define JX_ERROR_CODE_H
 
 #include <optional>
 #include <string>

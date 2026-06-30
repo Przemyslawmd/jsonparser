@@ -1,5 +1,5 @@
 
-#include "Writer.h"
+#include "writer.h"
 
 #include <iterator>
 #include <optional>
@@ -7,6 +7,8 @@
 
 
 constexpr std::string_view DATA_END = ",\n";
+
+using namespace json;
 
 
 std::string Writer::createJsonString(const ObjectNode& object)

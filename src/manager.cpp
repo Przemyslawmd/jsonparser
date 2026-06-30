@@ -11,7 +11,7 @@
 #include "reader/xml/parserTokensXML.h"
 #include "reader/xml/validator.h"
 
-#include "writer/Writer.h"
+#include "writer/json/writer.h"
 #include "log/ErrorStorage.h"
 #include "utils.h"
 
@@ -72,7 +72,7 @@ std::optional<std::string> Manager::objectToJsonString()
     if (isRootEmpty()) {
         return std::nullopt;
     }
-    const auto writer = std::make_unique<Writer>(*keyMapper);
+    const auto writer = std::make_unique<json::Writer>(*keyMapper);
     return writer->createJsonString(*root);
 }
 

@@ -11,7 +11,7 @@
 #include "reader/json/parser.h"
 #include "reader/json/parserKey.h"
 #include "reader/json/preparser.h"
-#include "writer/Writer.h"
+#include "writer/json/writer.h"
 
 #include "baseTest.h"
 #include "config.h"

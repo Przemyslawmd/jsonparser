@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_WRITER_H
-#define JSONPARSER_WRITER_H
+#ifndef JX_WRITER_JSON_WRITER_H
+#define JX_WRITER_JSON_WRITER_H
 
 #include <memory>
 #include <sstream> 
@@ -11,6 +11,8 @@
 #include "keyMapper.h"
 
 
+namespace json
+{
 class Writer
 {
 public:
@@ -38,6 +40,7 @@ private:
     size_t indent = 0;
     size_t indentStep = 2;
 };
+}
 
 #endif
 

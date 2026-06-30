@@ -5,7 +5,7 @@ add_library(
     "reader/json/parser.cpp"
     "reader/json/preparser.cpp"
     "reader/json/validator.cpp"
-    "writer/Writer.cpp"
+    "writer/json/writer.cpp"
     "log/Error.cpp"
     "log/ErrorStorage.cpp"
     "jsonApi.cpp"

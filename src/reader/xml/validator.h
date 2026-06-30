@@ -5,7 +5,7 @@
 
 #include "elem.h"
 #include "token.h"
-#include "error.h"
+#include "errorCode.h"
 #include "log/ErrorStorage.h"
 
 
