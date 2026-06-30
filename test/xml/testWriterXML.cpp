@@ -34,7 +34,7 @@ protected:
 
         const auto end = std::chrono::high_resolution_clock::now();
         showDuration(begin, end);
-        std::string jsonExpected = getJsonFromFile(TEST_DATA_XML, file);
+        std::string jsonExpected = getContentFromFile(TEST_DATA_XML, file);
         ASSERT_EQ(json, jsonExpected);
     }
 };

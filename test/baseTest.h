@@ -27,9 +27,9 @@ protected:
         performace.close();
     }
 
-    std::unique_ptr<JsonApi> prepareApi(const std::string& file)
+    std::unique_ptr<JsonApi> prepareApiWithJson(const std::string& file)
     {
-        std::string jsonString = getJsonFromFile(TEST_DATA_JSON, file);
+        std::string jsonString = getContentFromFile(TEST_DATA_JSON, file);
         auto api = std::make_unique<JsonApi>();
         bool result = api->parseJsonString(jsonString);
         EXPECT_TRUE(result);
@@ -38,7 +38,7 @@ protected:
 
     std::unique_ptr<JsonApi> prepareApiWithXml(const std::string& file)
     {
-        std::string xmlString = getJsonFromFile(TEST_DATA_XML, file);
+        std::string xmlString = getContentFromFile(TEST_DATA_XML, file);
         auto api = std::make_unique<JsonApi>();
         bool result = api->parseXmlString(xmlString);
         EXPECT_TRUE(result);

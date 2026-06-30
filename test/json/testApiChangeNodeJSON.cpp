@@ -19,19 +19,19 @@ class ApiChangeNodeJSON : public BaseTest {};
 
 TEST_F(ApiChangeNodeJSON, ChangeNodeInObjectIntoSimpleNode)
 {
-    auto api = prepareApi("test_3.json");
+    auto api = prepareApiWithJson("test_3.json");
     bool result = api->changeNodeInObject({ "person" }, "country", NodeApi{ .value = "Spain" });
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "changeNodeInObjectIntoSimpleNode_3.json");
+    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "changeNodeInObjectIntoSimpleNode_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
 
 TEST_F(ApiChangeNodeJSON, ChangeNodeInObjectIntoObject)
 {
-    auto api = prepareApi("test_3.json");
+    auto api = prepareApiWithJson("test_3.json");
 
     std::map<std::string, NodeApi> newObjectNode;
     newObjectNode.emplace("b", true);
@@ -47,28 +47,28 @@ TEST_F(ApiChangeNodeJSON, ChangeNodeInObjectIntoObject)
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "changeNodeInObjectIntoObject_3.json");
+    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "changeNodeInObjectIntoObject_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
 
 TEST_F(ApiChangeNodeJSON, ChangeNodeInObjectIntoArray)
 {
-    auto api = prepareApi("test_3.json");
+    auto api = prepareApiWithJson("test_3.json");
     std::vector<NodeApi> newArrayNode{ { true }, { "abv" }, { 0 }, { 1.01 } };
 
     bool result = api->changeNodeInObject({ "person" }, "country", NodeApi{ .value = newArrayNode });
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "changeNodeInObjectIntoArray_3.json");
+    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "changeNodeInObjectIntoArray_3.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
 
 TEST_F(ApiChangeNodeJSON, ChangeComplexJson)
 {
-    auto api = prepareApi("test_8_complex.json");
+    auto api = prepareApiWithJson("test_8_complex.json");
 
     const auto begin = high_resolution_clock::now();
     bool result = api->changeNodeInArray({ "employees", size_t(0), "data", size_t(1) }, 2, NodeApi{ .value = 10 });
@@ -84,27 +84,27 @@ TEST_F(ApiChangeNodeJSON, ChangeComplexJson)
     const auto end = high_resolution_clock::now();
     showDuration(begin, end);
 
-    std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "changeComplexJson_8.json");
+    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "changeComplexJson_8.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
 
 TEST_F(ApiChangeNodeJSON, ChangeNodeInArrayIntoSimpleNode)
 {
-    auto api = prepareApi("test_2.json");
+    auto api = prepareApiWithJson("test_2.json");
 
     bool result = api->changeNodeInArray({ "shipTo", "cities" }, 2, NodeApi{ .value = "Cracow" });
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "change_node_in_array_into_simple_node_2.json");
+    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "change_node_in_array_into_simple_node_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
 
 TEST_F(ApiChangeNodeJSON, ChangeNodeInArrayIntoObject)
 {
-    auto api = prepareApi("test_6.json");
+    auto api = prepareApiWithJson("test_6.json");
 
     std::map<std::string, NodeApi> newObject;
     newObject.emplace("aa", "bb");
@@ -116,21 +116,21 @@ TEST_F(ApiChangeNodeJSON, ChangeNodeInArrayIntoObject)
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "change_node_in_array_into_object_6.json");
+    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "change_node_in_array_into_object_6.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
 
 TEST_F(ApiChangeNodeJSON, ChangeNodeInArrayIntoArray)
 {
-    auto api = prepareApi("test_7.json");
+    auto api = prepareApiWithJson("test_7.json");
     std::vector<NodeApi> newArray{ { 1 }, { -100 }, { 43212231231 } };
 
     bool result = api->changeNodeInArray({ "employees", size_t(1), "data", size_t(0) }, size_t(0), NodeApi{ .value = newArray });
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "change_node_in_array_into_array_7.json");
+    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "change_node_in_array_into_array_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -139,7 +139,7 @@ TEST_F(ApiChangeNodeJSON, ChangeNodeInArrayIntoArray)
 
 TEST_F(ApiChangeNodeJSON, ErrorImproperKeyInPath)
 {
-    auto api = prepareApi("test_4.json");
+    auto api = prepareApiWithJson("test_4.json");
     NodeApi newNode{ .value = "Cracow" };
 
     bool result = api->changeNodeInObject({ "person2", "street" }, "address", newNode);
@@ -151,7 +151,7 @@ TEST_F(ApiChangeNodeJSON, ErrorImproperKeyInPath)
 
 TEST_F(ApiChangeNodeJSON, ErrorImproperKeyInNode)
 {
-    auto api = prepareApi("test_4.json");
+    auto api = prepareApiWithJson("test_4.json");
 
     NodeApi newNode{ .value = false };
     bool result = api->changeNodeInObject({ "person2", "address" }, "bbb", newNode);
@@ -163,7 +163,7 @@ TEST_F(ApiChangeNodeJSON, ErrorImproperKeyInNode)
 
 TEST_F(ApiChangeNodeJSON, ErrorOutOfIndexInPath)
 {
-    auto api = prepareApi("test_7.json");
+    auto api = prepareApiWithJson("test_7.json");
 
     NodeApi newNode{ .value = "Spain" };
     bool result = api->changeNodeInArray({ "employees", size_t(3), "data", size_t(3) }, 2, newNode);
@@ -175,7 +175,7 @@ TEST_F(ApiChangeNodeJSON, ErrorOutOfIndexInPath)
 
 TEST_F(ApiChangeNodeJSON, OutOfIndexInNode)
 {
-    auto api = prepareApi("test_7.json");
+    auto api = prepareApiWithJson("test_7.json");
 
     NodeApi newNode{ .value = 23.45 };
     bool result = api->changeNodeInArray({ "employees", size_t(0), "data", size_t(1) }, 4, newNode);
@@ -187,7 +187,7 @@ TEST_F(ApiChangeNodeJSON, OutOfIndexInNode)
 
 TEST_F(ApiChangeNodeJSON, ErrorImproperPath)
 {
-    auto api = prepareApi("test_4.json");
+    auto api = prepareApiWithJson("test_4.json");
 
     NodeApi newNode{ .value = 12 };
     bool result = api->changeNodeInObject({ "person2", size_t(0) }, "city", newNode);
@@ -199,7 +199,7 @@ TEST_F(ApiChangeNodeJSON, ErrorImproperPath)
 
 TEST_F(ApiChangeNodeJSON, ErrorImproperIndicatorForNode)
 {
-    auto api = prepareApi("test_4.json");
+    auto api = prepareApiWithJson("test_4.json");
 
     NodeApi newNode{ .value = "ABC" };
     bool result = api->changeNodeInArray({ "person2", "address" }, 1, newNode);

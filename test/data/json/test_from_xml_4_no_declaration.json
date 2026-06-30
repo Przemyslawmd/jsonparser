@@ -1,0 +1,12 @@
+{
+  "aa": {
+    "bb": {
+      "cc": {
+        "dd": "ddContent"
+      },
+      "ee": {
+        "ff": "ffContent"
+      }
+    }
+  }
+}

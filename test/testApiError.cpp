@@ -38,7 +38,7 @@ TEST_F(ApiTestError, parseObjectForEmptyRoot)
 
 TEST_F(ApiTestError, parseJSONStringWithDoubleKey)
 {
-    std::string jsonString = getJsonFromFile(TEST_DATA_IMPROPER_JSON, "double_key.json");
+    std::string jsonString = getContentFromFile(TEST_DATA_IMPROPER_JSON, "double_key.json");
     bool result = api->parseJsonString(jsonString);
     ASSERT_FALSE(result);
     const auto& errors = ErrorStorage::getErrors();

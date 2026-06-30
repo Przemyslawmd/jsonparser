@@ -23,7 +23,7 @@ protected:
     std::unique_ptr<std::vector<Token>> createTokens(const std::string& path, const std::string& file)
     {
         ErrorStorage::clear();
-        std::string jsonString = getJsonFromFile(path, file);
+        std::string jsonString = getContentFromFile(path, file);
 
         const auto begin = std::chrono::high_resolution_clock::now();
         auto preparser = std::make_unique<Preparser>();

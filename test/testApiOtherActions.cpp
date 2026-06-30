@@ -20,7 +20,7 @@ class ApiOtherActions : public BaseTest {};
 
 TEST_F(ApiOtherActions, ClearApi)
 {
-    auto api = prepareApi("test_7.json");
+    auto api = prepareApiWithJson("test_7.json");
 
     std::vector<NodeApi> arr1{ { 1 }, { 2 }, { 3 } };
     std::vector<NodeApi> arr2{ { "aa" }, { "b" } };
@@ -32,11 +32,11 @@ TEST_F(ApiOtherActions, ClearApi)
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "clear_api_7.json");
+    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "clear_api_7.json");
     ASSERT_EQ(json, jsonExpected);
 
     api->clear();
-    std::string jsonString = getJsonFromFile(TEST_DATA_JSON, "test_8_complex.json");
+    std::string jsonString = getContentFromFile(TEST_DATA_JSON, "test_8_complex.json");
     result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
 
@@ -48,11 +48,11 @@ TEST_F(ApiOtherActions, ClearApi)
     ASSERT_TRUE(result);
 
     json = api->objectToJsonString().value();
-    jsonExpected = getJsonFromFile(TEST_DATA_API, "clear_api_8.json");
+    jsonExpected = getContentFromFile(TEST_DATA_API, "clear_api_8.json");
     ASSERT_EQ(json, jsonExpected);
 
     api->clear();
-    jsonString = getJsonFromFile(TEST_DATA_JSON, "test_7.json");
+    jsonString = getContentFromFile(TEST_DATA_JSON, "test_7.json");
     result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
 
@@ -68,7 +68,7 @@ TEST_F(ApiOtherActions, ClearApi)
     json = api->objectToJsonString().value();
     const auto end = high_resolution_clock::now();
     showDuration(begin, end);
-    jsonExpected = getJsonFromFile(TEST_DATA_API, "clear_api_7_2.json");
+    jsonExpected = getContentFromFile(TEST_DATA_API, "clear_api_7_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -91,7 +91,7 @@ TEST_F(ApiOtherActions, LoadJsonObject_1)
     api->loadJsonObject(NodeApi{ .value = root });
 
     std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "load_json_object_1.json");
+    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "load_json_object_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -125,7 +125,7 @@ TEST_F(ApiOtherActions, LoadJsonObject_2)
     api->loadJsonObject(NodeApi{ .value = root });
 
     std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getJsonFromFile(TEST_DATA_API, "load_json_object_2.json");
+    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "load_json_object_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
