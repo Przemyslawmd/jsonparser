@@ -5,6 +5,12 @@
 #include "reader/json/parserKey.h"
 #include "reader/json/preparser.h"
 #include "reader/json/validator.h"
+
+#include "reader/xml/objectCreator.h"
+#include "reader/xml/preparser.h"
+#include "reader/xml/parserTokensXML.h"
+#include "reader/xml/validator.h"
+
 #include "writer/Writer.h"
 #include "log/ErrorStorage.h"
 #include "utils.h"
@@ -69,9 +75,30 @@ std::optional<std::string> Manager::objectToJsonString()
 }
 
 
-bool Manager::parseXmlString(const std::string& jsonString)
+bool Manager::parseXmlString(const std::string& xmlString)
 {
-    return false;
+    ErrorStorage::clear();
+    if (root) {
+        ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
+        return false;
+    }
+
+    const auto preparser = std::make_unique<xml::Preparser>();
+    auto tokens = preparser->parseXML(xmlString);
+    if (!tokens) {
+        return false;
+    }
+    const auto parserTokens = std::make_unique<ParserTokens>();
+    auto elems = parserTokens->parseTokens(std::move(tokens));
+    if (!elems) {
+        return false;
+    }
+    if (!xml::ValidateElems(*elems)) {
+        return false;
+    }
+    const auto objectCreator = std::make_unique<ObjectCreator>(*keyMapper);
+    root = objectCreator->parseElems(*elems);
+    return root ? true : false;
 }
 
 

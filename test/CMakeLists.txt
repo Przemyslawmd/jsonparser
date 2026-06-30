@@ -60,6 +60,10 @@ if (XML_BUILD)
     list(APPEND SRC_FILES "../src/writer/xml/elemWriterCreator.cpp")
 endif()
 
+if (JSON_BUILD AND XML_BUILD)
+    list(APPEND TEST_FILES "testApiXmlToJson.cpp")
+endif()
+
 add_executable(
   jsonParserTest
   ${SRC_FILES}

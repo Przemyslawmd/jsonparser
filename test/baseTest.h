@@ -36,6 +36,15 @@ protected:
         return api;
     }
 
+    std::unique_ptr<JsonApi> prepareApiWithXml(const std::string& file)
+    {
+        std::string xmlString = getJsonFromFile(TEST_DATA_XML, file);
+        auto api = std::make_unique<JsonApi>();
+        bool result = api->parseXmlString(xmlString);
+        EXPECT_TRUE(result);
+        return api;
+    }
+
     void showDuration(const TIME_TYPE start, const TIME_TYPE end)
     {
         const char* testCase = ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name();
