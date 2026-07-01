@@ -62,7 +62,9 @@ endif()
 
 if (JSON_BUILD AND XML_BUILD)
     list(APPEND TEST_FILES "testApiXmlToJson.cpp")
+    list(APPEND TEST_FILES "testApiJsonToXml.cpp")
 endif()
+
 
 add_executable(
   jsonParserTest

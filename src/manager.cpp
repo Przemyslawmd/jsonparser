@@ -12,6 +12,10 @@
 #include "reader/xml/validator.h"
 
 #include "writer/json/writer.h"
+
+#include "writer/xml/writer.h"
+#include "writer/xml/elemWriterCreator.h"
+
 #include "log/ErrorStorage.h"
 #include "utils.h"
 
@@ -108,7 +112,17 @@ bool Manager::parseXmlString(const std::string& xmlString)
 
 std::optional<std::string> Manager::objectToXmlString()
 {
-    return std::nullopt;
+    if (isRootEmpty()) {
+        return std::nullopt;
+    }
+    const auto elemsCreator = std::make_unique<xml::ElemWriterCreator>(*keyMapper);
+    auto elems = elemsCreator->createElems(*root);
+    if (elems.empty()) {
+        return std::nullopt;
+    }
+
+    const auto writer = std::make_unique<xml::Writer>(*keyMapper);
+    return writer->createXmlString(elems);
 }
 
 
