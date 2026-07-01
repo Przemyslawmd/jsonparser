@@ -90,6 +90,13 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
                    elems->back().name = contentName_ + " " + std::get<std::string>(token.data);
                 }
                 break;
+            case DATA_INT:
+            case DATA_DOUBLE:
+                if (state == STATE_TAG_CLOSE_COMPLETED || state == STATE_TAG_OPEN_COMPLETED) {
+                    state = STATE_CONTENT;
+                    elems->emplace_back(ElemType::CONTENT, token.data);
+                }
+                break;
             case EQUAL:
                 auto& tag = elems->back();
                 tag.attr.emplace_back(token.type, token.data);

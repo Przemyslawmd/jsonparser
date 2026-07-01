@@ -26,7 +26,7 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<ElemReader>& e
                 popContext();
                 break;
             case CONTENT:
-                processContent(elem.name);
+                processContent(elem.name, elem.value);
                 break;
         }
     }
@@ -58,7 +58,7 @@ void ObjectCreator::processTagOpen(const std::string& currKeyStr)
 }
 
 
-void ObjectCreator::processContent(const std::string& contentName)
+void ObjectCreator::processContent(const std::string& contentName, VariantData& data)
 {
     auto optKeyID = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
     if (!optKeyID.has_value()) {
@@ -68,7 +68,9 @@ void ObjectCreator::processContent(const std::string& contentName)
     ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
 
     if (attrs->empty()) {
-        obj->emplace(keyID, contentName);
+        //obj->emplace(keyID, contentName);
+        //obj->emplace(keyID, std::visit([](auto const& e) );
+        std::visit([obj, keyID](auto&& val) { obj->emplace(keyID, val); }, data); 
         return;
     }
 
@@ -76,7 +78,8 @@ void ObjectCreator::processContent(const std::string& contentName)
     auto *currentNode = std::get_if<ObjectNode>(&obj->at(keyID).value);
     insertAttrs(*currentNode, *attrs);
     auto newKeyID = keyMapper.createKeyID("__text", mapIDStack.top());
-    currentNode->emplace(newKeyID.value(), contentName);
+    std::visit([currentNode, newKeyID](auto&& val) { currentNode->emplace(newKeyID.value(), val); }, data);
+    //currentNode->emplace(newKeyID.value(), contentName);
 }
 
 

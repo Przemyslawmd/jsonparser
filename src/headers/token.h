@@ -6,6 +6,8 @@
 #include <variant>
 
 
+using VariantData = std::variant<std::string, int64_t, double, bool, nullptr_t>;
+
 namespace json
 {
     enum class TokenType
@@ -27,7 +29,8 @@ namespace json
     struct Token
     {
         TokenType type;
-        std::variant<std::string, int64_t, double, bool, nullptr_t> data;
+        VariantData data;
+        //std::variant<std::string, int64_t, double, bool, nullptr_t> data;
     };
 }
 
@@ -50,7 +53,8 @@ namespace xml
     struct Token
     {
         TokenType type;
-        std::variant<std::string, int64_t, double, bool, nullptr_t> data;
+        VariantData data;
+        //std::variant<std::string, int64_t, double, bool, nullptr_t> data;
     };
 }
 

@@ -29,16 +29,17 @@ struct ElemReader
     ElemReader(ElemType type, const std::string& name) : 
                type(type), name(name), value(nullptr), attr({}) {}
 
-    ElemReader(ElemType type, const std::string& name, std::variant<std::string, int64_t, double, bool, nullptr_t>& value) : 
+    ElemReader(ElemType type, const std::string& name, VariantData& value) : 
                type(type), name(name), value(value), attr({}) {}
 
-    ElemReader(ElemType type, std::variant<std::string, int64_t, double, bool, nullptr_t>& value) : 
+    ElemReader(ElemType type, VariantData& value) : 
                type(type), name({}), value(value), attr({}) {}
 
     ElemType type;
     std::string name;
     std::vector<xml::Token> attr;
-    std::variant<std::string, int64_t, double, bool, nullptr_t> value;
+    VariantData value;
+    //std::variant<std::string, int64_t, double, bool, nullptr_t> value;
 };
 
 
