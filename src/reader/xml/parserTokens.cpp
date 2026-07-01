@@ -77,15 +77,17 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
                 }
                 else if (state == STATE_TAG_CLOSE_COMPLETED || state == STATE_TAG_OPEN_COMPLETED) {
                     state = STATE_CONTENT;
-                    elems->emplace_back(ElemType::CONTENT, std::get<std::string>(token.data));
+                    elems->emplace_back(ElemType::CONTENT, std::get<std::string>(token.data), token.data);
                 }
                 else if (state == STATE_TAG_OPEN_PARSING) {
                     auto& tag = elems->back();
                     tag.attr.emplace_back(token.type, token.data);
                 }
                 else if (state == STATE_CONTENT) {
-                   auto& contentName = elems->back().name;
-                   elems->back().name = contentName + " " + std::get<std::string>(token.data);
+                   auto& contentName_ = elems->back().name;
+                   auto& contentName = std::get<std::string>(elems->back().value);
+                   elems->back().value = contentName + " " + std::get<std::string>(token.data);
+                   elems->back().name = contentName_ + " " + std::get<std::string>(token.data);
                 }
                 break;
             case EQUAL:
