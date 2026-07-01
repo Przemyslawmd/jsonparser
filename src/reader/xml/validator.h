@@ -1,4 +1,7 @@
 
+#ifndef JX_READER_XML_VALIDATOR_H
+#define JX_READER_XML_VALIDATOR_H
+
 #include <vector>
 #include <ranges>
 #include <stack>
@@ -81,4 +84,6 @@ static bool ValidateElems(std::vector<ElemReader>& elems)
     return false;
 }
 }
+
+#endif
 
