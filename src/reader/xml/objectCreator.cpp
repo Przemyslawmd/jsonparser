@@ -4,6 +4,8 @@
 #include <ranges>
 
 
+using namespace xml;
+
 std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<ElemReader>& elems)
 {
     uint firstTag = elems.at(0).type == ElemType::DECLARATION ? 1 : 0;

@@ -16,6 +16,8 @@
 
 using NodePtr = std::variant<ObjectNode*, ArrayNode*>;
 
+namespace xml
+{
 class ObjectCreator
 {
 public:
@@ -40,6 +42,7 @@ private:
 
     void insertAttrs(ObjectNode& node, std::vector<xml::Token>& attrs);
 };
+}
 
 #endif
 

@@ -9,6 +9,9 @@
 #include "token.h"
 
 
+namespace xml
+{
+
 enum class ElemType
 {
     DECLARATION,
@@ -20,9 +23,16 @@ enum class ElemType
 
 struct ElemReader
 {
+    ElemReader(ElemType type, const std::string& name, std::vector<xml::Token>&& attr) : 
+               type(type), name(name), value(nullptr), attr(std::move(attr)) {}
+
+    ElemReader(ElemType type, const std::string& name) : 
+               type(type), name(name), value(nullptr), attr({}) {}
+
     ElemType type;
     std::string name;
     std::vector<xml::Token> attr;
+    std::variant<std::string, int64_t, nullptr_t> value;
 };
 
 
@@ -32,6 +42,7 @@ struct ElemWriter
     std::string name;
     std::map<std::string, std::string> attr;
 };
+}
 
 #endif
 
