@@ -1,8 +1,7 @@
 
-#ifndef JSONPARSER_TAG_H
-#define JSONPARSER_TAG_H
+#ifndef JX_READER_XML_ELEM_H
+#define JX_READER_XML_ELEM_H
 
-#include <optional>
 #include <map>
 #include <string>
 #include <vector>

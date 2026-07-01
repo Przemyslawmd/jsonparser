@@ -54,7 +54,7 @@ if (XML_BUILD)
     list(APPEND TEST_FILES "xml/testWriterElemCreator.cpp")
 
     list(APPEND SRC_FILES "../src/reader/xml/preparser.cpp")
-    list(APPEND SRC_FILES "../src/reader/xml/parserTokensXML.cpp")
+    list(APPEND SRC_FILES "../src/reader/xml/parserTokens.cpp")
     list(APPEND SRC_FILES "../src/reader/xml/objectCreator.cpp")
     list(APPEND SRC_FILES "../src/writer/xml/writer.cpp")
     list(APPEND SRC_FILES "../src/writer/xml/elemWriterCreator.cpp")

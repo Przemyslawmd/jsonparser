@@ -1,5 +1,5 @@
 
-#include "parserTokensXML.h"
+#include "parserTokens.h"
 
 #include <ranges>
 
@@ -69,15 +69,15 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
             case DATA_STR_QUOTA:
                 if (state == STATE_TAG_INITIAL) {
                     state = STATE_TAG_OPEN_PARSING;
-                    elems->emplace_back(ElemType::TAG_OPEN, std::get<std::string>(token.data), std::vector<Token>{});
+                    elems->emplace_back(ElemType::TAG_OPEN, std::get<std::string>(token.data));
                 }
                 else if (state == STATE_TAG_CLOSE_PARSING) {
                     state = STATE_TAG_CLOSE_NAMED;
-                    elems->emplace_back(ElemType::TAG_CLOSE, std::get<std::string>(token.data), std::vector<Token>{});
+                    elems->emplace_back(ElemType::TAG_CLOSE, std::get<std::string>(token.data));
                 }
                 else if (state == STATE_TAG_CLOSE_COMPLETED || state == STATE_TAG_OPEN_COMPLETED) {
                     state = STATE_CONTENT;
-                    elems->emplace_back(ElemType::CONTENT, std::get<std::string>(token.data), std::vector<Token>{});
+                    elems->emplace_back(ElemType::CONTENT, std::get<std::string>(token.data));
                 }
                 else if (state == STATE_TAG_OPEN_PARSING) {
                     auto& tag = elems->back();

@@ -8,7 +8,7 @@
 
 #include "reader/xml/objectCreator.h"
 #include "reader/xml/preparser.h"
-#include "reader/xml/parserTokensXML.h"
+#include "reader/xml/parserTokens.h"
 #include "reader/xml/validator.h"
 
 #include "writer/json/writer.h"

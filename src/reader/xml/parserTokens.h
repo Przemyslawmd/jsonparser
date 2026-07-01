@@ -4,6 +4,7 @@
 
 #include <map>
 #include <memory>
+#include <optional>
 #include <string_view>
 #include <vector>
 
@@ -11,6 +12,8 @@
 #include "elem.h"
 
 
+namespace xml
+{
 enum class ParsingState
 {
     STATE_NONE,
@@ -32,13 +35,14 @@ class ParserTokens
 public:
     ParserTokens() = default;
 
-    std::unique_ptr<std::vector<ElemReader>> parseTokens(std::unique_ptr<std::vector<xml::Token>> tokens);
+    std::unique_ptr<std::vector<ElemReader>> parseTokens(std::unique_ptr<std::vector<Token>> tokens);
 
 private:
     std::unique_ptr<std::vector<ElemReader>> elems;
 
-    std::optional<uint> parseDeclaration(const std::vector<xml::Token>& tokens);
+    std::optional<uint> parseDeclaration(const std::vector<Token>& tokens);
 };
+}
 
 #endif
 

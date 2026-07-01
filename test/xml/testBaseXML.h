@@ -9,7 +9,7 @@
 #include "reader/xml/objectCreator.h"
 #include "reader/xml/elem.h"
 #include "reader/xml/preparser.h"
-#include "reader/xml/parserTokensXML.h"
+#include "reader/xml/parserTokens.h"
 #include "log/ErrorStorage.h"
 
 #include "utilsTest.h"
