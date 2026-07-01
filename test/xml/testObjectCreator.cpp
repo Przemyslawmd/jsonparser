@@ -12,7 +12,7 @@ class TestObjectCreator : public TestBaseXML
 {
 protected:
     std::unique_ptr<KeyMapper> keyMapper;
-    
+
     virtual void SetUp()
     {
         keyMapper = std::make_unique<KeyMapper>();
@@ -28,7 +28,7 @@ protected:
 };
 
 
-TEST_F(TestObjectCreator, test_1)
+TEST_F(TestObjectCreator, Test_3)
 {
     auto root = createObjects(TEST_DATA_XML, "test_3.xml", *keyMapper);
     ASSERT_NE(root, nullptr);
@@ -44,12 +44,12 @@ TEST_F(TestObjectCreator, test_1)
     auto* nodeName = std::get_if<ObjectNode>(&root->at(keys["person"]).value);
     ASSERT_TRUE(nodeName != nullptr);
 
-    auto* nodeNameContent = std::get_if<std::string>(&nodeName->at(keys["name"]).value);
-    ASSERT_EQ(*nodeNameContent, "John");
+    auto* nameContent = std::get_if<std::string>(&nodeName->at(keys["name"]).value);
+    ASSERT_EQ(*nameContent, "John");
 }
 
 
-TEST_F(TestObjectCreator, test_4)
+TEST_F(TestObjectCreator, Test_4)
 {
     auto root = createObjects(TEST_DATA_XML, "test_4.xml", *keyMapper);
     ASSERT_NE(root, nullptr);
@@ -116,11 +116,11 @@ TEST_F(TestObjectCreator, Test_File_3_1_Attr)
     auto* nodeName = std::get_if<ObjectNode>(&nodePerson->at(keys["name"]).value);
     ASSERT_EQ(nodeName->size(), 2);
 
-    auto* nodeNameCity = std::get_if<std::string>(&nodeName->at(keys["city"]).value);
-    ASSERT_EQ(*nodeNameCity, "Paris");
+    auto* nameCity = std::get_if<std::string>(&nodeName->at(keys["city"]).value);
+    ASSERT_EQ(*nameCity, "Paris");
 
-    auto* nodeNameText = std::get_if<std::string>(&nodeName->at(keys["__text"]).value);
-    ASSERT_EQ(*nodeNameText, "John");
+    auto* nameText = std::get_if<std::string>(&nodeName->at(keys["__text"]).value);
+    ASSERT_EQ(*nameText, "John");
 }
 
 
@@ -147,5 +147,47 @@ TEST_F(TestObjectCreator, Test_File_3_2_Attr)
 
     auto* nodeState = std::get_if<std::string>(&nodePerson->at(keys["state"]).value);
     ASSERT_EQ(*nodeState, "Spain");
+}
+
+
+TEST_F(TestObjectCreator, Test_Integer_Content)
+{
+    auto root = createObjects(TEST_DATA_XML, "test_content_int_value.xml", *keyMapper);
+    ASSERT_NE(root, nullptr);
+
+    std::map <std::string, uint32_t> keys 
+    {
+        { "person", 0x00'01'00'01, },
+        { "number", 0x00'02'00'01, }
+    };
+    checkKeyMapping(keys);
+
+    ASSERT_TRUE(root->find(keys["person"]) != root->end());
+    auto* nodeNumber = std::get_if<ObjectNode>(&root->at(keys["person"]).value);
+    ASSERT_TRUE(nodeNumber != nullptr);
+
+    auto* numberContent = std::get_if<int64_t>(&nodeNumber->at(keys["number"]).value);
+    ASSERT_EQ(*numberContent, 34567);
+}
+
+
+TEST_F(TestObjectCreator, Test_Double_Content)
+{
+    auto root = createObjects(TEST_DATA_XML, "test_content_double_value.xml", *keyMapper);
+    ASSERT_NE(root, nullptr);
+
+    std::map <std::string, uint32_t> keys 
+    {
+        { "person", 0x00'01'00'01, },
+        { "number", 0x00'02'00'01, }
+    };
+    checkKeyMapping(keys);
+
+    ASSERT_TRUE(root->find(keys["person"]) != root->end());
+    auto* nodeNumber = std::get_if<ObjectNode>(&root->at(keys["person"]).value);
+    ASSERT_TRUE(nodeNumber != nullptr);
+
+    auto* numberContent = std::get_if<double>(&nodeNumber->at(keys["number"]).value);
+    ASSERT_EQ(*numberContent, 10.001);
 }
 
