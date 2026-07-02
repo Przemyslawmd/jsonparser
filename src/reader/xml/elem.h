@@ -4,6 +4,7 @@
 
 #include <map>
 #include <string>
+#include <optional>
 #include <vector>
 
 #include "token.h"
@@ -44,20 +45,20 @@ struct ElemReader
 
 struct  ElemWriter
 {
-    ElemWriter(ElemType type, const std::string& name) : 
+    ElemWriter(ElemType type, std::optional<std::string> name) : 
                type(type), name(name), value(nullptr), attr({}) {}
 
+    ElemWriter(ElemType type, std::optional<std::string> name, const std::string& value) : 
+               type(type), name(name), value(value), attr({}) {}
+
     ElemWriter(ElemType type, int64_t value) : 
-               type(type), name({}), value(value), attr({}) {}
+               type(type), name(std::nullopt), value(value), attr({}) {}
 
     ElemWriter(ElemType type, double value) : 
-               type(type), name({}), value(value), attr({}) {}
-
-    ElemWriter(ElemType type, VariantData& value) : 
-               type(type), name({}), value(value), attr({}) {}
+               type(type), name(std::nullopt), value(value), attr({}) {}
 
     ElemType type;
-    std::string name;
+    std::optional<std::string> name;
     std::map<std::string, std::string> attr;
     VariantData value;
 };

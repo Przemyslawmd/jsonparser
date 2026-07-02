@@ -39,7 +39,7 @@ void ElemWriterCreator::processObjectNode(const ObjectNode& obj)
 void ElemWriterCreator::parseData(const Node& node)
 {
     if (std::holds_alternative<std::string>(node.value)) {
-        elems.emplace_back(ElemType::CONTENT, std::get<std::string>(node.value));
+        elems.emplace_back(ElemType::CONTENT, std::nullopt, std::get<std::string>(node.value));
     }
     else if (std::holds_alternative<int64_t>(node.value)) {
         elems.emplace_back(ElemType::CONTENT, std::get<int64_t>(node.value));

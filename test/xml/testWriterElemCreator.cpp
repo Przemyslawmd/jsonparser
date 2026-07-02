@@ -38,7 +38,7 @@ TEST_F(TestWriterElemCreator, Test_File_No_Declaration_1)
     ASSERT_EQ(elems.at(1).name, "name");
 
     ASSERT_EQ(elems.at(2).type, ElemType::CONTENT);
-    ASSERT_EQ(elems.at(2).name, "Jan");
+    ASSERT_EQ(std::get<std::string>(elems.at(2).value), "Jan");
 
     ASSERT_EQ(elems.at(3).type, ElemType::TAG_CLOSE);
     ASSERT_EQ(elems.at(3).name, "name");
@@ -62,7 +62,7 @@ TEST_F(TestWriterElemCreator, Test_File_3_Attr_1)
     ASSERT_EQ(elems.at(1).attr.at("city"), "Paris");
 
     ASSERT_EQ(elems.at(2).type, ElemType::CONTENT);
-    ASSERT_EQ(elems.at(2).name, "John");
+    ASSERT_EQ(std::get<std::string>(elems.at(2).value), "John");
 
     ASSERT_EQ(elems.at(3).type, ElemType::TAG_CLOSE);
     ASSERT_EQ(elems.at(3).name, "name");
@@ -86,7 +86,7 @@ TEST_F(TestWriterElemCreator, Test_File_3_Attr_2)
     ASSERT_EQ(elems.at(1).name, "name");
 
     ASSERT_EQ(elems.at(2).type, ElemType::CONTENT);
-    ASSERT_EQ(elems.at(2).name, "John");
+    ASSERT_EQ(std::get<std::string>(elems.at(2).value), "John");
 
     ASSERT_EQ(elems.at(3).type, ElemType::TAG_CLOSE);
     ASSERT_EQ(elems.at(3).name, "name");

@@ -19,7 +19,7 @@ std::string Writer::createXmlString(const std::vector<ElemWriter>& elems)
             case ElemType::TAG_OPEN:
                 incIndent();
                 std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
-                stream << "<" << elem.name;
+                stream << "<" << elem.name.value();
                 if (!elem.attr.empty()) {
                     for (const auto& [key, val] : elem.attr) {
                         stream << " " << key << "=\"" << val << "\"";
@@ -31,7 +31,7 @@ std::string Writer::createXmlString(const std::vector<ElemWriter>& elems)
                 if (elems.at(idx - 1).type != ElemType::CONTENT) {
                     std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
                 }
-                stream << "</" << elem.name << ">";
+                stream << "</" << elem.name.value() << ">";
                 if (indent != 0) {
                     stream << "\n";
                 }
@@ -39,7 +39,17 @@ std::string Writer::createXmlString(const std::vector<ElemWriter>& elems)
                 break;
             case ElemType::CONTENT:
                 deleteLastChars(stream, 1);
-                stream << elem.name;
+                if (std::holds_alternative<std::string>(elem.value)) {
+                    stream << std::get<std::string>(elem.value);
+                }
+                else if (std::holds_alternative<int64_t>(elem.value))
+                {
+                    stream << std::get<int64_t>(elem.value);
+                }
+                else if (std::holds_alternative<double>(elem.value))
+                {
+                    stream << std::get<double>(elem.value);
+                }
                 break;
         }
     }
