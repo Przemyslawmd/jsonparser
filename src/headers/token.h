@@ -30,7 +30,6 @@ namespace json
     {
         TokenType type;
         VariantData data;
-        //std::variant<std::string, int64_t, double, bool, nullptr_t> data;
     };
 }
 
@@ -54,7 +53,6 @@ namespace xml
     {
         TokenType type;
         VariantData data;
-        //std::variant<std::string, int64_t, double, bool, nullptr_t> data;
     };
 }
 
