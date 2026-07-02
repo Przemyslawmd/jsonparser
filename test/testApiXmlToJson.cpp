@@ -30,3 +30,12 @@ TEST_F(ApiXmlToJsonTest, Test_2)
     ASSERT_EQ(jsonString.value(), jsonExpected);
 }
 
+TEST_F(ApiXmlToJsonTest, Test_Number_Content)
+{
+    auto api = prepareApiWithXml("test_content_number_value.xml");
+    auto jsonString = api->objectToJsonString();
+    ASSERT_TRUE(jsonString.has_value());
+    std::string jsonExpected = getContentFromFile(TEST_DATA_JSON, "test_from_xml_number_content.json");
+    ASSERT_EQ(jsonString.value(), jsonExpected);
+}
+

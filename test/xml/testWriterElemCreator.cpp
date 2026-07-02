@@ -71,6 +71,7 @@ TEST_F(TestWriterElemCreator, Test_File_3_Attr_1)
     ASSERT_EQ(elems.at(4).name, "person");
 }
 
+
 TEST_F(TestWriterElemCreator, Test_File_3_Attr_2)
 {
     auto elems = createElemsWriter("test_3_attr_2.xml");
@@ -92,5 +93,36 @@ TEST_F(TestWriterElemCreator, Test_File_3_Attr_2)
 
     ASSERT_EQ(elems.at(4).type, ElemType::TAG_CLOSE);
     ASSERT_EQ(elems.at(4).name, "person");
+}
+
+
+TEST_F(TestWriterElemCreator, Test_Number_Content)
+{
+    auto elems = createElemsWriter("test_content_number_value.xml");
+    ASSERT_EQ(elems.size(), 8);
+
+    ASSERT_EQ(elems.at(0).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems.at(0).name, "person");
+
+    ASSERT_EQ(elems.at(1).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems.at(1).name, "number");
+
+    ASSERT_EQ(elems.at(2).type, ElemType::CONTENT);
+    ASSERT_EQ(std::get<int64_t>(elems.at(2).value), 34567);
+
+    ASSERT_EQ(elems.at(3).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems.at(3).name, "number");
+
+    ASSERT_EQ(elems.at(4).type, ElemType::TAG_OPEN);
+    ASSERT_EQ(elems.at(4).name, "secondNumber");
+
+    ASSERT_EQ(elems.at(5).type, ElemType::CONTENT);
+    ASSERT_EQ(std::get<double>(elems.at(5).value), 10.002);
+
+    ASSERT_EQ(elems.at(6).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems.at(6).name, "secondNumber");
+
+    ASSERT_EQ(elems.at(7).type, ElemType::TAG_CLOSE);
+    ASSERT_EQ(elems.at(7).name, "person");
 }
 

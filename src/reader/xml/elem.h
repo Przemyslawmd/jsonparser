@@ -39,19 +39,29 @@ struct ElemReader
     std::string name;
     std::vector<xml::Token> attr;
     VariantData value;
-    //std::variant<std::string, int64_t, double, bool, nullptr_t> value;
 };
 
 
-struct ElemWriter
+struct  ElemWriter
 {
+    ElemWriter(ElemType type, const std::string& name) : 
+               type(type), name(name), value(nullptr), attr({}) {}
+
+    ElemWriter(ElemType type, int64_t value) : 
+               type(type), name({}), value(value), attr({}) {}
+
+    ElemWriter(ElemType type, double value) : 
+               type(type), name({}), value(value), attr({}) {}
+
+    ElemWriter(ElemType type, VariantData& value) : 
+               type(type), name({}), value(value), attr({}) {}
+
     ElemType type;
     std::string name;
     std::map<std::string, std::string> attr;
+    VariantData value;
 };
 }
-
-// std::string, int64_t, double, bool, nullptr_t
 
 #endif
 

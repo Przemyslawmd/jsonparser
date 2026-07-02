@@ -150,15 +150,16 @@ TEST_F(TestObjectCreator, Test_File_3_2_Attr)
 }
 
 
-TEST_F(TestObjectCreator, Test_Integer_Content)
+TEST_F(TestObjectCreator, Test_Number_Content)
 {
-    auto root = createObjects(TEST_DATA_XML, "test_content_int_value.xml", *keyMapper);
+    auto root = createObjects(TEST_DATA_XML, "test_content_number_value.xml", *keyMapper);
     ASSERT_NE(root, nullptr);
 
     std::map <std::string, uint32_t> keys 
     {
-        { "person", 0x00'01'00'01, },
-        { "number", 0x00'02'00'01, }
+        { "person",       0x00'01'00'01, },
+        { "number",       0x00'02'00'01, },
+        { "secondNumber", 0x00'03'00'01, }
     };
     checkKeyMapping(keys);
 
@@ -166,28 +167,10 @@ TEST_F(TestObjectCreator, Test_Integer_Content)
     auto* nodeNumber = std::get_if<ObjectNode>(&root->at(keys["person"]).value);
     ASSERT_TRUE(nodeNumber != nullptr);
 
-    auto* numberContent = std::get_if<int64_t>(&nodeNumber->at(keys["number"]).value);
-    ASSERT_EQ(*numberContent, 34567);
-}
+    auto* intContent = std::get_if<int64_t>(&nodeNumber->at(keys["number"]).value);
+    ASSERT_EQ(*intContent, 34567);
 
-
-TEST_F(TestObjectCreator, Test_Double_Content)
-{
-    auto root = createObjects(TEST_DATA_XML, "test_content_double_value.xml", *keyMapper);
-    ASSERT_NE(root, nullptr);
-
-    std::map <std::string, uint32_t> keys 
-    {
-        { "person", 0x00'01'00'01, },
-        { "number", 0x00'02'00'01, }
-    };
-    checkKeyMapping(keys);
-
-    ASSERT_TRUE(root->find(keys["person"]) != root->end());
-    auto* nodeNumber = std::get_if<ObjectNode>(&root->at(keys["person"]).value);
-    ASSERT_TRUE(nodeNumber != nullptr);
-
-    auto* numberContent = std::get_if<double>(&nodeNumber->at(keys["number"]).value);
-    ASSERT_EQ(*numberContent, 10.001);
+    auto* doubleContent = std::get_if<double>(&nodeNumber->at(keys["secondNumber"]).value);
+    ASSERT_EQ(*doubleContent, 10.002);
 }
 

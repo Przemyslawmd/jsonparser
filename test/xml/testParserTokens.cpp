@@ -49,12 +49,12 @@ TEST_F(TestParserTokensXML, Test_File_2)
 }
 
 
-TEST_F(TestParserTokensXML, Test_Integer_Content)
+TEST_F(TestParserTokensXML, Test_Number_Content)
 {
-    auto elems = createElements(TEST_DATA_XML, "test_content_int_value.xml");
+    auto elems = createElements(TEST_DATA_XML, "test_content_number_value.xml");
 
     ASSERT_NE(elems, nullptr);
-    ASSERT_EQ(elems->size(), 5);
+    ASSERT_EQ(elems->size(), 8);
 
     uint index = 0;
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
@@ -77,37 +77,18 @@ TEST_F(TestParserTokensXML, Test_Integer_Content)
     ASSERT_TRUE(elems->at(index).attr.empty());
 
     index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(index).name, "person");
-    ASSERT_TRUE(elems->at(index).attr.empty());
-}
-
-
-TEST_F(TestParserTokensXML, Test_Double_Content)
-{
-    auto elems = createElements(TEST_DATA_XML, "test_content_double_value.xml");
-
-    ASSERT_NE(elems, nullptr);
-    ASSERT_EQ(elems->size(), 5);
-
-    uint index = 0;
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(index).name, "person");
-    ASSERT_TRUE(elems->at(index).attr.empty());
-
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(index).name, "number");
+    ASSERT_EQ(elems->at(index).name, "secondNumber");
     ASSERT_TRUE(elems->at(index).attr.empty());
 
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
-    ASSERT_EQ(std::get<double>(elems->at(index).value), 10.001);
+    ASSERT_EQ(std::get<double>(elems->at(index).value), 10.002);
     ASSERT_TRUE(elems->at(index).attr.empty());
 
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(index).name, "number");
+    ASSERT_EQ(elems->at(index).name, "secondNumber");
     ASSERT_TRUE(elems->at(index).attr.empty());
 
     index++;
