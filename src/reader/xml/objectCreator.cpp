@@ -68,8 +68,6 @@ void ObjectCreator::processContent(const std::string& contentName, VariantData& 
     ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
 
     if (attrs->empty()) {
-        //obj->emplace(keyID, contentName);
-        //obj->emplace(keyID, std::visit([](auto const& e) );
         std::visit([obj, keyID](auto&& val) { obj->emplace(keyID, val); }, data); 
         return;
     }
@@ -79,7 +77,6 @@ void ObjectCreator::processContent(const std::string& contentName, VariantData& 
     insertAttrs(*currentNode, *attrs);
     auto newKeyID = keyMapper.createKeyID("__text", mapIDStack.top());
     std::visit([currentNode, newKeyID](auto&& val) { currentNode->emplace(newKeyID.value(), val); }, data);
-    //currentNode->emplace(newKeyID.value(), contentName);
 }
 
 
