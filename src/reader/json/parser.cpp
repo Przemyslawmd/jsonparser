@@ -67,23 +67,21 @@ bool Parser::pushComplexNodeOnStack(const std::string& keyStr, State state)
         if (optKeyID == std::nullopt) {
             return false;
         }
-        uint32_t keyID = optKeyID.value();
-
-        objectNode->emplace(std::make_pair(keyID, T()));
-        auto* currentNode = &(std::get<T>(objectNode->at(keyID).value));
+        auto[it, _] = objectNode->emplace(std::make_pair(optKeyID.value(), T()));
+        auto* currentNode = &(std::get<T>((it->second).value));
         pushDataOnStack(currentNode, state);
     }
     else {
         ArrayNode* arrayNode = std::get<ArrayNode*>(nodeStack.top());
-        arrayNode->emplace_back(T());
-        auto* currentNode = &(std::get<T>(arrayNode->back().value));
+        auto& ref = arrayNode->emplace_back(T());
+        auto* currentNode = &(std::get<T>(ref.value));
         pushDataOnStack(currentNode, state);
     }
     return true;
 }
 
 
-template <typename T> requires PrimitiveLimit<T>
+template <typename T> requires SimpleLimit<T>
 bool Parser::processData(const std::string& keyStr, const json::Token& token)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
@@ -91,9 +89,8 @@ bool Parser::processData(const std::string& keyStr, const json::Token& token)
         if (optKeyID == std::nullopt) {
             return false;
         }
-        uint32_t keyID = optKeyID.value();
         ObjectNode* objectNode = std::get<ObjectNode*>(nodeStack.top());
-        objectNode->emplace(keyID, std::get<T>(token.data));
+        objectNode->emplace(optKeyID.value(), std::get<T>(token.data));
     }
     else {
         ArrayNode* arrayNode = std::get<ArrayNode*>(nodeStack.top());

@@ -3,6 +3,7 @@
 #define JX_READER_JSON_PARSERKEY_H
 
 #include <memory>
+#include <ranges>
 #include <stack>
 #include <vector>
 
@@ -18,20 +19,26 @@ static std::unique_ptr<std::vector<Token>> createKeyTokens(std::unique_ptr<std::
     using enum TokenType;
     using enum State;
 
-    for (auto it = tokens->begin(); it != tokens->end(); it++) {
-        if (it->type == CURLY_OPEN) {
-            states.emplace(OBJECT_PARSING);
-        }
-        else if (it->type == SQUARE_OPEN) {
-            states.emplace(ARRAY_PARSING);
-        }
-        else if (it->type == CURLY_CLOSE || it->type == SQUARE_CLOSE) {
-            states.pop();
-        }
-        else if (it->type == DATA_STR &&
-                 states.top() == OBJECT_PARSING &&
-                 ((it - 1)->type == CURLY_OPEN || (it - 1)->type == COMMA)) {
-            it->type = KEY;
+    for (const auto [idx, token] : std::views::enumerate(*tokens))
+    {
+        switch (token.type)
+        {
+            case CURLY_OPEN:
+                states.emplace(OBJECT_PARSING);
+                break;
+            case SQUARE_OPEN:
+                states.emplace(ARRAY_PARSING);
+                break;
+            case CURLY_CLOSE:
+            case SQUARE_CLOSE:
+                states.pop();
+                break;
+            case DATA_STR:
+                auto prevType = tokens->at(idx - 1).type;
+                if (states.top() == OBJECT_PARSING && (prevType == CURLY_OPEN || prevType == COMMA)) {
+                    token.type = KEY;
+                }
+                break;
         }
     }
     return tokens;

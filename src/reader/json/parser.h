@@ -16,15 +16,15 @@
 
 
 template <typename T>
-concept ComplexLimit = std::is_same<T, ObjectNode>::value || std::is_same<T, ArrayNode>::value;
-
+concept ComplexLimit = std::is_same<T, ObjectNode>::value || 
+                       std::is_same<T, ArrayNode>::value;
 
 template <typename T>
-concept PrimitiveLimit = std::is_same<T, std::string>::value || 
-                         std::is_same<T, double>::value || 
-                         std::is_same<T, int64_t>::value || 
-                         std::is_same<T, bool>::value || 
-                         std::is_same<T, nullptr_t>::value;
+concept SimpleLimit = std::is_same<T, std::string>::value || 
+                      std::is_same<T, double>::value || 
+                      std::is_same<T, int64_t>::value || 
+                      std::is_same<T, bool>::value || 
+                      std::is_same<T, nullptr_t>::value;
 
 
 namespace json
@@ -32,15 +32,15 @@ namespace json
 class Parser
 {
     public:
-        Parser(KeyMapper& keyMapper) : keyMapper(keyMapper) {};
+        Parser(KeyMapper& keyMapper) : keyMapper(keyMapper), maxMapId(0) {};
 
-        std::unique_ptr<ObjectNode> parseTokens(const std::vector<json::Token>&);
+        std::unique_ptr<ObjectNode> parseTokens(const std::vector<Token>&);
 
     private:
         std::stack<std::variant<ObjectNode*, ArrayNode*>> nodeStack;
         std::stack<State> stateStack;
         std::stack<uint32_t> mapIDStack;
-        uint32_t maxMapId = 0;
+        uint32_t maxMapId;
 
         KeyMapper& keyMapper;
 
@@ -50,8 +50,8 @@ class Parser
         template <typename T> requires ComplexLimit<T>
         bool pushComplexNodeOnStack(const std::string& key, State);
 
-        template <typename T> requires PrimitiveLimit<T>
-        bool processData(const std::string& key, const json::Token&);
+        template <typename T> requires SimpleLimit<T>
+        bool processData(const std::string& key, const Token&);
 };
 }
 
