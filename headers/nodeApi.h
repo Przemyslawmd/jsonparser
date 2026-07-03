@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_NODE_API_H
-#define JSONPARSER_NODE_API_H
+#ifndef JX_NODE_API_H
+#define JX_NODE_API_H
 
 #include <map>
 #include <string>

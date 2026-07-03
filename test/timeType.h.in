@@ -1,6 +1,6 @@
 
-#ifndef TIME_TYPE_H_IN
-#define TIME_TYPE_H_IN
+#ifndef JX_TIME_TYPE_H_IN
+#define JX_TIME_TYPE_H_IN
 
 #define TIME_TYPE @TIME_MEASUREMENT_TYPE@
 

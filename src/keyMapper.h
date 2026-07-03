@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_KEY_MAPPER_H
-#define JSONPARSER_KEY_MAPPER_H
+#ifndef JX_KEY_MAPPER_H
+#define JX_KEY_MAPPER_H
 
 #include <cstdint>
 #include <map> 

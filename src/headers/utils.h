@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_UTILS_H
-#define JSONPARSER_UTILS_H
+#ifndef JX_UTILS_H
+#define JX_UTILS_H
 
 #include <map>
 #include <string>
@@ -28,10 +28,7 @@ Node createNode(const NodeApi& node)
     if (std::holds_alternative<bool>(node.value)) {
         return Node{ .value = std::get<bool>(node.value) };
     }
-    if (std::holds_alternative<nullptr_t>(node.value)) {
-        return Node{ .value = nullptr };
-    }
-    return {};
+    return Node{ .value = nullptr };
 }
 
 

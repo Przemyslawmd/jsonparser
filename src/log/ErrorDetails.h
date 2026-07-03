@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_ERROR_DESCRIPTION_H
-#define JSONPARSER_ERROR_DESCRIPTION_H
+#ifndef JX_LOG_ERROR_DETAILS_H
+#define JX_LOG_ERROR_DETAILS_H
 
 #include <unordered_map>
 #include <optional>

@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_TOKEN_DESCRIPTION_H
-#define JSONPARSER_TOKEN_DESCRIPTION_H
+#ifndef JX_LOG_TOKEN_DESCRIPTION_H
+#define JX_LOG_TOKEN_DESCRIPTION_H
 
 #include <unordered_map>
 #include <string>
@@ -8,8 +8,8 @@
 #include "token.h"
 
 
-using namespace json;
-
+namespace json
+{
 static const std::unordered_map<TokenType, std::string> TokenDesc =
 {
     { TokenType::CURLY_OPEN,   "Opening curly bracket" },
@@ -25,6 +25,7 @@ static const std::unordered_map<TokenType, std::string> TokenDesc =
     { TokenType::DATA_DOUBLE,  "Double number" },
     { TokenType::DATA_NULL,    "Null" },
 };
+}
 
 #endif
 

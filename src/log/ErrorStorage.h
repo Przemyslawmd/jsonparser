@@ -1,6 +1,6 @@
 
-#ifndef JSONPARSER_ERROR_STORAGE_H
-#define JSONPARSER_ERROR_STORAGE_H
+#ifndef JX_LOG_ERROR_STORAGE_H
+#define JX_LOG_ERROR_STORAGE_H
 
 #include <optional>
 #include <string>
