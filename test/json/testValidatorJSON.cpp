@@ -18,8 +18,7 @@ static void makeValidatorError(const std::string& jsonFile)
     std::string jsonString = getContentFromFile(TEST_DATA_IMPROPER_JSON, jsonFile);
     auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
-    Validator validator;
-    bool result = validator.validate(*tokens);
+    bool result = validateTokens(*tokens);
     EXPECT_FALSE(result);
 }
 
@@ -44,7 +43,7 @@ TEST(ValidatorTest, ImproperTokenAfterCurlyOpen)
 {
     makeValidatorError("not_allowed_after_curly_open.json");
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::VALIDATOR_AFTER_CURLY_OPEN);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_VALIDATOR_AFTER_CURLY_OPEN);
 }
 
 
@@ -52,7 +51,7 @@ TEST(ValidatorTest, ImproperTokenAfterCurlyClose)
 {
     makeValidatorError("not_allowed_after_curly_close.json");
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::VALIDATOR_AFTER_CURLY_CLOSE);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_VALIDATOR_AFTER_CURLY_CLOSE);
 }
 
 
@@ -60,7 +59,7 @@ TEST(ValidatorTest, ImproperTokenAfterString)
 {
     makeValidatorError("not_allowed_after_string.json");
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::VALIDATOR_AFTER_STRING);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_VALIDATOR_AFTER_STRING);
 }
 
 
@@ -68,7 +67,7 @@ TEST(ValidatorTest, ImproperTokenAfterInt)
 {
     makeValidatorError("not_allowed_after_int.json");
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::VALIDATOR_AFTER_INT);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_VALIDATOR_AFTER_INT);
 }
 
 
@@ -76,7 +75,7 @@ TEST(ValidatorTest, ImproperTokenAfterDouble)
 {
     makeValidatorError("not_allowed_after_double.json");
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::VALIDATOR_AFTER_DOUBLE);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_VALIDATOR_AFTER_DOUBLE);
 }
 
 
@@ -84,7 +83,7 @@ TEST(ValidatorTest, ImproperTokenAfterBool)
 {
     makeValidatorError("not_allowed_after_bool.json");
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::VALIDATOR_AFTER_BOOL);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_VALIDATOR_AFTER_BOOL);
 }
 
 
@@ -92,7 +91,7 @@ TEST(ValidatorTest, ImproperTokenAfterColon)
 {
     makeValidatorError("not_allowed_after_colon.json");
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::VALIDATOR_AFTER_COLON);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_VALIDATOR_AFTER_COLON);
 }
 
 
@@ -100,6 +99,6 @@ TEST(ValidatorTest, ImproperTokenAfterComma)
 {
     makeValidatorError("not_allowed_after_comma.json");
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::VALIDATOR_AFTER_COMMA);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_VALIDATOR_AFTER_COMMA);
 }
 

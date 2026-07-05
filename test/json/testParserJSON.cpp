@@ -25,13 +25,11 @@ class TestParserJSON : public BaseTest
 protected:
     std::unique_ptr<KeyMapper> keyMapper;
     std::unique_ptr<Preparser> preparser;
-    std::unique_ptr<Validator> validator;
 
     virtual void SetUp()
     {
         keyMapper = std::make_unique<KeyMapper>();
         preparser = std::make_unique<Preparser>();
-        validator = std::make_unique<Validator>();
     }
 
     std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
@@ -40,7 +38,6 @@ protected:
 
         auto tokens = preparser->parseJSON(jsonString);
         EXPECT_TRUE(tokens != nullptr);
-        validator->validate(*tokens);
         tokens = createKeyTokens(std::move(tokens));
 
         const auto parser = std::make_unique<Parser>(*keyMapper);

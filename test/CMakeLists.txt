@@ -36,7 +36,6 @@ if (JSON_BUILD)
 
     list(APPEND SRC_FILES "../src/manager.cpp")
     list(APPEND SRC_FILES "../src/reader/json/preparser.cpp")
-    list(APPEND SRC_FILES "../src/reader/json/validator.cpp")
     list(APPEND SRC_FILES "../src/reader/json/parser.cpp")
     list(APPEND SRC_FILES "../src/writer/json/writer.cpp")
     list(APPEND SRC_FILES "../src/log/Error.cpp")
