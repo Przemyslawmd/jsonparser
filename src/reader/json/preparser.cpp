@@ -8,17 +8,22 @@
 #include "reader/utilsReader.h"
 
 
-constexpr size_t FALSE_WORD_LEN = 5;
-constexpr size_t TRUE_WORD_LEN = 4;
-constexpr size_t NULL_WORD_LEN = 4;
-
-
 using namespace json;
 
 std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json)
 {
     using enum ErrorCode;
     using enum TokenType;
+
+    auto checkWord = [](const std::string& json, const std::string& soughtWord, size_t& index) -> bool
+    {
+        if (json.length() - index > soughtWord.length() && (json.compare(index, soughtWord.length(), soughtWord) == 0)) {
+            index += (soughtWord.length() - 1);
+            return true;
+        }
+        ErrorStorage::putError(JSON_PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
+        return false;
+    };
 
     tokens = std::make_unique<std::vector<Token>>();
     tokens->reserve(100);
@@ -46,30 +51,24 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             continue;
         }
         if (symbol == 'f') {
-            if (json.length() - index > FALSE_WORD_LEN && (json.compare(index, FALSE_WORD_LEN, "false") == 0)) {
+            if (checkWord(json, "false", index)) {
                 tokens->emplace_back(DATA_BOOL, false);
-                index += (FALSE_WORD_LEN - 1);
                 continue;
             }
-            ErrorStorage::putError(JSON_PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
             return nullptr;
         }
         if (symbol == 't') {
-            if (json.length() - index > TRUE_WORD_LEN && (json.compare(index, TRUE_WORD_LEN, "true") == 0)) {
+            if (checkWord(json, "true", index)) {
                 tokens->emplace_back(DATA_BOOL, true);
-                index += (TRUE_WORD_LEN - 1);
                 continue;
             }
-            ErrorStorage::putError(JSON_PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
             return nullptr;
         }
         if (symbol == 'n') {
-            if (json.length() - index > NULL_WORD_LEN && (json.compare(index, NULL_WORD_LEN, "null") == 0)) {
+            if (checkWord(json, "null", index)) {
                 tokens->emplace_back(DATA_NULL, nullptr);
-                index += (NULL_WORD_LEN - 1);
                 continue;
             }
-            ErrorStorage::putError(JSON_PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
             return nullptr;
         }
         ErrorStorage::putError(JSON_PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
