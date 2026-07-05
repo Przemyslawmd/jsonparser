@@ -1,6 +1,7 @@
 
 #include <chrono>
 #include <memory>
+#include <ranges>
 #include <variant>
 #include <vector>
 
@@ -16,6 +17,7 @@
 
 
 using namespace json;
+using enum TokenType;
 
 class TestPreparserJSON : public BaseTest
 {
@@ -44,20 +46,34 @@ void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<Token>&
 {
     ASSERT_EQ(tokens->size(), expected.size());
 
+    auto compareData = []<typename T>(Token& token_1, Token& token_2)
+    {
+        if constexpr (std::is_same_v<T, double>) {
+            ASSERT_TRUE((std::get<T>(token_1.data) - std::get<T>(token_2.data)) <= DBL_EPSILON);
+        }
+        else {
+            ASSERT_EQ(std::get<T>(token_1.data), std::get<T>(token_2.data));
+        }
+    };
+
     using enum TokenType;
-    for (int i = 0; i < tokens->size(); i++) {
-        ASSERT_EQ(tokens->at(i).type, expected[i].type );
-        if (tokens->at(i).type == DATA_INT) {
-            ASSERT_EQ(std::get<int64_t>(tokens->at(i).data), std::get<int64_t>(expected[i].data));
-        }
-        else if (tokens->at(i).type == DATA_STR || tokens->at(i).type == KEY) {
-            ASSERT_EQ(std::get<std::string>(tokens->at(i).data), std::get<std::string>(expected[i].data));
-        }
-        else if (tokens->at(i).type == DATA_BOOL) {
-            ASSERT_EQ(std::get<bool>(tokens->at(i).data), std::get<bool>(expected[i].data));
-        }
-        else if (tokens->at(i).type == DATA_DOUBLE) {
-            ASSERT_TRUE((std::get<double>(tokens->at(i).data) - std::get<double>(expected[i].data)) <= DBL_EPSILON);
+
+    for (const auto [token_1, token_2] : std::views::zip(*tokens, expected)) {
+        ASSERT_EQ(token_1.type, token_2.type );
+        switch (token_1.type) {
+            case DATA_INT:
+                compareData.template operator()<int64_t>(token_1, token_2);
+                break;
+            case DATA_STR:
+            case KEY:
+                compareData.template operator()<std::string>(token_1, token_2);
+                break;
+            case DATA_BOOL:
+                compareData.template operator()<bool>(token_1, token_2);
+                break;
+            case DATA_DOUBLE:
+                compareData.template operator()<double>(token_1, token_2);
+                break;
         }
     }
 }
@@ -68,35 +84,35 @@ TEST_F(TestPreparserJSON, Test_File_1)
     auto tokens = createTokens(TEST_DATA_JSON, "test_1.json");
 
     std::vector<Token> expected = {
-       { TokenType::CURLY_OPEN },
-       { TokenType::KEY, std::string{ "person" }},
-       { TokenType::COLON } ,
-       { TokenType::CURLY_OPEN }, 
-       { TokenType::KEY, std::string{ "name" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "John" }},
-       { TokenType::COMMA },
-       { TokenType::KEY, std::string{ "age" }},
-       { TokenType::COLON } ,
-       { TokenType::DATA_INT, 39 },
-       { TokenType::COMMA },
-       { TokenType::KEY, std::string{ "country" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "Poland" }},
-       { TokenType::COMMA },
-       { TokenType::KEY, std::string{ "employed" }},
-       { TokenType::COLON },
-       { TokenType::DATA_BOOL, true },
-       { TokenType::COMMA },
-       { TokenType::KEY, std::string{ "restricted" }},
-       { TokenType::COLON },
-       { TokenType::DATA_BOOL, false },
-       { TokenType::COMMA },
-       { TokenType::KEY, std::string{ "empty" }},
-       { TokenType::COLON },
-       { TokenType::DATA_NULL, nullptr },
-       { TokenType::CURLY_CLOSE },
-       { TokenType::CURLY_CLOSE },
+       { CURLY_OPEN },
+       { KEY, std::string{ "person" }},
+       { COLON } ,
+       { CURLY_OPEN },
+       { KEY, std::string{ "name" }},
+       { COLON },
+       { DATA_STR, std::string{ "John" }},
+       { COMMA },
+       { KEY, std::string{ "age" }},
+       { COLON } ,
+       { DATA_INT, 39 },
+       { COMMA },
+       { KEY, std::string{ "country" }},
+       { COLON },
+       { DATA_STR, std::string{ "Poland" }},
+       { COMMA },
+       { KEY, std::string{ "employed" }},
+       { COLON },
+       { DATA_BOOL, true },
+       { COMMA },
+       { KEY, std::string{ "restricted" }},
+       { COLON },
+       { DATA_BOOL, false },
+       { COMMA },
+       { KEY, std::string{ "empty" }},
+       { COLON },
+       { DATA_NULL, nullptr },
+       { CURLY_CLOSE },
+       { CURLY_CLOSE },
     };
     checkTokens(std::move(tokens), std::move(expected));
 }
@@ -107,100 +123,100 @@ TEST_F(TestPreparserJSON, Test_File_2)
     auto tokens = createTokens(TEST_DATA_JSON, "test_2.json");
 
     std::vector<Token> expected = {
-       { TokenType::CURLY_OPEN },
+       { CURLY_OPEN },
        
-       { TokenType::KEY, std::string{ "name" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "John Smith" }},
-       { TokenType::COMMA },
+       { KEY, std::string{ "name" }},
+       { COLON },
+       { DATA_STR, std::string{ "John Smith" }},
+       { COMMA },
        
-       { TokenType::KEY, std::string{ "value" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "20223" }},
-       { TokenType::COMMA },
+       { KEY, std::string{ "value" }},
+       { COLON },
+       { DATA_STR, std::string{ "20223" }},
+       { COMMA },
 
-       { TokenType::KEY, std::string{ "price" }},
-       { TokenType::COLON },
-       { TokenType::DATA_INT, 2224 },
-       { TokenType::COMMA },
+       { KEY, std::string{ "price" }},
+       { COLON },
+       { DATA_INT, 2224 },
+       { COMMA },
 
-       { TokenType::KEY, std::string{ "shipTo" }},
-       { TokenType::COLON },
-       { TokenType::CURLY_OPEN },
+       { KEY, std::string{ "shipTo" }},
+       { COLON },
+       { CURLY_OPEN },
 
-       { TokenType::KEY, std::string{ "name" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "Jane Smith" }},
-       { TokenType::COMMA },
+       { KEY, std::string{ "name" }},
+       { COLON },
+       { DATA_STR, std::string{ "Jane Smith" }},
+       { COMMA },
 
-       { TokenType::KEY, std::string{ "address" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "123 Maple Street" }},
-       { TokenType::COMMA },
+       { KEY, std::string{ "address" }},
+       { COLON },
+       { DATA_STR, std::string{ "123 Maple Street" }},
+       { COMMA },
 
-       { TokenType::KEY, std::string{ "cities" }},
-       { TokenType::COLON },
-       { TokenType::SQUARE_OPEN },
-       { TokenType::DATA_STR, std::string{ "Pretendville" }},
-       { TokenType::COMMA },
-       { TokenType::DATA_STR, std::string{ "New York" }},
-       { TokenType::COMMA },
-       { TokenType::DATA_STR, std::string{ "Chicago" }},
-       { TokenType::SQUARE_CLOSE },
-       { TokenType::COMMA },
+       { KEY, std::string{ "cities" }},
+       { COLON },
+       { SQUARE_OPEN },
+       { DATA_STR, std::string{ "Pretendville" }},
+       { COMMA },
+       { DATA_STR, std::string{ "New York" }},
+       { COMMA },
+       { DATA_STR, std::string{ "Chicago" }},
+       { SQUARE_CLOSE },
+       { COMMA },
 
-       { TokenType::KEY, std::string{ "state" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "NY" }},
-       { TokenType::COMMA },
+       { KEY, std::string{ "state" }},
+       { COLON },
+       { DATA_STR, std::string{ "NY" }},
+       { COMMA },
 
-       { TokenType::KEY, std::string{ "zip" }},
-       { TokenType::COLON },
-       { TokenType::DATA_INT, -12345 },
-       { TokenType::COMMA },
+       { KEY, std::string{ "zip" }},
+       { COLON },
+       { DATA_INT, -12345 },
+       { COMMA },
 
-       { TokenType::KEY, std::string{ "weight" }},
-       { TokenType::COLON },
-       { TokenType::DATA_DOUBLE, 12.34 },
+       { KEY, std::string{ "weight" }},
+       { COLON },
+       { DATA_DOUBLE, 12.34 },
 
-       { TokenType::CURLY_CLOSE },
-       { TokenType::COMMA },
+       { CURLY_CLOSE },
+       { COMMA },
 
-       { TokenType::KEY, std::string{ "billTo" }},
-       { TokenType::COLON },
-       { TokenType::CURLY_OPEN },
+       { KEY, std::string{ "billTo" }},
+       { COLON },
+       { CURLY_OPEN },
 
-       { TokenType::KEY, std::string{ "name" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "John Smith" }},
-       { TokenType::COMMA },
+       { KEY, std::string{ "name" }},
+       { COLON },
+       { DATA_STR, std::string{ "John Smith" }},
+       { COMMA },
 
-       { TokenType::KEY, std::string{ "address" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "123 Maple Street" }},
-       { TokenType::COMMA },
+       { KEY, std::string{ "address" }},
+       { COLON },
+       { DATA_STR, std::string{ "123 Maple Street" }},
+       { COMMA },
 
-       { TokenType::KEY, std::string{ "city" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "Pretendville" }},
-       { TokenType::COMMA },
+       { KEY, std::string{ "city" }},
+       { COLON },
+       { DATA_STR, std::string{ "Pretendville" }},
+       { COMMA },
 
-       { TokenType::KEY, std::string{ "state" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "NY" }},
-       { TokenType::COMMA },
+       { KEY, std::string{ "state" }},
+       { COLON },
+       { DATA_STR, std::string{ "NY" }},
+       { COMMA },
 
-       { TokenType::KEY, std::string{ "zip" }},
-       { TokenType::COLON },
-       { TokenType::DATA_INT, 26111474836476 },
-       { TokenType::COMMA },
+       { KEY, std::string{ "zip" }},
+       { COLON },
+       { DATA_INT, 26111474836476 },
+       { COMMA },
 
-       { TokenType::KEY, std::string{ "minusWeight" }},
-       { TokenType::COLON },
-       { TokenType::DATA_DOUBLE, -0.2456 },
+       { KEY, std::string{ "minusWeight" }},
+       { COLON },
+       { DATA_DOUBLE, -0.2456 },
 
-       { TokenType::CURLY_CLOSE },
-       { TokenType::CURLY_CLOSE },
+       { CURLY_CLOSE },
+       { CURLY_CLOSE },
     };
     checkTokens(std::move(tokens), std::move(expected));
 }
@@ -211,42 +227,42 @@ TEST_F(TestPreparserJSON, Test_File_6)
     auto tokens = createTokens(TEST_DATA_JSON, "test_6.json");
 
     std::vector<Token> expected = {
-       { TokenType::CURLY_OPEN },
-       { TokenType::KEY, std::string{ "employees" }},
-       { TokenType::COLON } ,
-       { TokenType::SQUARE_OPEN },
+       { CURLY_OPEN },
+       { KEY, std::string{ "employees" }},
+       { COLON } ,
+       { SQUARE_OPEN },
 
-       { TokenType::CURLY_OPEN },
-       { TokenType::KEY, std::string{ "name" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "Agata" }},
-       { TokenType::COMMA },
-       { TokenType::KEY, std::string{ "email" }},
-       { TokenType::COLON } ,
-       { TokenType::DATA_STR, std::string{ "agata@gmail.com" }},
-       { TokenType::COMMA },
-       { TokenType::KEY, std::string{ "age" }},
-       { TokenType::COLON },
-       { TokenType::DATA_INT, 33 },
-       { TokenType::CURLY_CLOSE },
-       { TokenType::COMMA },
+       { CURLY_OPEN },
+       { KEY, std::string{ "name" }},
+       { COLON },
+       { DATA_STR, std::string{ "Agata" }},
+       { COMMA },
+       { KEY, std::string{ "email" }},
+       { COLON } ,
+       { DATA_STR, std::string{ "agata@gmail.com" }},
+       { COMMA },
+       { KEY, std::string{ "age" }},
+       { COLON },
+       { DATA_INT, 33 },
+       { CURLY_CLOSE },
+       { COMMA },
 
-       { TokenType::CURLY_OPEN },
-       { TokenType::KEY, std::string{ "name" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "Anna" }},
-       { TokenType::COMMA },
-       { TokenType::KEY, std::string{ "email" }},
-       { TokenType::COLON } ,
-       { TokenType::DATA_STR, std::string{ "anna@gmail.com" }},
-       { TokenType::COMMA },
-       { TokenType::KEY, std::string{ "age" }},
-       { TokenType::COLON },
-       { TokenType::DATA_INT, 31 },
+       { CURLY_OPEN },
+       { KEY, std::string{ "name" }},
+       { COLON },
+       { DATA_STR, std::string{ "Anna" }},
+       { COMMA },
+       { KEY, std::string{ "email" }},
+       { COLON } ,
+       { DATA_STR, std::string{ "anna@gmail.com" }},
+       { COMMA },
+       { KEY, std::string{ "age" }},
+       { COLON },
+       { DATA_INT, 31 },
 
-       { TokenType::CURLY_CLOSE },
-       { TokenType::SQUARE_CLOSE },
-       { TokenType::CURLY_CLOSE },
+       { CURLY_CLOSE },
+       { SQUARE_CLOSE },
+       { CURLY_CLOSE },
     };
     checkTokens(std::move(tokens), std::move(expected));
 }
@@ -257,59 +273,59 @@ TEST_F(TestPreparserJSON, Test_File_7)
     auto tokens = createTokens(TEST_DATA_JSON, "test_7.json");
 
     std::vector<Token> expected = {
-       { TokenType::CURLY_OPEN },
-       { TokenType::KEY, std::string{ "employees" }},
-       { TokenType::COLON },
-       { TokenType::SQUARE_OPEN },
+       { CURLY_OPEN },
+       { KEY, std::string{ "employees" }},
+       { COLON },
+       { SQUARE_OPEN },
 
-       { TokenType::CURLY_OPEN },
-       { TokenType::KEY, std::string{ "name" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "Agata" }},
-       { TokenType::COMMA },
-       { TokenType::KEY, std::string{ "data" }},
-       { TokenType::COLON },
-       { TokenType::SQUARE_OPEN },
-       { TokenType::SQUARE_OPEN },
-       { TokenType::DATA_INT, 1 },
-       { TokenType::COMMA },
-       { TokenType::DATA_INT, 2 },
-       { TokenType::COMMA },
-       { TokenType::DATA_INT, 3 },
-       { TokenType::SQUARE_CLOSE },
-       { TokenType::COMMA },
-       { TokenType::SQUARE_OPEN },
-       { TokenType::DATA_INT, 4 },
-       { TokenType::COMMA },
-       { TokenType::DATA_INT, 5 },
-       { TokenType::COMMA },
-       { TokenType::DATA_INT, 6 },
-       { TokenType::SQUARE_CLOSE },
-       { TokenType::SQUARE_CLOSE },
-       { TokenType::CURLY_CLOSE },
-       { TokenType::COMMA },
+       { CURLY_OPEN },
+       { KEY, std::string{ "name" }},
+       { COLON },
+       { DATA_STR, std::string{ "Agata" }},
+       { COMMA },
+       { KEY, std::string{ "data" }},
+       { COLON },
+       { SQUARE_OPEN },
+       { SQUARE_OPEN },
+       { DATA_INT, 1 },
+       { COMMA },
+       { DATA_INT, 2 },
+       { COMMA },
+       { DATA_INT, 3 },
+       { SQUARE_CLOSE },
+       { COMMA },
+       { SQUARE_OPEN },
+       { DATA_INT, 4 },
+       { COMMA },
+       { DATA_INT, 5 },
+       { COMMA },
+       { DATA_INT, 6 },
+       { SQUARE_CLOSE },
+       { SQUARE_CLOSE },
+       { CURLY_CLOSE },
+       { COMMA },
 
-       { TokenType::CURLY_OPEN },
-       { TokenType::KEY, std::string{ "name" }},
-       { TokenType::COLON },
-       { TokenType::DATA_STR, std::string{ "Anna" }},
-       { TokenType::COMMA },
-       { TokenType::KEY, std::string{ "data" }},
-       { TokenType::COLON },
-       { TokenType::SQUARE_OPEN },
-       { TokenType::SQUARE_OPEN },
-       { TokenType::DATA_STR, "a" },
-       { TokenType::COMMA },
-       { TokenType::DATA_STR, "b" },
-       { TokenType::SQUARE_CLOSE },
-       { TokenType::COMMA },
-       { TokenType::SQUARE_OPEN },
-       { TokenType::DATA_STR, "c d e" },
-       { TokenType::SQUARE_CLOSE },
-       { TokenType::SQUARE_CLOSE },
-       { TokenType::CURLY_CLOSE },
-       { TokenType::SQUARE_CLOSE },
-       { TokenType::CURLY_CLOSE },
+       { CURLY_OPEN },
+       { KEY, std::string{ "name" }},
+       { COLON },
+       { DATA_STR, std::string{ "Anna" }},
+       { COMMA },
+       { KEY, std::string{ "data" }},
+       { COLON },
+       { SQUARE_OPEN },
+       { SQUARE_OPEN },
+       { DATA_STR, "a" },
+       { COMMA },
+       { DATA_STR, "b" },
+       { SQUARE_CLOSE },
+       { COMMA },
+       { SQUARE_OPEN },
+       { DATA_STR, "c d e" },
+       { SQUARE_CLOSE },
+       { SQUARE_CLOSE },
+       { CURLY_CLOSE },
+       { SQUARE_CLOSE },
+       { CURLY_CLOSE },
     };
     checkTokens(std::move(tokens), std::move(expected));
 }
@@ -328,7 +344,7 @@ TEST_F(TestPreparserJSON, FirstImproperDataTest)
 
     ASSERT_EQ(tokens, nullptr);
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::PREPARSER_UNKNOWN_SYMBOL);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_PREPARSER_UNKNOWN_SYMBOL);
 }
 
 
@@ -339,5 +355,35 @@ TEST_F(TestPreparserJSON, SecondImproperDataTest)
     ASSERT_EQ(tokens, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::PREPARSER_STRING_ERROR);
+}
+
+
+TEST_F(TestPreparserJSON, UnknownSymbol_1)
+{
+    auto tokens = createTokens(TEST_DATA_IMPROPER_JSON, "preparser_unknown_symbol_1.json");
+
+    ASSERT_EQ(tokens, nullptr);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_PREPARSER_UNKNOWN_SYMBOL);
+}
+
+
+TEST_F(TestPreparserJSON, UnknownSymbol_2)
+{
+    auto tokens = createTokens(TEST_DATA_IMPROPER_JSON, "preparser_unknown_symbol_2.json");
+
+    ASSERT_EQ(tokens, nullptr);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_PREPARSER_UNKNOWN_SYMBOL);
+}
+
+
+TEST_F(TestPreparserJSON, UnknownSymbol_3)
+{
+    auto tokens = createTokens(TEST_DATA_IMPROPER_JSON, "preparser_unknown_symbol_3.json");
+
+    ASSERT_EQ(tokens, nullptr);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_PREPARSER_UNKNOWN_SYMBOL);
 }
 

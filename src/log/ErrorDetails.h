@@ -33,7 +33,7 @@ static const std::unordered_map<ErrorCode, std::optional<std::string>> ErrorDeta
         "Action requires no JSON object, invoke clear function" },
     { ErrorCode::MANAGER_ROOT_NOT_OBJECT,            std::nullopt },
     { ErrorCode::PREPARSER_STRING_ERROR,             std::nullopt },
-    { ErrorCode::PREPARSER_UNKNOWN_SYMBOL,           std::nullopt },
+    { ErrorCode::JSON_PREPARSER_UNKNOWN_SYMBOL,      std::nullopt },
     { ErrorCode::VALIDATOR_BRACKET_CURLY,            std::nullopt },
     { ErrorCode::VALIDATOR_BRACKET_SQUARE,           std::nullopt },
     { ErrorCode::VALIDATOR_IMPROPER_BEGIN,           std::nullopt },

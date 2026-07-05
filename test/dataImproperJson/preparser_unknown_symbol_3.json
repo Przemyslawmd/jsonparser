@@ -1,0 +1,14 @@
+{
+  "employees": [
+    {
+      "name": qaz,
+      "email": "agata@gmail.com",
+      "age": 33
+    },
+    {
+      "name": "Anna",
+      "email": "anna@gmail.com",
+      "age": false
+    }
+  ]
+}
