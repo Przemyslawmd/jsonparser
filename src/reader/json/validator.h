@@ -34,7 +34,7 @@ static bool checkTokensSequence(const std::vector<Token>& tokens)
 
     std::stack<State> states;
 
-    std::set<TokenType> tokenValue
+    std::set<TokenType> tokenData
     {
         DATA_BOOL,
         DATA_DOUBLE,
@@ -42,18 +42,6 @@ static bool checkTokensSequence(const std::vector<Token>& tokens)
         DATA_NULL,
         DATA_STR
     };
-
-    const std::set<TokenType> afterCurlyOpen
-    {
-        DATA_STR
-    };
-
-    std::set<TokenType> afterSquareOpen
-    {
-        CURLY_OPEN,
-        SQUARE_OPEN,
-    };
-    afterSquareOpen.insert(tokenValue.begin(), tokenValue.end());
 
     const std::set<TokenType> afterClose
     {
@@ -68,19 +56,19 @@ static bool checkTokensSequence(const std::vector<Token>& tokens)
         { ARRAY_PARSING,  { COMMA, SQUARE_CLOSE }}
     };
 
-    std::set<TokenType> afterColon
+    std::set<TokenType> afterColonOrSquareOpen
     {
         CURLY_OPEN,
         SQUARE_OPEN,
     };
-    afterColon.insert(tokenValue.begin(), tokenValue.end());
+    afterColonOrSquareOpen.insert(tokenData.begin(), tokenData.end());
 
     std::map<State, std::set<TokenType>> afterComma
     {
         { OBJECT_PARSING, { DATA_STR }},
         { ARRAY_PARSING,  { CURLY_OPEN, SQUARE_OPEN }}
     };
-    afterComma.at(State::ARRAY_PARSING).insert(tokenValue.begin(), tokenValue.end());
+    afterComma.at(State::ARRAY_PARSING).insert(tokenData.begin(), tokenData.end());
 
     const std::set<TokenType> afterData
     {
@@ -94,74 +82,74 @@ static bool checkTokensSequence(const std::vector<Token>& tokens)
     for (auto it = tokens.begin() + 1; it != tokens.end() - 1; it++) {
 
         State state = states.top();
-        TokenType tokenType = it->type;
-        TokenType nextTokenType = (it + 1)-> type;
+        TokenType type = it->type;
+        TokenType nextType = (it + 1)-> type;
 
-        switch (tokenType)
+        switch (type)
         {
             case CURLY_OPEN:
                 states.push(State::OBJECT_PARSING);
-                if (afterCurlyOpen.contains(nextTokenType)) {
+                if (nextType == DATA_STR) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_CURLY_OPEN, tokenType, nextTokenType);
+                createError(JSON_VALIDATOR_AFTER_CURLY_OPEN, type, nextType);
                 return false;
             case SQUARE_OPEN:
                 states.push(ARRAY_PARSING);
-                if (afterSquareOpen.contains(nextTokenType)) {
+                if (afterColonOrSquareOpen.contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_SQUARE_OPEN, tokenType, nextTokenType);
+                createError(JSON_VALIDATOR_AFTER_SQUARE_OPEN, type, nextType);
                 return false;
             case CURLY_CLOSE:
                 states.pop();
-                if (afterClose.contains(nextTokenType)) {
+                if (afterClose.contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_CURLY_CLOSE, tokenType, nextTokenType);
+                createError(JSON_VALIDATOR_AFTER_CURLY_CLOSE, type, nextType);
                 return false;
             case SQUARE_CLOSE:
                 states.pop();
-                if (afterClose.contains(nextTokenType)) {
+                if (afterClose.contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_SQUARE_CLOSE, tokenType, nextTokenType);
+                createError(JSON_VALIDATOR_AFTER_SQUARE_CLOSE, type, nextType);
                 return false;
             case COMMA:
-                if (afterComma.at(state).contains(nextTokenType)) {
+                if (afterComma.at(state).contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_COMMA, tokenType, nextTokenType);
+                createError(JSON_VALIDATOR_AFTER_COMMA, type, nextType);
                 return false;
             case COLON:
-                if (state != ARRAY_PARSING && afterColon.contains(nextTokenType)) {
+                if (state != ARRAY_PARSING && afterColonOrSquareOpen.contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_COLON, tokenType, nextTokenType);
+                createError(JSON_VALIDATOR_AFTER_COLON, type, nextType);
                 return false;
             case DATA_STR:
-                if (afterString.at(state).contains(nextTokenType)) {
+                if (afterString.at(state).contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_STRING, tokenType, nextTokenType);
+                createError(JSON_VALIDATOR_AFTER_STRING, type, nextType);
                 return false;
             case DATA_INT:
-                if (afterData.contains(nextTokenType)) {
+                if (afterData.contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_INT, tokenType, nextTokenType);
+                createError(JSON_VALIDATOR_AFTER_INT, type, nextType);
                 return false;
             case DATA_DOUBLE:
-                if (afterData.contains(nextTokenType)) {
+                if (afterData.contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_DOUBLE, tokenType, nextTokenType);
+                createError(JSON_VALIDATOR_AFTER_DOUBLE, type, nextType);
                 return false;
             case DATA_BOOL:
-                if (afterData.contains(nextTokenType)) {
+                if (afterData.contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_BOOL, tokenType, nextTokenType);
+                createError(JSON_VALIDATOR_AFTER_BOOL, type, nextType);
                 return false;
         }
     }
