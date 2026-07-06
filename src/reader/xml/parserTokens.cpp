@@ -116,14 +116,6 @@ constexpr std::string STA = "standalone";
 
 std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tokens)
 {
-    uint index = 1;
-    if (tokens.at(index).type != QUESTION) {
-        return 0;
-    }
-    if (tokens.at(index + 1).type != DATA_STR || std::get<std::string>(tokens.at(2).data) != XML) {
-        return std::nullopt;
-    }
-
     auto checkPair = [](const std::vector<Token>& tokens, uint index, const std::string& value)
     {
         return tokens.at(index).type == DATA_STR &&
@@ -131,6 +123,19 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tok
                tokens.at(index + 1).type == EQUAL &&
                tokens.at(index + 2).type == DATA_STR_QUOTA;
     };
+
+    auto checkClosing = [](const std::vector<Token>& tokens, uint index)
+    {
+        return tokens.at(index).type == QUESTION && tokens.at(index + 1).type == ANGLE_CLOSE;
+    };
+
+    uint index = 1;
+    if (tokens.at(index).type != QUESTION) {
+        return 0;
+    }
+    if (tokens.at(index + 1).type != DATA_STR || std::get<std::string>(tokens.at(2).data) != XML) {
+        return std::nullopt;
+    }
 
     index = 3;
     if (!checkPair(tokens, index, VER)) {
@@ -143,10 +148,9 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tok
     elems->emplace_back(ElemType::DECLARATION, XML, std::vector<Token> {{ DATA_STR, VER },
                                                                         { EQUAL, nullptr },
                                                                         { DATA_STR_QUOTA, verValue }});
-
     index = 6;
-    if (tokens.at(index).type == QUESTION && tokens.at(index + 1).type == ANGLE_CLOSE) {
-        return index;
+    if (checkClosing(tokens, index)) {
+        return index + 2;
     }
 
     if (!checkPair(tokens, index, ENC)) {
@@ -157,7 +161,7 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tok
     elems->back().attr.emplace_back(DATA_STR_QUOTA, std::get<std::string>(tokens.at(index + 2).data));
 
     index = 9;
-    if (tokens.at(index).type == QUESTION && tokens.at(index + 1).type == ANGLE_CLOSE) {
+    if (checkClosing(tokens, index)) {
         return index + 2;
     }
 
@@ -173,7 +177,7 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tok
     elems->back().attr.emplace_back(DATA_STR_QUOTA, staValue);
 
     index = 12;
-    if (tokens.at(index).type == QUESTION && tokens.at(index + 1).type == ANGLE_CLOSE) {
+    if (checkClosing(tokens, index)) {
         return index + 2;
     }
     return std::nullopt;
