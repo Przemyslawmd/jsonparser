@@ -288,3 +288,30 @@ TEST_F(TestParserTokensXML, AngleClose)
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_CLOSE_ANGLE);
 }
 
+
+TEST_F(TestParserTokensXML, DeclarationImproperSequence)
+{
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_improper_sequence.xml");
+    ASSERT_EQ(elems, nullptr);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_DECLARATION);
+}
+
+
+TEST_F(TestParserTokensXML, DeclarationImproperValue)
+{
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_improper_value.xml");
+    ASSERT_EQ(elems, nullptr);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_DECLARATION);
+}
+
+
+TEST_F(TestParserTokensXML, DeclarationNoEqual)
+{
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_no_equal.xml");
+    ASSERT_EQ(elems, nullptr);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_DECLARATION);
+}
+

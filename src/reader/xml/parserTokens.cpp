@@ -36,7 +36,12 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
 
     elems = std::make_unique<std::vector<ElemReader>>();
     ParsingState state = ParsingState::STATE_NONE;
+
     std::optional<uint> declarationTokens = parseDeclaration(*tokens);
+    if (!declarationTokens.has_value()) {
+        ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_DECLARATION);
+        return nullptr;
+    }
 
     for (auto token : *tokens | std::views::drop(declarationTokens.value())) {
         switch (token.type)
@@ -133,7 +138,7 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tok
     }
     elems->emplace_back(ElemType::DECLARATION, XML, std::vector<Token> {{ DATA_STR, VER },
                                                                         { EQUAL, nullptr },
-                                                                        { DATA_STR_QUOTA, std::get<std::string>(tokens.at(5).data) }});
+                                                                        { DATA_STR_QUOTA, std::get<std::string>(tokens.at(index + 2).data) }});
 
     index = 6;
     if (tokens.at(index).type == QUESTION && tokens.at(index + 1).type == ANGLE_CLOSE) {
