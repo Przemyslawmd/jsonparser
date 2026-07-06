@@ -9,8 +9,6 @@
 
 using namespace xml;
 
-//void checkElem(const ElemReader& elem, ElemType type, const std::string& name, bool attrs
-
 class TestParserTokensXML : public TestBaseXML {};
 
 
@@ -142,14 +140,17 @@ TEST_F(TestParserTokensXML, Test_File_5_attrs)
     uint index = 0;
     ASSERT_EQ(elems->at(index).type, ElemType::DECLARATION);
     ASSERT_EQ(elems->at(index).name, "xml");
-    ASSERT_EQ(elems->at(index).attr.size(), 6);
+    ASSERT_EQ(elems->at(index).attr.size(), 9);
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[0].data), "version");
     ASSERT_EQ(elems->at(index).attr[1].type, TokenType::EQUAL);
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[2].data), "1.0");
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[3].data), "encoding");
     ASSERT_EQ(elems->at(index).attr[4].type, TokenType::EQUAL);
     ASSERT_EQ(std::get<std::string>(elems->at(index).attr[5].data), "UTF-8");
-    
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[6].data), "standalone");
+    ASSERT_EQ(elems->at(index).attr[7].type, TokenType::EQUAL);
+    ASSERT_EQ(std::get<std::string>(elems->at(index).attr[8].data), "yes");
+
     index++;
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
     ASSERT_EQ(elems->at(index).name, "city");

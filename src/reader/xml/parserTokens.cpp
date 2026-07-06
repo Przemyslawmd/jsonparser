@@ -107,56 +107,61 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
 constexpr std::string XML = "xml";
 constexpr std::string VER = "version";
 constexpr std::string ENC = "encoding";
+constexpr std::string STA = "standalone";
 
 std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tokens)
 {
-    if (tokens.at(1).type != QUESTION) {
+    uint index = 1;
+    if (tokens.at(index).type != QUESTION) {
         return 0;
     }
-    if (tokens.at(2).type != DATA_STR || std::get<std::string>(tokens.at(2).data) != XML) {
+    if (tokens.at(index + 1).type != DATA_STR || std::get<std::string>(tokens.at(2).data) != XML) {
         return std::nullopt;
     }
 
-    if (tokens.at(3).type != DATA_STR || 
-        std::get<std::string>(tokens.at(3).data) != VER || 
-        tokens.at(4).type != EQUAL || 
-        tokens.at(5).type != DATA_STR_QUOTA) {
-            return std::nullopt;
-    }
-    elems->emplace_back(ElemType::DECLARATION, XML, std::vector<Token> {{ TokenType::DATA_STR, VER }, 
-                                                                        { TokenType::EQUAL, nullptr }, 
-                                                                        { TokenType::DATA_STR_QUOTA, std::get<std::string>(tokens.at(5).data) }});
-
-    const auto checkAttrs = [](const std::vector<Token>& tokens, uint questionIndex) 
+    auto checkPair = [](const std::vector<Token>& tokens, uint index, const std::string& value)
     {
-        return tokens.at(questionIndex).type == QUESTION && tokens.at(questionIndex + 1).type == ANGLE_CLOSE;
+        return tokens.at(index).type == DATA_STR &&
+               std::get<std::string>(tokens.at(index).data) == value &&
+               tokens.at(index + 1).type == EQUAL &&
+               tokens.at(index + 2).type == DATA_STR_QUOTA;
     };
 
-    uint countOfAttrs;
-    if (checkAttrs(tokens, 6)) {
-        countOfAttrs = 1;
-    }
-    else if (checkAttrs(tokens, 9)) {
-        if (tokens.at(6).type != DATA_STR || 
-            std::get<std::string>(tokens.at(6).data) != ENC || 
-            tokens.at(7).type != EQUAL || 
-            tokens.at(8).type != DATA_STR_QUOTA) {
-                return std::nullopt;
-        }
-        elems->back().attr.emplace_back(TokenType::DATA_STR, ENC);
-        elems->back().attr.emplace_back(TokenType::EQUAL, nullptr);
-        elems->back().attr.emplace_back(TokenType::DATA_STR_QUOTA, std::get<std::string>(tokens.at(8).data));
-        return 11;
-    }
-    else if (checkAttrs(tokens, 12)) {
-        countOfAttrs = 3;
-    }
-    else {
+    index = 3;
+    if (!checkPair(tokens, index, VER)) {
         return std::nullopt;
     }
+    elems->emplace_back(ElemType::DECLARATION, XML, std::vector<Token> {{ DATA_STR, VER },
+                                                                        { EQUAL, nullptr },
+                                                                        { DATA_STR_QUOTA, std::get<std::string>(tokens.at(5).data) }});
 
-    if (countOfAttrs == 3) {
-        return 14;
+    index = 6;
+    if (tokens.at(index).type == QUESTION && tokens.at(index + 1).type == ANGLE_CLOSE) {
+        return index;
+    }
+    
+    if (!checkPair(tokens, index, ENC)) {
+        return std::nullopt;
+    }
+    elems->back().attr.emplace_back(DATA_STR, ENC);
+    elems->back().attr.emplace_back(EQUAL, nullptr);
+    elems->back().attr.emplace_back(DATA_STR_QUOTA, std::get<std::string>(tokens.at(index + 2).data));
+
+    index = 9;
+    if (tokens.at(index).type == QUESTION && tokens.at(index + 1).type == ANGLE_CLOSE) {
+        return index + 2;
+    }
+
+    if (!checkPair(tokens, index, STA)) {
+        return std::nullopt;
+    }
+    elems->back().attr.emplace_back(DATA_STR, STA);
+    elems->back().attr.emplace_back(EQUAL, nullptr);
+    elems->back().attr.emplace_back(DATA_STR_QUOTA, std::get<std::string>(tokens.at(index + 2).data));
+
+    index = 12;
+    if (tokens.at(index).type == QUESTION && tokens.at(index + 1).type == ANGLE_CLOSE) {
+        return index + 2;
     }
     return std::nullopt;
 }
