@@ -31,8 +31,8 @@ public:
     std::optional<std::string> objectToJsonString();
     std::optional<std::string> objectToXmlString();
 
-    bool loadJsonObject(const NodeApi&);
-    bool isJsonObject() const;
+    bool loadObject(const NodeApi&);
+    bool isObject() const;
 
     void clear();
 

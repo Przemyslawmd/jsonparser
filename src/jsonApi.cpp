@@ -27,14 +27,14 @@ std::optional<std::string> JsonApi::objectToXmlString()
     return manager->objectToXmlString();
 }
 
-bool JsonApi::loadJsonObject(const NodeApi& node)
+bool JsonApi::loadObject(const NodeApi& node)
 {
-    return manager->loadJsonObject(node);
+    return manager->loadObject(node);
 }
 
-bool JsonApi::isJsonObject()
+bool JsonApi::isObject()
 {
-    return manager->isJsonObject();
+    return manager->isObject();
 }
 
 void JsonApi::clear()

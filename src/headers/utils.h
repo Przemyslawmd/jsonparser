@@ -32,24 +32,17 @@ Node createNode(const NodeApi& node)
 }
 
 
-NodeType getNodeApiType(const NodeApi& node)
+template <typename T, typename U>
+concept ConceptNodeType = std::is_same<T, Node>::value && std::is_same<U, size_t>::value ||
+                          std::is_same<T, NodeApi>::value && std::is_same<U, std::string>::value;
+
+template <typename T, typename U> requires ConceptNodeType<T, U>
+NodeType getNodeType(const T& node)
 {
-    if (std::holds_alternative<std::map<std::string, NodeApi>>(node.value)) {
+    if (std::holds_alternative<std::map<U, T>>(node.value)) {
         return NodeType::OBJECT;
     }
-    if (std::holds_alternative<std::vector<NodeApi>>(node.value)) {
-        return NodeType::ARRAY;
-    }
-    return NodeType::SIMPLE;
-}
-
-
-NodeType getNodeType(const Node& node)
-{
-    if (std::holds_alternative<std::map<size_t, Node>>(node.value)) {
-        return NodeType::OBJECT;
-    }
-    if (std::holds_alternative<std::vector<Node>>(node.value)) {
+    if (std::holds_alternative<std::vector<T>>(node.value)) {
         return NodeType::ARRAY;
     }
     return NodeType::SIMPLE;

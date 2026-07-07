@@ -125,7 +125,7 @@ std::optional<std::string> Manager::objectToXmlString()
 }
 
 
-bool Manager::loadJsonObject(const NodeApi& node)
+bool Manager::loadObject(const NodeApi& node)
 {
     if (root != nullptr) {
         ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
@@ -143,7 +143,7 @@ bool Manager::loadJsonObject(const NodeApi& node)
 }
 
 
-bool Manager::isJsonObject() const
+bool Manager::isObject() const
 {
     return isRootEmpty() == false;
 }
@@ -167,7 +167,7 @@ bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string
     }
     uint32_t keyID = optKeyID.value();
 
-    NodeType newNodeType = getNodeApiType(newNode);
+    NodeType newNodeType = getNodeType<NodeApi, std::string>(newNode);
     if (newNodeType == NodeType::SIMPLE) {
         obj->emplace(keyID, createNode(newNode));
     }
@@ -195,7 +195,7 @@ bool Manager::addNodeIntoArray(const std::vector<Path>& path, const NodeApi& new
         return false;
     }
 
-    NodeType newNodeType = getNodeApiType(newNode);
+    NodeType newNodeType = getNodeType<NodeApi, std::string>(newNode);
 
     if (newNodeType == NodeType::SIMPLE) {
         arr->emplace_back(createNode(newNode));
@@ -223,7 +223,7 @@ bool Manager::insertNodeIntoArray(const std::vector<Path>& path, size_t index, c
         return false;
     }
 
-    NodeType newNodeType = getNodeApiType(newNode);
+    NodeType newNodeType = getNodeType<NodeApi, std::string>(newNode);
     if (newNodeType == NodeType::SIMPLE) {
         arr->insert(arr->begin() + index, createNode(newNode));
         return true;
@@ -253,7 +253,7 @@ bool Manager::changeNodeInObject(const std::vector<Path>& path, const std::strin
         return false;
     }
 
-    NodeType nodeType = getNodeApiType(newNode);
+    NodeType nodeType = getNodeType<NodeApi, std::string>(newNode);
     if (nodeType == NodeType::SIMPLE) {
         obj->at(keyID) = createNode(newNode);
         return true;
@@ -285,7 +285,7 @@ bool Manager::changeNodeInArray(const std::vector<Path>& path, size_t index, con
         return false;
     }
 
-    NodeType nodeType = getNodeApiType(newNode);
+    NodeType nodeType = getNodeType<NodeApi, std::string>(newNode);
     if (nodeType == NodeType::SIMPLE) {
         arr->at(index) = createNode(newNode);
     }
@@ -315,7 +315,7 @@ bool Manager::removeNodeFromObject(const std::vector<Path>& path, const std::str
     }
 
     Node nodeToRemove = obj->at(keyID);
-    NodeType nodeType = getNodeType(nodeToRemove);
+    NodeType nodeType = getNodeType<Node, size_t>(nodeToRemove);
 
     if (nodeType == NodeType::OBJECT) {
         const auto& objToRemove = std::get<ObjectNode>(obj->at(keyID).value);
@@ -343,7 +343,7 @@ bool Manager::removeNodeFromArray(const std::vector<Path>& path, size_t index)
     }
 
     Node nodeToRemove = arr->at(index);
-    NodeType nodeType = getNodeType(nodeToRemove);
+    NodeType nodeType = getNodeType<Node, size_t>(nodeToRemove);
 
     if (nodeType == NodeType::OBJECT) {
         const auto& objToRemove = std::get<ObjectNode>(arr->at(index).value);
@@ -450,7 +450,7 @@ void Manager::addObjectInternally(ObjectNode& obj, const NodeApi& newNode)
         auto optKeyID = keyMapper->createKeyID(keyStr, mapID);
         uint32_t keyID = optKeyID.value();
 
-        NodeType newNodeType = getNodeApiType(val);
+        NodeType newNodeType = getNodeType<NodeApi, std::string>(val);
         if (newNodeType == NodeType::SIMPLE) {
             obj.emplace(keyID, createNode(val));
         }
@@ -469,7 +469,7 @@ void Manager::addObjectInternally(ObjectNode& obj, const NodeApi& newNode)
 void Manager::addArrayInternally(ArrayNode& arr, const NodeApi& newNode)
 {
     for (auto& val : std::get<ArrayNodeApi>(newNode.value)) {
-        NodeType newNodeType = getNodeApiType(val);
+        NodeType newNodeType = getNodeType<NodeApi, std::string>(val);
         if (newNodeType == NodeType::SIMPLE) {
             arr.emplace_back(createNode(val));
         }
@@ -527,7 +527,7 @@ Manager::getObjectAndKeyIDFromPath(const std::vector<Path>& path, const std::str
 
 void Manager::checkObjectToRemoveKeyID(const Node& node)
 {
-    NodeType nodeType = getNodeType(node);
+    NodeType nodeType = getNodeType<Node, size_t>(node);
     if (nodeType == NodeType::OBJECT) {
         const auto& objToRemove = std::get<ObjectNode>(node.value);
         traverseObjectToRemoveKeyID(objToRemove);

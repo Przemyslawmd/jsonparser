@@ -26,8 +26,8 @@ public:
     bool parseXmlString(const std::string& file);
     std::optional<std::string> objectToXmlString();
 
-    bool loadJsonObject(const NodeApi&);
-    bool isJsonObject();
+    bool loadObject(const NodeApi&);
+    bool isObject();
 
     void clear();
 

@@ -88,7 +88,7 @@ TEST_F(ApiOtherActions, LoadJsonObject_1)
     root.emplace("person", internalObject);
 
     auto api = std::make_unique<JsonApi>();
-    api->loadJsonObject(NodeApi{ .value = root });
+    api->loadObject(NodeApi{ .value = root });
 
     std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getContentFromFile(TEST_DATA_API, "load_json_object_1.json");
@@ -122,7 +122,7 @@ TEST_F(ApiOtherActions, LoadJsonObject_2)
     root.emplace("employees", mainArray);
 
     auto api = std::make_unique<JsonApi>();
-    api->loadJsonObject(NodeApi{ .value = root });
+    api->loadObject(NodeApi{ .value = root });
 
     std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getContentFromFile(TEST_DATA_API, "load_json_object_2.json");
@@ -135,9 +135,9 @@ TEST_F(ApiOtherActions, LoadJsonObject_Error)
     std::vector<NodeApi> arrayNode{ { 1 }, { 2 }, { 3 } };
 
     auto api = std::make_unique<JsonApi>();
-    bool result = api->loadJsonObject(NodeApi{ .value = arrayNode });
+    bool result = api->loadObject(NodeApi{ .value = arrayNode });
     ASSERT_FALSE(result);
-    ASSERT_FALSE(api->isJsonObject());
+    ASSERT_FALSE(api->isObject());
 
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_ROOT_NOT_OBJECT);
