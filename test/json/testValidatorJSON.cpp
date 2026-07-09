@@ -27,7 +27,7 @@ TEST(ValidatorTest, ImproperBegin)
 {
     makeValidatorError("improper_begin.json");
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::VALIDATOR_IMPROPER_BEGIN);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_VALIDATOR_IMPROPER_BEGIN);
 }
 
 
@@ -35,7 +35,7 @@ TEST(ValidatorTest, ImproperEnd)
 {
     makeValidatorError("improper_end.json");
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::VALIDATOR_IMPROPER_END);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_VALIDATOR_IMPROPER_END);
 }
 
 

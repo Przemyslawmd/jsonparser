@@ -176,22 +176,22 @@ static ErrorCode validateBrackets(const std::vector<Token>& tokens)
                 continue;
             case CURLY_CLOSE:
                 if (--curlyCounter < 0) {
-                    return VALIDATOR_BRACKET_CURLY;
+                    return JSON_VALIDATOR_BRACKET_CURLY;
                 }
                 continue;
             case SQUARE_CLOSE:
                 if (--squareCounter < 0) {
-                    return VALIDATOR_BRACKET_SQUARE;
+                    return JSON_VALIDATOR_BRACKET_SQUARE;
                 }
                 continue;
         }
     }
 
     if (curlyCounter != 0) {
-        return VALIDATOR_BRACKET_CURLY;
+        return JSON_VALIDATOR_BRACKET_CURLY;
     }
     if (squareCounter != 0) {
-        return VALIDATOR_BRACKET_SQUARE;
+        return JSON_VALIDATOR_BRACKET_SQUARE;
     }
     return NO_ERROR;
 }
@@ -200,11 +200,11 @@ static ErrorCode validateBrackets(const std::vector<Token>& tokens)
 static bool validateTokens(const std::vector<Token>& tokens)
 {
     if (tokens.front().type != TokenType::CURLY_OPEN) {
-        ErrorStorage::putError(ErrorCode::VALIDATOR_IMPROPER_BEGIN);
+        ErrorStorage::putError(ErrorCode::JSON_VALIDATOR_IMPROPER_BEGIN);
         return false;
     }
     if (tokens.back().type != TokenType::CURLY_CLOSE) {
-        ErrorStorage::putError(ErrorCode::VALIDATOR_IMPROPER_END);
+        ErrorStorage::putError(ErrorCode::JSON_VALIDATOR_IMPROPER_END);
         return false;
     }
 
