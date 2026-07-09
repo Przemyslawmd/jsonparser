@@ -11,10 +11,6 @@
 #include "manager.h"
 
 
-/* Path contains a key for an object (map) or index for an array */
-using Path = std::variant<std::string, size_t>;
-
-
 class JsonApi
 {
 public:

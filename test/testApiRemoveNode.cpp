@@ -74,7 +74,7 @@ TEST_F(ApiRemoveNode, RemoveArrayFromObject)
     auto api = prepareApiWithJson("test_7.json");
 
     const auto begin = high_resolution_clock::now();
-    bool result = api->removeNodeFromObject({ "employees", size_t(1) }, "data");
+    bool result = api->removeNodeFromObject({ "employees", uint(1) }, "data");
     const auto end = high_resolution_clock::now();
     ASSERT_TRUE(result);
     showDuration(begin, end);
@@ -89,13 +89,13 @@ TEST_F(ApiRemoveNode, RemoveSimpleNodeFromArray)
 {
     auto api = prepareApiWithJson("test_7.json");
 
-    bool result = api->removeNodeFromArray({ "employees", size_t(0), "data", size_t(0) }, 1);
+    bool result = api->removeNodeFromArray({ "employees", uint(0), "data", uint(0) }, 1);
     ASSERT_TRUE(result);
 
-    result = api->removeNodeFromArray({ "employees", size_t(0), "data", size_t(1) }, 0);
+    result = api->removeNodeFromArray({ "employees", uint(0), "data", uint(1) }, 0);
     ASSERT_TRUE(result);
 
-    result = api->removeNodeFromArray({ "employees", size_t(1), "data", size_t(0) }, 1);
+    result = api->removeNodeFromArray({ "employees", uint(1), "data", uint(0) }, 1);
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
@@ -109,7 +109,7 @@ TEST_F(ApiRemoveNode, RemoveObjectFromArray)
     auto api = prepareApiWithJson("test_6.json");
 
     const auto begin = high_resolution_clock::now();
-    bool result = api->removeNodeFromArray({ "employees" }, size_t(0));
+    bool result = api->removeNodeFromArray({ "employees" }, 0);
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
@@ -125,7 +125,7 @@ TEST_F(ApiRemoveNode, RemoveArrayFromArray)
     auto api = prepareApiWithJson("test_7.json");
 
     const auto begin = high_resolution_clock::now();
-    bool result = api->removeNodeFromArray({ "employees", size_t(0), "data" }, size_t(1));
+    bool result = api->removeNodeFromArray({ "employees", uint(0), "data" }, 1);
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();

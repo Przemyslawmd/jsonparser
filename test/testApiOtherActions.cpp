@@ -28,7 +28,7 @@ TEST_F(ApiOtherActions, ClearApi)
     std::vector<NodeApi> newArray{ { arr1 }, { arr2 }, { arr3 } };
 
     const auto begin = high_resolution_clock::now();
-    bool result = api->addNodeIntoArray({ "employees", size_t(1), "data" }, { newArray });
+    bool result = api->addNodeIntoArray({ "employees", uint(1), "data" }, { newArray });
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
@@ -40,11 +40,11 @@ TEST_F(ApiOtherActions, ClearApi)
     result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
 
-    result = api->changeNodeInArray({ "employees", size_t(0), "data", size_t(1) }, 2, NodeApi{ .value = 10 });
+    result = api->changeNodeInArray({ "employees", uint(0), "data", uint(1) }, 2, NodeApi{ .value = 10 });
     ASSERT_TRUE(result);
-    result = api->changeNodeInObject({ "employees", size_t(1), "employees", size_t(0) }, "name", NodeApi{ .value = "Maria" });
+    result = api->changeNodeInObject({ "employees", uint(1), "employees", uint(0) }, "name", NodeApi{ .value = "Maria" });
     ASSERT_TRUE(result);
-    result = api->changeNodeInArray({ "employees", size_t(1), "data", size_t(2), size_t(0), "numbers" }, 0, NodeApi{ .value = 0.12 });
+    result = api->changeNodeInArray({ "employees", uint(1), "data", uint(2), uint(0), "numbers" }, 0, NodeApi{ .value = 0.12 });
     ASSERT_TRUE(result);
 
     json = api->objectToJsonString().value();
@@ -56,13 +56,13 @@ TEST_F(ApiOtherActions, ClearApi)
     result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
 
-    result = api->removeNodeFromArray({ "employees", size_t(0), "data", size_t(0) }, 1);
+    result = api->removeNodeFromArray({ "employees", uint(0), "data", uint(0) }, 1);
     ASSERT_TRUE(result);
-    result = api->removeNodeFromArray({ "employees", size_t(0), "data", size_t(1) }, 0);
+    result = api->removeNodeFromArray({ "employees", uint(0), "data", uint(1) }, 0);
     ASSERT_TRUE(result);
-    result = api->removeNodeFromArray({ "employees", size_t(1), "data", size_t(0) }, 1);
+    result = api->removeNodeFromArray({ "employees", uint(1), "data", uint(0) }, 1);
     ASSERT_TRUE(result);
-    result = api->removeNodeFromArray({ "employees", size_t(1), "data" }, 1);
+    result = api->removeNodeFromArray({ "employees", uint(1), "data" }, 1);
     ASSERT_TRUE(result);
 
     json = api->objectToJsonString().value();
@@ -98,17 +98,17 @@ TEST_F(ApiOtherActions, LoadJsonObject_1)
 
 TEST_F(ApiOtherActions, LoadJsonObject_2)
 {
-    std::vector<NodeApi> array_1_1{ { 1 }, { 2 }, { 3 } };
-    std::vector<NodeApi> array_1_2{ { 4 }, { 5 }, { 6 } };
-    std::vector<NodeApi> array_1{ { array_1_1 }, { array_1_2 } };
+    std::vector<NodeApi> array_1_1{{ 1 }, { 2 }, { 3 }};
+    std::vector<NodeApi> array_1_2{{ 4 }, { 5 }, { 6 }};
+    std::vector<NodeApi> array_1{{ array_1_1 }, { array_1_2 }};
 
     std::map<std::string, NodeApi> object_1;
     object_1.emplace("name", "Agata");
     object_1.emplace("data", array_1);
 
-    std::vector<NodeApi> array_2_1{ { "a" }, { "b" } };
-    std::vector<NodeApi> array_2_2{ { "c d e" } };
-    std::vector<NodeApi> array_2{ { array_2_1 }, { array_2_2 } };
+    std::vector<NodeApi> array_2_1{{ "a" }, { "b" }};
+    std::vector<NodeApi> array_2_2{{ "c d e" }};
+    std::vector<NodeApi> array_2{{ array_2_1 }, { array_2_2 }};
 
     std::map<std::string, NodeApi> object_2;
     object_2.emplace("name", "Anna");
@@ -132,7 +132,7 @@ TEST_F(ApiOtherActions, LoadJsonObject_2)
 
 TEST_F(ApiOtherActions, LoadJsonObject_Error)
 {
-    std::vector<NodeApi> arrayNode{ { 1 }, { 2 }, { 3 } };
+    std::vector<NodeApi> arrayNode{{ 1 }, { 2 }, { 3 }};
 
     auto api = std::make_unique<JsonApi>();
     bool result = api->loadObject(NodeApi{ .value = arrayNode });

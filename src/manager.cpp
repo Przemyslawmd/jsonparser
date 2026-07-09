@@ -409,8 +409,8 @@ ComplexNode Manager::getNodeFromPath(const std::vector<Path>& path)
                 return nullptr;
             }
         }
-        else if (nodeType == NodeType::ARRAY && std::holds_alternative<size_t>(pathKey)) {
-            size_t index = std::get<size_t>(pathKey);
+        else if (nodeType == NodeType::ARRAY && std::holds_alternative<uint>(pathKey)) {
+            size_t index = std::get<uint>(pathKey);
             if (index >= arr->size()) {
                 ErrorStorage::putError(ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
                 return nullptr;
