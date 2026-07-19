@@ -169,11 +169,9 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tok
     if (verValue != "1.0" && verValue != "1.1") {
         return std::nullopt;
     }
-    elems->emplace_back(ElemType::DECLARATION, XML, std::vector<Token> {{ DATA_STR, VER },
-                                                                        { EQUAL, nullptr },
-                                                                        { DATA_STR_QUOTA, verValue }});
-    
+    elems->emplace_back(ElemType::DECLARATION, XML);
     elems->back().attrs.emplace(VER, verValue);
+
     index = 6;
     if (checkClosing(tokens, index)) {
         return index + 2;
@@ -182,10 +180,6 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tok
     if (!checkPair(tokens, index, ENC)) {
         return std::nullopt;
     }
-    elems->back().attr.emplace_back(DATA_STR, ENC);
-    elems->back().attr.emplace_back(EQUAL, nullptr);
-    elems->back().attr.emplace_back(DATA_STR_QUOTA, std::get<std::string>(tokens.at(index + 2).data));
-
     elems->back().attrs.emplace(ENC, std::get<std::string>(tokens.at(index + 2).data));
 
     index = 9;
@@ -200,10 +194,6 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tok
     if (staValue != "yes" && staValue != "no") {
         return std::nullopt;
     }
-    elems->back().attr.emplace_back(DATA_STR, STA);
-    elems->back().attr.emplace_back(EQUAL, nullptr);
-    elems->back().attr.emplace_back(DATA_STR_QUOTA, staValue);
-
     elems->back().attrs.emplace(STA, std::get<std::string>(tokens.at(index + 2).data));
 
     index = 12;
