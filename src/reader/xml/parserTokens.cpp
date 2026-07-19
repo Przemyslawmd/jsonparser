@@ -92,11 +92,16 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
                    auto& contentName = std::get<std::string>(elems->back().value);
                    elems->back().value = contentName + " " + std::get<std::string>(token.data);
                 }
+                else {
+                    ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_DATA_STR);
+                    return nullptr;
+                }
                 break;
             case DATA_STR_QUOTA:
-                if (state == STATE_TAG_OPEN_NAMED) {
+                if (state == STATE_TAG_OPEN_NAMED || state == STATE_EQUAL) {
                     auto& tag = elems->back();
                     tag.attr.emplace_back(token.type, token.data);
+                    state = STATE_TAG_OPEN_NAMED;
                 }
                 break;
             case DATA_INT:
@@ -109,6 +114,7 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
             case EQUAL:
                 auto& tag = elems->back();
                 tag.attr.emplace_back(token.type, token.data);
+                state = STATE_EQUAL;
                 break;
         }
     }

@@ -66,17 +66,6 @@ TEST_F(TestValidatorXML, MismatchedTag_4)
 }
 
 
-TEST_F(TestValidatorXML, Attr_1)
-{
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "attrs_1.xml");
-    ASSERT_NE(elems, nullptr);
-    bool res = ValidateElems(*elems);
-    ASSERT_FALSE(res);
-    const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_VALIDATOR_ATTR);
-}
-
-
 TEST_F(TestValidatorXML, Attr_2)
 {
     auto elems = createElements(TEST_DATA_IMPROPER_XML, "attrs_2.xml");

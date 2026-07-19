@@ -25,6 +25,8 @@ enum class ParsingState
     STATE_TAG_CLOSE_PARSING,
     STATE_TAG_COMPLETED,
 
+    STATE_EQUAL,
+
     STATE_CONTENT
 };
 

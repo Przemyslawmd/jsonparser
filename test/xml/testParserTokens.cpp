@@ -325,11 +325,20 @@ TEST_F(TestParserTokensXML, DeclarationImproperVersion)
 }
 
 
-TEST_F(TestParserTokensXML, DeclarationImproperStandalone)
+TEST_F(TestParserTokensXML, Error_File_Declaration_Standalone)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_improper_standalone.xml");
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_standalone.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_DECLARATION);
+}
+
+
+TEST_F(TestParserTokensXML, Error_File_Attrs_1)
+{
+    auto elems = createElements(TEST_DATA_IMPROPER_XML, "attrs_1.xml");
+    ASSERT_EQ(elems, nullptr);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_DATA_STR);
 }
 
