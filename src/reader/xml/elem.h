@@ -25,16 +25,16 @@ enum class ElemType
 struct ElemReader
 {
     ElemReader(ElemType type, const std::string& name, std::vector<xml::Token>&& attr) : 
-               type(type), name(name), value(nullptr), attr(std::move(attr)) {}
+               type(type), name(name), value(nullptr), attr(std::move(attr)), attrs({})  {}
 
     ElemReader(ElemType type, const std::string& name) : 
-               type(type), name(name), value(nullptr), attr({}) {}
+               type(type), name(name), value(nullptr), attr({}), attrs({}) {}
 
     ElemReader(ElemType type, const std::string& name, VariantData& value) : 
-               type(type), name(name), value(value), attr({}) {}
+               type(type), name(name), value(value), attr({}), attrs({}) {}
 
     ElemReader(ElemType type, VariantData& value) : 
-               type(type), name({}), value(value), attr({}) {}
+               type(type), name({}), value(value), attr({}), attrs({}) {}
 
     ElemType type;
     std::string name;

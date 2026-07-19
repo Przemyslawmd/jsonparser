@@ -14,6 +14,7 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<ElemReader>& e
     mapIDStack.push(0);
     pushContext(document.get(), elems.at(firstTag).name);
     attrs = &elems.at(firstTag).attr;
+    attrs_ = &elems.at(firstTag).attrs;
 
     using enum ElemType;
     for (auto& elem : elems | std::views::drop(firstTag + 1)) {
@@ -21,6 +22,7 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<ElemReader>& e
             case TAG_OPEN:
                 processTagOpen(elem.name);
                 attrs = &elem.attr;
+                attrs_ = &elem.attrs;
                 break;
             case TAG_CLOSE:
                 popContext();
@@ -51,9 +53,14 @@ void ObjectCreator::processTagOpen(const std::string& currKeyStr)
     obj->emplace(prevKey, ObjectNode());
     auto *currNode = std::get_if<ObjectNode>(&obj->at(prevKey).value);
 
-    if (attrs && !attrs->empty()) {
-        insertAttrs(*currNode, *attrs);
+    if (attrs_ && !attrs_->empty()) {
+        insertAttrs_(*currNode, *attrs_);
     }
+
+
+    //if (attrs && !attrs->empty()) {
+    //    insertAttrs(*currNode, *attrs);
+    //}
     pushContext(currNode, currKeyStr);
 }
 
@@ -93,6 +100,17 @@ void ObjectCreator::insertAttrs(ObjectNode& node, std::vector<xml::Token>& attrs
     }
 }
 
+void ObjectCreator::insertAttrs_(ObjectNode& node, std::map<std::string, std::string>& attrs)
+{
+    std::optional<uint> keyId;
+
+    for (const auto& [key, value] : attrs) {
+        //if (i % 2 == 0) {
+        keyId = keyMapper.createKeyIDAttr(key, mapIDStack.top());
+        node.emplace(keyId.value(), value);
+        //}
+    }
+}
 
 void ObjectCreator::pushContext(NodePtr node, const std::string& keyStr)
 {
