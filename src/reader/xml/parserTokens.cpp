@@ -17,6 +17,7 @@ const std::map<ParsingState, ParsingState> angleCloseTransision =
 {
         { STATE_TAG_OPEN_NAMED,    STATE_TAG_COMPLETED },
         { STATE_TAG_CLOSE_NAMED,   STATE_TAG_COMPLETED },
+        { STATE_ATTR_VALUE,        STATE_TAG_COMPLETED },
 };
 
 
@@ -84,9 +85,10 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
                     state = STATE_CONTENT;
                     elems->emplace_back(ElemType::CONTENT, std::get<std::string>(token.data), token.data);
                 }
-                else if (state == STATE_TAG_OPEN_NAMED) {
+                else if (state == STATE_ATTR_VALUE || state == STATE_TAG_OPEN_NAMED) {
                     auto& tag = elems->back();
                     tag.attr.emplace_back(token.type, token.data);
+                    state = STATE_ATTR_KEY;
                 }
                 else if (state == STATE_CONTENT) {
                    auto& contentName = std::get<std::string>(elems->back().value);
@@ -98,10 +100,10 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
                 }
                 break;
             case DATA_STR_QUOTA:
-                if (state == STATE_EQUAL) {
+                if (state == STATE_ATTR_EQUAL) {
                     auto& tag = elems->back();
                     tag.attr.emplace_back(token.type, token.data);
-                    state = STATE_TAG_OPEN_NAMED;
+                    state = STATE_ATTR_VALUE;
                     break;
                 }
                 ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_DATA_STR_QUOTA);
@@ -114,9 +116,13 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
                 }
                 break;
             case EQUAL:
+                if (state != STATE_ATTR_KEY) {
+                    ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_EQUAL);
+                    return nullptr;
+                }
                 auto& tag = elems->back();
                 tag.attr.emplace_back(token.type, token.data);
-                state = STATE_EQUAL;
+                state = STATE_ATTR_EQUAL;
                 break;
         }
     }
