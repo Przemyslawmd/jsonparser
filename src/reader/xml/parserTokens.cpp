@@ -12,10 +12,11 @@ using namespace xml;
 using enum ParsingState;
 using enum TokenType;
 
+
 const std::map<ParsingState, ParsingState> angleCloseTransision = 
 {
-        { STATE_TAG_OPEN_PARSING,    STATE_TAG_OPEN_COMPLETED },
-        { STATE_TAG_CLOSE_NAMED,     STATE_TAG_CLOSE_COMPLETED },
+        { STATE_TAG_OPEN_NAMED,    STATE_TAG_COMPLETED },
+        { STATE_TAG_CLOSE_NAMED,   STATE_TAG_COMPLETED },
 };
 
 
@@ -47,11 +48,11 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
         switch (token.type)
         {
             case ANGLE_OPEN:
-                if (state == STATE_TAG_INITIAL || state == STATE_TAG_OPEN_PARSING) {
+                if (state == STATE_ANGLE_OPEN || state == STATE_TAG_OPEN_NAMED) {
                     ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_OPEN_ANGLE);
                     return nullptr;
                 }
-                state = STATE_TAG_INITIAL;
+                state = STATE_ANGLE_OPEN;
                 break;
             case ANGLE_CLOSE:
                 if (!angleCloseTransision.contains(state)) {
@@ -61,7 +62,7 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
                 state = angleCloseTransision.at(state);
                 break;
             case SLASH:
-                if (state != STATE_TAG_INITIAL && state != STATE_CONTENT) {
+                if (state != STATE_ANGLE_OPEN && state != STATE_CONTENT) {
                     ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_SLASH);
                     return nullptr;
                 }
@@ -71,20 +72,19 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
                 ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_QUESTION);
                 return nullptr;
             case DATA_STR:
-            case DATA_STR_QUOTA:
-                if (state == STATE_TAG_INITIAL) {
-                    state = STATE_TAG_OPEN_PARSING;
+                if (state == STATE_ANGLE_OPEN) {
+                    state = STATE_TAG_OPEN_NAMED;
                     elems->emplace_back(ElemType::TAG_OPEN, std::get<std::string>(token.data));
                 }
                 else if (state == STATE_TAG_CLOSE_PARSING) {
                     state = STATE_TAG_CLOSE_NAMED;
                     elems->emplace_back(ElemType::TAG_CLOSE, std::get<std::string>(token.data));
                 }
-                else if (state == STATE_TAG_CLOSE_COMPLETED || state == STATE_TAG_OPEN_COMPLETED) {
+                else if (state == STATE_TAG_COMPLETED) {
                     state = STATE_CONTENT;
                     elems->emplace_back(ElemType::CONTENT, std::get<std::string>(token.data), token.data);
                 }
-                else if (state == STATE_TAG_OPEN_PARSING) {
+                else if (state == STATE_TAG_OPEN_NAMED) {
                     auto& tag = elems->back();
                     tag.attr.emplace_back(token.type, token.data);
                 }
@@ -93,9 +93,15 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
                    elems->back().value = contentName + " " + std::get<std::string>(token.data);
                 }
                 break;
+            case DATA_STR_QUOTA:
+                if (state == STATE_TAG_OPEN_NAMED) {
+                    auto& tag = elems->back();
+                    tag.attr.emplace_back(token.type, token.data);
+                }
+                break;
             case DATA_INT:
             case DATA_DOUBLE:
-                if (state == STATE_TAG_CLOSE_COMPLETED || state == STATE_TAG_OPEN_COMPLETED) {
+                if (state == STATE_TAG_COMPLETED) {
                     state = STATE_CONTENT;
                     elems->emplace_back(ElemType::CONTENT, token.data);
                 }
