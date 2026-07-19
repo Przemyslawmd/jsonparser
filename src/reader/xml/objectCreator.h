@@ -27,8 +27,7 @@ public:
 
 private:
     std::stack<NodePtr> nodeStack;
-    std::vector<xml::Token>* attrs;
-    std::map<std::string, std::string>* attrs_;
+    std::map<std::string, std::string>* attrs;
 
     KeyMapper& keyMapper;
     std::stack<uint32_t> mapIDStack;
@@ -41,8 +40,7 @@ private:
     void processTagOpen(const std::string& key);
     void processContent(const std::string& contentName, VariantData& data);
 
-    void insertAttrs(ObjectNode& node, std::vector<xml::Token>& attrs);
-    void insertAttrs_(ObjectNode& node, std::map<std::string, std::string>& attrs);
+    void insertAttrs(ObjectNode& node, std::map<std::string, std::string>& attrs);
 };
 }
 
