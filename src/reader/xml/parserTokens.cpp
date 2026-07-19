@@ -88,10 +88,8 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
                     elems->emplace_back(ElemType::CONTENT, std::get<std::string>(token.data), token.data);
                 }
                 else if (state == STATE_ATTR_VALUE || state == STATE_TAG_OPEN_NAMED) {
-                    auto& tag = elems->back();
-                    tag.attr.emplace_back(token.type, token.data);
-                    state = STATE_ATTR_KEY;
                     attrKey = std::get<std::string>(token.data);
+                    state = STATE_ATTR_KEY;
                 }
                 else if (state == STATE_CONTENT) {
                    auto& contentName = std::get<std::string>(elems->back().value);
@@ -105,7 +103,6 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
             case DATA_STR_QUOTA:
                 if (state == STATE_ATTR_EQUAL) {
                     auto& tag = elems->back();
-                    tag.attr.emplace_back(token.type, token.data);
                     state = STATE_ATTR_VALUE;
                     tag.attrs.emplace(attrKey.value(), std::get<std::string>(token.data));
                     break;
@@ -124,8 +121,6 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
                     ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_EQUAL);
                     return nullptr;
                 }
-                auto& tag = elems->back();
-                tag.attr.emplace_back(token.type, token.data);
                 state = STATE_ATTR_EQUAL;
                 break;
         }
