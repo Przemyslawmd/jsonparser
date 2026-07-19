@@ -39,6 +39,7 @@ struct ElemReader
     ElemType type;
     std::string name;
     std::vector<xml::Token> attr;
+    std::map<std::string, std::string> attrs;
     VariantData value;
 };
 

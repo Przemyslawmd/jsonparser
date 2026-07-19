@@ -45,6 +45,8 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
         return nullptr;
     }
 
+    std::optional<std::string> attrKey = std::nullopt;
+
     for (auto token : *tokens | std::views::drop(declarationTokens.value())) {
         switch (token.type)
         {
@@ -89,6 +91,7 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
                     auto& tag = elems->back();
                     tag.attr.emplace_back(token.type, token.data);
                     state = STATE_ATTR_KEY;
+                    attrKey = std::get<std::string>(token.data);
                 }
                 else if (state == STATE_CONTENT) {
                    auto& contentName = std::get<std::string>(elems->back().value);
@@ -104,6 +107,7 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
                     auto& tag = elems->back();
                     tag.attr.emplace_back(token.type, token.data);
                     state = STATE_ATTR_VALUE;
+                    tag.attrs.emplace(attrKey.value(), std::get<std::string>(token.data));
                     break;
                 }
                 ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_DATA_STR_QUOTA);
