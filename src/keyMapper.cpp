@@ -88,6 +88,18 @@ bool KeyMapper::isAttrKey(uint32_t keyID) const
     return std::count(attrs.begin(), attrs.end(), keyID);
 }
 
+
+void KeyMapper::storeAttrsDec(const std::map<std::string, std::string>&& attrsDec)
+{
+    attrsDeclaration = attrsDec;
+}
+
+
+const std::map<std::string, std::string>& KeyMapper::getAttrsDec() const
+{
+    return attrsDeclaration;
+}
+
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 

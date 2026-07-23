@@ -3,6 +3,7 @@
 
 #include <ranges>
 
+#include "definesXML.h"
 #include "errorCode.h"
 #include "log/ErrorStorage.h"
 
@@ -128,10 +129,6 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
     return std::move(elems);
 }
 
-constexpr std::string XML = "xml";
-constexpr std::string VER = "version";
-constexpr std::string ENC = "encoding";
-constexpr std::string STA = "standalone";
 
 std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tokens)
 {

@@ -6,12 +6,31 @@
 #include <ranges>
 #include <sstream>
 
+#include "definesXML.h"
+
 
 using namespace xml;
 
 std::string Writer::createXmlString(const std::vector<ElemWriter>& elems)
 {
     std::ostringstream stream;
+
+    const auto& attrsDec = keyMapper.getAttrsDec();
+    if (!attrsDec.empty()) {
+        stream << "<?xml ";
+        if (attrsDec.contains(VER)) {
+            stream << VER << "=" << "\"" << attrsDec.at(VER) << "\" ";
+        }
+        if (attrsDec.contains(ENC)) {
+            stream << ENC << "=" << "\"" << attrsDec.at(ENC) << "\" ";
+        }
+        if (attrsDec.contains(STA)) {
+            stream << STA << "=" << "\"" << attrsDec.at(STA) << "\" ";
+        }
+        deleteLastChars(stream, 1);
+        stream << "?>\n";
+    }
+
     for (const auto [idx, elem] : std::views::enumerate(elems))
     {
         switch(elem.type)

@@ -20,6 +20,9 @@ public:
     void removeKey(uint32_t keyID);
     bool isAttrKey(uint32_t keyID) const;
 
+    void storeAttrsDec(const std::map<std::string, std::string>&& attrsDec);
+    const std::map<std::string, std::string>& getAttrsDec() const;
+
     std::optional<std::string> getKeyStr(uint32_t keyID) const;
     std::optional<uint32_t> getKeyID(std::string_view keyStr, uint32_t mapID) const;
 
@@ -30,6 +33,7 @@ private:
 
     std::map<uint32_t, std::string> keyMap;
     std::vector<uint32_t> attrs;
+    std::map<std::string, std::string> attrsDeclaration;
 };
 
 #endif

@@ -8,7 +8,11 @@ using namespace xml;
 
 std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<ElemReader>& elems)
 {
-    uint firstTag = elems.at(0).type == ElemType::DECLARATION ? 1 : 0;
+    uint firstTag = 0;
+    if (elems.front().type == ElemType::DECLARATION) {
+        keyMapper.storeAttrsDec(std::move(elems.front().attrs));
+        firstTag = 1;
+    }
 
     auto document = std::make_unique<ObjectNode>();
     mapIDStack.push(0);

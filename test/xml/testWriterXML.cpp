@@ -28,12 +28,12 @@ protected:
 
         auto begin = std::chrono::high_resolution_clock::now();
         Writer writer(*keyMapper);
-        std::string json = writer.createXmlString(elems);
+        std::string xml = writer.createXmlString(elems);
 
         const auto end = std::chrono::high_resolution_clock::now();
         showDuration(begin, end);
-        std::string jsonExpected = getContentFromFile(TEST_DATA_XML, file);
-        ASSERT_EQ(json, jsonExpected);
+        std::string xmlExpected = getContentFromFile(TEST_DATA_XML, file);
+        ASSERT_EQ(xml, xmlExpected);
     }
 };
 
@@ -71,5 +71,15 @@ TEST_F(TestWriterXML, Test_Content_Few_Words)
 TEST_F(TestWriterXML, Test_Content_Number)
 {
     testWriter("test_content_number_value.xml");
+}
+
+TEST_F(TestWriterXML, Declaration_Two_Values__test_1)
+{
+    testWriter("test_1.xml");
+}
+
+TEST_F(TestWriterXML, Full_Declaration__test_5_attrs)
+{
+    testWriter("test_5_attrs.xml");
 }
 
