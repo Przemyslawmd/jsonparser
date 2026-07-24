@@ -55,7 +55,7 @@ bool Manager::parseJsonString(const std::string& jsonString)
         return false;
     }
 
-    if (json::validateTokens(*tokens) == false) {
+    if (validateTokens(*tokens) == false) {
         return false;
     }
 
@@ -72,10 +72,12 @@ bool Manager::parseJsonString(const std::string& jsonString)
 
 std::optional<std::string> Manager::objectToJsonString()
 {
+    using namespace json;
+
     if (isRootEmpty()) {
         return std::nullopt;
     }
-    const auto writer = std::make_unique<json::Writer>(*keyMapper);
+    const auto writer = std::make_unique<Writer>(*keyMapper);
     return writer->createJsonString(*root);
 }
 
@@ -100,7 +102,7 @@ bool Manager::parseXmlString(const std::string& xmlString)
     if (!elems) {
         return false;
     }
-    if (!xml::ValidateElems(*elems)) {
+    if (!ValidateElems(*elems)) {
         return false;
     }
     const auto objectCreator = std::make_unique<ObjectCreator>(*keyMapper);
@@ -111,16 +113,18 @@ bool Manager::parseXmlString(const std::string& xmlString)
 
 std::optional<std::string> Manager::objectToXmlString()
 {
+    using namespace xml;
+
     if (isRootEmpty()) {
         return std::nullopt;
     }
-    const auto elemsCreator = std::make_unique<xml::ElemWriterCreator>(*keyMapper);
+    const auto elemsCreator = std::make_unique<ElemWriterCreator>(*keyMapper);
     auto elems = elemsCreator->createElems(*root);
     if (elems.empty()) {
         return std::nullopt;
     }
 
-    const auto writer = std::make_unique<xml::Writer>(*keyMapper);
+    const auto writer = std::make_unique<Writer>(*keyMapper);
     return writer->createXmlString(elems);
 }
 

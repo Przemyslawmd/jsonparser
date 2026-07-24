@@ -82,7 +82,7 @@ bool Parser::pushComplexNodeOnStack(const std::string& keyStr, State state)
 
 
 template <typename T> requires SimpleLimit<T>
-bool Parser::processData(const std::string& keyStr, const json::Token& token)
+bool Parser::processData(const std::string& keyStr, const Token& token)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
         auto optKeyID = keyMapper.createKeyID(keyStr, mapIDStack.top());

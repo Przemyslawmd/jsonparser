@@ -39,7 +39,7 @@ protected:
         ErrorStorage::clear();
     }
 
-    std::unique_ptr<std::vector<xml::Token>> createTokens(const std::string& path, const std::string& file)
+    std::unique_ptr<std::vector<Token>> createTokens(const std::string& path, const std::string& file)
     {
         std::string xmlString = getContentFromFile(path, file);
         auto preparser = std::make_unique<Preparser>();
