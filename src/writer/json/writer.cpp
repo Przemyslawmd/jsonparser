@@ -18,9 +18,9 @@ std::string Writer::createJsonString(const ObjectNode& object)
 }
 
 
-void Writer::setIndent(size_t indentStep)
+void Writer::setIndent(uint step)
 {
-    this->indentStep = indentStep;
+    this->indentationStep = step;
 }
 
 
@@ -33,7 +33,7 @@ void Writer::processObjectNode(const ObjectNode& obj)
     incIndent();
 
     for (auto const& [idKey, val] : obj) {
-        std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
+        std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
         auto keyStr = keyMapper.getKeyStr(idKey);
         stream << "\"" << keyStr.value() << "\": ";
         parseData(val);
@@ -41,11 +41,11 @@ void Writer::processObjectNode(const ObjectNode& obj)
     deleteLastChars(stream);
 
     decIndent();
-    if (indent == 0) {
+    if (indentation == 0) {
         stream << '}';
         return;
     }
-    std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
+    std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
     stream << "},\n"; 
 }
 
@@ -56,13 +56,13 @@ void Writer::processArrayNode(const ArrayNode& arr)
     incIndent();
     
     for (auto const& val : arr) {
-        std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
+        std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
         parseData(val);
     }
     deleteLastChars(stream);
 
     decIndent();
-    std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
+    std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
     stream << "],\n";
 }
 
@@ -103,12 +103,12 @@ void Writer::deleteLastChars(std::ostringstream& stream)
 
 void Writer::incIndent()
 {
-    indent += indentStep;
+    indentation += indentationStep;
 }
 
 
 void Writer::decIndent()
 {
-    indent -= indentStep;
+    indentation -= indentationStep;
 }
 

@@ -77,7 +77,9 @@ std::optional<std::string> Manager::objectToJsonString()
     if (isRootEmpty()) {
         return std::nullopt;
     }
-    const auto writer = std::make_unique<Writer>(*keyMapper);
+
+    uint indentation = Settings::getIndentation();
+    const auto writer = std::make_unique<Writer>(*keyMapper, indentation);
     return writer->createJsonString(*root);
 }
 
@@ -124,7 +126,8 @@ std::optional<std::string> Manager::objectToXmlString()
         return std::nullopt;
     }
 
-    const auto writer = std::make_unique<Writer>(*keyMapper);
+    uint indentation = Settings::getIndentation();
+    const auto writer = std::make_unique<Writer>(*keyMapper, indentation);
     return writer->createXmlString(elems);
 }
 
@@ -359,6 +362,12 @@ bool Manager::removeNodeFromArray(const std::vector<Path>& path, size_t index)
     }
     arr->erase(arr->begin() + index);
     return true;
+}
+
+
+bool Manager::setIndentation(uint indentation)
+{
+    return Settings::setIndendation(indentation);
 }
 
 

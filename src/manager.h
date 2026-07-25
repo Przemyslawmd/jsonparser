@@ -12,6 +12,7 @@
 #include "node.h"
 #include "nodeApi.h"
 #include "errorCode.h"
+#include "settings.h"
 
 
 using ComplexNode = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
@@ -45,6 +46,8 @@ public:
 
     bool removeNodeFromObject(const std::vector<Path>&, const std::string& keyStr);
     bool removeNodeFromArray(const std::vector<Path>&, size_t index);
+
+    bool setIndentation(uint indentation);
 
     const std::vector<Error>& getErrors() const;
 

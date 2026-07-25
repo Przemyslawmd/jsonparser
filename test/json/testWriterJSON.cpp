@@ -37,13 +37,13 @@ static std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, 
 class TestWriterJSON : public BaseTest
 {
 protected:
-    void testJsonString(const std::string& file)
+    void testJsonString(const std::string& file, uint indentation = 2)
     {
         auto keyMapper = std::make_unique<KeyMapper>();
         auto root = writerParseJSON(file, *keyMapper);
 
         auto begin = std::chrono::high_resolution_clock::now();
-        Writer writer(*keyMapper);
+        Writer writer(*keyMapper, indentation);
         std::string json = writer.createJsonString(*root);
 
         const auto end = std::chrono::high_resolution_clock::now();
@@ -100,3 +100,10 @@ TEST_F(TestWriterJSON, Test_File_8)
 {
     testJsonString("test_8_complex.json");
 }
+
+
+TEST_F(TestWriterJSON, Indentation_3)
+{
+    testJsonString("test_indentation_3.json", 3);
+}
+

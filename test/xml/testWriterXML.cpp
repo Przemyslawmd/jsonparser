@@ -19,7 +19,7 @@ using namespace xml;
 class TestWriterXML : public TestBaseXML
 {
 protected:
-    void testWriter(const std::string& file)
+    void testWriter(const std::string& file, uint indentation = 2)
     {
         auto keyMapper = std::make_unique<KeyMapper>();
         auto root = createObjects(TEST_DATA_XML, file, *keyMapper);
@@ -27,7 +27,7 @@ protected:
         auto elems = elemWtiter.createElems(*root);
 
         auto begin = std::chrono::high_resolution_clock::now();
-        Writer writer(*keyMapper);
+        Writer writer(*keyMapper, indentation);
         std::string xml = writer.createXmlString(elems);
 
         const auto end = std::chrono::high_resolution_clock::now();
@@ -43,43 +43,57 @@ TEST_F(TestWriterXML, Test_File_No_Declaration_1)
     testWriter("test_no_declaration_1.xml");
 }
 
+
 TEST_F(TestWriterXML, Test_File_No_Declaration_2)
 {
     testWriter("test_no_declaration_two_values.xml");
 }
+
 
 TEST_F(TestWriterXML, Test_File_No_Declaration_4)
 {
     testWriter("test_4_no_declaration.xml");
 }
 
+
 TEST_F(TestWriterXML, Test_File_3_Attr_1)
 {
     testWriter("test_3_attr_1.xml");
 }
+
 
 TEST_F(TestWriterXML, Test_File_3_Attr_2)
 {
     testWriter("test_3_attr_2.xml");
 }
 
+
 TEST_F(TestWriterXML, Test_Content_Few_Words)
 {
     testWriter("test_content_few_words.xml");
 }
+
 
 TEST_F(TestWriterXML, Test_Content_Number)
 {
     testWriter("test_content_number_value.xml");
 }
 
+
 TEST_F(TestWriterXML, Declaration_Two_Values__test_1)
 {
     testWriter("test_1.xml");
 }
 
+
 TEST_F(TestWriterXML, Full_Declaration__test_5_attrs)
 {
     testWriter("test_5_attrs.xml");
+}
+
+
+TEST_F(TestWriterXML, Indentation__test_indentation_4)
+{
+    testWriter("test_indentation_4.xml", 4);
 }
 

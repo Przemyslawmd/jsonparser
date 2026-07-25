@@ -15,10 +15,12 @@ namespace xml
 class Writer
 {
 public:
-    Writer(const KeyMapper& keyMapper) : keyMapper(keyMapper), indent(-2), indentStep(2) {}
+    Writer(const KeyMapper& keyMapper, uint indentation) : keyMapper(keyMapper), 
+                                                           indentation(indentation * -1), 
+                                                           indentationStep(indentation) {}
 
     std::string createXmlString(const std::vector<ElemWriter>& elems);
-    void setIndent(size_t);
+    void setIndent(uint);
 
 private:
     void incIndent();
@@ -27,8 +29,8 @@ private:
     void deleteLastChars(std::ostringstream& stream, uint noOfChars);
 
     const KeyMapper& keyMapper;
-    int indent;
-    int indentStep;
+    int indentation;
+    int indentationStep;
     std::vector<ElemReader> elems;
 };
 }

@@ -37,7 +37,7 @@ std::string Writer::createXmlString(const std::vector<ElemWriter>& elems)
         {
             case ElemType::TAG_OPEN:
                 incIndent();
-                std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
+                std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
                 stream << "<" << elem.name.value();
                 if (!elem.attr.empty()) {
                     for (const auto& [key, val] : elem.attr) {
@@ -48,10 +48,10 @@ std::string Writer::createXmlString(const std::vector<ElemWriter>& elems)
                 break;;
             case ElemType::TAG_CLOSE:
                 if (elems.at(idx - 1).type != ElemType::CONTENT) {
-                    std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
+                    std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
                 }
                 stream << "</" << elem.name.value() << ">";
-                if (indent != 0) {
+                if (indentation != 0) {
                     stream << "\n";
                 }
                 decIndent();
@@ -76,9 +76,9 @@ std::string Writer::createXmlString(const std::vector<ElemWriter>& elems)
 }
 
 
-void Writer::setIndent(size_t indentStep)
+void Writer::setIndent(uint step)
 {
-    this->indentStep = indentStep;
+    this->indentationStep = step;
 }
 
 /*******************************************************************/
@@ -93,12 +93,12 @@ void Writer::deleteLastChars(std::ostringstream& stream, uint noOfChars)
 
 void Writer::incIndent()
 {
-    indent += indentStep;
+    indentation += indentationStep;
 }
 
 
 void Writer::decIndent()
 {
-    indent -= indentStep;
+    indentation -= indentationStep;
 }
 
