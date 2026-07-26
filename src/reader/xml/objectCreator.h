@@ -1,6 +1,5 @@
 
-#ifndef JX_READER_XML_OBJECT_CREATOR_H
-#define JX_READER_XML_OBJECT_CREATOR_H
+#pragma once
 
 #include <map>
 #include <memory>
@@ -43,6 +42,4 @@ private:
     void insertAttrs(ObjectNode& node, std::map<std::string, std::string>& attrs);
 };
 }
-
-#endif
 

@@ -44,8 +44,8 @@ bool Manager::parseJsonString(const std::string& jsonString)
     using namespace json;
 
     ErrorStorage::clear();
-    if (root != nullptr) {
-        ErrorStorage::putError(ErrorCode::MANAGER__ROOT_NOT_EMPTY);
+    if (root) {
+        ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_NULL);
         return false;
     }
 
@@ -90,7 +90,7 @@ bool Manager::parseXmlString(const std::string& xmlString)
 
     ErrorStorage::clear();
     if (root) {
-        ErrorStorage::putError(ErrorCode::MANAGER__ROOT_NOT_EMPTY);
+        ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_NULL);
         return false;
     }
 
@@ -135,12 +135,12 @@ std::optional<std::string> Manager::objectToXmlString()
 bool Manager::loadObject(const NodeApi& node)
 {
     if (root != nullptr) {
-        ErrorStorage::putError(ErrorCode::MANAGER__ROOT_NOT_EMPTY);
+        ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_NULL);
         return false;
     }
 
     if (std::holds_alternative<std::map<std::string, NodeApi>>(node.value) == false) {
-        ErrorStorage::putError(ErrorCode::MANAGER__ROOT_NOT_OBJECT);
+        ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_OBJECT);
         return false;
     }
 
@@ -382,7 +382,7 @@ const std::vector<Error>& Manager::getErrors() const
 bool Manager::isRootEmpty() const
 {
     if (root == nullptr) {
-        ErrorStorage::putError(ErrorCode::MANAGER__EMPTY);
+        ErrorStorage::putError(ErrorCode::MANAGER_NO_OBJECT);
         return true;
     }
     return false;
@@ -405,7 +405,7 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
             std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
 
             if (keyID == std::nullopt) {
-                ErrorStorage::putError(ErrorCode::MANAGER__NOT_KEY_IN_OBJECT);
+                ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
                 return nullptr;
             }
 
@@ -526,7 +526,7 @@ Manager::getObjectAndKeyIDFromPath(const std::vector<Path>& path, const std::str
 
     std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
     if (keyID == std::nullopt) {
-        ErrorStorage::putError(ErrorCode::MANAGER__NOT_KEY_IN_OBJECT);
+        ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
         return { nullptr, 0 };
     }
 

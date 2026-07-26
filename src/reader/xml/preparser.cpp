@@ -52,9 +52,9 @@ std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
-size_t Preparser::parseStringOutQuotation(const std::string& json, size_t index)
+size_t Preparser::parseStringOutQuotation(const std::string& json, uint index)
 {
-    size_t shift = 0;
+    uint shift = 0;
     while (index + shift < json.length()) {
         if (json[index + shift] == ' ' || tokensMap.contains(json[index + shift])) {
             tokens->emplace_back(TokenType::DATA_STR, json.substr(index, shift));

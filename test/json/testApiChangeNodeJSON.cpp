@@ -145,7 +145,7 @@ TEST_F(ApiChangeNodeJSON, ErrorImproperKeyInPath)
     bool result = api->changeNodeInObject({ "person2", "street" }, "address", newNode);
     ASSERT_FALSE(result);
     const auto& errors = api->getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__NOT_KEY_IN_OBJECT);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
 }
 
 
@@ -157,7 +157,7 @@ TEST_F(ApiChangeNodeJSON, ErrorImproperKeyInNode)
     bool result = api->changeNodeInObject({ "person2", "address" }, "bbb", newNode);
     ASSERT_FALSE(result);
     const auto& errors = api->getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__NOT_KEY_IN_OBJECT);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
 }
 
 
@@ -217,6 +217,6 @@ TEST_F(ApiChangeNodeJSON, ErrorEmptyRoot)
     bool result = api->changeNodeInArray({ "person2", "address" }, 1, newNode);
     ASSERT_FALSE(result);
     const auto& errors = api->getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__EMPTY);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_NO_OBJECT);
 }
 

@@ -1,6 +1,5 @@
 
-#ifndef JX_READER_XML_ELEM_H
-#define JX_READER_XML_ELEM_H
+#pragma once
 
 #include <map>
 #include <string>
@@ -60,6 +59,4 @@ struct  ElemWriter
     VariantData value;
 };
 }
-
-#endif
 

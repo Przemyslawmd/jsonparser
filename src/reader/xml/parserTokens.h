@@ -1,6 +1,5 @@
 
-#ifndef JX_READER_XML_PARSER_TOKENS_H
-#define JX_READER_XML_PARSER_TOKENS_H
+#pragma once
 
 #include <map>
 #include <memory>
@@ -46,6 +45,4 @@ private:
     std::optional<uint> parseDeclaration(const std::vector<Token>& tokens);
 };
 }
-
-#endif
 

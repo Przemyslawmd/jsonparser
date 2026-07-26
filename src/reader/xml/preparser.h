@@ -1,9 +1,9 @@
-#ifndef JX_READER_XML_PREPARSER_H
-#define JX_READER_XML_PREPARSER_H
+
+#pragma once
 
 #include <map>
 #include <memory>
-#include <string_view>
+#include <string>
 #include <vector>
 
 #include "token.h"
@@ -19,7 +19,7 @@ public:
     std::unique_ptr<std::vector<Token>> parseXML(const std::string& json);
 
 private:
-    size_t parseStringOutQuotation(const std::string& json, size_t index);
+    size_t parseStringOutQuotation(const std::string& json, uint index);
 
     std::unique_ptr<std::vector<Token>> tokens;
 
@@ -33,6 +33,4 @@ private:
     };
 };
 }
-
-#endif
 

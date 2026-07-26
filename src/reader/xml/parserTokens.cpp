@@ -28,11 +28,11 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
         ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_NO_TOKENS);
         return nullptr;
     }
-    if (tokens->at(0).type != ANGLE_OPEN) {
+    if (tokens->front().type != ANGLE_OPEN) {
         ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_INVALID_BEGIN);
         return nullptr;
     }
-    if (tokens->at(tokens->size() - 1).type != ANGLE_CLOSE) {
+    if (tokens->back().type != ANGLE_CLOSE) {
         ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_INVALID_END);
         return nullptr;
     }
