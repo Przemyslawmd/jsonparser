@@ -54,28 +54,30 @@ T checkComplexNode(ComplexNodePtr node)
     if (std::holds_alternative<nullptr_t>(node)) {
         return nullptr;
     }
-    if (std::holds_alternative<T>(node) == false) {
-        if (std::is_same_v<T, ObjectNode*>) {
-            ErrorStorage::putError(ErrorCode::MANAGER_NODE_NOT_OBJECT);
-        }
-        else if (std::is_same_v<T, ArrayNode*>) {
-            ErrorStorage::putError(ErrorCode::MANAGER_NODE_NOT_ARRAY);
-        }
+    if (std::holds_alternative<T>(node)) {
+        return std::get<T>(node);
+    }
+
+    if constexpr (std::same_as<T, ObjectNode>) {
+        ErrorStorage::putError(ErrorCode::MANAGER_NODE_NOT_OBJECT);
         return nullptr;
     }
-    return std::get<T>(node);
+    ErrorStorage::putError(ErrorCode::MANAGER_NODE_NOT_ARRAY);
+    return nullptr;
 }
 
 
 template <typename T>
+concept ConceptComplexNode = std::same_as<T, ObjectNode> || std::same_as<T, ArrayNode>;
+
+template <typename T> requires ConceptComplexNode<T>
 T& createNodeInObjectAndGet(ObjectNode& obj, uint32_t keyID)
 {
     obj.emplace(keyID, T());
     return std::get<T>(obj.at(keyID).value);
 }
 
-
-template <typename T>
+template <typename T> requires ConceptComplexNode<T>
 T& createNodeInArrayAndGet(ArrayNode& arr)
 {
     arr.emplace_back(T());
