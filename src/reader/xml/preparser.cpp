@@ -5,7 +5,7 @@
 
 #include "errorCode.h"
 #include "log/ErrorStorage.h"
-#include "../utilsReader.h"
+#include "reader/utilsReader.h"
 
 
 using namespace xml;
@@ -22,10 +22,11 @@ std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
             continue;
         }
         if (symbol == '\"') {
-            size_t shift = parseString<Token, TokenType>(xml, index, *tokens, TokenType::DATA_STR_QUOTA);
+            uint shift = parseString(xml, index);
             if (shift == 0) {
                 return nullptr;
             }
+            tokens->emplace_back(TokenType::DATA_STR_QUOTA, xml.substr(index + 1, shift - 1));
             index += shift;
             continue;
         }

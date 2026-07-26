@@ -13,13 +13,11 @@ concept ConceptToken = std::same_as<T, json::Token> && std::same_as<U, json::Tok
                        std::same_as<T, xml::Token> && std::same_as<U, xml::TokenType>;
 
 
-template <typename T, typename U> requires ConceptToken<T, U>
-static size_t parseString(const std::string& file, size_t index, std::vector<T>& tokens, U type)
+static uint parseString(const std::string& file, uint index)
 {
-    size_t shift = 1;
+    uint shift = 1;
     while (index + shift < file.length()) {
         if (file[index + shift] == '\"') {
-            tokens.emplace_back(type, file.substr(index + 1, shift - 1));
             return shift;
         }
         shift += 1;

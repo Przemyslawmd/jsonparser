@@ -35,10 +35,11 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             continue;
         }
         if (symbol == '\"') {
-            size_t shift = parseString<Token, TokenType>(json, index, *tokens, DATA_STR);
+            size_t shift = parseString(json, index);
             if (shift == 0) {
                 return nullptr;
             }
+            tokens->emplace_back(TokenType::DATA_STR, json.substr(index + 1, shift - 1));
             index += shift;
             continue;
         }
