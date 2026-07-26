@@ -1,6 +1,5 @@
 
-#ifndef JX_DEFINES_XML_H
-#define JX_DEFINES_XML_H
+#pragma once
 
 #include <string>
 
@@ -12,6 +11,4 @@ namespace xml
     constexpr std::string ENC = "encoding";
     constexpr std::string STA = "standalone";
 }
-
-#endif
 

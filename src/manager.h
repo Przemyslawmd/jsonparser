@@ -15,7 +15,7 @@
 #include "settings.h"
 
 
-using ComplexNode = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
+using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 
 /* Path contains a key for an object (map) or index for an array */
 using Path = std::variant<std::string, uint>;
@@ -57,7 +57,7 @@ private:
     void addObjectInternally(ObjectNode&, const NodeApi&);
     void addArrayInternally(ArrayNode&, const NodeApi&);
 
-    ComplexNode getNodeFromPath(const std::vector<Path>& path);
+    ComplexNodePtr getNodeFromPath(const std::vector<Path>& path);
 
     ArrayNode* getArrayFromPath(const std::vector<Path>& path, size_t index);
 

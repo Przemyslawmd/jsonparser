@@ -162,7 +162,7 @@ bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string
         return false;
     }
 
-    ComplexNode comNode = getNodeFromPath(path);
+    ComplexNodePtr comNode = getNodeFromPath(path);
     ObjectNode* obj = checkComplexNode<ObjectNode*>(comNode);
     if (obj == nullptr) {
         return false;
@@ -179,11 +179,11 @@ bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string
         obj->emplace(keyID, createNode(newNode));
     }
     else if (newNodeType == NodeType::OBJECT) {
-        auto& objNew = putIntoObjectAndGet<ObjectNode>(*obj, keyID);
+        auto& objNew = createNodeInObjectAndGet<ObjectNode>(*obj, keyID);
         addObjectInternally(objNew, newNode);
     }
     else {
-        auto& arrNew = putIntoObjectAndGet<ArrayNode>(*obj, keyID);
+        auto& arrNew = createNodeInObjectAndGet<ArrayNode>(*obj, keyID);
         addArrayInternally(arrNew, newNode);
     }
     return true;
@@ -196,7 +196,7 @@ bool Manager::addNodeIntoArray(const std::vector<Path>& path, const NodeApi& new
         return false;
     }
 
-    ComplexNode comNode = getNodeFromPath(path);
+    ComplexNodePtr comNode = getNodeFromPath(path);
     ArrayNode* arr = checkComplexNode<ArrayNode*>(comNode);
     if (arr == nullptr) {
         return false;
@@ -208,11 +208,11 @@ bool Manager::addNodeIntoArray(const std::vector<Path>& path, const NodeApi& new
         arr->emplace_back(createNode(newNode));
     }
     else if (newNodeType == NodeType::OBJECT) {
-        auto& objNew = putIntoArrayAndGet<ObjectNode>(*arr);
+        auto& objNew = createNodeInArrayAndGet<ObjectNode>(*arr);
         addObjectInternally(objNew, newNode);
     }
     else {
-        auto& arrNew = putIntoArrayAndGet<ArrayNode>(*arr);
+        auto& arrNew = createNodeInArrayAndGet<ArrayNode>(*arr);
         addArrayInternally(arrNew, newNode);
     }
     return true;
@@ -389,7 +389,7 @@ bool Manager::isRootEmpty() const
 }
 
 
-ComplexNode Manager::getNodeFromPath(const std::vector<Path>& path)
+ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
 {
     if (path.empty()) {
         return root.get();
@@ -468,11 +468,11 @@ void Manager::addObjectInternally(ObjectNode& obj, const NodeApi& newNode)
             obj.emplace(keyID, createNode(val));
         }
         else if (newNodeType == NodeType::OBJECT) {
-            auto& objNew = putIntoObjectAndGet<ObjectNode>(obj, keyID);
+            auto& objNew = createNodeInObjectAndGet<ObjectNode>(obj, keyID);
             addObjectInternally(objNew, val);
         }
         else {
-            auto& arrNew = putIntoObjectAndGet<ArrayNode>(obj, keyID);
+            auto& arrNew = createNodeInObjectAndGet<ArrayNode>(obj, keyID);
             addArrayInternally(arrNew, val);
         }
     }
@@ -487,11 +487,11 @@ void Manager::addArrayInternally(ArrayNode& arr, const NodeApi& newNode)
             arr.emplace_back(createNode(val));
         }
         else if (newNodeType == NodeType::ARRAY) {
-            auto& arrNew = putIntoArrayAndGet<ArrayNode>(arr);
+            auto& arrNew = createNodeInArrayAndGet<ArrayNode>(arr);
             addArrayInternally(arrNew, val);
         }
         else if (newNodeType == NodeType::OBJECT) {
-            auto& objNew = putIntoArrayAndGet<ObjectNode>(arr);
+            auto& objNew = createNodeInArrayAndGet<ObjectNode>(arr);
             addObjectInternally(objNew, val);
         }
     }
@@ -501,7 +501,7 @@ void Manager::addArrayInternally(ArrayNode& arr, const NodeApi& newNode)
 ArrayNode* 
 Manager::getArrayFromPath(const std::vector<Path>& path, size_t index)
 {
-    ComplexNode complexNode = getNodeFromPath(path);
+    ComplexNodePtr complexNode = getNodeFromPath(path);
     ArrayNode* arr = checkComplexNode<ArrayNode*>(complexNode);
     if (arr == nullptr) {
         return nullptr;
@@ -518,7 +518,7 @@ Manager::getArrayFromPath(const std::vector<Path>& path, size_t index)
 std::tuple<ObjectNode*, size_t> 
 Manager::getObjectAndKeyIDFromPath(const std::vector<Path>& path, const std::string& keyStr)
 {
-    ComplexNode comNode = getNodeFromPath(path);
+    ComplexNodePtr comNode = getNodeFromPath(path);
     ObjectNode* obj = checkComplexNode<ObjectNode*>(comNode);
     if (obj == nullptr) {
         return { nullptr, 0 };

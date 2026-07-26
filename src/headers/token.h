@@ -1,6 +1,5 @@
 
-#ifndef JX_TOKEN_H
-#define JX_TOKEN_H
+#pragma once
 
 #include <string>
 #include <variant>
@@ -55,6 +54,4 @@ namespace xml
         VariantData data;
     };
 }
-
-#endif
 

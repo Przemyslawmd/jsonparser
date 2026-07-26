@@ -1,6 +1,5 @@
 
-#ifndef JX_NODE_H
-#define JX_NODE_H
+#pragma once
 
 #include <map>
 #include <string>
@@ -25,6 +24,4 @@ struct Node
 
 using ObjectNode = std::map<size_t, Node>;
 using ArrayNode = std::vector<Node>;
-
-#endif
 

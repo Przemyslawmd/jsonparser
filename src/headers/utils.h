@@ -1,6 +1,5 @@
 
-#ifndef JX_UTILS_H
-#define JX_UTILS_H
+#pragma once
 
 #include <map>
 #include <string>
@@ -11,7 +10,7 @@
 #include "log/ErrorStorage.h"
 
 
-using ComplexNode = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
+using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 
 
 Node createNode(const NodeApi& node)
@@ -33,8 +32,8 @@ Node createNode(const NodeApi& node)
 
 
 template <typename T, typename U>
-concept ConceptNodeType = std::is_same<T, Node>::value && std::is_same<U, size_t>::value ||
-                          std::is_same<T, NodeApi>::value && std::is_same<U, std::string>::value;
+concept ConceptNodeType = std::same_as<T, Node> && std::same_as<U, size_t> ||
+                          std::same_as<T, NodeApi> && std::same_as<U, std::string>;
 
 template <typename T, typename U> requires ConceptNodeType<T, U>
 NodeType getNodeType(const T& node)
@@ -50,16 +49,16 @@ NodeType getNodeType(const T& node)
 
 
 template <typename T>
-T checkComplexNode(ComplexNode node)
+T checkComplexNode(ComplexNodePtr node)
 {
     if (std::holds_alternative<nullptr_t>(node)) {
         return nullptr;
     }
     if (std::holds_alternative<T>(node) == false) {
-        if (std::is_same<T, ObjectNode*>::value) {
+        if (std::is_same_v<T, ObjectNode*>) {
             ErrorStorage::putError(ErrorCode::MANAGER_NODE_NOT_OBJECT);
         }
-        else if (std::is_same<T, ArrayNode*>::value) {
+        else if (std::is_same_v<T, ArrayNode*>) {
             ErrorStorage::putError(ErrorCode::MANAGER_NODE_NOT_ARRAY);
         }
         return nullptr;
@@ -69,7 +68,7 @@ T checkComplexNode(ComplexNode node)
 
 
 template <typename T>
-T& putIntoObjectAndGet(ObjectNode& obj, uint32_t keyID)
+T& createNodeInObjectAndGet(ObjectNode& obj, uint32_t keyID)
 {
     obj.emplace(keyID, T());
     return std::get<T>(obj.at(keyID).value);
@@ -77,11 +76,9 @@ T& putIntoObjectAndGet(ObjectNode& obj, uint32_t keyID)
 
 
 template <typename T>
-T& putIntoArrayAndGet(ArrayNode& arr)
+T& createNodeInArrayAndGet(ArrayNode& arr)
 {
     arr.emplace_back(T());
     return std::get<T>(arr.back().value);
 }
-
-#endif
 
