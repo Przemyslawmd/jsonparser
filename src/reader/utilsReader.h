@@ -1,6 +1,5 @@
 
-#ifndef JX_READER_UTILS_READER_H
-#define JX_READER_UTILS_READER_H
+#pragma once
 
 #include <string>
 
@@ -10,8 +9,8 @@
 
 
 template <typename T, typename U>
-concept ConceptToken = std::is_same<T, json::Token>::value || std::is_same<T, xml::Token>::value &&
-                       std::is_same<U, json::TokenType>::value || std::is_same<U, xml::TokenType>::value;
+concept ConceptToken = std::same_as<T, json::Token> && std::same_as<U, json::TokenType> ||
+                       std::same_as<T, xml::Token> && std::same_as<U, xml::TokenType>;
 
 
 template <typename T, typename U> requires ConceptToken<T, U>
@@ -64,6 +63,4 @@ size_t parseNumber(const std::string& json, size_t index, std::vector<T>& tokens
     tokens.emplace_back(U::DATA_DOUBLE, isMinus ? numberFloat * -1.0 : numberFloat);
     return index - 1;
 }
-
-#endif
 

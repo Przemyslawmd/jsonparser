@@ -1,6 +1,5 @@
 
-#ifndef JX_READER_JSON_PARSER_H
-#define JX_READER_JSON_PARSER_H
+#pragma once
 
 #include <concepts>
 #include <map>
@@ -16,15 +15,14 @@
 
 
 template <typename T>
-concept ComplexLimit = std::is_same<T, ObjectNode>::value || 
-                       std::is_same<T, ArrayNode>::value;
+concept ComplexNode = std::same_as<T, ObjectNode> || std::same_as<T, ArrayNode>;
 
 template <typename T>
-concept SimpleLimit = std::is_same<T, std::string>::value || 
-                      std::is_same<T, double>::value || 
-                      std::is_same<T, int64_t>::value || 
-                      std::is_same<T, bool>::value || 
-                      std::is_same<T, nullptr_t>::value;
+concept SimpleNode = std::same_as<T, std::string> || 
+                     std::same_as<T, double> || 
+                     std::same_as<T, int64_t> || 
+                     std::same_as<T, bool> || 
+                     std::same_as<T, nullptr_t>;
 
 
 namespace json
@@ -47,13 +45,11 @@ class Parser
         void pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> nodeStack, State);
         void popDataFromStack();
 
-        template <typename T> requires ComplexLimit<T>
+        template <typename T> requires ComplexNode<T>
         bool pushComplexNodeOnStack(const std::string& key, State);
 
-        template <typename T> requires SimpleLimit<T>
+        template <typename T> requires SimpleNode<T>
         bool processData(const std::string& key, const Token&);
 };
 }
-
-#endif
 

@@ -57,7 +57,7 @@ std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
-template <typename T> requires ComplexLimit<T>
+template <typename T> requires ComplexNode<T>
 bool Parser::pushComplexNodeOnStack(const std::string& keyStr, State state)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {
@@ -81,7 +81,7 @@ bool Parser::pushComplexNodeOnStack(const std::string& keyStr, State state)
 }
 
 
-template <typename T> requires SimpleLimit<T>
+template <typename T> requires SimpleNode<T>
 bool Parser::processData(const std::string& keyStr, const Token& token)
 {
     if (stateStack.top() == State::OBJECT_PARSING) {

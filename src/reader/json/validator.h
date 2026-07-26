@@ -1,6 +1,5 @@
 
-#ifndef JX_READER_JSON_VALIDATOR_H
-#define JX_READER_JSON_VALIDATOR_H
+#pragma once
 
 #include <format>
 #include <map>
@@ -92,64 +91,64 @@ static bool checkTokensSequence(const std::vector<Token>& tokens)
                 if (nextType == DATA_STR) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_CURLY_OPEN, type, nextType);
+                createError(JSON_VALIDATOR__AFTER_CURLY_OPEN, type, nextType);
                 return false;
             case SQUARE_OPEN:
                 states.push(ARRAY_PARSING);
                 if (afterColonOrSquareOpen.contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_SQUARE_OPEN, type, nextType);
+                createError(JSON_VALIDATOR__AFTER_SQUARE_OPEN, type, nextType);
                 return false;
             case CURLY_CLOSE:
                 states.pop();
                 if (afterClose.contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_CURLY_CLOSE, type, nextType);
+                createError(JSON_VALIDATOR__AFTER_CURLY_CLOSE, type, nextType);
                 return false;
             case SQUARE_CLOSE:
                 states.pop();
                 if (afterClose.contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_SQUARE_CLOSE, type, nextType);
+                createError(JSON_VALIDATOR__AFTER_SQUARE_CLOSE, type, nextType);
                 return false;
             case COMMA:
                 if (afterComma.at(state).contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_COMMA, type, nextType);
+                createError(JSON_VALIDATOR__AFTER_COMMA, type, nextType);
                 return false;
             case COLON:
                 if (state != ARRAY_PARSING && afterColonOrSquareOpen.contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_COLON, type, nextType);
+                createError(JSON_VALIDATOR__AFTER_COLON, type, nextType);
                 return false;
             case DATA_STR:
                 if (afterString.at(state).contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_STRING, type, nextType);
+                createError(JSON_VALIDATOR__AFTER_STRING, type, nextType);
                 return false;
             case DATA_INT:
                 if (afterData.contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_INT, type, nextType);
+                createError(JSON_VALIDATOR__AFTER_INT, type, nextType);
                 return false;
             case DATA_DOUBLE:
                 if (afterData.contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_DOUBLE, type, nextType);
+                createError(JSON_VALIDATOR__AFTER_DOUBLE, type, nextType);
                 return false;
             case DATA_BOOL:
                 if (afterData.contains(nextType)) {
                     continue;
                 }
-                createError(JSON_VALIDATOR_AFTER_BOOL, type, nextType);
+                createError(JSON_VALIDATOR__AFTER_BOOL, type, nextType);
                 return false;
         }
     }
@@ -176,22 +175,22 @@ static ErrorCode validateBrackets(const std::vector<Token>& tokens)
                 continue;
             case CURLY_CLOSE:
                 if (--curlyCounter < 0) {
-                    return JSON_VALIDATOR_BRACKET_CURLY;
+                    return JSON_VALIDATOR__BRACKET_CURLY;
                 }
                 continue;
             case SQUARE_CLOSE:
                 if (--squareCounter < 0) {
-                    return JSON_VALIDATOR_BRACKET_SQUARE;
+                    return JSON_VALIDATOR__BRACKET_SQUARE;
                 }
                 continue;
         }
     }
 
     if (curlyCounter != 0) {
-        return JSON_VALIDATOR_BRACKET_CURLY;
+        return JSON_VALIDATOR__BRACKET_CURLY;
     }
     if (squareCounter != 0) {
-        return JSON_VALIDATOR_BRACKET_SQUARE;
+        return JSON_VALIDATOR__BRACKET_SQUARE;
     }
     return NO_ERROR;
 }
@@ -200,11 +199,11 @@ static ErrorCode validateBrackets(const std::vector<Token>& tokens)
 static bool validateTokens(const std::vector<Token>& tokens)
 {
     if (tokens.front().type != TokenType::CURLY_OPEN) {
-        ErrorStorage::putError(ErrorCode::JSON_VALIDATOR_IMPROPER_BEGIN);
+        ErrorStorage::putError(ErrorCode::JSON_VALIDATOR__IMPROPER_BEGIN);
         return false;
     }
     if (tokens.back().type != TokenType::CURLY_CLOSE) {
-        ErrorStorage::putError(ErrorCode::JSON_VALIDATOR_IMPROPER_END);
+        ErrorStorage::putError(ErrorCode::JSON_VALIDATOR__IMPROPER_END);
         return false;
     }
 
@@ -216,6 +215,4 @@ static bool validateTokens(const std::vector<Token>& tokens)
     return checkTokensSequence(tokens);
 }
 }
-
-#endif
 

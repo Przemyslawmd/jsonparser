@@ -1,6 +1,5 @@
 
-#ifndef JX_READER_JSON_PARSERKEY_H
-#define JX_READER_JSON_PARSERKEY_H
+#pragma once
 
 #include <memory>
 #include <ranges>
@@ -44,6 +43,4 @@ static std::unique_ptr<std::vector<Token>> createKeyTokens(std::unique_ptr<std::
     return tokens;
 }
 }
-
-#endif
 

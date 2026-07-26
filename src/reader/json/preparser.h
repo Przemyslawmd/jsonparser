@@ -1,6 +1,5 @@
 
-#ifndef JX_READER_JSON_PREPARSER_H
-#define JX_READER_JSON_PREPARSER_H
+#pragma once
 
 #include <map>
 #include <memory>
@@ -33,4 +32,3 @@ private:
 };
 }
 
-#endif
