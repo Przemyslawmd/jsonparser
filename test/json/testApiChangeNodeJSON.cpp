@@ -145,7 +145,7 @@ TEST_F(ApiChangeNodeJSON, ErrorImproperKeyInPath)
     bool result = api->changeNodeInObject({ "person2", "street" }, "address", newNode);
     ASSERT_FALSE(result);
     const auto& errors = api->getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__NOT_KEY_IN_OBJECT);
 }
 
 
@@ -157,7 +157,7 @@ TEST_F(ApiChangeNodeJSON, ErrorImproperKeyInNode)
     bool result = api->changeNodeInObject({ "person2", "address" }, "bbb", newNode);
     ASSERT_FALSE(result);
     const auto& errors = api->getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__NOT_KEY_IN_OBJECT);
 }
 
 
@@ -169,7 +169,7 @@ TEST_F(ApiChangeNodeJSON, ErrorOutOfIndexInPath)
     bool result = api->changeNodeInArray({ "employees", uint(3), "data", uint(3) }, 2, newNode);
     ASSERT_FALSE(result);
     const auto& errors = api->getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__INDEX_OUT_OF_ARRAY);
 }
 
 
@@ -181,7 +181,7 @@ TEST_F(ApiChangeNodeJSON, OutOfIndexInNode)
     bool result = api->changeNodeInArray({ "employees", uint(0), "data", uint(1) }, 4, newNode);
     ASSERT_FALSE(result);
     const auto& errors = api->getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__INDEX_OUT_OF_ARRAY);
 }
 
 
@@ -193,7 +193,7 @@ TEST_F(ApiChangeNodeJSON, ErrorImproperPath)
     bool result = api->changeNodeInObject({ "person2", uint(0) }, "city", newNode);
     ASSERT_FALSE(result);
     const auto& errors = api->getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_IMPROPER_PATH);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__IMPROPER_PATH);
 }
 
 
@@ -205,7 +205,7 @@ TEST_F(ApiChangeNodeJSON, ErrorImproperIndicatorForNode)
     bool result = api->changeNodeInArray({ "person2", "address" }, 1, newNode);
     ASSERT_FALSE(result);
     const auto& errors = api->getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_NODE_NOT_ARRAY);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__NODE_NOT_ARRAY);
 }
 
 
@@ -217,6 +217,6 @@ TEST_F(ApiChangeNodeJSON, ErrorEmptyRoot)
     bool result = api->changeNodeInArray({ "person2", "address" }, 1, newNode);
     ASSERT_FALSE(result);
     const auto& errors = api->getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_EMPTY);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__EMPTY);
 }
 

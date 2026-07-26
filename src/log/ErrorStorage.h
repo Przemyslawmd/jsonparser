@@ -1,6 +1,5 @@
 
-#ifndef JX_LOG_ERROR_STORAGE_H
-#define JX_LOG_ERROR_STORAGE_H
+#pragma once
 
 #include <optional>
 #include <string>
@@ -20,6 +19,4 @@ public:
 private:
     static std::vector<Error> errors;
 };
-
-#endif
 

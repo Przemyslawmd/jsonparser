@@ -1,6 +1,5 @@
 
-#ifndef JX_LOG_ERROR_DETAILS_H
-#define JX_LOG_ERROR_DETAILS_H
+#pragma once
 
 #include <unordered_map>
 #include <optional>
@@ -17,21 +16,21 @@ static const std::unordered_map<ErrorCode, std::optional<std::string>> ErrorDeta
     { ErrorCode::KEY_MAPPER_KEY_STR_REPEAT,
         "KeyMapper: Key in JSON repeated" },
 
-    { ErrorCode::MANAGER_EMPTY,
+    { ErrorCode::MANAGER__EMPTY,
         "There is no object, parse string or load an object" },
-    { ErrorCode::MANAGER_NOT_KEY_IN_OBJECT,
+    { ErrorCode::MANAGER__NOT_KEY_IN_OBJECT,
         "There is no provided key in object" },
-    { ErrorCode::MANAGER_IMPROPER_PATH,
+    { ErrorCode::MANAGER__IMPROPER_PATH,
         "Using key for array or index for object" },
-    { ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY,
+    { ErrorCode::MANAGER__INDEX_OUT_OF_ARRAY,
         "Provided index is out of array" },
-    { ErrorCode::MANAGER_NODE_NOT_ARRAY,
+    { ErrorCode::MANAGER__NODE_NOT_ARRAY,
         "Array node is expected" },
-    { ErrorCode::MANAGER_NODE_NOT_OBJECT,
+    { ErrorCode::MANAGER__NODE_NOT_OBJECT,
         "Object node is expected" },
-    { ErrorCode::MANAGER_ROOT_NOT_EMPTY,
+    { ErrorCode::MANAGER__ROOT_NOT_EMPTY,
         "Action requires no object, invoke clear function" },
-    { ErrorCode::MANAGER_ROOT_NOT_OBJECT,            std::nullopt },
+    { ErrorCode::MANAGER__ROOT_NOT_OBJECT,            std::nullopt },
     { ErrorCode::PREPARSER_STRING_ERROR,             std::nullopt },
     { ErrorCode::JSON_PREPARSER_UNKNOWN_SYMBOL,      std::nullopt },
     { ErrorCode::JSON_VALIDATOR_BRACKET_CURLY,       std::nullopt },
@@ -50,5 +49,4 @@ static const std::unordered_map<ErrorCode, std::optional<std::string>> ErrorDeta
     { ErrorCode::JSON_VALIDATOR_AFTER_STRING,        std::nullopt },
 };
 
-#endif
 

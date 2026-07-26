@@ -1,6 +1,5 @@
 
-#ifndef JX_LOG_TOKEN_DESCRIPTION_H
-#define JX_LOG_TOKEN_DESCRIPTION_H
+#pragma once
 
 #include <unordered_map>
 #include <string>
@@ -26,6 +25,4 @@ static const std::unordered_map<TokenType, std::string> TokenDesc =
     { TokenType::DATA_NULL,    "Null" },
 };
 }
-
-#endif
 

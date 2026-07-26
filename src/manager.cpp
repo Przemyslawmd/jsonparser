@@ -45,7 +45,7 @@ bool Manager::parseJsonString(const std::string& jsonString)
 
     ErrorStorage::clear();
     if (root != nullptr) {
-        ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
+        ErrorStorage::putError(ErrorCode::MANAGER__ROOT_NOT_EMPTY);
         return false;
     }
 
@@ -90,7 +90,7 @@ bool Manager::parseXmlString(const std::string& xmlString)
 
     ErrorStorage::clear();
     if (root) {
-        ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
+        ErrorStorage::putError(ErrorCode::MANAGER__ROOT_NOT_EMPTY);
         return false;
     }
 
@@ -135,12 +135,12 @@ std::optional<std::string> Manager::objectToXmlString()
 bool Manager::loadObject(const NodeApi& node)
 {
     if (root != nullptr) {
-        ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_EMPTY);
+        ErrorStorage::putError(ErrorCode::MANAGER__ROOT_NOT_EMPTY);
         return false;
     }
 
     if (std::holds_alternative<std::map<std::string, NodeApi>>(node.value) == false) {
-        ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_OBJECT);
+        ErrorStorage::putError(ErrorCode::MANAGER__ROOT_NOT_OBJECT);
         return false;
     }
 
@@ -382,7 +382,7 @@ const std::vector<Error>& Manager::getErrors() const
 bool Manager::isRootEmpty() const
 {
     if (root == nullptr) {
-        ErrorStorage::putError(ErrorCode::MANAGER_EMPTY);
+        ErrorStorage::putError(ErrorCode::MANAGER__EMPTY);
         return true;
     }
     return false;
@@ -405,7 +405,7 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
             std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
 
             if (keyID == std::nullopt) {
-                ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
+                ErrorStorage::putError(ErrorCode::MANAGER__NOT_KEY_IN_OBJECT);
                 return nullptr;
             }
 
@@ -418,14 +418,14 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
                 nodeType = NodeType::ARRAY;
                 arr = std::get_if<ArrayNode>(&node->value);
             } else {
-                ErrorStorage::putError(ErrorCode::MANAGER_IMPROPER_PATH);
+                ErrorStorage::putError(ErrorCode::MANAGER__IMPROPER_PATH);
                 return nullptr;
             }
         }
         else if (nodeType == NodeType::ARRAY && std::holds_alternative<uint>(pathKey)) {
             size_t index = std::get<uint>(pathKey);
             if (index >= arr->size()) {
-                ErrorStorage::putError(ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
+                ErrorStorage::putError(ErrorCode::MANAGER__INDEX_OUT_OF_ARRAY);
                 return nullptr;
             }
 
@@ -439,12 +439,12 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
                 arr = std::get_if<ArrayNode>(&node->value);
             }
             else {
-                ErrorStorage::putError(ErrorCode::MANAGER_IMPROPER_PATH);
+                ErrorStorage::putError(ErrorCode::MANAGER__IMPROPER_PATH);
                 return nullptr;
             }
         }
         else {
-            ErrorStorage::putError(ErrorCode::MANAGER_IMPROPER_PATH);
+            ErrorStorage::putError(ErrorCode::MANAGER__IMPROPER_PATH);
             return nullptr;
         }
     }
@@ -508,7 +508,7 @@ Manager::getArrayFromPath(const std::vector<Path>& path, size_t index)
     }
 
     if (index > arr->size()) {
-        ErrorStorage::putError(ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
+        ErrorStorage::putError(ErrorCode::MANAGER__INDEX_OUT_OF_ARRAY);
         return nullptr;
     }
     return arr;
@@ -526,7 +526,7 @@ Manager::getObjectAndKeyIDFromPath(const std::vector<Path>& path, const std::str
 
     std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
     if (keyID == std::nullopt) {
-        ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
+        ErrorStorage::putError(ErrorCode::MANAGER__NOT_KEY_IN_OBJECT);
         return { nullptr, 0 };
     }
 

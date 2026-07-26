@@ -140,6 +140,6 @@ TEST_F(ApiOtherActions, LoadJsonObject_Error)
     ASSERT_FALSE(api->isObject());
 
     const auto& errors = ErrorStorage::getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_ROOT_NOT_OBJECT);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__ROOT_NOT_OBJECT);
 }
 
