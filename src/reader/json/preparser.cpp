@@ -39,12 +39,19 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             if (shift == 0) {
                 return nullptr;
             }
-            tokens->emplace_back(TokenType::DATA_STR, json.substr(index + 1, shift - 1));
+            tokens->emplace_back(DATA_STR, json.substr(index + 1, shift - 1));
             index += shift;
             continue;
         }
         if (isdigit(symbol) || symbol == '-') {
-            index = parseNumber<Token, TokenType>(json, index, *tokens);
+            auto[newIndex, num] = parseNumber(json, index);
+            if (std::holds_alternative<int64_t>(num)) {
+                tokens->emplace_back(DATA_INT, std::get<int64_t>(num));
+            }
+            else {
+                tokens->emplace_back(DATA_DOUBLE, std::get<double>(num));
+            }
+            index = newIndex;
             continue;
         }
         if (tokensMap.count(symbol)) {

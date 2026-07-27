@@ -76,7 +76,7 @@ std::string Writer::createXmlString(const std::vector<ElemWriter>& elems)
 }
 
 
-void Writer::setIndent(uint step)
+void Writer::setIndent(int step)
 {
     this->indentationStep = step;
 }

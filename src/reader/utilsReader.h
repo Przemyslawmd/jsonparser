@@ -8,11 +8,6 @@
 #include "token.h"
 
 
-template <typename T, typename U>
-concept ConceptToken = std::same_as<T, json::Token> && std::same_as<U, json::TokenType> ||
-                       std::same_as<T, xml::Token> && std::same_as<U, xml::TokenType>;
-
-
 static uint parseString(const std::string& file, uint index)
 {
     uint shift = 1;
@@ -27,8 +22,7 @@ static uint parseString(const std::string& file, uint index)
 }
 
 
-template <typename T, typename U> requires ConceptToken<T, U>
-size_t parseNumber(const std::string& json, size_t index, std::vector<T>& tokens)
+static std::tuple<size_t, std::variant<int64_t, double>> parseNumber(const std::string& json, size_t index)
 {
     int64_t number = 0;
     bool isMinus = false;
@@ -46,8 +40,7 @@ size_t parseNumber(const std::string& json, size_t index, std::vector<T>& tokens
         index++;
     }
     if (json[index] != '.') {
-        tokens.emplace_back(U::DATA_INT, isMinus ? number * -1 : number);
-        return index - 1;
+        return std::make_tuple(index - 1, isMinus ? number * -1 : number);
     }
 
     index++;
@@ -57,8 +50,7 @@ size_t parseNumber(const std::string& json, size_t index, std::vector<T>& tokens
         index++;
         divider *= 10;
     }
-    double numberFloat = (double) number / divider;
-    tokens.emplace_back(U::DATA_DOUBLE, isMinus ? numberFloat * -1.0 : numberFloat);
-    return index - 1;
+    double numberDouble = (double) number / divider;
+    return std::make_tuple(index - 1, isMinus ? numberDouble * -1.0 : numberDouble);
 }
 
