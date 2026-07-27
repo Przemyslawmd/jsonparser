@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <string>
+
 #include "errorCode.h"
 #include "log/ErrorStorage.h"
 
@@ -23,7 +25,18 @@ public:
         return indentation;
     }
 
+    static void setPretendedKey(const std::string& key)
+    {
+        pretendedKey = key;
+    }
+
+    static std::string& getPretendedKey()
+    {
+        return pretendedKey;
+    }
+
 private:
     inline static unsigned int indentation = 2;
+    inline static std::string pretendedKey = "__text";
 };
 

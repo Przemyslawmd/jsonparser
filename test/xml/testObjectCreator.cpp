@@ -5,6 +5,8 @@
 
 #include <gtest/gtest.h>
 
+#include "settings.h"
+
 
 using namespace xml;
 
@@ -121,6 +123,33 @@ TEST_F(TestObjectCreator, Test_File_3_1_Attr)
 
     auto* nameText = std::get_if<std::string>(&nodeName->at(keys["__text"]).value);
     ASSERT_EQ(*nameText, "John");
+}
+
+
+TEST_F(TestObjectCreator, Test_File_3_1_Attr_Pretended_Key_Changed)
+{
+    Settings::setPretendedKey("##text");
+
+    auto root = createObjects(TEST_DATA_XML, "test_3_attr_1.xml", *keyMapper);
+    ASSERT_NE(root, nullptr);
+
+    std::map <std::string, uint32_t> keys
+    {
+        { "person", 0x00'01'00'01, },
+        { "name",   0x00'02'00'01, },
+        { "city",   0x00'02'00'02  },
+        { "##text", 0x00'02'00'03  }
+    };
+    checkKeyMapping(keys);
+
+    ASSERT_TRUE(root->find(keys["person"]) != root->end());
+    auto* nodePerson = std::get_if<ObjectNode>(&root->at(keys["person"]).value);
+    auto* nodeName = std::get_if<ObjectNode>(&nodePerson->at(keys["name"]).value);
+
+    auto* nameText = std::get_if<std::string>(&nodeName->at(keys["##text"]).value);
+    ASSERT_EQ(*nameText, "John");
+
+    Settings::setPretendedKey("__text");
 }
 
 

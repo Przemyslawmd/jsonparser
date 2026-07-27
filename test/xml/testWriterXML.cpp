@@ -6,6 +6,7 @@
 #include <gtest/gtest.h>
 
 #include "keyMapper.h"
+#include "settings.h"
 #include "writer/xml/writer.h"
 #include "writer/xml/elemWriterCreator.h"
 
@@ -23,7 +24,8 @@ protected:
     {
         auto keyMapper = std::make_unique<KeyMapper>();
         auto root = createObjects(TEST_DATA_XML, file, *keyMapper);
-        ElemWriterCreator elemWtiter(*keyMapper);
+        const std::string& pretendedKey = Settings::getPretendedKey();
+        ElemWriterCreator elemWtiter(*keyMapper, pretendedKey);
         auto elems = elemWtiter.createElems(*root);
 
         auto begin = std::chrono::high_resolution_clock::now();

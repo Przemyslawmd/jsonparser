@@ -107,7 +107,8 @@ bool Manager::parseXmlString(const std::string& xmlString)
     if (!ValidateElems(*elems)) {
         return false;
     }
-    const auto objectCreator = std::make_unique<ObjectCreator>(*keyMapper);
+    const std::string& pretendedKey = Settings::getPretendedKey();
+    const auto objectCreator = std::make_unique<ObjectCreator>(*keyMapper, pretendedKey);
     root = objectCreator->parseElems(*elems);
     return root ? true : false;
 }
@@ -120,7 +121,8 @@ std::optional<std::string> Manager::objectToXmlString()
     if (isRootEmpty()) {
         return std::nullopt;
     }
-    const auto elemsCreator = std::make_unique<ElemWriterCreator>(*keyMapper);
+    const auto& pretendedKey = Settings::getPretendedKey();
+    const auto elemsCreator = std::make_unique<ElemWriterCreator>(*keyMapper, pretendedKey);
     auto elems = elemsCreator->createElems(*root);
     if (elems.empty()) {
         return std::nullopt;
@@ -368,6 +370,12 @@ bool Manager::removeNodeFromArray(const std::vector<Path>& path, size_t index)
 bool Manager::setIndentation(uint indentation)
 {
     return Settings::setIndendation(indentation);
+}
+
+
+void Manager::setXmlAdditionKeyForJson(const std::string& key)
+{
+    Settings::setPretendedKey(key);
 }
 
 

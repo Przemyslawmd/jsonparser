@@ -47,6 +47,7 @@ public:
     bool removeNodeFromArray(const std::vector<Path>&, size_t index);
 
     bool setIndentation(uint indentation);
+    void setXmlAdditionKeyForJson(const std::string& key);
 
     const std::vector<Error>& getErrors() const;
 

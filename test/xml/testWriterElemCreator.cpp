@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 
 #include "keyMapper.h"
+#include "settings.h"
 #include "writer/xml/elemWriterCreator.h"
 
 #include "testBaseXML.h"
@@ -20,7 +21,8 @@ protected:
     {
         auto keyMapper = std::make_unique<KeyMapper>();
         auto root = createObjects(TEST_DATA_XML, file, *keyMapper);
-        auto writer = std::make_unique<ElemWriterCreator>(*keyMapper);
+        const std::string& pretendedKey = Settings::getPretendedKey();
+        auto writer = std::make_unique<ElemWriterCreator>(*keyMapper, pretendedKey);
         return writer->createElems(*root);
     }
 };

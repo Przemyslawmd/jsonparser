@@ -24,7 +24,7 @@ void ElemWriterCreator::processObjectNode(const ObjectNode& obj)
             elems.back().attr.emplace(keyStr.value(), std::get<std::string>(val.value));
             continue;
         }
-        if (keyStr == "__text") {
+        if (keyStr == pretendedKey) {
             parseData(val);
             continue;
         }

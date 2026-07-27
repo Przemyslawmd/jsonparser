@@ -10,6 +10,7 @@
 #include "reader/xml/preparser.h"
 #include "reader/xml/parserTokens.h"
 #include "log/ErrorStorage.h"
+#include "settings.h"
 
 #include "utilsTest.h"
 #include "config.h"
@@ -55,7 +56,8 @@ protected:
     std::unique_ptr<ObjectNode> createObjects(const std::string& path, const std::string& file, KeyMapper& keyMapper)
     {
         auto elems = createElements(path, file);
-        auto objCreator = std::make_unique<ObjectCreator>(keyMapper);
+        const std::string& pretendedKey = Settings::getPretendedKey();
+        auto objCreator = std::make_unique<ObjectCreator>(keyMapper, pretendedKey);
         auto node = objCreator->parseElems(*elems);
         return node;
     }
