@@ -1,7 +1,5 @@
 
-#ifndef JX_SETTINGS_H
-#define JX_SETTINGS_H
-
+#pragma once
 
 class Settings
 {
@@ -23,6 +21,4 @@ public:
 private:
     inline static uint indentation = 2;
 };
-
-#endif
 

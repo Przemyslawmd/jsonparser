@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "error.h"
+#include "errorCode.h"
 #include "log/ErrorStorage.h"
 #include "token.h"
 

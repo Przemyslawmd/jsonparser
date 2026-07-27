@@ -1,6 +1,5 @@
 
-#ifndef JX_API_H
-#define JX_API_H
+#pragma once
 
 #include <memory>
 #include <optional>
@@ -42,6 +41,4 @@ public:
 private:
     std::unique_ptr<Manager> manager;
 };
-
-#endif
 

@@ -59,10 +59,10 @@ T checkComplexNode(ComplexNodePtr node)
     }
 
     if constexpr (std::same_as<T, ObjectNode>) {
-        ErrorStorage::putError(ErrorCode::MANAGER__NODE_NOT_OBJECT);
+        ErrorStorage::putError(ErrorCode::MANAGER_NODE_NOT_OBJECT);
         return nullptr;
     }
-    ErrorStorage::putError(ErrorCode::MANAGER__NODE_NOT_ARRAY);
+    ErrorStorage::putError(ErrorCode::MANAGER_NODE_NOT_ARRAY);
     return nullptr;
 }
 

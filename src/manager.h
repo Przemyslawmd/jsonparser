@@ -1,6 +1,5 @@
 
-#ifndef JX_MANAGER_H
-#define JX_MANAGER_H
+#pragma once
 
 #include <map>
 #include <memory>
@@ -72,4 +71,3 @@ private:
     std::unique_ptr<KeyMapper> keyMapper;
 };
 
-#endif

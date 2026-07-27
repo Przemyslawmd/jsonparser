@@ -1,7 +1,7 @@
 
 #include <gtest/gtest.h>
 
-#include "error.h"
+#include "errorCode.h"
 #include "log/ErrorStorage.h"
 #include "reader/json/preparser.h"
 #include "reader/json/validator.h"

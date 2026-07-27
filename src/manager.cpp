@@ -418,14 +418,14 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
                 nodeType = NodeType::ARRAY;
                 arr = std::get_if<ArrayNode>(&node->value);
             } else {
-                ErrorStorage::putError(ErrorCode::MANAGER__IMPROPER_PATH);
+                ErrorStorage::putError(ErrorCode::MANAGER_IMPROPER_PATH);
                 return nullptr;
             }
         }
         else if (nodeType == NodeType::ARRAY && std::holds_alternative<uint>(pathKey)) {
             size_t index = std::get<uint>(pathKey);
             if (index >= arr->size()) {
-                ErrorStorage::putError(ErrorCode::MANAGER__INDEX_OUT_OF_ARRAY);
+                ErrorStorage::putError(ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
                 return nullptr;
             }
 
@@ -439,12 +439,12 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
                 arr = std::get_if<ArrayNode>(&node->value);
             }
             else {
-                ErrorStorage::putError(ErrorCode::MANAGER__IMPROPER_PATH);
+                ErrorStorage::putError(ErrorCode::MANAGER_IMPROPER_PATH);
                 return nullptr;
             }
         }
         else {
-            ErrorStorage::putError(ErrorCode::MANAGER__IMPROPER_PATH);
+            ErrorStorage::putError(ErrorCode::MANAGER_IMPROPER_PATH);
             return nullptr;
         }
     }
@@ -508,7 +508,7 @@ Manager::getArrayFromPath(const std::vector<Path>& path, size_t index)
     }
 
     if (index > arr->size()) {
-        ErrorStorage::putError(ErrorCode::MANAGER__INDEX_OUT_OF_ARRAY);
+        ErrorStorage::putError(ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
         return nullptr;
     }
     return arr;

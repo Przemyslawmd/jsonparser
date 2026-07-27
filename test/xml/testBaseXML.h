@@ -1,6 +1,5 @@
 
-#ifndef JX_TEST_XML_BASE_H
-#define JX_TEST_XML_BASE_H
+#pragma once
 
 #include <fstream>
 
@@ -74,6 +73,4 @@ private:
     std::ofstream performace;
 };
 }
-
-#endif
 

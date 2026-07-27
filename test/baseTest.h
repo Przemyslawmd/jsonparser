@@ -1,6 +1,5 @@
 
-#ifndef JSONPARSER_TEST_BASE_API_H
-#define JSONPARSER_TEST_BASE_API_H
+#pragma once
 
 #include <fstream>
 
@@ -58,6 +57,4 @@ private:
 
     std::ofstream performace;
 };
-
-#endif
 

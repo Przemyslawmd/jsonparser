@@ -1,6 +1,5 @@
 
-#ifndef JX_WRITER_XML_WRITER_H
-#define JX_WRITER_XML_WRITER_H
+#pragma once
 
 #include <string>
 #include <variant>
@@ -34,6 +33,4 @@ private:
     std::vector<ElemReader> elems;
 };
 }
-
-#endif
 

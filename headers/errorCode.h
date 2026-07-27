@@ -1,6 +1,5 @@
 
-#ifndef JX_ERROR_CODE_H
-#define JX_ERROR_CODE_H
+#pragma once
 
 #include <optional>
 #include <string>
@@ -18,10 +17,10 @@ enum class ErrorCode
     MANAGER_ROOT_NOT_OBJECT,
     MANAGER_NO_OBJECT,
     MANAGER_NOT_KEY_IN_OBJECT,
-    MANAGER__IMPROPER_PATH,
-    MANAGER__INDEX_OUT_OF_ARRAY,
-    MANAGER__NODE_NOT_ARRAY,
-    MANAGER__NODE_NOT_OBJECT,
+    MANAGER_IMPROPER_PATH,
+    MANAGER_INDEX_OUT_OF_ARRAY,
+    MANAGER_NODE_NOT_ARRAY,
+    MANAGER_NODE_NOT_OBJECT,
 
     PREPARSER_STRING_ERROR,
 
@@ -73,6 +72,4 @@ private:
     std::optional<std::string> details;
     ErrorCode errorCode;
 };
-
-#endif
 

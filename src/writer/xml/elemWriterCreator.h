@@ -1,6 +1,5 @@
 
-#ifndef JX_WRITER_XML_ELEM_WRITER_CREATOR_H
-#define JX_WRITER_XML_ELEM_WRITER_CREATOR_H
+#pragma once
 
 #include <memory>
 #include <string>
@@ -27,6 +26,4 @@ private:
     std::vector<ElemWriter> elems;
 };
 }
-
-#endif
 

@@ -1,6 +1,5 @@
 
-#ifndef JX_NODE_API_H
-#define JX_NODE_API_H
+#pragma once
 
 #include <map>
 #include <string>
@@ -13,6 +12,4 @@ struct NodeApi
     using Value = std::variant<std::string, int64_t, double, bool, nullptr_t, std::map<std::string, NodeApi>, std::vector<NodeApi>>;
     Value value;
 };
-
-#endif
 

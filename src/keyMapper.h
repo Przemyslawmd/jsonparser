@@ -1,6 +1,5 @@
 
-#ifndef JX_KEY_MAPPER_H
-#define JX_KEY_MAPPER_H
+#pragma once
 
 #include <cstdint>
 #include <map> 
@@ -35,6 +34,4 @@ private:
     std::vector<uint32_t> attrs;
     std::map<std::string, std::string> attrsDeclaration;
 };
-
-#endif
 

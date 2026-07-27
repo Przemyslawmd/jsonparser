@@ -1,6 +1,5 @@
 
-#ifndef JX_WRITER_JSON_WRITER_H
-#define JX_WRITER_JSON_WRITER_H
+#pragma once
 
 #include <memory>
 #include <sstream> 
@@ -41,6 +40,4 @@ private:
     uint indentationStep;
 };
 }
-
-#endif
 

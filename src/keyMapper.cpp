@@ -1,7 +1,7 @@
 
 #include "keyMapper.h" 
 
-#include <bits/stdc++.h>
+#include <algorithm>
 #include <ranges>
 
 #include "log/ErrorStorage.h"

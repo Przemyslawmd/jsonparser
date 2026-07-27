@@ -169,7 +169,7 @@ TEST_F(ApiChangeNodeJSON, ErrorOutOfIndexInPath)
     bool result = api->changeNodeInArray({ "employees", uint(3), "data", uint(3) }, 2, newNode);
     ASSERT_FALSE(result);
     const auto& errors = api->getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__INDEX_OUT_OF_ARRAY);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
 }
 
 
@@ -181,7 +181,7 @@ TEST_F(ApiChangeNodeJSON, OutOfIndexInNode)
     bool result = api->changeNodeInArray({ "employees", uint(0), "data", uint(1) }, 4, newNode);
     ASSERT_FALSE(result);
     const auto& errors = api->getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__INDEX_OUT_OF_ARRAY);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_INDEX_OUT_OF_ARRAY);
 }
 
 
@@ -193,7 +193,7 @@ TEST_F(ApiChangeNodeJSON, ErrorImproperPath)
     bool result = api->changeNodeInObject({ "person2", uint(0) }, "city", newNode);
     ASSERT_FALSE(result);
     const auto& errors = api->getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__IMPROPER_PATH);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_IMPROPER_PATH);
 }
 
 
@@ -205,7 +205,7 @@ TEST_F(ApiChangeNodeJSON, ErrorImproperIndicatorForNode)
     bool result = api->changeNodeInArray({ "person2", "address" }, 1, newNode);
     ASSERT_FALSE(result);
     const auto& errors = api->getErrors();
-    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER__NODE_NOT_ARRAY);
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::MANAGER_NODE_NOT_ARRAY);
 }
 
 
