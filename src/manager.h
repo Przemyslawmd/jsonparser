@@ -17,7 +17,7 @@
 using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 
 /* Path contains a key for an object (map) or index for an array */
-using Path = std::variant<std::string, uint>;
+using Path = std::variant<std::string, unsigned int>;
 
 
 class Manager

@@ -12,7 +12,7 @@
 
 
 using std::chrono::high_resolution_clock;
-
+using uint = unsigned int;
 
 class ApiChangeNodeJSON : public BaseTest {};
 

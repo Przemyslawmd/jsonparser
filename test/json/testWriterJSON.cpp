@@ -37,7 +37,7 @@ static std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, 
 class TestWriterJSON : public BaseTest
 {
 protected:
-    void testJsonString(const std::string& file, uint indentation = 2)
+    void testJsonString(const std::string& file, unsigned int indentation = 2)
     {
         auto keyMapper = std::make_unique<KeyMapper>();
         auto root = writerParseJSON(file, *keyMapper);

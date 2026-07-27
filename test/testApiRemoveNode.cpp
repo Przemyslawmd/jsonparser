@@ -10,7 +10,7 @@
 
 
 using std::chrono::high_resolution_clock;
-
+using uint = unsigned int;
 
 class ApiRemoveNode : public BaseTest {};
 

@@ -18,8 +18,8 @@ TEST_F(TestParserTokensXML, Test_File_2)
 
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 4);
-    
-    uint index = 0;
+
+    unsigned int index = 0;
     ASSERT_EQ(elems->at(index).type, ElemType::DECLARATION);
     ASSERT_EQ(elems->at(index).name, "xml");
 
@@ -54,7 +54,7 @@ TEST_F(TestParserTokensXML, Test_Number_Content)
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 8);
 
-    uint index = 0;
+    unsigned int index = 0;
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
     ASSERT_EQ(elems->at(index).name, "person");
     ASSERT_TRUE(elems->at(index).attrs.empty());
@@ -103,7 +103,7 @@ TEST_F(TestParserTokensXML, Test_File_No_Declaration_1)
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 5);
 
-    uint index = 0;
+    unsigned int index = 0;
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
     ASSERT_EQ(elems->at(index).name, "person");
     ASSERT_TRUE(elems->at(index).attrs.empty());
@@ -137,10 +137,10 @@ TEST_F(TestParserTokensXML, Test_File_5_attrs)
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 9);
 
-    uint index = 0;
+    unsigned int index = 0;
     ASSERT_EQ(elems->at(index).type, ElemType::DECLARATION);
     ASSERT_EQ(elems->at(index).name, "xml");
-    
+
     const auto& attrsDec = elems->at(index).attrs;
     ASSERT_EQ(attrsDec.size(), 3);
     ASSERT_TRUE(attrsDec.contains("version"));
@@ -208,7 +208,7 @@ TEST_F(TestParserTokensXML, Test_Content_Few_Words)
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 5);
 
-    uint index = 0;
+    unsigned int index = 0;
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
     ASSERT_EQ(elems->at(index).name, "person");
     ASSERT_TRUE(elems->at(index).attrs.empty());
