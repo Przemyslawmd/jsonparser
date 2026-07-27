@@ -47,7 +47,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
             tokens->emplace_back(tokensMap.at(symbol), nullptr);
             continue;
         }
-        size_t shift = parseStringOutQuotation(xml, index);
+        int shift = parseStringNoQuotation(xml, index);
         if (shift < 0) {
             ErrorStorage::putError(ErrorCode::XML_PREPARSER_STRING_ERROR);
             return nullptr;
@@ -62,7 +62,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
-unsigned int Preparser::parseStringOutQuotation(const std::string& json, unsigned int index)
+int Preparser::parseStringNoQuotation(const std::string& json, unsigned int index)
 {
     unsigned int shift = 0;
     while (index + shift < json.length()) {

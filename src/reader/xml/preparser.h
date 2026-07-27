@@ -19,7 +19,7 @@ public:
     std::unique_ptr<std::vector<Token>> parseXML(const std::string& json);
 
 private:
-    unsigned int parseStringOutQuotation(const std::string& json, unsigned int index);
+    int parseStringNoQuotation(const std::string& json, unsigned int index);
 
     std::unique_ptr<std::vector<Token>> tokens;
 

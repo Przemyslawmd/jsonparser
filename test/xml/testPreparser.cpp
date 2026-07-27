@@ -120,7 +120,7 @@ TEST_F(TestPreparserXML, Test_File_1)
 }
 
 
-TEST_F(TestPreparserXML, Test_one_letter)
+TEST_F(TestPreparserXML, Test_One_Letter)
 {
     auto tokens = createTokens(TEST_DATA_XML, "test_one_letter.xml");
     std::vector<Token> testData =
@@ -161,5 +161,14 @@ TEST_F(TestPreparserXML, Test_one_letter)
         { ANGLE_CLOSE },
     };
     checkTokens(std::move(tokens), testData);
+}
+
+
+TEST_F(TestPreparserXML, Error_String_Not_Ended)
+{
+    auto tokens = createTokens(TEST_DATA_IMPROPER_XML, "notEnd.xml");
+    ASSERT_EQ(tokens, nullptr);
+    const auto& errors = ErrorStorage::getErrors();
+    ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PREPARSER_STRING_ERROR);
 }
 
