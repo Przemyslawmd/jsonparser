@@ -9,7 +9,7 @@
 
 using namespace xml;
 
-class TestParserTokensXML : public TestBaseXML {};
+class TestParserTokensXML : public BaseTestXML {};
 
 
 TEST_F(TestParserTokensXML, Test_File_2)

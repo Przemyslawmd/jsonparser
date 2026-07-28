@@ -14,7 +14,7 @@
 
 using namespace xml;
 
-class TestWriterElemCreator : public TestBaseXML
+class TestWriterElemCreator : public BaseTestXML
 {
 protected:
     std::vector<ElemWriter> createElemsWriter(const std::string& file)

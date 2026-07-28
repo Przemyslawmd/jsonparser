@@ -10,7 +10,7 @@
 
 using namespace xml;
 
-class TestValidatorXML : public TestBaseXML {};
+class TestValidatorXML : public BaseTestXML {};
 
 
 TEST_F(TestValidatorXML, Declaration_not_start)

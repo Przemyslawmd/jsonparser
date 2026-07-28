@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include <fstream>
-
 #include <gtest/gtest.h>
 
 #include "reader/xml/objectCreator.h"
@@ -12,29 +10,23 @@
 #include "log/ErrorStorage.h"
 #include "settings.h"
 
+#include "baseTest.h"
 #include "utilsTest.h"
 #include "config.h"
-#include "timeType.h"
 
 
 namespace xml
 {
-class TestBaseXML : public testing::Test
+class BaseTestXML : public BaseTest
 {
 protected:
-    virtual void SetUp()
-    {
-        ErrorStorage::clear();
-        checkPerformance = false;
-    }
-
     std::unique_ptr<std::vector<Token>> createTokens(const std::string& path, const std::string& file)
     {
         std::string xmlString = getContentFromFile(path, file);
         auto preparser = std::make_unique<Preparser>();
         return preparser->parseXML(xmlString);
     }
-    
+
     std::unique_ptr<std::vector<ElemReader>> createElements(const std::string& path, const std::string& file)
     {
         auto tokens = createTokens(path, file);;
@@ -50,26 +42,6 @@ protected:
         auto node = objCreator->parseElems(*elems);
         return node;
     }
-
-    void showDuration(const TIME_TYPE start, const TIME_TYPE end)
-    {
-        if (!checkPerformance) {
-            return;
-        }
-        const char* testCase = ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name();
-        const char* testName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
-        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        std::cout << "\n############ " << testCase << " : " << testName << " : time: " << elapsed.count() << std::endl << std::endl;
-        const auto fullPath = std::string(TEST_DATA) + "performance.txt";
-        performace.open(fullPath, std::ios::app);
-        performace << std::left << std::setw(20) << testCase << std::setw(35) << testName << "time: " << elapsed.count() << std::endl;
-        performace.close();
-    }
-
-    bool checkPerformance;
-
-private:
-    std::ofstream performace;
 };
 }
 

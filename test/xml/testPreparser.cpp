@@ -11,7 +11,7 @@
 using namespace xml;
 using enum TokenType;
 
-class TestPreparserXML : public TestBaseXML {};
+class TestPreparserXML : public BaseTestXML {};
 
 
 void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<Token>& testData)

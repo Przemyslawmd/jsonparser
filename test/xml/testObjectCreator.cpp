@@ -10,7 +10,7 @@
 
 using namespace xml;
 
-class TestObjectCreator : public TestBaseXML
+class TestObjectCreator : public BaseTestXML
 {
 protected:
     std::unique_ptr<KeyMapper> keyMapper;

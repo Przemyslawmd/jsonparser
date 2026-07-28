@@ -9,7 +9,7 @@
 
 using namespace xml;
 
-class TestParserTokensErrorXML : public TestBaseXML {};
+class TestParserTokensErrorXML : public BaseTestXML {};
 
 
 TEST_F(TestParserTokensErrorXML, File_Angle_Open)

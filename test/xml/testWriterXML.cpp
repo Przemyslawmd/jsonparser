@@ -17,7 +17,7 @@
 
 using namespace xml;
 
-class TestWriterXML : public TestBaseXML
+class TestWriterXML : public BaseTestXML
 {
 protected:
     void testWriter(const std::string& file, uint indentation = 2)
