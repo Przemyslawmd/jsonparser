@@ -31,6 +31,7 @@ std::string Writer::createXmlString(const std::vector<ElemWriter>& elems)
         stream << "?>\n";
     }
 
+    unsigned int numOfElems = elems.size();
     for (const auto [idx, elem] : std::views::enumerate(elems))
     {
         switch(elem.type)
@@ -51,24 +52,14 @@ std::string Writer::createXmlString(const std::vector<ElemWriter>& elems)
                     std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
                 }
                 stream << "</" << elem.name.value() << ">";
-                if (indentation != 0) {
+                if (idx != (numOfElems - 1)) {
                     stream << "\n";
                 }
                 decIndent();
                 break;
             case ElemType::CONTENT:
                 deleteLastChars(stream, 1);
-                if (std::holds_alternative<std::string>(elem.value)) {
-                    stream << std::get<std::string>(elem.value);
-                }
-                else if (std::holds_alternative<int64_t>(elem.value))
-                {
-                    stream << std::get<int64_t>(elem.value);
-                }
-                else if (std::holds_alternative<double>(elem.value))
-                {
-                    stream << std::get<double>(elem.value);
-                }
+                std::visit([&stream](const auto& val) { stream << val; }, elem.value);
                 break;
         }
     }
