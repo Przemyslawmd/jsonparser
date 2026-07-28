@@ -24,8 +24,7 @@ protected:
     {
         auto keyMapper = std::make_unique<KeyMapper>();
         auto root = createObjects(TEST_DATA_XML, file, *keyMapper);
-        const std::string& pretendedKey = Settings::getPretendedKey();
-        ElemWriterCreator elemWtiter(*keyMapper, pretendedKey);
+        ElemWriterCreator elemWtiter(*keyMapper);
         auto elems = elemWtiter.createElems(*root);
 
         auto begin = std::chrono::high_resolution_clock::now();

@@ -21,8 +21,7 @@ protected:
     {
         auto keyMapper = std::make_unique<KeyMapper>();
         auto root = createObjects(TEST_DATA_XML, file, *keyMapper);
-        const std::string& pretendedKey = Settings::getPretendedKey();
-        auto writer = std::make_unique<ElemWriterCreator>(*keyMapper, pretendedKey);
+        auto writer = std::make_unique<ElemWriterCreator>(*keyMapper);
         return writer->createElems(*root);
     }
 };

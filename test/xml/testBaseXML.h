@@ -37,8 +37,7 @@ protected:
     std::unique_ptr<ObjectNode> createObjects(const std::string& path, const std::string& file, KeyMapper& keyMapper)
     {
         auto elems = createElements(path, file);
-        const std::string& pretendedKey = Settings::getPretendedKey();
-        auto objCreator = std::make_unique<ObjectCreator>(keyMapper, pretendedKey);
+        auto objCreator = std::make_unique<ObjectCreator>(keyMapper);
         auto node = objCreator->parseElems(*elems);
         return node;
     }

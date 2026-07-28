@@ -10,6 +10,7 @@
 #include "keyMapper.h"
 #include "elem.h"
 #include "node.h"
+#include "settings.h"
 #include "token.h"
 
 
@@ -20,10 +21,10 @@ namespace xml
 class ObjectCreator
 {
 public:
-    ObjectCreator(KeyMapper& keyMapper, const std::string& pretendedKey) : keyMapper(keyMapper), 
-                                                                           maxMapId(0), 
-                                                                           attrs(nullptr), 
-                                                                           pretendedKey(pretendedKey){};
+    ObjectCreator(KeyMapper& keyMapper) : keyMapper(keyMapper), 
+                                          maxMapId(0), 
+                                          attrs(nullptr), 
+                                          pretendedKey(Settings::getPretendedKey()){};
 
     std::unique_ptr<ObjectNode> parseElems(std::vector<ElemReader>&);
 

@@ -7,6 +7,7 @@
 #include "reader/xml/elem.h"
 #include "node.h"
 #include "keyMapper.h"
+#include "settings.h"
 
 
 namespace xml
@@ -14,8 +15,8 @@ namespace xml
 class ElemWriterCreator
 {
 public:
-    ElemWriterCreator(const KeyMapper& keyMapper, const std::string& pretendedKey): keyMapper(keyMapper), 
-                                                                                    pretendedKey(pretendedKey) {}
+    ElemWriterCreator(const KeyMapper& keyMapper): keyMapper(keyMapper), 
+                                                   pretendedKey(Settings::getPretendedKey()) {}
 
     std::vector<ElemWriter> createElems(const ObjectNode&);
 

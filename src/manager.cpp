@@ -107,8 +107,7 @@ bool Manager::parseXmlString(const std::string& xmlString)
     if (!ValidateElems(*elems)) {
         return false;
     }
-    const std::string& pretendedKey = Settings::getPretendedKey();
-    const auto objectCreator = std::make_unique<ObjectCreator>(*keyMapper, pretendedKey);
+    const auto objectCreator = std::make_unique<ObjectCreator>(*keyMapper);
     root = objectCreator->parseElems(*elems);
     return root ? true : false;
 }
@@ -121,13 +120,11 @@ std::optional<std::string> Manager::objectToXmlString()
     if (isRootEmpty()) {
         return std::nullopt;
     }
-    const auto& pretendedKey = Settings::getPretendedKey();
-    const auto elemsCreator = std::make_unique<ElemWriterCreator>(*keyMapper, pretendedKey);
+    const auto elemsCreator = std::make_unique<ElemWriterCreator>(*keyMapper);
     auto elems = elemsCreator->createElems(*root);
     if (elems.empty()) {
         return std::nullopt;
     }
-
     uint indentation = Settings::getIndentation();
     const auto writer = std::make_unique<Writer>(*keyMapper, indentation);
     return writer->createXmlString(elems);
