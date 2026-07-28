@@ -9,7 +9,15 @@ using namespace xml;
 
 std::vector<ElemWriter> ElemWriterCreator::createElems(const ObjectNode& object)
 {
+    bool addRoot = xmlRootIfNeeded && object.size() > 1;
+
+    if (addRoot) {
+        elems.emplace_back(ElemType::TAG_OPEN, "root");
+    }
     processObjectNode(object);
+    if (addRoot) {
+        elems.emplace_back(ElemType::TAG_CLOSE, "root");
+    }
     return elems;
 }
 

@@ -35,8 +35,19 @@ public:
         return pretendedKey;
     }
 
+    static void setXmlRoot(bool root)
+    {
+        xmlRootIfNeeded = root;
+    }
+
+    static bool getXmlRoot()
+    {
+        return xmlRootIfNeeded;
+    }
+
 private:
     inline static unsigned int indentation = 2;
     inline static std::string pretendedKey = "__text";
+    inline static bool xmlRootIfNeeded = true;
 };
 

@@ -1,0 +1,11 @@
+<person>
+  <name>John</name>
+  <age>39</age>
+  <country>Poland</country>
+  <values>
+    <ab>-12.67</ab>
+    <cd>43.001</cd>
+  </values>
+</person>
+<company>abc</company>
+<city>Cracow</city>

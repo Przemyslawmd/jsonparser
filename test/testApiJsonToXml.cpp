@@ -21,6 +21,7 @@ TEST_F(ApiJsonToXmlTest, Test_1)
     ASSERT_EQ(xmlString.value(), xmlExpected);
 }
 
+
 TEST_F(ApiJsonToXmlTest, Test_Number_Content)
 {
     auto api = prepareApiWithJson("test_from_xml_number_content.json");
@@ -30,3 +31,25 @@ TEST_F(ApiJsonToXmlTest, Test_Number_Content)
     ASSERT_EQ(xmlString.value(), xmlExpected);
 }
 
+
+TEST_F(ApiJsonToXmlTest, Test_No_Root_In_Json)
+{
+    auto api = prepareApiWithJson("test_5.json");
+    auto xmlString = api->objectToXmlString();
+    ASSERT_TRUE(xmlString.has_value());
+    std::string xmlExpected = getContentFromFile(TEST_DATA_XML, "test_5_from_json_root_added.xml");
+    ASSERT_EQ(xmlString.value(), xmlExpected);
+}
+
+#include <iostream>
+
+TEST_F(ApiJsonToXmlTest, Test_No_Root_In_Json_Root)
+{
+    Settings::setXmlRoot(false);
+    auto api = prepareApiWithJson("test_5.json");
+    auto xmlString = api->objectToXmlString();
+    ASSERT_TRUE(xmlString.has_value());
+    std::string xmlExpected = getContentFromFile(TEST_DATA_XML, "test_5_from_json_no_root.xml");
+    std::cout << xmlString.value() << std::endl;
+    ASSERT_EQ(xmlString.value(), xmlExpected);
+}

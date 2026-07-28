@@ -16,7 +16,8 @@ class ElemWriterCreator
 {
 public:
     ElemWriterCreator(const KeyMapper& keyMapper): keyMapper(keyMapper), 
-                                                   pretendedKey(Settings::getPretendedKey()) {}
+                                                   pretendedKey(Settings::getPretendedKey()),
+                                                   xmlRootIfNeeded(Settings::getXmlRoot()) {}
 
     std::vector<ElemWriter> createElems(const ObjectNode&);
 
@@ -25,6 +26,7 @@ private:
     void parseData(const Node&);
 
     const std::string& pretendedKey;
+    const bool xmlRootIfNeeded;
     const KeyMapper& keyMapper;
     std::vector<ElemWriter> elems;
 };
