@@ -41,15 +41,13 @@ TEST_F(ApiJsonToXmlTest, Test_No_Root_In_Json)
     ASSERT_EQ(xmlString.value(), xmlExpected);
 }
 
-#include <iostream>
 
-TEST_F(ApiJsonToXmlTest, Test_No_Root_In_Json_Root)
+TEST_F(ApiJsonToXmlTest, Test_No_Root_In_Json_No_Root_In_Settings)
 {
     Settings::setXmlRoot(false);
     auto api = prepareApiWithJson("test_5.json");
     auto xmlString = api->objectToXmlString();
     ASSERT_TRUE(xmlString.has_value());
     std::string xmlExpected = getContentFromFile(TEST_DATA_XML, "test_5_from_json_no_root.xml");
-    std::cout << xmlString.value() << std::endl;
     ASSERT_EQ(xmlString.value(), xmlExpected);
 }
