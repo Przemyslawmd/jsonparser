@@ -20,7 +20,7 @@ class ApiAddNodeJSON : public BaseTest {};
 TEST_F(ApiAddNodeJSON, AddSimpleNodeToObject)
 {
     auto api = prepareApiWithJson("test_4.json");
-    bool result = api->addNodeIntoObject({ "person2", "address" }, "post", NodeApi{ .value = "Cracow" });
+    bool result = api->addNodeIntoObject({ "person2", "address" }, "post", { "Cracow" });
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
@@ -112,10 +112,10 @@ TEST_F(ApiAddNodeJSON, AddSimpleNodeIntoArray)
 {
     auto api = prepareApiWithJson("test_7.json");
 
-    bool result = api->addNodeIntoArray({ "employees", uint(0), "data", uint(0) }, NodeApi{ .value = 4 });
+    bool result = api->addNodeIntoArray({ "employees", uint(0), "data", uint(0) }, { 4 });
     ASSERT_TRUE(result);
 
-    result = api->insertNodeIntoArray({ "employees", uint(1), "data", uint(0) }, 1, NodeApi{ .value = "c c" });
+    result = api->insertNodeIntoArray({ "employees", uint(1), "data", uint(0) }, 1, { "c c" });
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();

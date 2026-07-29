@@ -10,6 +10,9 @@
 struct NodeApi
 {
     using Value = std::variant<std::string, int64_t, double, bool, nullptr_t, std::map<std::string, NodeApi>, std::vector<NodeApi>>;
+
+    NodeApi(const Value& value) : value(value) {}
+
     Value value;
 };
 

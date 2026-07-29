@@ -40,11 +40,11 @@ TEST_F(ApiOtherActions, ClearApi)
     result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
 
-    result = api->changeNodeInArray({ "employees", uint(0), "data", uint(1) }, 2, NodeApi{ .value = 10 });
+    result = api->changeNodeInArray({ "employees", uint(0), "data", uint(1) }, 2, { 10 });
     ASSERT_TRUE(result);
-    result = api->changeNodeInObject({ "employees", uint(1), "employees", uint(0) }, "name", NodeApi{ .value = "Maria" });
+    result = api->changeNodeInObject({ "employees", uint(1), "employees", uint(0) }, "name", { "Maria" });
     ASSERT_TRUE(result);
-    result = api->changeNodeInArray({ "employees", uint(1), "data", uint(2), uint(0), "numbers" }, 0, NodeApi{ .value = 0.12 });
+    result = api->changeNodeInArray({ "employees", uint(1), "data", uint(2), uint(0), "numbers" }, 0, { 0.12 });
     ASSERT_TRUE(result);
 
     json = api->objectToJsonString().value();
@@ -88,7 +88,7 @@ TEST_F(ApiOtherActions, LoadJsonObject_1)
     root.emplace("person", internalObject);
 
     auto api = std::make_unique<JsonApi>();
-    api->loadObject(NodeApi{ .value = root });
+    api->loadObject({ root });
 
     std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getContentFromFile(TEST_DATA_API, "load_json_object_1.json");
@@ -122,7 +122,7 @@ TEST_F(ApiOtherActions, LoadJsonObject_2)
     root.emplace("employees", mainArray);
 
     auto api = std::make_unique<JsonApi>();
-    api->loadObject(NodeApi{ .value = root });
+    api->loadObject({ root });
 
     std::string json = api->objectToJsonString().value();
     std::string jsonExpected = getContentFromFile(TEST_DATA_API, "load_json_object_2.json");
@@ -135,7 +135,7 @@ TEST_F(ApiOtherActions, LoadJsonObject_Error)
     std::vector<NodeApi> arrayNode{{ 1 }, { 2 }, { 3 }};
 
     auto api = std::make_unique<JsonApi>();
-    bool result = api->loadObject(NodeApi{ .value = arrayNode });
+    bool result = api->loadObject({ arrayNode });
     ASSERT_FALSE(result);
     ASSERT_FALSE(api->isObject());
 
