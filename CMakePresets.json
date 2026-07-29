@@ -48,6 +48,16 @@
       }
     },
     {
+      "name": "Linux Clang",
+      "displayName": "Linux debug with Clang",
+      "inherits": "LinuxBase",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
       "name": "WindowsBase",
       "generator": "Ninja",
       "hidden": true,
