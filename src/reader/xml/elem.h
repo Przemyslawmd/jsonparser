@@ -26,16 +26,16 @@ struct ElemReader
     ElemReader(ElemType type, const std::string& name) : 
                type(type), name(name), value(nullptr), attrs({}) {}
 
-    ElemReader(ElemType type, const std::string& name, VariantData& value) : 
+    ElemReader(ElemType type, const std::string& name, TokenData& value) : 
                type(type), name(name), value(value), attrs({}) {}
 
-    ElemReader(ElemType type, VariantData& value) : 
+    ElemReader(ElemType type, TokenData& value) : 
                type(type), name({}), value(value), attrs({}) {}
 
     ElemType type;
     std::string name;
     std::map<std::string, std::string> attrs;
-    VariantData value;
+    TokenData value;
 };
 
 
@@ -56,7 +56,7 @@ struct  ElemWriter
     ElemType type;
     std::optional<std::string> name;
     std::map<std::string, std::string> attr;
-    VariantData value;
+    TokenData value;
 };
 }
 

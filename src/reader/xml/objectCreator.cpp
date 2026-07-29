@@ -62,7 +62,7 @@ void ObjectCreator::processTagOpen(const std::string& currKeyStr)
 }
 
 
-void ObjectCreator::processContent(const std::string& contentName, VariantData& data)
+void ObjectCreator::processContent(const std::string& contentName, TokenData& data)
 {
     auto optKeyID = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
     if (!optKeyID.has_value()) {

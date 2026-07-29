@@ -5,7 +5,7 @@
 #include <variant>
 
 
-using VariantData = std::variant<std::string, int64_t, double, bool, nullptr_t>;
+using TokenData = std::variant<std::string, int64_t, double, bool, nullptr_t>;
 
 namespace json
 {
@@ -28,7 +28,7 @@ namespace json
     struct Token
     {
         TokenType type;
-        VariantData data;
+        TokenData data;
     };
 }
 
@@ -51,7 +51,7 @@ namespace xml
     struct Token
     {
         TokenType type;
-        VariantData data;
+        TokenData data;
     };
 }
 

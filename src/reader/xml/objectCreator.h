@@ -42,7 +42,7 @@ private:
     void popContext();
 
     void processTagOpen(const std::string& key);
-    void processContent(const std::string& contentName, VariantData& data);
+    void processContent(const std::string& contentName, TokenData& data);
 
     void insertAttrs(ObjectNode& node, std::map<std::string, std::string>& attrs);
 };
