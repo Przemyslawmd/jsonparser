@@ -235,12 +235,12 @@ bool Manager::insertNodeIntoArray(const std::vector<Path>& path, size_t index, c
         return true;
     }
     else if (newNodeType == NodeType::OBJECT) {
-        arr->insert(arr->begin() + index, Node{ ObjectNode() });
+        arr->insert(arr->begin() + index, { ObjectNode() });
         auto& objToAdd = std::get<ObjectNode>(arr->at(index).value);
         addObjectInternally(objToAdd, newNode);
     }
     else {
-        arr->insert(arr->begin() + index, Node{ ArrayNode() });
+        arr->insert(arr->begin() + index, { ArrayNode() });
         auto& arrToAdd = std::get<ArrayNode>(arr->at(index).value);
         addArrayInternally(arrToAdd, newNode);
     }
@@ -296,12 +296,12 @@ bool Manager::changeNodeInArray(const std::vector<Path>& path, size_t index, con
         arr->at(index) = createNode(newNode);
     }
     else if (nodeType == NodeType::OBJECT) {
-        arr->at(index) = Node{ ObjectNode() };
+        arr->at(index) = { ObjectNode() };
         auto& objNew = std::get<ObjectNode>(arr->at(index).value);
         addObjectInternally(objNew, newNode);
     }
     else {
-        arr->at(index) = Node{ ArrayNode() };
+        arr->at(index) = { ArrayNode() };
         auto& arrNew = std::get<ArrayNode>(arr->at(index).value);
         addArrayInternally(arrNew, newNode);
     }

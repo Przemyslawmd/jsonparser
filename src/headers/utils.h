@@ -16,18 +16,18 @@ using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
 Node createNode(const NodeApi& node)
 {
     if (std::holds_alternative<std::string>(node.value)) {
-        return Node{ std::get<std::string>(node.value) };
+        return { std::get<std::string>(node.value) };
     }
     if (std::holds_alternative<int64_t>(node.value)) {
-        return Node{ std::get<int64_t>(node.value) };
+        return { std::get<int64_t>(node.value) };
     }
     if (std::holds_alternative<double>(node.value)) {
-        return Node{ std::get<double>(node.value) };
+        return { std::get<double>(node.value) };
     }
     if (std::holds_alternative<bool>(node.value)) {
-        return Node{ std::get<bool>(node.value) };
+        return { std::get<bool>(node.value) };
     }
-    return Node{ nullptr };
+    return { nullptr };
 }
 
 
