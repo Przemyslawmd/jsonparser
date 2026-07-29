@@ -14,7 +14,7 @@
 #include "settings.h"
 
 
-using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
+using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, std::nullptr_t>;
 
 /* Path contains a key for an object (map) or index for an array */
 using Path = std::variant<std::string, unsigned int>;

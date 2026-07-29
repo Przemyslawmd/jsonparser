@@ -22,7 +22,7 @@ concept SimpleNode = std::same_as<T, std::string> ||
                      std::same_as<T, double> || 
                      std::same_as<T, int64_t> || 
                      std::same_as<T, bool> || 
-                     std::same_as<T, nullptr_t>;
+                     std::same_as<T, std::nullptr_t>;
 
 
 namespace json

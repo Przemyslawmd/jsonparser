@@ -10,7 +10,7 @@
 #include "log/ErrorStorage.h"
 
 
-using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, nullptr_t>;
+using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, std::nullptr_t>;
 
 
 Node createNode(const NodeApi& node)
@@ -51,7 +51,7 @@ NodeType getNodeType(const T& node)
 template <typename T>
 T checkComplexNode(ComplexNodePtr node)
 {
-    if (std::holds_alternative<nullptr_t>(node)) {
+    if (std::holds_alternative<std::nullptr_t>(node)) {
         return nullptr;
     }
     if (std::holds_alternative<T>(node)) {

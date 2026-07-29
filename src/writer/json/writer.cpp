@@ -81,7 +81,7 @@ void Writer::parseData(const Node& node)
     else if (std::holds_alternative<bool>(node.value)) {
         stream << (std::get<bool>(node.value) == true ? "true" : "false") << DATA_END;
     }
-    else if (std::holds_alternative<nullptr_t>(node.value)) {
+    else if (std::holds_alternative<std::nullptr_t>(node.value)) {
         stream << "null" << DATA_END;
     }
     else if (std::holds_alternative<ObjectNode>(node.value)) {

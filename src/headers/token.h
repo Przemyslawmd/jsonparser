@@ -5,7 +5,7 @@
 #include <variant>
 
 
-using TokenData = std::variant<std::string, int64_t, double, bool, nullptr_t>;
+using TokenData = std::variant<std::string, int64_t, double, bool, std::nullptr_t>;
 
 namespace json
 {
