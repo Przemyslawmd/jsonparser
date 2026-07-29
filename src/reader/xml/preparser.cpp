@@ -24,7 +24,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
             continue;
         }
         if (symbol == '\"') {
-            uint shift = parseString(xml, index);
+            unsigned int shift = parseString(xml, index);
             if (shift == 0) {
                 return nullptr;
             }

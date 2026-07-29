@@ -20,7 +20,7 @@ using namespace xml;
 class TestWriterXML : public BaseTestXML
 {
 protected:
-    void testWriter(const std::string& file, uint indentation = 2)
+    void testWriter(const std::string& file, unsigned int indentation = 2)
     {
         auto keyMapper = std::make_unique<KeyMapper>();
         auto root = createObjects(TEST_DATA_XML, file, *keyMapper);

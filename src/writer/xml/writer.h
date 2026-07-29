@@ -25,7 +25,7 @@ private:
     void incIndent();
     void decIndent();
 
-    void deleteLastChars(std::ostringstream& stream, uint noOfChars);
+    void deleteLastChars(std::ostringstream& stream, unsigned int noOfChars);
 
     const KeyMapper& keyMapper;
     int indentation;

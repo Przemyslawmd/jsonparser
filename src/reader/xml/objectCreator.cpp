@@ -8,7 +8,7 @@ using namespace xml;
 
 std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<ElemReader>& elems)
 {
-    uint firstTag = 0;
+    unsigned int firstTag = 0;
     if (elems.front().type == ElemType::DECLARATION) {
         keyMapper.storeAttrsDec(std::move(elems.front().attrs));
         firstTag = 1;
@@ -86,9 +86,9 @@ void ObjectCreator::processContent(const std::string& contentName, TokenData& da
 
 void ObjectCreator::insertAttrs(ObjectNode& node, std::map<std::string, std::string>& attrs)
 {
-    std::optional<uint> keyId;
-    for (const auto& [key, value] : attrs) {
-        keyId = keyMapper.createKeyIDAttr(key, mapIDStack.top());
+    std::optional<unsigned int> keyId;
+    for (const auto& [keyStr, value] : attrs) {
+        keyId = keyMapper.createKeyIDAttr(keyStr, mapIDStack.top());
         node.emplace(keyId.value(), value);
     }
 }

@@ -75,7 +75,7 @@ void Writer::setIndent(int step)
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
-void Writer::deleteLastChars(std::ostringstream& stream, uint noOfChars)
+void Writer::deleteLastChars(std::ostringstream& stream, unsigned int noOfChars)
 {
     size_t pos = stream.tellp();
     stream.seekp(pos - noOfChars);

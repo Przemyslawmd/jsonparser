@@ -18,9 +18,9 @@ std::string Writer::createJsonString(const ObjectNode& object)
 }
 
 
-void Writer::setIndent(uint step)
+void Writer::setIndent(unsigned int step)
 {
-    this->indentationStep = step;
+    indentationStep = step;
 }
 
 
@@ -54,8 +54,8 @@ void Writer::processArrayNode(const ArrayNode& arr)
 {
     stream << "[\n";
     incIndent();
-    
-    for (auto const& val : arr) {
+
+    for (const auto& val : arr) {
         std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
         parseData(val);
     }

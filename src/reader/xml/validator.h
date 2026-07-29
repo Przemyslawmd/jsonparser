@@ -15,7 +15,7 @@ namespace xml
 {
 static bool ValidateElems(const std::vector<ElemReader>& elems)
 {
-    uint skipFirst = elems.front().type == ElemType::DECLARATION ? 1 : 0;
+    unsigned int skipFirst = elems.front().type == ElemType::DECLARATION ? 1 : 0;
 
     std::stack<std::string> tags;
     for (const auto& elem : elems | std::views::drop(skipFirst)) 
