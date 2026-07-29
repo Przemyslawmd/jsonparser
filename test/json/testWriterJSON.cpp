@@ -27,8 +27,7 @@ static std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, 
     const auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
     EXPECT_TRUE(tokens != nullptr);
-    tokens = createKeyTokens(std::move(tokens));
-
+    createKeyTokens(*tokens);
     const auto parser = std::make_unique<Parser>(keyMapper);
     return parser->parseTokens(*tokens);
 }
@@ -45,9 +44,9 @@ protected:
         auto begin = std::chrono::high_resolution_clock::now();
         Writer writer(*keyMapper, indentation);
         std::string json = writer.createJsonString(*root);
-
         const auto end = std::chrono::high_resolution_clock::now();
         showDuration(begin, end);
+
         std::string jsonExpected = getContentFromFile(TEST_DATA_JSON, file);
         ASSERT_EQ(json, jsonExpected);
     }

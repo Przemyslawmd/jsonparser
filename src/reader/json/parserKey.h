@@ -12,13 +12,13 @@
 
 namespace json
 {
-static std::unique_ptr<std::vector<Token>> createKeyTokens(std::unique_ptr<std::vector<Token>> tokens)
+static void createKeyTokens(std::vector<Token>& tokens)
 {
     std::stack<State> states;
     using enum TokenType;
     using enum State;
 
-    for (const auto [idx, token] : std::views::enumerate(*tokens))
+    for (const auto [idx, token] : std::views::enumerate(tokens))
     {
         switch (token.type)
         {
@@ -33,14 +33,13 @@ static std::unique_ptr<std::vector<Token>> createKeyTokens(std::unique_ptr<std::
                 states.pop();
                 break;
             case DATA_STR:
-                auto prevType = tokens->at(idx - 1).type;
+                auto prevType = tokens.at(idx - 1).type;
                 if (states.top() == OBJECT_PARSING && (prevType == CURLY_OPEN || prevType == COMMA)) {
                     token.type = KEY;
                 }
                 break;
         }
     }
-    return tokens;
 }
 }
 

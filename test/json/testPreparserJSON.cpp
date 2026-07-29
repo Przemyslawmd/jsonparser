@@ -30,11 +30,11 @@ protected:
         const auto begin = std::chrono::high_resolution_clock::now();
         auto preparser = std::make_unique<Preparser>();
         auto tokens = preparser->parseJSON(jsonString);
-        if (tokens == nullptr) {
+        if (!tokens) {
             return nullptr;
         }
-        tokens = createKeyTokens(std::move(tokens));
 
+        createKeyTokens(*tokens);
         const auto end = std::chrono::high_resolution_clock::now();
         showDuration(begin, end);
         return tokens;
@@ -55,8 +55,6 @@ void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<Token>&
             ASSERT_EQ(std::get<T>(token_1.data), std::get<T>(token_2.data));
         }
     };
-
-    using enum TokenType;
 
     for (const auto [token_1, token_2] : std::views::zip(*tokens, expected)) {
         ASSERT_EQ(token_1.type, token_2.type );

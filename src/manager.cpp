@@ -51,19 +51,18 @@ bool Manager::parseJsonString(const std::string& jsonString)
 
     const auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
-    if (tokens == nullptr) {
+    if (!tokens) {
         return false;
     }
 
-    if (validateTokens(*tokens) == false) {
+    if (!validateTokens(*tokens)) {
         return false;
     }
 
-    tokens = createKeyTokens(std::move(tokens));
-
+    createKeyTokens(*tokens);
     const auto parser = std::make_unique<Parser>(*keyMapper);
     root = parser->parseTokens(*tokens);
-    if (root == nullptr) {
+    if (!root) {
         return false;
     }
     return true;
@@ -163,12 +162,12 @@ bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string
 
     ComplexNodePtr comNode = getNodeFromPath(path);
     ObjectNode* obj = checkComplexNode<ObjectNode*>(comNode);
-    if (obj == nullptr) {
+    if (!obj) {
         return false;
     }
 
     auto optKeyID = keyMapper->createKeyID(keyStr, obj->begin()->first);
-    if (optKeyID == std::nullopt) {
+    if (!optKeyID.has_value()) {
         return false;
     }
     uint32_t keyID = optKeyID.value();
@@ -197,7 +196,7 @@ bool Manager::addNodeIntoArray(const std::vector<Path>& path, const NodeApi& new
 
     ComplexNodePtr comNode = getNodeFromPath(path);
     ArrayNode* arr = checkComplexNode<ArrayNode*>(comNode);
-    if (arr == nullptr) {
+    if (!arr) {
         return false;
     }
 

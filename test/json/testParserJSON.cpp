@@ -38,7 +38,7 @@ protected:
 
         auto tokens = preparser->parseJSON(jsonString);
         EXPECT_TRUE(tokens != nullptr);
-        tokens = createKeyTokens(std::move(tokens));
+        createKeyTokens(*tokens);
 
         const auto parser = std::make_unique<Parser>(*keyMapper);
         const auto begin = std::chrono::high_resolution_clock::now();
@@ -64,7 +64,7 @@ void checkSimpleNode(ObjectNode* objectNode, const uint32_t key, T expected)
 {
     ASSERT_TRUE(objectNode->find(key) != objectNode->end());
     auto* nodeValue = std::get_if<T>(&objectNode->at(key).value);
-    ASSERT_TRUE(nodeValue != nullptr);
+    ASSERT_TRUE(nodeValue);
     ASSERT_EQ(*nodeValue, expected);
 }
 
