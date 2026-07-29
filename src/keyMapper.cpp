@@ -16,7 +16,7 @@ std::optional<uint32_t>
 KeyMapper::createKeyID(std::string_view keyStr, uint32_t mapID)
 {
     mapID &= MASK_MAP_ID;
-    if (getKeyID(keyStr, mapID) != std::nullopt) {
+    if (getKeyID(keyStr, mapID).has_value()) {
         ErrorStorage::putError(ErrorCode::KEY_MAPPER_KEY_STR_REPEAT);
         return std::nullopt;
     }
@@ -30,7 +30,7 @@ std::optional<uint32_t>
 KeyMapper::createKeyIDAttr(std::string_view keyStr, uint32_t mapID)
 {
     auto keyID = createKeyID(keyStr, mapID);
-    if (keyID == std::nullopt) {
+    if (!keyID.has_value()) {
         return std::nullopt;
     }
     attrs.push_back(keyID.value());
@@ -40,7 +40,7 @@ KeyMapper::createKeyIDAttr(std::string_view keyStr, uint32_t mapID)
 
 std::optional<std::string> KeyMapper::getKeyStr(uint32_t keyID) const
 {
-    if (keyMap.contains(keyID) == false) {
+    if (!keyMap.contains(keyID)) {
         return std::nullopt;
     }
     return keyMap.at(keyID);

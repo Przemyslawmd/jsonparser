@@ -343,7 +343,7 @@ bool Manager::removeNodeFromArray(const std::vector<Path>& path, size_t index)
     }
 
     ArrayNode* arr = getArrayFromPath(path, index);
-    if (arr == nullptr) {
+    if (!arr) {
         return false;
     }
 
@@ -385,7 +385,7 @@ const std::vector<Error>& Manager::getErrors() const
 
 bool Manager::isRootEmpty() const
 {
-    if (root == nullptr) {
+    if (!root) {
         ErrorStorage::putError(ErrorCode::MANAGER_NO_OBJECT);
         return true;
     }
@@ -408,7 +408,7 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
             const auto& keyStr = std::get<std::string>(pathKey);
             std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
 
-            if (keyID == std::nullopt) {
+            if (!keyID.has_value()) {
                 ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
                 return nullptr;
             }
@@ -507,7 +507,7 @@ Manager::getArrayFromPath(const std::vector<Path>& path, size_t index)
 {
     ComplexNodePtr complexNode = getNodeFromPath(path);
     ArrayNode* arr = checkComplexNode<ArrayNode*>(complexNode);
-    if (arr == nullptr) {
+    if (!arr) {
         return nullptr;
     }
 
@@ -524,17 +524,17 @@ Manager::getObjectAndKeyIDFromPath(const std::vector<Path>& path, const std::str
 {
     ComplexNodePtr comNode = getNodeFromPath(path);
     ObjectNode* obj = checkComplexNode<ObjectNode*>(comNode);
-    if (obj == nullptr) {
+    if (!obj) {
         return { nullptr, 0 };
     }
 
     std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
-    if (keyID == std::nullopt) {
+    if (!keyID.has_value()) {
         ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
         return { nullptr, 0 };
     }
 
-    if (obj->contains(keyID.value()) == false) {
+    if (!obj->contains(keyID.value())) {
         ErrorStorage::putError(ErrorCode::EXCEPTION_MANAGER_NOT_KEY_IN_OBJECT);
         return { nullptr, 0 };
     }
