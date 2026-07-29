@@ -4,13 +4,13 @@
 #include <string>
 
 #include "errorCode.h"
-#include "log/ErrorStorage.h"
 #include "token.h"
+#include "log/ErrorStorage.h"
 
 
-static uint parseString(const std::string& file, uint index)
+static unsigned int parseString(const std::string& file, unsigned int index)
 {
-    uint shift = 1;
+    unsigned int shift = 1;
     while (index + shift < file.length()) {
         if (file[index + shift] == '\"') {
             return shift;
@@ -22,7 +22,7 @@ static uint parseString(const std::string& file, uint index)
 }
 
 
-static std::tuple<size_t, std::variant<int64_t, double>> parseNumber(const std::string& json, size_t index)
+static std::tuple<size_t, std::variant<int64_t, double>> parseNumber(const std::string& json, unsigned int index)
 {
     int64_t number = 0;
     bool isMinus = false;
@@ -44,7 +44,7 @@ static std::tuple<size_t, std::variant<int64_t, double>> parseNumber(const std::
     }
 
     index++;
-    size_t divider = 1;
+    unsigned int divider = 1;
     while (index < json.length() && isdigit(json[index])) {
         number = number * 10 + (json[index] - '0');
         index++;

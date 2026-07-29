@@ -78,7 +78,7 @@ std::optional<std::string> Manager::objectToJsonString()
         return std::nullopt;
     }
 
-    uint indentation = Settings::getIndentation();
+    auto indentation = Settings::getIndentation();
     const auto writer = std::make_unique<Writer>(*keyMapper, indentation);
     return writer->createJsonString(*root);
 }
@@ -125,7 +125,7 @@ std::optional<std::string> Manager::objectToXmlString()
     if (elems.empty()) {
         return std::nullopt;
     }
-    uint indentation = Settings::getIndentation();
+    auto indentation = Settings::getIndentation();
     const auto writer = std::make_unique<Writer>(*keyMapper, indentation);
     return writer->createXmlString(elems);
 }
@@ -138,7 +138,7 @@ bool Manager::loadObject(const NodeApi& node)
         return false;
     }
 
-    if (std::holds_alternative<std::map<std::string, NodeApi>>(node.value) == false) {
+    if (!std::holds_alternative<std::map<std::string, NodeApi>>(node.value)) {
         ErrorStorage::putError(ErrorCode::MANAGER_ROOT_NOT_OBJECT);
         return false;
     }
@@ -364,7 +364,7 @@ bool Manager::removeNodeFromArray(const std::vector<Path>& path, size_t index)
 }
 
 
-bool Manager::setIndentation(uint indentation)
+bool Manager::setIndentation(unsigned int indentation)
 {
     return Settings::setIndendation(indentation);
 }

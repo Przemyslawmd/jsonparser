@@ -40,7 +40,7 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
     elems = std::make_unique<std::vector<ElemReader>>();
     ParsingState state = ParsingState::STATE_NONE;
 
-    std::optional<uint> declarationTokens = parseDeclaration(*tokens);
+    auto declarationTokens = parseDeclaration(*tokens);
     if (!declarationTokens.has_value()) {
         ErrorStorage::putError(ErrorCode::XML_PARSER_TOKENS_DECLARATION);
         return nullptr;
@@ -130,9 +130,9 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
 }
 
 
-std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tokens)
+std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Token>& tokens)
 {
-    auto checkPair = [](const std::vector<Token>& tokens, uint index, const std::string& value)
+    auto checkPair = [](const std::vector<Token>& tokens, unsigned int index, const std::string& value)
     {
         return tokens.at(index).type == DATA_STR &&
                std::get<std::string>(tokens.at(index).data) == value &&
@@ -140,16 +140,16 @@ std::optional<uint> ParserTokens::parseDeclaration(const std::vector<Token>& tok
                tokens.at(index + 2).type == DATA_STR_QUOTA;
     };
 
-    auto checkClosing = [](const std::vector<Token>& tokens, uint index)
+    auto checkClosing = [](const std::vector<Token>& tokens, unsigned int index)
     {
         return tokens.at(index).type == QUESTION && tokens.at(index + 1).type == ANGLE_CLOSE;
     };
 
-    uint index = 1;
+    unsigned int index = 1;
     if (tokens.at(index).type != QUESTION) {
         return 0;
     }
-    if (tokens.at(index + 1).type != DATA_STR || std::get<std::string>(tokens.at(2).data) != XML) {
+    if (tokens.at(index + 1).type != DATA_STR || std::get<std::string>(tokens.at(index + 1).data) != XML) {
         return std::nullopt;
     }
 

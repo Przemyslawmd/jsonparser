@@ -1,10 +1,8 @@
 
 #pragma once
 
-#include <map>
 #include <memory>
 #include <optional>
-#include <string_view>
 #include <vector>
 
 #include "token.h"
@@ -42,7 +40,7 @@ public:
 private:
     std::unique_ptr<std::vector<ElemReader>> elems;
 
-    std::optional<uint> parseDeclaration(const std::vector<Token>& tokens);
+    std::optional<unsigned int> parseDeclaration(const std::vector<Token>& tokens);
 };
 }
 
