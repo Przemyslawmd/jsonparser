@@ -10,9 +10,6 @@
 
 static const std::unordered_map<ErrorCode, std::optional<std::string>> ErrorDetails = 
 {
-    { ErrorCode::EXCEPTION_MANAGER_NOT_KEY_IN_OBJECT,
-        "Exception: Key exists in the key mapper but not in the object" },
-
     { ErrorCode::KEY_MAPPER_KEY_STR_REPEAT,
         "KeyMapper: Key in JSON repeated" },
 

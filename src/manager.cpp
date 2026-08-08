@@ -536,11 +536,6 @@ Manager::getObjectAndKeyIDFromPath(const std::vector<Path>& path, const std::str
         ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
         return { nullptr, 0 };
     }
-
-    if (!obj->contains(keyID.value())) {
-        ErrorStorage::putError(ErrorCode::EXCEPTION_MANAGER_NOT_KEY_IN_OBJECT);
-        return { nullptr, 0 };
-    }
     return { obj, keyID.value() };
 }
 
