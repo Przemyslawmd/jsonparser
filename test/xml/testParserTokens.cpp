@@ -20,31 +20,31 @@ TEST_F(TestParserTokensXML, Test_File_2)
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 4);
 
-    unsigned int index = 0;
-    ASSERT_EQ(elems->at(index).type, ElemType::DECLARATION);
-    ASSERT_EQ(elems->at(index).name, "xml");
+    unsigned int idx = 0;
+    ASSERT_EQ(elems->at(idx).type, DECLARATION);
+    ASSERT_EQ(elems->at(idx).name, "xml");
 
-    const auto& attrs = elems->at(index).attrs;
+    const auto& attrs = elems->at(idx).attrs;
     ASSERT_EQ(attrs.size(), 2);
     ASSERT_TRUE(attrs.contains("version"));
     ASSERT_EQ(attrs.at("version"), "1.0");
     ASSERT_TRUE(attrs.contains("encoding"));
     ASSERT_EQ(attrs.at("encoding"), "UTF-8");
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(index).name, "person");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "person");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
-    ASSERT_EQ(std::get<std::string>(elems->at(index).value), "John");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, CONTENT);
+    ASSERT_EQ(std::get<std::string>(elems->at(idx).value), "John");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(index).name, "person");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "person");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 }
 
 
@@ -55,45 +55,45 @@ TEST_F(TestParserTokensXML, Test_Number_Content)
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 8);
 
-    unsigned int index = 0;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(index).name, "person");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    unsigned int idx = 0;
+    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "person");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(index).name, "number");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "number");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
-    ASSERT_EQ(std::get<int64_t>(elems->at(index).value), 34567);
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, CONTENT);
+    ASSERT_EQ(std::get<int64_t>(elems->at(idx).value), 34567);
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(index).name, "number");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "number");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(index).name, "secondNumber");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "secondNumber");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
-    ASSERT_EQ(std::get<double>(elems->at(index).value), 10.002);
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, CONTENT);
+    ASSERT_EQ(std::get<double>(elems->at(idx).value), 10.002);
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(index).name, "secondNumber");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "secondNumber");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(index).name, "person");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "person");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 }
 
 
@@ -104,30 +104,30 @@ TEST_F(TestParserTokensXML, Test_File_No_Declaration_1)
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 5);
 
-    unsigned int index = 0;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(index).name, "person");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    unsigned int idx = 0;
+    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "person");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(index).name, "name");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "name");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
-    ASSERT_EQ(std::get<std::string>(elems->at(index).value), "Jan");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, CONTENT);
+    ASSERT_EQ(std::get<std::string>(elems->at(idx).value), "Jan");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(index).name, "name");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "name");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(index).name, "person");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "person");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 }
 
 
@@ -138,11 +138,11 @@ TEST_F(TestParserTokensXML, Test_File_5_attrs)
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 9);
 
-    unsigned int index = 0;
-    ASSERT_EQ(elems->at(index).type, ElemType::DECLARATION);
-    ASSERT_EQ(elems->at(index).name, "xml");
+    unsigned int idx = 0;
+    ASSERT_EQ(elems->at(idx).type, DECLARATION);
+    ASSERT_EQ(elems->at(idx).name, "xml");
 
-    const auto& attrsDec = elems->at(index).attrs;
+    const auto& attrsDec = elems->at(idx).attrs;
     ASSERT_EQ(attrsDec.size(), 3);
     ASSERT_TRUE(attrsDec.contains("version"));
     ASSERT_EQ(attrsDec.at("version"), "1.0");
@@ -151,54 +151,54 @@ TEST_F(TestParserTokensXML, Test_File_5_attrs)
     ASSERT_TRUE(attrsDec.contains("standalone"));
     ASSERT_EQ(attrsDec.at("standalone"), "yes");
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(index).name, "city");
-    const auto& attrsCity = elems->at(index).attrs;
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "city");
+    const auto& attrsCity = elems->at(idx).attrs;
     ASSERT_EQ(attrsCity.size(), 1);
     ASSERT_TRUE(attrsCity.contains("state"));
     ASSERT_EQ(attrsCity.at("state"), "Italy");
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(index).name, "name");
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "name");
 
-    auto& attrsName = elems->at(index).attrs;
+    auto& attrsName = elems->at(idx).attrs;
     ASSERT_EQ(attrsName.size(), 2);
     ASSERT_TRUE(attrsName.contains("code"));
     ASSERT_EQ(attrsName.at("code"), "ML");
     ASSERT_TRUE(attrsName.contains("post"));
     ASSERT_EQ(attrsName.at("post"), "_ML");
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
-    ASSERT_EQ(std::get<std::string>(elems->at(index).value), "Milan");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, CONTENT);
+    ASSERT_EQ(std::get<std::string>(elems->at(idx).value), "Milan");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(index).name, "name");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "name");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(index).name, "province");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "province");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
-    ASSERT_EQ(std::get<std::string>(elems->at(index).value), "Lombardy");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, CONTENT);
+    ASSERT_EQ(std::get<std::string>(elems->at(idx).value), "Lombardy");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(index).name, "province");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "province");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
         
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(index).name, "city");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "city");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 }
 
 
@@ -209,30 +209,30 @@ TEST_F(TestParserTokensXML, Test_Content_Few_Words)
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 5);
 
-    unsigned int index = 0;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(index).name, "person");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    unsigned int idx = 0;
+    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "person");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_OPEN);
-    ASSERT_EQ(elems->at(index).name, "name");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "name");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::CONTENT);
-    ASSERT_EQ(std::get<std::string>(elems->at(index).value), "John Wick Paris");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, CONTENT);
+    ASSERT_EQ(std::get<std::string>(elems->at(idx).value), "John Wick Paris");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(index).name, "name");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "name");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 
-    index++;
-    ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
-    ASSERT_EQ(elems->at(index).name, "person");
-    ASSERT_TRUE(elems->at(index).attrs.empty());
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "person");
+    ASSERT_TRUE(elems->at(idx).attrs.empty());
 }
 
 
@@ -241,40 +241,52 @@ TEST_F(TestParserTokensXML, Test_Array)
     auto elems = createElements(TEST_DATA_XML, "test_array.xml");
     ASSERT_EQ(elems->size(), 12);
 
-    ASSERT_EQ(elems->at(0).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(0).name, "root");
+    unsigned int idx = 0;
+    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "root");
 
-    ASSERT_EQ(elems->at(1).type, TAG_ARRAY_OPEN);
-    ASSERT_EQ(elems->at(1).name, "employees");
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_ARRAY_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "employees");
 
-    ASSERT_EQ(elems->at(2).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(2).name, "name");
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "name");
 
-    ASSERT_EQ(elems->at(3).type, CONTENT);
-    ASSERT_EQ(std::get<std::string>(elems->at(3).value), "Agata");
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, CONTENT);
+    ASSERT_EQ(std::get<std::string>(elems->at(idx).value), "Agata");
 
-    ASSERT_EQ(elems->at(4).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(4).name, "name");
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "name");
 
-    ASSERT_EQ(elems->at(5).type, TAG_ARRAY_CLOSE);
-    ASSERT_EQ(elems->at(5).name, "employees");
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_ARRAY_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "employees");
 
-    ASSERT_EQ(elems->at(6).type, TAG_ARRAY_OPEN);
-    ASSERT_EQ(elems->at(6).name, "employees");
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_ARRAY_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "employees");
 
-    ASSERT_EQ(elems->at(7).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(7).name, "name");
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(idx).name, "name");
 
-    ASSERT_EQ(elems->at(8).type, CONTENT);
-    ASSERT_EQ(std::get<std::string>(elems->at(8).value), "Anna");
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, CONTENT);
+    ASSERT_EQ(std::get<std::string>(elems->at(idx).value), "Anna");
 
-    ASSERT_EQ(elems->at(9).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(9).name, "name");
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "name");
 
-    ASSERT_EQ(elems->at(10).type, TAG_ARRAY_CLOSE);
-    ASSERT_EQ(elems->at(10).name, "employees");
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_ARRAY_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "employees");
 
-    ASSERT_EQ(elems->at(11).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(11).name, "root");
+    idx++;
+    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(idx).name, "root");
 }
 

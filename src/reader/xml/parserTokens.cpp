@@ -19,15 +19,15 @@ using enum TokenType;
 
 const std::map<ParsingState, ParsingState> angleCloseTransision = 
 {
-        { STATE_TAG_OPEN_NAMED,    STATE_TAG_COMPLETED },
-        { STATE_TAG_CLOSE_NAMED,   STATE_TAG_COMPLETED },
-        { STATE_ATTR_VALUE,        STATE_TAG_COMPLETED },
+    { STATE_TAG_OPEN_NAMED,  STATE_TAG_COMPLETED },
+    { STATE_TAG_CLOSE_NAMED, STATE_TAG_COMPLETED },
+    { STATE_ATTR_VALUE,      STATE_TAG_COMPLETED },
 };
 
 
 std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_ptr<std::vector<Token>> tokens)
 {
-    if (tokens == nullptr || tokens->empty()) {
+    if (!tokens || tokens->empty()) {
         ErrorStorage::putError(XML_PARSER_TOKENS_NO_TOKENS);
         return nullptr;
     }
@@ -107,10 +107,10 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
             case DATA_STR_QUOTA:
                 if (state == STATE_ATTR_EQUAL) {
                     auto& tag = elems->back();
-                    state = STATE_ATTR_VALUE;
                     tag.attrs.emplace(attrKey.value(), std::get<std::string>(token.data));
+                    state = STATE_ATTR_VALUE;
                     break;
-                }
+                    }
                 ErrorStorage::putError(XML_PARSER_TOKENS_DATA_STR_QUOTA);
                 return nullptr;
             case DATA_INT:
@@ -232,7 +232,7 @@ void ParserTokens::checkArrays()
             }
             else if (elem.name == name && elem.type == TAG_CLOSE && guard == 0) {
                 elem.type = TAG_ARRAY_CLOSE;
-                break;;
+                break;
             }
         }
     };
@@ -246,12 +246,11 @@ void ParserTokens::checkArrays()
             tagName = elem.name;
             continue;
         }
-        if (elem.type == TAG_OPEN && tagName.has_value() && tagName.value() == elem.name) {
+        else if (elem.type == TAG_OPEN && tagName.has_value() && tagName.value() == elem.name) {
             elem.type = TAG_ARRAY_OPEN;
             elems->at(idx - 1).type = TAG_ARRAY_CLOSE;
             findOpenElem(*elems, idx - 1, tagName.value());
             findCloseElem(*elems, idx + 1, tagName.value());
-            continue;
         }
         tagName.reset();
     }
