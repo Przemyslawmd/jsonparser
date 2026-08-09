@@ -1,0 +1,68 @@
+
+#pragma once
+
+#include <ranges>
+#include <vector>
+
+#include "elem.h"
+
+
+namespace xml
+{
+static void checkArrays(std::vector<ElemReader>& elems)
+{
+    using enum ElemType;
+
+    auto findOpenElem = [](std::vector<ElemReader>& elems, unsigned int idx, const std::string& name)
+    {
+        unsigned int guard = 0;
+        for (auto& elem : std::views::reverse(elems) | std::views::drop(idx)) {
+            if (elem.name == name && elem.type == TAG_CLOSE) {
+                guard++;
+            }
+            else if (elem.name == name && elem.type == TAG_OPEN && guard > 0) {
+                guard--;
+            }
+            else if (elem.name == name && elem.type == TAG_OPEN && guard == 0) {
+                elem.type = TAG_ARRAY_OPEN;
+                break;
+            }
+        }
+    };
+
+    auto findCloseElem = [](std::vector<ElemReader>& elems, unsigned int idx, const std::string& name)
+    {
+        unsigned int guard = 0;
+        for (auto& elem : elems | std::views::drop(idx)) {
+            if (elem.name == name && elem.type == TAG_OPEN) {
+                guard++;
+            }
+            else if (elem.name == name && elem.type == TAG_CLOSE && guard > 0) {
+                guard--;
+            }
+            else if (elem.name == name && elem.type == TAG_CLOSE && guard == 0) {
+                elem.type = TAG_ARRAY_CLOSE;
+                break;
+            }
+        }
+    };
+
+    auto firstToken = elems.front().type == DECLARATION ? 1 : 0;
+    std::optional<std::string> tagName;
+
+    auto elemsView = elems | std::views::drop(firstToken) | std::views::enumerate;
+    for (auto [idx, elem] : elemsView) {
+        if (elem.type == TAG_CLOSE) {
+            tagName = elem.name;
+            continue;
+        }
+        else if (elem.type == TAG_OPEN && tagName.has_value() && tagName.value() == elem.name) {
+            elem.type = TAG_ARRAY_OPEN;
+            elems.at(idx - 1).type = TAG_ARRAY_CLOSE;
+            findOpenElem(elems, idx - 1, tagName.value());
+            findCloseElem(elems, idx + 1, tagName.value());
+        }
+        tagName.reset();
+    }
+}
+}

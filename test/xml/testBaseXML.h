@@ -3,6 +3,7 @@
 
 #include <gtest/gtest.h>
 
+#include "reader/xml/arrayChecker.h"
 #include "reader/xml/objectCreator.h"
 #include "reader/xml/elem.h"
 #include "reader/xml/preparser.h"
@@ -37,6 +38,7 @@ protected:
     std::unique_ptr<ObjectNode> createObjects(const std::string& path, const std::string& file, KeyMapper& keyMapper)
     {
         auto elems = createElements(path, file);
+        checkArrays(*elems);
         auto objCreator = std::make_unique<ObjectCreator>(keyMapper);
         auto node = objCreator->parseElems(*elems);
         return node;

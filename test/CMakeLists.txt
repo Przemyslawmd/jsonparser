@@ -45,6 +45,7 @@ if (JSON_BUILD)
 endif()
 
 if (XML_BUILD)
+    list(APPEND TEST_FILES "xml/testArrayChecker.cpp")
     list(APPEND TEST_FILES "xml/testPreparser.cpp")
     list(APPEND TEST_FILES "xml/testParserTokens.cpp")
     list(APPEND TEST_FILES "xml/testParserTokensError.cpp")

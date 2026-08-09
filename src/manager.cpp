@@ -6,6 +6,7 @@
 #include "reader/json/preparser.h"
 #include "reader/json/validator.h"
 
+#include "reader/xml/arrayChecker.h"
 #include "reader/xml/objectCreator.h"
 #include "reader/xml/preparser.h"
 #include "reader/xml/parserTokens.h"
@@ -107,6 +108,8 @@ bool Manager::parseXmlString(const std::string& xmlString)
     if (!ValidateElems(*elems)) {
         return false;
     }
+
+    checkArrays(*elems);
     const auto objectCreator = std::make_unique<ObjectCreator>(*keyMapper);
     root = objectCreator->parseElems(*elems);
     return root ? true : false;
