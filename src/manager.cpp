@@ -164,8 +164,6 @@ bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string
         return false;
     }
 
-    //auto [obj, keyID] = getObjectAndKeyIDFromPath(path, keyStr);
-    
     ComplexNodePtr comNode = getNodeFromPath(path);
     ObjectNode* obj = checkComplexNode<ObjectNode*>(comNode);
     if (!obj) {
@@ -409,6 +407,19 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
     ObjectNode* obj = root.get();
     ArrayNode* arr = nullptr;
 
+    auto checkNewNode = [](Node* node, ObjectNode** obj, ArrayNode** arr) -> NodeType
+    {
+        if (std::holds_alternative<ObjectNode>(node->value)) {
+            *obj = std::get_if<ObjectNode>(&node->value);
+            return OBJECT;
+        }
+        else if (std::holds_alternative<ArrayNode>(node->value)) {
+            *arr = std::get_if<ArrayNode>(&node->value);
+            return ARRAY;
+        }
+        return SIMPLE;
+    };
+
     for (const auto& pathKey : path) {
         if (nodeType == OBJECT && std::holds_alternative<std::string>(pathKey)) {
             const auto& keyStr = std::get<std::string>(pathKey);
@@ -420,14 +431,8 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
             }
 
             Node* node = &obj->at(keyID.value());
-            if (std::holds_alternative<ObjectNode>(node->value)) {
-                nodeType = OBJECT;
-                obj = std::get_if<ObjectNode>(&node->value);
-            }
-            else if (std::holds_alternative<ArrayNode>(node->value)) {
-                nodeType = ARRAY;
-                arr = std::get_if<ArrayNode>(&node->value);
-            } else {
+            nodeType = checkNewNode(node, &obj, &arr);
+            if (nodeType == SIMPLE) {
                 ErrorStorage::putError(ErrorCode::MANAGER_IMPROPER_PATH);
                 return nullptr;
             }
@@ -440,15 +445,8 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
             }
 
             Node* node = &arr->at(index);
-            if (std::holds_alternative<ObjectNode>(node->value)) {
-                nodeType = OBJECT;
-                obj = std::get_if<ObjectNode>(&node->value);
-            }
-            else if (std::holds_alternative<ArrayNode>(node->value)) {
-                nodeType = ARRAY;
-                arr = std::get_if<ArrayNode>(&node->value);
-            }
-            else {
+            nodeType = checkNewNode(node, &obj, &arr);
+            if (nodeType == SIMPLE) {
                 ErrorStorage::putError(ErrorCode::MANAGER_IMPROPER_PATH);
                 return nullptr;
             }
