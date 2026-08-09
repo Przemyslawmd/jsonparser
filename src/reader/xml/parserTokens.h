@@ -41,6 +41,7 @@ private:
     std::unique_ptr<std::vector<ElemReader>> elems;
 
     std::optional<unsigned int> parseDeclaration(const std::vector<Token>& tokens);
+    void checkArrays();
 };
 }
 

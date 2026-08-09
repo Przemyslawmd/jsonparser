@@ -8,6 +8,7 @@
 
 
 using namespace xml;
+using enum ElemType;
 
 class TestParserTokensXML : public BaseTestXML {};
 
@@ -232,5 +233,48 @@ TEST_F(TestParserTokensXML, Test_Content_Few_Words)
     ASSERT_EQ(elems->at(index).type, ElemType::TAG_CLOSE);
     ASSERT_EQ(elems->at(index).name, "person");
     ASSERT_TRUE(elems->at(index).attrs.empty());
+}
+
+
+TEST_F(TestParserTokensXML, Test_Array)
+{
+    auto elems = createElements(TEST_DATA_XML, "test_array.xml");
+    ASSERT_EQ(elems->size(), 12);
+
+    ASSERT_EQ(elems->at(0).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(0).name, "root");
+
+    ASSERT_EQ(elems->at(1).type, TAG_ARRAY_OPEN);
+    ASSERT_EQ(elems->at(1).name, "employees");
+
+    ASSERT_EQ(elems->at(2).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(2).name, "name");
+
+    ASSERT_EQ(elems->at(3).type, CONTENT);
+    ASSERT_EQ(std::get<std::string>(elems->at(3).value), "Agata");
+
+    ASSERT_EQ(elems->at(4).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(4).name, "name");
+
+    ASSERT_EQ(elems->at(5).type, TAG_ARRAY_CLOSE);
+    ASSERT_EQ(elems->at(5).name, "employees");
+
+    ASSERT_EQ(elems->at(6).type, TAG_ARRAY_OPEN);
+    ASSERT_EQ(elems->at(6).name, "employees");
+
+    ASSERT_EQ(elems->at(7).type, TAG_OPEN);
+    ASSERT_EQ(elems->at(7).name, "name");
+
+    ASSERT_EQ(elems->at(8).type, CONTENT);
+    ASSERT_EQ(std::get<std::string>(elems->at(8).value), "Anna");
+
+    ASSERT_EQ(elems->at(9).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(9).name, "name");
+
+    ASSERT_EQ(elems->at(10).type, TAG_ARRAY_CLOSE);
+    ASSERT_EQ(elems->at(10).name, "employees");
+
+    ASSERT_EQ(elems->at(11).type, TAG_CLOSE);
+    ASSERT_EQ(elems->at(11).name, "root");
 }
 
