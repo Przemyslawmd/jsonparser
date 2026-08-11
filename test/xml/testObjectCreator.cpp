@@ -203,3 +203,30 @@ TEST_F(TestObjectCreator, Test_Number_Content)
     ASSERT_EQ(*doubleContent, 10.002);
 }
 
+
+/*
+TEST_F(TestObjectCreator, Test_Array)
+{
+    auto root = createObjects(TEST_DATA_XML, "test_array.xml", *keyMapper);
+    auto x = *root;
+    ASSERT_NE(root, nullptr);
+
+    std::map <std::string, uint32_t> keys 
+    {
+        { "root",         0x00'01'00'01, },
+        { "employees",    0x00'02'00'01, },
+        { "secondNumber", 0x00'03'00'01, }
+    };
+    //checkKeyMapping(keys);
+
+    ASSERT_TRUE(root->find(keys["root"]) != root->end());
+    auto* nodeRoot = std::get_if<ObjectNode>(&root->at(keys["root"]).value);
+    ASSERT_TRUE(nodeRoot != nullptr);
+
+    auto* nodeEmployees = std::get_if<ArrayNode>(&nodeRoot->at(keys["employees"]).value);
+    ASSERT_TRUE(nodeEmployees != nullptr );
+
+    //auto* doubleContent = std::get_if<double>(&nodeNumber->at(keys["secondNumber"]).value);
+    //ASSERT_EQ(*doubleContent, 10.002);
+}
+*/

@@ -11,6 +11,7 @@
 #include "elem.h"
 #include "node.h"
 #include "settings.h"
+#include "state.h"
 #include "token.h"
 
 
@@ -36,12 +37,15 @@ private:
     KeyMapper& keyMapper;
     std::stack<uint32_t> mapIDStack;
     std::stack<std::string> keyStack;
+    std::stack<State> stateStack;
     uint32_t maxMapId;
 
-    void pushContext(NodePtr node, const std::string& keyStr);
+    void pushContext(NodePtr node, const std::string& keyStr, State);
+    void pushContext(NodePtr node, State);
     void popContext();
 
     void processTagOpen(const std::string& key);
+    void processTagArrayOpen(const std::string& key);
     void processContent(const std::string& contentName, TokenData& data);
 
     void insertAttrs(ObjectNode& node, std::map<std::string, std::string>& attrs);
