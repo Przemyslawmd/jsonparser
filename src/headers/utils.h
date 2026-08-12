@@ -13,7 +13,7 @@
 using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, std::nullptr_t>;
 
 
-Node createNode(const NodeApi& node)
+inline Node createNode(const NodeApi& node)
 {
     if (std::holds_alternative<std::string>(node.value)) {
         return { std::get<std::string>(node.value) };

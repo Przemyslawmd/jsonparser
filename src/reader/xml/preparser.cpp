@@ -43,7 +43,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
             index = newIndex;
             continue;
         }
-        if (tokensMap.count(symbol)) {
+        if (tokensMap.contains(symbol)) {
             tokens->emplace_back(tokensMap.at(symbol), nullptr);
             continue;
         }
@@ -53,7 +53,6 @@ std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
             return nullptr;
         }
         index += shift;
-        continue;
     }
     tokens->shrink_to_fit();
     return std::move(tokens);

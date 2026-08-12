@@ -2,7 +2,6 @@
 #include "parserTokens.h"
 
 #include <ranges>
-#include <stack>
 
 #include "definesXML.h"
 #include "errorCode.h"

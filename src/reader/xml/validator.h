@@ -6,7 +6,6 @@
 #include <stack>
 
 #include "elem.h"
-#include "token.h"
 #include "errorCode.h"
 #include "log/ErrorStorage.h"
 
@@ -34,7 +33,6 @@ static bool ValidateElems(const std::vector<ElemReader>& elems)
                 return false;
             }
             tags.pop();
-            continue;
         }
     }
 
