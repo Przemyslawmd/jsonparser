@@ -204,29 +204,29 @@ TEST_F(TestObjectCreator, Test_Number_Content)
 }
 
 
-/*
 TEST_F(TestObjectCreator, Test_Array)
 {
-    auto root = createObjects(TEST_DATA_XML, "test_array.xml", *keyMapper);
-    auto x = *root;
+    auto root = createObjects(TEST_DATA_XML, "test_array_1.xml", *keyMapper);
     ASSERT_NE(root, nullptr);
 
     std::map <std::string, uint32_t> keys 
     {
-        { "root",         0x00'01'00'01, },
-        { "employees",    0x00'02'00'01, },
-        { "secondNumber", 0x00'03'00'01, }
+        { "a",  0x00'01'00'01, },
+        { "b",  0x00'02'00'01, },
     };
-    //checkKeyMapping(keys);
+    checkKeyMapping(keys);
 
-    ASSERT_TRUE(root->find(keys["root"]) != root->end());
-    auto* nodeRoot = std::get_if<ObjectNode>(&root->at(keys["root"]).value);
-    ASSERT_TRUE(nodeRoot != nullptr);
+    ASSERT_TRUE(root->contains(keys["a"]));
+    auto* nodeA = std::get_if<ObjectNode>(&root->at(keys["a"]).value);
+    ASSERT_TRUE(nodeA != nullptr);
 
-    auto* nodeEmployees = std::get_if<ArrayNode>(&nodeRoot->at(keys["employees"]).value);
-    ASSERT_TRUE(nodeEmployees != nullptr );
+    auto* nodeB = std::get_if<ArrayNode>(&nodeA->at(keys["b"]).value);
+    ASSERT_TRUE(nodeB != nullptr );
+    ASSERT_EQ(nodeB->size(), 2);
 
-    //auto* doubleContent = std::get_if<double>(&nodeNumber->at(keys["secondNumber"]).value);
-    //ASSERT_EQ(*doubleContent, 10.002);
+    auto* content1 = std::get_if<std::string>(&nodeB->at(0).value);
+    ASSERT_EQ(*content1, "B");
+    auto* content2 = std::get_if<std::string>(&nodeB->at(1).value);
+    ASSERT_EQ(*content2, "C");
 }
-*/
+
