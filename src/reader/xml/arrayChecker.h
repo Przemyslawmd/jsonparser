@@ -50,15 +50,14 @@ static void checkArrays(std::vector<ElemReader>& elems)
     auto firstToken = elems.front().type == DECLARATION ? 1 : 0;
     std::optional<std::string> tagName;
 
-    auto elemsView = elems | std::views::drop(firstToken) | std::views::enumerate;
-    for (auto [idx, elem] : elemsView) {
+    for (auto [idx, elem] : elems | std::views::drop(firstToken) | std::views::enumerate) {
         if (elem.type == TAG_CLOSE) {
             tagName = elem.name;
             continue;
         }
-        else if (elem.type == TAG_OPEN && tagName.has_value() && tagName.value() == elem.name) {
-            elem.type = TAG_ARRAY_OPEN;
-            elems.at(idx - 1).type = TAG_ARRAY_CLOSE;
+        if (elem.type == TAG_OPEN && tagName.has_value() && tagName.value() == elem.name) {
+            elem.type = TAG_NULL;
+            elems.at(idx - 1).type = TAG_NULL;
             findOpenElem(elems, idx - 1, tagName.value());
             findCloseElem(elems, idx + 1, tagName.value());
         }

@@ -4,7 +4,6 @@
 #include <map>
 #include <string>
 #include <optional>
-#include <vector>
 
 #include "token.h"
 
@@ -19,6 +18,7 @@ enum class ElemType
     TAG_CLOSE,
     TAG_ARRAY_OPEN,
     TAG_ARRAY_CLOSE,
+    TAG_NULL,
     CONTENT
 };
 
