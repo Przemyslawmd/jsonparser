@@ -27,6 +27,14 @@ protected:
             ASSERT_TRUE(keyMapper->getKeyStr(idExpected).value() == strExpected);
         }
     }
+
+    void checkKeyMapping(const std::map<uint32_t, std::string>& mapExpected)
+    {
+        for (const auto& [idExpected, strExpected] : mapExpected) {
+            ASSERT_TRUE(keyMapper->getKeyStr(idExpected) != std::nullopt);
+            ASSERT_TRUE(keyMapper->getKeyStr(idExpected).value() == strExpected);
+        }
+    }
 };
 
 
@@ -204,29 +212,65 @@ TEST_F(TestObjectCreator, Test_Number_Content)
 }
 
 
-TEST_F(TestObjectCreator, Test_Array)
+TEST_F(TestObjectCreator, Test_Array_1)
 {
-    auto root = createObjects(TEST_DATA_XML, "test_array_1.xml", *keyMapper);
-    ASSERT_NE(root, nullptr);
+    const auto root = createObjects(TEST_DATA_XML, "test_array_1.xml", *keyMapper);
+    ASSERT_TRUE(root);
 
-    std::map <std::string, uint32_t> keys 
+    constexpr uint32_t idA = 0x00'01'00'01;
+    constexpr uint32_t idB = 0x00'02'00'01;
+    const std::map <uint32_t, std::string> keys
     {
-        { "a",  0x00'01'00'01, },
-        { "b",  0x00'02'00'01, },
+        { idA, "a" },
+        { idB, "b" },
     };
     checkKeyMapping(keys);
 
-    ASSERT_TRUE(root->contains(keys["a"]));
-    auto* nodeA = std::get_if<ObjectNode>(&root->at(keys["a"]).value);
-    ASSERT_TRUE(nodeA != nullptr);
+    ASSERT_TRUE(root->contains(idA));
+    auto* nodeA = std::get_if<ObjectNode>(&root->at(idA).value);
+    ASSERT_TRUE(nodeA);
 
-    auto* nodeB = std::get_if<ArrayNode>(&nodeA->at(keys["b"]).value);
-    ASSERT_TRUE(nodeB != nullptr );
+    auto* nodeB = std::get_if<ArrayNode>(&nodeA->at(idB).value);
+    ASSERT_TRUE(nodeB);
     ASSERT_EQ(nodeB->size(), 2);
 
-    auto* content1 = std::get_if<std::string>(&nodeB->at(0).value);
-    ASSERT_EQ(*content1, "B");
-    auto* content2 = std::get_if<std::string>(&nodeB->at(1).value);
-    ASSERT_EQ(*content2, "C");
+    ASSERT_EQ(std::get<std::string>(nodeB->at(0).value), "B");
+    ASSERT_EQ(std::get<std::string>(nodeB->at(1).value), "C");
+}
+
+
+TEST_F(TestObjectCreator, Test_Array_2)
+{
+    auto const root = createObjects(TEST_DATA_XML, "test_array_2.xml", *keyMapper);
+    ASSERT_TRUE(root);
+
+    constexpr uint32_t idRoot = 0x00'01'00'01;
+    constexpr uint32_t idEmp = 0x00'02'00'01;
+    constexpr uint32_t idName1 = 0x00'03'00'01;
+    constexpr uint32_t idName2 = 0x00'04'00'01;
+    const std::map <uint32_t, std::string> keys
+    {
+        { idRoot,  "root" },
+        { idEmp,   "employees" },
+        { idName1, "name" },
+        { idName2, "name" },
+    };
+    checkKeyMapping(keys);
+
+    ASSERT_TRUE(root->contains(idRoot));
+    const auto* nodeRoot = std::get_if<ObjectNode>(&root->at(idRoot).value);
+    ASSERT_TRUE(nodeRoot);
+
+    const auto* arrayEmployees = std::get_if<ArrayNode>(&nodeRoot->at(idEmp).value);
+    ASSERT_TRUE(arrayEmployees);
+    ASSERT_EQ(arrayEmployees->size(), 2);
+
+    auto* nodeName1 = std::get_if<ObjectNode>(&arrayEmployees->at(0).value);
+    ASSERT_TRUE(nodeName1);
+    ASSERT_EQ(std::get<std::string>(nodeName1->at(idName1).value), "Agata");
+
+    auto* nodeName2 = std::get_if<ObjectNode>(&arrayEmployees->at(1).value);
+    ASSERT_TRUE(nodeName2);
+    ASSERT_EQ(std::get<std::string>(nodeName2->at(idName2).value), "Anna");
 }
 

@@ -46,7 +46,7 @@ private:
 
     void processTagOpen(const std::string& key);
     void processTagArrayOpen(const std::string& key);
-    void processContent(const std::string& contentName, TokenData& data);
+    void processContent(TokenData& data);
 
     void insertAttrs(ObjectNode& node, std::map<std::string, std::string>& attrs);
 };
