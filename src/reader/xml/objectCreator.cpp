@@ -5,6 +5,7 @@
 
 
 using namespace xml;
+using enum State;
 
 std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<ElemReader>& elems)
 {
@@ -16,7 +17,7 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<ElemReader>& e
 
     auto document = std::make_unique<ObjectNode>();
     mapIDStack.push(0);
-    pushContext(document.get(), elems.at(firstTag).name, State::OBJECT_PARSING);
+    pushContext(document.get(), elems.at(firstTag).name, OBJECT_PARSING);
     attrs = &elems.at(firstTag).attrs;
 
     using enum ElemType;
@@ -49,80 +50,77 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<ElemReader>& e
 }
 
 
-void ObjectCreator::processTagOpen(const std::string& currKeyStr)
+void ObjectCreator::processTagOpen(const std::string& keyStr)
 {
-    if (stateStack.top() == State::OBJECT_PARSING)
+    if (stateStack.top() == OBJECT_PARSING)
     {
-        ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
+        ObjectNode* objNode = std::get<ObjectNode*>(nodeStack.top());
         auto optPrevKey = keyMapper.getKeyID(keyStack.top(), mapIDStack.top());
         if (optPrevKey.has_value()) {
-            auto *currNode = std::get_if<ObjectNode>(&obj->at(optPrevKey.value()).value);
-            pushContext(currNode, currKeyStr, State::OBJECT_PARSING);
+            ObjectNode* currNode = std::get_if<ObjectNode>(&objNode->at(optPrevKey.value()).value);
+            pushContext(currNode, keyStr, OBJECT_PARSING);
             return;
         }
 
         optPrevKey = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
         uint32_t prevKey = optPrevKey.value();
-        obj->emplace(prevKey, ObjectNode());
-        auto *currNode = std::get_if<ObjectNode>(&obj->at(prevKey).value);
+        objNode->emplace(prevKey, ObjectNode());
+        ObjectNode* newNode = std::get_if<ObjectNode>(&objNode->at(prevKey).value);
 
         if (attrs && !attrs->empty()) {
-            insertAttrs(*currNode, *attrs);
+            insertAttrs(*newNode, *attrs);
         }
-        pushContext(currNode, currKeyStr, State::OBJECT_PARSING);
+        pushContext(newNode, keyStr, OBJECT_PARSING);
     }
     else {
-        auto* arr = std::get<ArrayNode*>(nodeStack.top());
-        auto& ref = arr->emplace_back(ObjectNode());
-        auto* currNode = std::get_if<ObjectNode>(&ref.value);
-        pushContext(currNode, currKeyStr, State::OBJECT_PARSING);
+        ArrayNode* arrNode = std::get<ArrayNode*>(nodeStack.top());
+        Node& ref = arrNode->emplace_back(ObjectNode());
+        ObjectNode* newNode = std::get_if<ObjectNode>(&ref.value);
+        pushContext(newNode, keyStr, OBJECT_PARSING);
     }
 }
 
 
-void ObjectCreator::processTagArrayOpen(const std::string& currKeyStr)
+void ObjectCreator::processTagArrayOpen(const std::string& keyStr)
 {
-    ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
-    auto optPrevKey = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
-    uint32_t prevKey = optPrevKey.value();
-    obj->emplace(prevKey, ObjectNode());
-    auto *currNode = std::get_if<ObjectNode>(&obj->at(prevKey).value);
-    pushContext(currNode, currKeyStr, State::OBJECT_PARSING);
+    ObjectNode* objNode = std::get<ObjectNode*>(nodeStack.top());
+    auto prevKey = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
+    objNode->emplace(prevKey.value(), ObjectNode());
+    ObjectNode* currNode = std::get_if<ObjectNode>(&objNode->at(prevKey.value()).value);
+    pushContext(currNode, keyStr, OBJECT_PARSING);
 
-    auto optKey = keyMapper.createKeyID(currKeyStr, mapIDStack.top());
-    uint32_t Key = optKey.value();
-
-    currNode->emplace(Key, ArrayNode());
-    ArrayNode* arrNode_ = std::get_if<ArrayNode>(&currNode->at(Key).value);
-    pushContext(arrNode_, State::ARRAY_PARSING);
+    auto arrKey = keyMapper.createKeyID(keyStr, mapIDStack.top());
+    currNode->emplace(arrKey.value(), ArrayNode());
+    ArrayNode* arrNode = std::get_if<ArrayNode>(&currNode->at(arrKey.value()).value);
+    pushContext(arrNode, ARRAY_PARSING);
 }
 
 
 void ObjectCreator::processContent(TokenData& data)
 {
-    if (stateStack.top() == State::OBJECT_PARSING) 
+    if (stateStack.top() == OBJECT_PARSING)
     {
-        auto optKeyID = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
-        if (!optKeyID.has_value()) {
+        auto optKey = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
+        if (!optKey.has_value()) {
             return;
         }
-        uint32_t keyID = optKeyID.value();
-        ObjectNode* obj = std::get<ObjectNode*>(nodeStack.top());
+        uint32_t keyID = optKey.value();
+        ObjectNode* objNode = std::get<ObjectNode*>(nodeStack.top());
 
         if (attrs->empty()) {
-            std::visit([obj, keyID](auto&& val) { obj->emplace(keyID, val); }, data); 
+            std::visit([objNode, keyID](auto&& val) { objNode->emplace(keyID, val); }, data);
             return;
         }
 
-        obj->emplace(keyID, ObjectNode());
-        auto *currentNode = std::get_if<ObjectNode>(&obj->at(keyID).value);
-        insertAttrs(*currentNode, *attrs);
+        objNode->emplace(keyID, ObjectNode());
+        ObjectNode* currNode = std::get_if<ObjectNode>(&objNode->at(keyID).value);
+        insertAttrs(*currNode, *attrs);
         auto newKeyID = keyMapper.createKeyID(pretendedKey, mapIDStack.top());
-        std::visit([currentNode, newKeyID](auto&& val) { currentNode->emplace(newKeyID.value(), val); }, data);
+        std::visit([currNode, newKeyID](auto&& val) { currNode->emplace(newKeyID.value(), val); }, data);
     } 
     else {
-        ArrayNode* arr  = std::get<ArrayNode*>(nodeStack.top());
-        std::visit([arr](auto&& val) { arr->emplace_back(val); }, data);
+        ArrayNode* arrNode  = std::get<ArrayNode*>(nodeStack.top());
+        std::visit([arrNode](auto&& val) { arrNode->emplace_back(val); }, data);
     }
 }
 

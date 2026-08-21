@@ -22,19 +22,20 @@ namespace xml
 class ObjectCreator
 {
 public:
-    ObjectCreator(KeyMapper& keyMapper) : keyMapper(keyMapper), 
-                                          maxMapId(0), 
-                                          attrs(nullptr), 
-                                          pretendedKey(Settings::getPretendedKey()){};
+    explicit ObjectCreator(KeyMapper& keyMapper) : keyMapper(keyMapper),
+                                                   attrs(nullptr),
+                                                   pretendedKey(Settings::getPretendedKey()),
+                                                   maxMapId(0) {};
 
     std::unique_ptr<ObjectNode> parseElems(std::vector<ElemReader>&);
 
 private:
+    KeyMapper& keyMapper;
+
     std::stack<NodePtr> nodeStack;
     std::map<std::string, std::string>* attrs;
     const std::string& pretendedKey;
 
-    KeyMapper& keyMapper;
     std::stack<uint32_t> mapIDStack;
     std::stack<std::string> keyStack;
     std::stack<State> stateStack;
