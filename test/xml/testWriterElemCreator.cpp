@@ -137,57 +137,27 @@ TEST_F(TestWriterElemCreator, Test_Array_1)
     ASSERT_EQ(elems.size(), 8);
 
     ASSERT_EQ(elems.at(0).type, TAG_OPEN);
-    ASSERT_EQ(elems.at(0).name, "person");
+    ASSERT_EQ(elems.at(0).name, "a");
 
-    ASSERT_EQ(elems.at(1).type, TAG_OPEN);
-    ASSERT_EQ(elems.at(1).name, "number");
-
-    ASSERT_EQ(elems.at(2).type, CONTENT);
-    ASSERT_EQ(std::get<int64_t>(elems.at(2).value), 34567);
-
-    ASSERT_EQ(elems.at(3).type, TAG_CLOSE);
-    ASSERT_EQ(elems.at(3).name, "number");
-
-    ASSERT_EQ(elems.at(4).type, TAG_OPEN);
-    ASSERT_EQ(elems.at(4).name, "secondNumber");
-
-    ASSERT_EQ(elems.at(5).type, CONTENT);
-    ASSERT_EQ(std::get<double>(elems.at(5).value), 10.002);
-
-    ASSERT_EQ(elems.at(6).type, TAG_CLOSE);
-    ASSERT_EQ(elems.at(6).name, "secondNumber");
-
-    ASSERT_EQ(elems.at(7).type, TAG_CLOSE);
-    ASSERT_EQ(elems.at(7).name, "person");
-}
-
-
-TEST_F(TestWriterElemCreator, Test_Array_2)
-{
-    auto elems = createElemsWriter("test_array_2.xml");
-    ASSERT_EQ(elems.size(), 8);
-
-    ASSERT_EQ(elems.at(0).type, TAG_OPEN);
-    ASSERT_EQ(elems.at(0).name, "person");
-
-    ASSERT_EQ(elems.at(1).type, TAG_OPEN);
-    ASSERT_EQ(elems.at(1).name, "number");
+    ASSERT_EQ(elems.at(1).type, TAG_ARRAY_OPEN);
+    ASSERT_EQ(elems.at(1).name, "b");
 
     ASSERT_EQ(elems.at(2).type, CONTENT);
-    ASSERT_EQ(std::get<int64_t>(elems.at(2).value), 34567);
+    ASSERT_EQ(std::get<std::string>(elems.at(2).value), "B");
 
-    ASSERT_EQ(elems.at(3).type, TAG_CLOSE);
-    ASSERT_EQ(elems.at(3).name, "number");
+    ASSERT_EQ(elems.at(3).type, TAG_ARRAY_CLOSE);
+    ASSERT_EQ(elems.at(3).name, "b");
 
-    ASSERT_EQ(elems.at(4).type, TAG_OPEN);
-    ASSERT_EQ(elems.at(4).name, "secondNumber");
+    ASSERT_EQ(elems.at(4).type, TAG_ARRAY_OPEN);
+    ASSERT_EQ(elems.at(4).name, "b");
 
     ASSERT_EQ(elems.at(5).type, CONTENT);
-    ASSERT_EQ(std::get<double>(elems.at(5).value), 10.002);
+    ASSERT_EQ(std::get<std::string>(elems.at(5).value), "C");
 
-    ASSERT_EQ(elems.at(6).type, TAG_CLOSE);
-    ASSERT_EQ(elems.at(6).name, "secondNumber");
+    ASSERT_EQ(elems.at(6).type, TAG_ARRAY_CLOSE);
+    ASSERT_EQ(elems.at(6).name, "b");
 
     ASSERT_EQ(elems.at(7).type, TAG_CLOSE);
-    ASSERT_EQ(elems.at(7).name, "person");
+    ASSERT_EQ(elems.at(7).name, "a");
 }
+

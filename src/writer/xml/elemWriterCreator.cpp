@@ -1,22 +1,24 @@
 
-#include "writer/xml/elemWriterCreator.h"
+#include "elemWriterCreator.h"
 
 #include <optional>
 #include <variant>
 
 
 using namespace xml;
+using enum ElemType;
 
 std::vector<ElemWriter> ElemWriterCreator::createElems(const ObjectNode& object)
 {
-    bool addRoot = xmlRootIfNeeded && object.size() > 1;
+    bool const addRoot = xmlRootIfNeeded && object.size() > 1;
+    removeElem = false;
 
     if (addRoot) {
-        elems.emplace_back(ElemType::TAG_OPEN, "root");
+        elems.emplace_back(TAG_OPEN, "root");
     }
     processObjectNode(object);
     if (addRoot) {
-        elems.emplace_back(ElemType::TAG_CLOSE, "root");
+        elems.emplace_back(TAG_CLOSE, "root");
     }
     return elems;
 }
@@ -26,6 +28,7 @@ std::vector<ElemWriter> ElemWriterCreator::createElems(const ObjectNode& object)
 
 void ElemWriterCreator::processObjectNode(const ObjectNode& obj)
 {
+    state.push(State::OBJECT_PARSING);
     for (const auto& [idKey, val] : obj) {
         auto keyStr = keyMapper.getKeyStr(idKey);
         if (keyMapper.isAttrKey(idKey)) {
@@ -33,30 +36,55 @@ void ElemWriterCreator::processObjectNode(const ObjectNode& obj)
             continue;
         }
         if (keyStr == pretendedKey) {
-            parseData(val);
+            parseData(val.value);
             continue;
         }
 
-        elems.emplace_back(ElemType::TAG_OPEN, keyStr.value());
-        parseData(val);
-        elems.emplace_back(ElemType::TAG_CLOSE, keyStr.value());
+        elems.emplace_back(TAG_OPEN, keyStr.value());
+        parseData(val.value);
+        if (!removeElem) {
+            elems.emplace_back(TAG_CLOSE, keyStr.value());
+        }
     }
+    removeElem = false;
+    state.pop();
 }
 
 
-void ElemWriterCreator::parseData(const Node& node)
+void ElemWriterCreator::processArrayNode(const ArrayNode& arr)
 {
-    if (std::holds_alternative<std::string>(node.value)) {
-        elems.emplace_back(ElemType::CONTENT, std::nullopt, std::get<std::string>(node.value));
+    if (state.top() == State::OBJECT_PARSING) {
+        arrayKey = elems.back().name.value();
+        elems.pop_back();
     }
-    else if (std::holds_alternative<int64_t>(node.value)) {
-        elems.emplace_back(ElemType::CONTENT, std::get<int64_t>(node.value));
+    state.push(State::ARRAY_PARSING);
+
+    for (const auto& a : arr) {
+        elems.emplace_back(TAG_ARRAY_OPEN, arrayKey);
+        parseData(a.value);
+        elems.emplace_back(TAG_ARRAY_CLOSE, arrayKey);
     }
-    else if (std::holds_alternative<double>(node.value)) {
-        elems.emplace_back(ElemType::CONTENT, std::get<double>(node.value));
+    removeElem = true;
+    state.pop();
+}
+
+
+void ElemWriterCreator::parseData(const Node::Value& nodeVal)
+{
+    if (std::holds_alternative<std::string>(nodeVal)) {
+        elems.emplace_back(CONTENT, std::nullopt, std::get<std::string>(nodeVal));
     }
-    else if (std::holds_alternative<ObjectNode>(node.value)) {
-        processObjectNode(std::get<ObjectNode>(node.value));
+    else if (std::holds_alternative<int64_t>(nodeVal)) {
+        elems.emplace_back(CONTENT, std::get<int64_t>(nodeVal));
+    }
+    else if (std::holds_alternative<double>(nodeVal)) {
+        elems.emplace_back(CONTENT, std::get<double>(nodeVal));
+    }
+    else if (std::holds_alternative<ObjectNode>(nodeVal)) {
+        processObjectNode(std::get<ObjectNode>(nodeVal));
+    }
+    else if (std::holds_alternative<ArrayNode>(nodeVal)) {
+        processArrayNode(std::get<ArrayNode>(nodeVal));
     }
 }
 
