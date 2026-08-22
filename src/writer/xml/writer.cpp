@@ -57,6 +57,22 @@ std::string Writer::createXmlString(const std::vector<ElemWriter>& elems)
                 }
                 decIndent();
                 break;
+            case ElemType::TAG_ARRAY_BEGIN:
+                incIndent();
+                std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
+                stream << "<" << elem.name.value() <<">\n";
+                break;
+            case ElemType::TAG_ARRAY_OPEN:
+                std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
+                stream << "<" << elem.name.value() << ">\n";
+                break;
+            case ElemType::TAG_ARRAY_CLOSE:
+                stream << "</" << elem.name.value() << ">\n";
+                break;
+            case ElemType::TAG_ARRAY_END:
+                stream << "</" << elem.name.value() << ">\n";
+                decIndent();
+                break;
             case ElemType::CONTENT:
                 deleteLastChars(stream, 1);
                 std::visit([&stream](const auto& val) { stream << val; }, elem.value);

@@ -2,10 +2,8 @@
 #pragma once
 
 #include <string>
-#include <variant>
 
 #include "reader/xml/elem.h"
-#include "node.h"
 #include "keyMapper.h"
 
 
@@ -14,9 +12,9 @@ namespace xml
 class Writer
 {
 public:
-    Writer(const KeyMapper& keyMapper, unsigned int indentation) : keyMapper(keyMapper), 
-                                                                   indentation(indentation * -1), 
-                                                                   indentationStep(indentation) {}
+    Writer(const KeyMapper& keyMapper, int indentation) : keyMapper(keyMapper),
+                                                          indentation(indentation * -1),
+                                                          indentationStep(indentation) {}
 
     std::string createXmlString(const std::vector<ElemWriter>& elems);
     void setIndent(int);

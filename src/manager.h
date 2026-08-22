@@ -11,7 +11,6 @@
 #include "node.h"
 #include "nodeApi.h"
 #include "errorCode.h"
-#include "settings.h"
 
 
 using ComplexNodePtr = std::variant<ObjectNode*, ArrayNode*, std::nullptr_t>;
