@@ -2,6 +2,7 @@
 #include "elemWriterCreator.h"
 
 #include <optional>
+#include <ranges>
 #include <variant>
 
 
@@ -59,10 +60,12 @@ void ElemWriterCreator::processArrayNode(const ArrayNode& arr)
     }
     state.push(State::ARRAY_PARSING);
 
-    for (const auto& a : arr) {
-        elems.emplace_back(TAG_ARRAY_OPEN, arrayKey);
+    for (const auto& [idx, a] : std::views::enumerate(arr)) {
+        auto elemOpenType  = idx == 0 ? TAG_ARRAY_BEGIN : TAG_ARRAY_OPEN;
+        elems.emplace_back(elemOpenType, arrayKey);
         parseData(a.value);
-        elems.emplace_back(TAG_ARRAY_CLOSE, arrayKey);
+        auto elemCloseType  = idx == (arr.size() - 1) ? TAG_ARRAY_END : TAG_ARRAY_CLOSE;
+        elems.emplace_back(elemCloseType, arrayKey);
     }
     removeElem = true;
     state.pop();

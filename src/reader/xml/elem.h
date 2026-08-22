@@ -16,6 +16,8 @@ enum class ElemType
     DECLARATION,
     TAG_OPEN,
     TAG_CLOSE,
+    TAG_ARRAY_BEGIN,
+    TAG_ARRAY_END,
     TAG_ARRAY_OPEN,
     TAG_ARRAY_CLOSE,
     TAG_NULL,

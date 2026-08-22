@@ -139,7 +139,7 @@ TEST_F(TestWriterElemCreator, Test_Array_1)
     ASSERT_EQ(elems.at(0).type, TAG_OPEN);
     ASSERT_EQ(elems.at(0).name, "a");
 
-    ASSERT_EQ(elems.at(1).type, TAG_ARRAY_OPEN);
+    ASSERT_EQ(elems.at(1).type, TAG_ARRAY_BEGIN);
     ASSERT_EQ(elems.at(1).name, "b");
 
     ASSERT_EQ(elems.at(2).type, CONTENT);
@@ -154,7 +154,7 @@ TEST_F(TestWriterElemCreator, Test_Array_1)
     ASSERT_EQ(elems.at(5).type, CONTENT);
     ASSERT_EQ(std::get<std::string>(elems.at(5).value), "C");
 
-    ASSERT_EQ(elems.at(6).type, TAG_ARRAY_CLOSE);
+    ASSERT_EQ(elems.at(6).type, TAG_ARRAY_END);
     ASSERT_EQ(elems.at(6).name, "b");
 
     ASSERT_EQ(elems.at(7).type, TAG_CLOSE);
