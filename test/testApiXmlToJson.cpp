@@ -1,16 +1,17 @@
 
 #include <gtest/gtest.h>
 
-#include "jsonApi.h"
-#include "log/ErrorStorage.h"
-
-#include "config.h"
+#include "paths.h"
 #include "baseTest.h"
 #include "utilsTest.h"
 
+#include "src/jsonApi.h"
 
-class ApiXmlToJsonTest : public BaseTest {};
 
+namespace
+{
+    class ApiXmlToJsonTest : public BaseTest {};
+}
 
 TEST_F(ApiXmlToJsonTest, Test_1)
 {

@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 
-#include "config.h"
+#include "paths.h"
 #include "timeType.h"
 #include "utilsTest.h"
 

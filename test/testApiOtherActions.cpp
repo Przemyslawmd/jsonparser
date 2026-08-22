@@ -7,7 +7,7 @@
 #include "jsonApi.h"
 
 #include "baseTest.h"
-#include "config.h"
+#include "paths.h"
 #include "utilsTest.h"
 #include "node.h"
 

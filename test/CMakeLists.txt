@@ -20,7 +20,7 @@ endif()
 
 
 configure_file (timeType.h.in ${CMAKE_CURRENT_SOURCE_DIR}/timeType.h @ONLY)
-configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/config.h)
+configure_file(${PROJECT_SOURCE_DIR}/paths.h.in ${PROJECT_SOURCE_DIR}/paths.h)
 
 
 if (JSON_BUILD)
@@ -83,6 +83,7 @@ target_include_directories(
   "../headers/" 
   "../src/headers/" 
   "../src/"
+  "../"
   "./"
 )
 

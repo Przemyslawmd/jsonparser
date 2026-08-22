@@ -4,7 +4,7 @@
 #include "jsonApi.h"
 #include "log/ErrorStorage.h"
 
-#include "config.h"
+#include "paths.h"
 #include "utilsTest.h"
 #include "node.h"
 

@@ -3,17 +3,20 @@
 
 #include <gtest/gtest.h>
 
-#include "jsonApi.h"
-
 #include "baseTest.h"
-#include "config.h"
+#include "paths.h"
+
+#include "src/jsonApi.h"
 
 
 using std::chrono::high_resolution_clock;
 using uint = unsigned int;
 
-class ApiRemoveNode : public BaseTest {};
 
+namespace
+{
+    class ApiRemoveNode : public BaseTest {};
+}
 
 TEST_F(ApiRemoveNode, RemoveSimpleNodeFromObject)
 {

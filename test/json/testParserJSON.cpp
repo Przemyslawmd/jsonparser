@@ -13,7 +13,7 @@
 #include "keyMapper.h"
 
 #include "baseTest.h"
-#include "config.h"
+#include "paths.h"
 #include "node.h"
 #include "utilsTest.h"
 

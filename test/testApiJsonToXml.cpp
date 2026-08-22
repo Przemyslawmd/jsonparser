@@ -4,7 +4,7 @@
 #include "jsonApi.h"
 #include "settings.h"
 
-#include "config.h"
+#include "paths.h"
 #include "baseTest.h"
 #include "utilsTest.h"
 

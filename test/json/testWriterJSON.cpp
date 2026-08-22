@@ -14,7 +14,7 @@
 #include "writer/json/writer.h"
 
 #include "baseTest.h"
-#include "config.h"
+#include "paths.h"
 #include "utilsTest.h"
 
 

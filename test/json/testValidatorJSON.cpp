@@ -6,7 +6,7 @@
 #include "reader/json/preparser.h"
 #include "reader/json/validator.h"
 
-#include "config.h"
+#include "paths.h"
 #include "utilsTest.h"
 
 

@@ -4,12 +4,11 @@
 
 #include <gtest/gtest.h>
 
-#include "keyMapper.h"
-#include "settings.h"
-#include "writer/xml/elemWriterCreator.h"
-
 #include "testBaseXML.h"
 #include "config.h"
+
+#include "src/keyMapper.h"
+#include "src/writer/xml/elemWriterCreator.h"
 
 
 using namespace xml;
