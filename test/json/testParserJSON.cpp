@@ -6,11 +6,11 @@
 
 #include <gtest/gtest.h>
 
-#include "reader/json/parser.h"
-#include "reader/json/parserKey.h"
-#include "reader/json/preparser.h"
-#include "reader/json/validator.h"
-#include "keyMapper.h"
+#include "src/reader/json/parser.h"
+#include "src/reader/json/parserKey.h"
+#include "src/reader/json/preparser.h"
+#include "src/reader/json/validator.h"
+#include "src/keyMapper.h"
 
 #include "baseTest.h"
 #include "paths.h"
@@ -20,73 +20,75 @@
 
 using namespace json;
 
-class TestParserJSON : public BaseTest
+namespace
 {
-protected:
-    std::unique_ptr<KeyMapper> keyMapper;
-    std::unique_ptr<Preparser> preparser;
-
-    virtual void SetUp()
+    class TestParserJSON : public BaseTest
     {
-        keyMapper = std::make_unique<KeyMapper>();
-        preparser = std::make_unique<Preparser>();
+    protected:
+        std::unique_ptr<KeyMapper> keyMapper;
+        std::unique_ptr<Preparser> preparser;
+
+        void SetUp() override
+        {
+            keyMapper = std::make_unique<KeyMapper>();
+            preparser = std::make_unique<Preparser>();
+        }
+
+        std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
+        {
+            std::string jsonString = getContentFromFile(TEST_DATA_JSON, jsonFile);
+
+            const auto tokens = preparser->parseJSON(jsonString);
+            EXPECT_TRUE(tokens != nullptr);
+            createKeyTokens(*tokens);
+
+            const auto parser = std::make_unique<Parser>(*keyMapper);
+            const auto begin = std::chrono::high_resolution_clock::now();
+            std::unique_ptr<ObjectNode> jsonObj = parser->parseTokens(*tokens);
+            const auto end = std::chrono::high_resolution_clock::now();
+            showDuration(begin, end);
+
+            return jsonObj;
+        }
+
+        void checkKeyMapping(const std::map<uint32_t, std::string>& keyMapExpected)
+        {
+            for (const auto& [keyIDExpected, keyStrExpected] : keyMapExpected) {
+                ASSERT_TRUE(keyMapper->getKeyStr(keyIDExpected).has_value());
+                ASSERT_TRUE(keyMapper->getKeyStr(keyIDExpected).value() == keyStrExpected);
+            }
+        }
+    };
+
+
+    template <typename T>
+    void checkSimpleNode(ObjectNode* objectNode, const uint32_t key, const T& expected)
+    {
+        ASSERT_TRUE(objectNode->contains(key));
+        auto* nodeValue = std::get_if<T>(&objectNode->at(key).value);
+        ASSERT_TRUE(nodeValue);
+        ASSERT_EQ(*nodeValue, expected);
     }
 
-    std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
+
+    template <typename T>
+    void checkArrayValue(ArrayNode* arrayPointer, size_t index, const T& dataExpected)
     {
-        std::string jsonString = getContentFromFile(TEST_DATA_JSON, jsonFile);
-
-        auto tokens = preparser->parseJSON(jsonString);
-        EXPECT_TRUE(tokens != nullptr);
-        createKeyTokens(*tokens);
-
-        const auto parser = std::make_unique<Parser>(*keyMapper);
-        const auto begin = std::chrono::high_resolution_clock::now();
-        std::unique_ptr<ObjectNode> jsonObj = parser->parseTokens(*tokens);
-        const auto end = std::chrono::high_resolution_clock::now();
-        showDuration(begin, end);
-
-        return jsonObj;
-    }
-
-    void checkKeyMapping(const std::map<uint32_t, std::string>& keyMapExpected)
-    {
-        for (const auto& [keyIDExpected, keyStrExpected] : keyMapExpected) {
-            ASSERT_TRUE(keyMapper->getKeyStr(keyIDExpected) != std::nullopt);
-            ASSERT_TRUE(keyMapper->getKeyStr(keyIDExpected).value() == keyStrExpected);
+        try {
+            T data = std::get<T>(arrayPointer->at(index).value);
+            ASSERT_EQ(data, dataExpected);
+        }
+        catch (const std::exception&) {
+            ASSERT_TRUE(false);
         }
     }
-};
-
-
-template <typename T>
-void checkSimpleNode(ObjectNode* objectNode, const uint32_t key, T expected)
-{
-    ASSERT_TRUE(objectNode->find(key) != objectNode->end());
-    auto* nodeValue = std::get_if<T>(&objectNode->at(key).value);
-    ASSERT_TRUE(nodeValue);
-    ASSERT_EQ(*nodeValue, expected);
 }
-
-
-template <typename T>
-void checkArrayValue(ArrayNode* arrayPointer, size_t index, T dataExpected)
-{
-    try {
-        T data = std::get<T>(arrayPointer->at(index).value);
-        ASSERT_EQ(data, dataExpected);
-    }
-    catch (const std::exception& ex) {
-        ASSERT_TRUE(false);
-    }
-}
-
 
 TEST_F(TestParserJSON, Test_File_1)
 {
     auto root = parseJSON("test_1.json");
 
-    std::map <uint32_t, std::string> keyMap {
+    const std::map <uint32_t, std::string> keyMap {
         { 0x00'01'00'01, "person" },
         { 0x00'02'00'01, "name" },
         { 0x00'02'00'02, "age" },
@@ -111,7 +113,7 @@ TEST_F(TestParserJSON, Test_File_3)
 {
     auto root = parseJSON("test_3.json");
 
-    std::map<uint32_t, std::string> keyMap{
+    const std::map<uint32_t, std::string> keyMap{
         { 0x00'01'00'01, "person" },
         { 0x00'02'00'01, "name" },
         { 0x00'02'00'02, "age" },
@@ -141,7 +143,7 @@ TEST_F(TestParserJSON, Test_File_6)
 {
     auto root = parseJSON("test_6.json");
 
-    std::map<uint32_t, std::string> keyMap{
+    const std::map<uint32_t, std::string> keyMap{
         { 0x00'01'00'01, "employees" },
         { 0x00'02'00'01, "name" },
         { 0x00'02'00'02, "email" },
@@ -172,7 +174,7 @@ TEST_F(TestParserJSON, Test_File_7)
 {
     auto root = parseJSON("test_7.json");
 
-    std::map<uint32_t, std::string> keyMap{
+    const std::map<uint32_t, std::string> keyMap{
         { 0x00'01'00'01, "employees" },
         { 0x00'02'00'01, "name" },
         { 0x00'02'00'02, "data" },

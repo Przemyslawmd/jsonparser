@@ -10,32 +10,35 @@
 
 using namespace xml;
 
-class TestObjectCreator : public BaseTestXML
+namespace
 {
-protected:
-    std::unique_ptr<KeyMapper> keyMapper;
-
-    virtual void SetUp()
+    class TestObjectCreator : public BaseTestXML
     {
-        keyMapper = std::make_unique<KeyMapper>();
-    }
+    protected:
+        std::unique_ptr<KeyMapper> keyMapper;
 
-    void checkKeyMapping(const std::map<std::string, uint32_t>& mapExpected)
-    {
-        for (const auto& [strExpected, idExpected] : mapExpected) {
-            ASSERT_TRUE(keyMapper->getKeyStr(idExpected) != std::nullopt);
-            ASSERT_TRUE(keyMapper->getKeyStr(idExpected).value() == strExpected);
+        void SetUp() override
+        {
+            keyMapper = std::make_unique<KeyMapper>();
         }
-    }
 
-    void checkKeyMapping(const std::map<uint32_t, std::string>& mapExpected)
-    {
-        for (const auto& [idExpected, strExpected] : mapExpected) {
-            ASSERT_TRUE(keyMapper->getKeyStr(idExpected) != std::nullopt);
-            ASSERT_TRUE(keyMapper->getKeyStr(idExpected).value() == strExpected);
+        void checkKeyMapping(const std::map<std::string, uint32_t>& mapExpected)
+        {
+            for (const auto& [strExpected, idExpected] : mapExpected) {
+                ASSERT_TRUE(keyMapper->getKeyStr(idExpected) != std::nullopt);
+                ASSERT_TRUE(keyMapper->getKeyStr(idExpected).value() == strExpected);
+            }
         }
-    }
-};
+
+        void checkKeyMapping(const std::map<uint32_t, std::string>& mapExpected)
+        {
+            for (const auto& [idExpected, strExpected] : mapExpected) {
+                ASSERT_TRUE(keyMapper->getKeyStr(idExpected) != std::nullopt);
+                ASSERT_TRUE(keyMapper->getKeyStr(idExpected).value() == strExpected);
+            }
+        }
+    };
+}
 
 
 TEST_F(TestObjectCreator, Test_3)
@@ -43,14 +46,14 @@ TEST_F(TestObjectCreator, Test_3)
     auto root = createObjects(TEST_DATA_XML, "test_3.xml", *keyMapper);
     ASSERT_NE(root, nullptr);
 
-    std::map <std::string, uint32_t> keys 
+    std::map <std::string, uint32_t> keys
     {
         { "person", 0x00'01'00'01, },
         { "name",   0x00'02'00'01, }
     };
     checkKeyMapping(keys);
 
-    ASSERT_TRUE(root->find(keys["person"]) != root->end());
+    ASSERT_TRUE(root->contains(keys["person"]));
     auto* nodeName = std::get_if<ObjectNode>(&root->at(keys["person"]).value);
     ASSERT_TRUE(nodeName != nullptr);
 
