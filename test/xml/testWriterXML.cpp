@@ -16,10 +16,10 @@ namespace
     class TestWriterXML : public BaseTestXML
     {
     protected:
-        void testWriter(const std::string& file, unsigned int indentation = 2)
+        void testWriter(const std::string& file, unsigned int indent = 2)
         {
             auto elems = createElemsWriter(file);
-            Writer writer(*keyMapper, indentation);
+            Writer writer(*keyMapper, indent);
 
             const auto begin = std::chrono::high_resolution_clock::now();
             const std::string xmlString = writer.createXmlString(std::move(elems));

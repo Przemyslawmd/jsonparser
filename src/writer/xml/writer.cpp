@@ -10,35 +10,37 @@
 
 
 using namespace xml;
+using enum ElemType;
 
 std::string Writer::createXmlString(std::unique_ptr<std::vector<ElemWriter>> elems)
 {
     std::ostringstream stream;
 
-    const auto& attrsDec = keyMapper.getAttrsDec();
-    if (!attrsDec.empty()) {
+    if (const auto& attrsDesc = keyMapper.getAttrsDec(); !attrsDesc.empty()) {
         stream << "<?xml ";
-        if (attrsDec.contains(VER)) {
-            stream << VER << "=" << "\"" << attrsDec.at(VER) << "\" ";
+        if (attrsDesc.contains(VER)) {
+            stream << VER << "=" << "\"" << attrsDesc.at(VER) << "\" ";
         }
-        if (attrsDec.contains(ENC)) {
-            stream << ENC << "=" << "\"" << attrsDec.at(ENC) << "\" ";
+        if (attrsDesc.contains(ENC)) {
+            stream << ENC << "=" << "\"" << attrsDesc.at(ENC) << "\" ";
         }
-        if (attrsDec.contains(STA)) {
-            stream << STA << "=" << "\"" << attrsDec.at(STA) << "\" ";
+        if (attrsDesc.contains(STA)) {
+            stream << STA << "=" << "\"" << attrsDesc.at(STA) << "\" ";
         }
         deleteLastChars(stream, 1);
         stream << "?>\n";
     }
 
-    unsigned int numOfElems = elems->size();
+    const unsigned int numOfElems = elems->size();
     for (const auto [idx, elem] : std::views::enumerate(*elems))
     {
         switch(elem.type)
         {
-            case ElemType::TAG_OPEN:
-                incIndent();
-                std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
+            case TAG_OPEN:
+                if (idx != 0) {
+                    incIndent();
+                }
+                std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
                 stream << "<" << elem.name.value();
                 if (!elem.attr.empty()) {
                     for (const auto& [key, val] : elem.attr) {
@@ -46,10 +48,10 @@ std::string Writer::createXmlString(std::unique_ptr<std::vector<ElemWriter>> ele
                     }
                 }
                 stream << ">\n";
-                break;;
-            case ElemType::TAG_CLOSE:
-                if (elems->at(idx - 1).type != ElemType::CONTENT) {
-                    std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
+                break;
+            case TAG_CLOSE:
+                if (elems->at(idx - 1).type != CONTENT) {
+                    std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
                 }
                 stream << "</" << elem.name.value() << ">";
                 if (idx != (numOfElems - 1)) {
@@ -57,23 +59,23 @@ std::string Writer::createXmlString(std::unique_ptr<std::vector<ElemWriter>> ele
                 }
                 decIndent();
                 break;
-            case ElemType::TAG_ARRAY_BEGIN:
+            case TAG_ARRAY_BEGIN:
                 incIndent();
-                std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
+                std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
                 stream << "<" << elem.name.value() <<">\n";
                 break;
-            case ElemType::TAG_ARRAY_OPEN:
-                std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
+            case TAG_ARRAY_OPEN:
+                std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
                 stream << "<" << elem.name.value() << ">\n";
                 break;
-            case ElemType::TAG_ARRAY_CLOSE:
+            case TAG_ARRAY_CLOSE:
                 stream << "</" << elem.name.value() << ">\n";
                 break;
-            case ElemType::TAG_ARRAY_END:
+            case TAG_ARRAY_END:
                 stream << "</" << elem.name.value() << ">\n";
                 decIndent();
                 break;
-            case ElemType::CONTENT:
+            case CONTENT:
                 deleteLastChars(stream, 1);
                 std::visit([&stream](const auto& val) { stream << val; }, elem.value);
                 break;
@@ -83,9 +85,9 @@ std::string Writer::createXmlString(std::unique_ptr<std::vector<ElemWriter>> ele
 }
 
 
-void Writer::setIndent(int step)
+void Writer::setIndent(unsigned int step)
 {
-    this->indentationStep = step;
+    this->indentStep = step;
 }
 
 /*******************************************************************/
@@ -100,12 +102,12 @@ void Writer::deleteLastChars(std::ostringstream& stream, unsigned int noOfChars)
 
 void Writer::incIndent()
 {
-    indentation += indentationStep;
+    indent += indentStep;
 }
 
 
 void Writer::decIndent()
 {
-    indentation -= indentationStep;
+    indent -= indentStep;
 }
 
