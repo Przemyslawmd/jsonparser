@@ -16,9 +16,16 @@ namespace
     protected:
         void testWriter(const std::string& file, unsigned int indentation = 2)
         {
-            const std::string xmlString = createString(file, indentation);
+            auto elems = createElemsWriter(file);
+            Writer writer(*keyMapper, indentation);
+
+            const auto begin = std::chrono::high_resolution_clock::now();
+            const std::string xmlString = writer.createXmlString(std::move(elems));
+            const auto end = std::chrono::high_resolution_clock::now();
+
             const std::string xmlExpected = getContentFromFile(TEST_DATA_XML, file);
             ASSERT_EQ(xmlString, xmlExpected);
+            showDuration(begin, end);
         }
     };
 }

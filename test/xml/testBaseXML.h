@@ -24,6 +24,7 @@ protected:
     {
         ErrorStorage::clear();
         keyMapper = std::make_unique<KeyMapper>();
+        checkDuration = false;
     }
 
     void TearDown() override
@@ -59,13 +60,6 @@ protected:
         const auto root = createObjects(TEST_DATA_XML, file);
         const auto writer = std::make_unique<ElemWriterCreator>(*keyMapper);
         return writer->createElems(*root);
-    }
-
-    std::string createString(const std::string& file, unsigned int indentation = 2)
-    {
-        auto elems = createElemsWriter(file);
-        Writer writer(*keyMapper, indentation);
-        return writer.createXmlString(std::move(elems));
     }
 
     std::unique_ptr<KeyMapper> keyMapper;

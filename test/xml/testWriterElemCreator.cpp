@@ -5,21 +5,36 @@
 #include <gtest/gtest.h>
 
 #include "testBaseXML.h"
+#include "paths.h"
 
 
 using namespace xml;
 
 namespace
 {
-    class TestWriterElemCreator : public BaseTestXML {};
-}
+    class TestWriterElemCreator : public BaseTestXML
+    {
+    protected:
+        std::unique_ptr<std::vector<ElemWriter>> testWriterElemCreator(const std::string& file)
+        {
+            const auto root = createObjects(TEST_DATA_XML, file);
+            ElemWriterCreator elemWriter(*keyMapper);
 
+            const auto begin = std::chrono::high_resolution_clock::now();
+            auto elems = elemWriter.createElems(*root);
+            const auto end = std::chrono::high_resolution_clock::now();
+
+            showDuration(begin, end);
+            return elems;
+        }
+    };
+}
 
 using enum ElemType;
 
-TEST_F(TestWriterElemCreator, Test_File_No_Declaration_1)
+TEST_F(TestWriterElemCreator, No_Declaration_1)
 {
-    auto elems = createElemsWriter("test_no_declaration_1.xml");
+    const auto elems = testWriterElemCreator("test_no_declaration_1.xml");
     ASSERT_EQ(elems->size(), 5);
 
     ASSERT_EQ(elems->at(0).type, TAG_OPEN);
@@ -39,9 +54,9 @@ TEST_F(TestWriterElemCreator, Test_File_No_Declaration_1)
 }
 
 
-TEST_F(TestWriterElemCreator, Test_File_3_Attr_1)
+TEST_F(TestWriterElemCreator, Attr_1)
 {
-    auto elems = createElemsWriter("test_3_attr_1.xml");
+    const auto elems = testWriterElemCreator("test_3_attr_1.xml");
     ASSERT_EQ(elems->size(), 5);
 
     ASSERT_EQ(elems->at(0).type, TAG_OPEN);
@@ -63,9 +78,9 @@ TEST_F(TestWriterElemCreator, Test_File_3_Attr_1)
 }
 
 
-TEST_F(TestWriterElemCreator, Test_File_3_Attr_2)
+TEST_F(TestWriterElemCreator, Attr_2)
 {
-    auto elems = createElemsWriter("test_3_attr_2.xml");
+    const auto elems = testWriterElemCreator("test_3_attr_2.xml");
     ASSERT_EQ(elems->size(), 5);
 
     ASSERT_EQ(elems->at(0).type, TAG_OPEN);
@@ -87,9 +102,9 @@ TEST_F(TestWriterElemCreator, Test_File_3_Attr_2)
 }
 
 
-TEST_F(TestWriterElemCreator, Test_Number_Content)
+TEST_F(TestWriterElemCreator, Number_Content)
 {
-    auto elems = createElemsWriter("test_content_number_value.xml");
+    const auto elems = testWriterElemCreator("test_content_number_value.xml");
     ASSERT_EQ(elems->size(), 8);
 
     ASSERT_EQ(elems->at(0).type, TAG_OPEN);
@@ -118,9 +133,9 @@ TEST_F(TestWriterElemCreator, Test_Number_Content)
 }
 
 
-TEST_F(TestWriterElemCreator, Test_Array_1)
+TEST_F(TestWriterElemCreator, Array_1)
 {
-    auto elems = createElemsWriter("test_array_1.xml");
+    const auto elems = testWriterElemCreator("test_array_1.xml");
     ASSERT_EQ(elems->size(), 8);
 
     ASSERT_EQ(elems->at(0).type, TAG_OPEN);
