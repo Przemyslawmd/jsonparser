@@ -9,13 +9,16 @@
 
 using namespace xml;
 
-class TestParserTokensErrorXML : public BaseTestXML {};
+namespace
+{
+    class TestParserTokensErrorXML : public BaseTestXML {};
+}
 
 
 TEST_F(TestParserTokensErrorXML, File_Angle_Open)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "angleOpen.xml");
-    ASSERT_EQ(elems, nullptr);
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "angleOpen.xml");
+    ASSERT_EQ(createElements(TEST_DATA_IMPROPER_XML, "angleOpen.xml"), nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_OPEN_ANGLE);
 }
@@ -23,7 +26,7 @@ TEST_F(TestParserTokensErrorXML, File_Angle_Open)
 
 TEST_F(TestParserTokensErrorXML, File_Begin)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "begin.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "begin.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_INVALID_BEGIN);
@@ -32,7 +35,7 @@ TEST_F(TestParserTokensErrorXML, File_Begin)
 
 TEST_F(TestParserTokensErrorXML, File_End)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "end.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "end.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_INVALID_END);
@@ -41,7 +44,7 @@ TEST_F(TestParserTokensErrorXML, File_End)
 
 TEST_F(TestParserTokensErrorXML, File_Slash_1)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "slashImproper_1.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "slashImproper_1.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_SLASH);
@@ -50,7 +53,7 @@ TEST_F(TestParserTokensErrorXML, File_Slash_1)
 
 TEST_F(TestParserTokensErrorXML, File_Slash_2)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "slashImproper_2.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "slashImproper_2.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_SLASH);
@@ -59,7 +62,7 @@ TEST_F(TestParserTokensErrorXML, File_Slash_2)
 
 TEST_F(TestParserTokensErrorXML, File_Angle_Close)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "angleClose.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "angleClose.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_CLOSE_ANGLE);
@@ -68,7 +71,7 @@ TEST_F(TestParserTokensErrorXML, File_Angle_Close)
 
 TEST_F(TestParserTokensErrorXML, File_Declaration_Sequence)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_sequence.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_sequence.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_DECLARATION);
@@ -77,7 +80,7 @@ TEST_F(TestParserTokensErrorXML, File_Declaration_Sequence)
 
 TEST_F(TestParserTokensErrorXML, File_Declaration_Key)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_key.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_key.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_DECLARATION);
@@ -86,7 +89,7 @@ TEST_F(TestParserTokensErrorXML, File_Declaration_Key)
 
 TEST_F(TestParserTokensErrorXML, File_Declaration_No_Equal)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_no_equal.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_no_equal.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_DECLARATION);
@@ -95,7 +98,7 @@ TEST_F(TestParserTokensErrorXML, File_Declaration_No_Equal)
 
 TEST_F(TestParserTokensErrorXML, File_Declaration_Version)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_version.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_version.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_DECLARATION);
@@ -104,7 +107,7 @@ TEST_F(TestParserTokensErrorXML, File_Declaration_Version)
 
 TEST_F(TestParserTokensErrorXML, File_Declaration_Standalone)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_standalone.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_standalone.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_DECLARATION);
@@ -113,7 +116,7 @@ TEST_F(TestParserTokensErrorXML, File_Declaration_Standalone)
 
 TEST_F(TestParserTokensErrorXML, File_Attrs_1)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "attrs_1.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "attrs_1.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_DATA_STR);
@@ -122,7 +125,7 @@ TEST_F(TestParserTokensErrorXML, File_Attrs_1)
 
 TEST_F(TestParserTokensErrorXML, File_Attrs_2)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "attrs_2.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "attrs_2.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_DATA_STR_QUOTA);
@@ -131,7 +134,7 @@ TEST_F(TestParserTokensErrorXML, File_Attrs_2)
 
 TEST_F(TestParserTokensErrorXML, File_Attrs_3)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "attrs_3.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "attrs_3.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_DATA_STR_QUOTA);
@@ -140,7 +143,7 @@ TEST_F(TestParserTokensErrorXML, File_Attrs_3)
 
 TEST_F(TestParserTokensErrorXML, File_Attrs_4)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "attrs_4.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "attrs_4.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_DATA_STR_QUOTA);

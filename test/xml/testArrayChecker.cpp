@@ -9,7 +9,10 @@
 using namespace xml;
 using enum ElemType;
 
-class TestArrayChecker : public BaseTestXML {};
+namespace
+{
+    class TestArrayChecker : public BaseTestXML {};
+}
 
 
 TEST_F(TestArrayChecker, Test_Array_1)

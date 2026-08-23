@@ -10,12 +10,29 @@
 using namespace xml;
 using enum ElemType;
 
-class TestParserTokensXML : public BaseTestXML {};
-
-
-TEST_F(TestParserTokensXML, Test_File_2)
+namespace
 {
-    auto elems = createElements(TEST_DATA_XML, "test_2.xml");
+    class TestParserTokensXML : public BaseTestXML
+    {
+    protected:
+        std::unique_ptr<std::vector<ElemReader>> testParserTokens(const std::string& path, const std::string& file)
+        {
+            auto tokens = createTokens(path, file);;
+            const auto parser = std::make_unique<ParserTokens>();
+
+            const auto begin = std::chrono::high_resolution_clock::now();
+            auto elems = parser->parseTokens(std::move(tokens));
+            const auto end = std::chrono::high_resolution_clock::now();
+
+            showDuration(begin, end);
+            return elems;
+        }
+    };
+}
+
+TEST_F(TestParserTokensXML, File_2)
+{
+    auto elems =  testParserTokens(TEST_DATA_XML, "test_2.xml");
 
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 4);
@@ -48,9 +65,9 @@ TEST_F(TestParserTokensXML, Test_File_2)
 }
 
 
-TEST_F(TestParserTokensXML, Test_Number_Content)
+TEST_F(TestParserTokensXML, Number_Content)
 {
-    auto elems = createElements(TEST_DATA_XML, "test_content_number_value.xml");
+    auto elems =  testParserTokens(TEST_DATA_XML, "test_content_number_value.xml");
 
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 8);
@@ -97,9 +114,9 @@ TEST_F(TestParserTokensXML, Test_Number_Content)
 }
 
 
-TEST_F(TestParserTokensXML, Test_File_No_Declaration_1)
+TEST_F(TestParserTokensXML, No_Declaration_1)
 {
-    auto elems = createElements(TEST_DATA_XML, "test_no_declaration_1.xml");
+    auto elems =  testParserTokens(TEST_DATA_XML, "test_no_declaration_1.xml");
 
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 5);
@@ -131,9 +148,9 @@ TEST_F(TestParserTokensXML, Test_File_No_Declaration_1)
 }
 
 
-TEST_F(TestParserTokensXML, Test_File_5_attrs)
+TEST_F(TestParserTokensXML, File_5_attrs)
 {
-    auto elems = createElements(TEST_DATA_XML, "test_5_attrs.xml");
+    auto elems =  testParserTokens(TEST_DATA_XML, "test_5_attrs.xml");
 
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 9);
@@ -202,9 +219,9 @@ TEST_F(TestParserTokensXML, Test_File_5_attrs)
 }
 
 
-TEST_F(TestParserTokensXML, Test_Content_Few_Words)
+TEST_F(TestParserTokensXML, Content_Few_Words)
 {
-    auto elems = createElements(TEST_DATA_XML, "test_content_few_words.xml");
+    auto elems =  testParserTokens(TEST_DATA_XML, "test_content_few_words.xml");
 
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 5);
