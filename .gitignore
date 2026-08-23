@@ -1,5 +1,6 @@
-.vs/
-.vscode/
+**/.*
+!**/.gitignore
+
 build/*
 out/*
 config.h
