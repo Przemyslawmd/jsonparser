@@ -11,25 +11,41 @@
 using namespace xml;
 using enum TokenType;
 
-class TestPreparserXML : public BaseTestXML {};
-
-
-void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<Token>& testData)
+namespace
 {
-    ASSERT_NE(tokens, nullptr);
-    ASSERT_EQ(tokens->size(), testData.size());
+    class TestPreparserXML : public BaseTestXML
+    {
+    protected:
+        std::unique_ptr<std::vector<Token>> testPreparser(const std::string& path, const std::string& file)
+        {
+            const std::string xmlString = getContentFromFile(path, file);
+            const auto preparser = std::make_unique<Preparser>();
+
+            const auto begin = std::chrono::high_resolution_clock::now();
+            auto tokens = preparser->parseXML(xmlString);
+            const auto end = std::chrono::high_resolution_clock::now();
+
+            showDuration(begin, end);
+            return tokens;
+        }
+    };
+}
+
+static void checkTokens(const std::vector<Token>& tokens, const std::vector<Token>& testData)
+{
+    ASSERT_EQ(tokens.size(), testData.size());
 
     using enum TokenType;
-    for (int i = 0; i < testData.size(); i++) {
-        ASSERT_EQ(tokens->at(i).type, testData[i].type );
-        if (tokens->at(i).type == DATA_INT) {
-            ASSERT_EQ(std::get<int64_t>(tokens->at(i).data), std::get<int64_t>(testData[i].data));
+    for (const auto& [a, b] : std::views::zip(tokens, testData)) {
+        ASSERT_EQ(a.type, b.type);
+        if (a.type == DATA_INT) {
+            ASSERT_EQ(std::get<int64_t>(a.data), std::get<int64_t>(b.data));
         }
-        else if (tokens->at(i).type == DATA_STR) {
-            ASSERT_EQ(std::get<std::string>(tokens->at(i).data), std::get<std::string>(testData[i].data));
+        else if (a.type == DATA_STR) {
+            ASSERT_EQ(std::get<std::string>(a.data), std::get<std::string>(b.data));
         }
-        else if (tokens->at(i).type == DATA_DOUBLE) {
-            ASSERT_TRUE((std::get<double>(tokens->at(i).data) - std::get<double>(testData[i].data)) <= DBL_EPSILON);
+        else if (a.type == DATA_DOUBLE) {
+            ASSERT_TRUE((std::get<double>(a.data) - std::get<double>(b.data)) <= DBL_EPSILON);
         }
     }
 }
@@ -37,8 +53,8 @@ void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<Token>&
 
 TEST_F(TestPreparserXML, Test_File_1)
 {
-    auto tokens = createTokens(TEST_DATA_XML, "test_1.xml");
-    std::vector<Token> testData =
+    const auto tokens = testPreparser(TEST_DATA_XML, "test_1.xml");
+    const std::vector<Token> testData =
     {
         { ANGLE_OPEN },
         { QUESTION },
@@ -116,14 +132,14 @@ TEST_F(TestPreparserXML, Test_File_1)
         { DATA_STR, std::string{ "person" }},
         { ANGLE_CLOSE },
     };
-    checkTokens(std::move(tokens), testData);
+    checkTokens(*tokens, testData);
 }
 
 
 TEST_F(TestPreparserXML, Test_One_Letter)
 {
-    auto tokens = createTokens(TEST_DATA_XML, "test_one_letter.xml");
-    std::vector<Token> testData =
+    const auto tokens = testPreparser(TEST_DATA_XML, "test_one_letter.xml");
+    const std::vector<Token> testData =
     {
         { ANGLE_OPEN },
         { QUESTION },
@@ -160,13 +176,13 @@ TEST_F(TestPreparserXML, Test_One_Letter)
         { DATA_STR, std::string{ "person" }},
         { ANGLE_CLOSE },
     };
-    checkTokens(std::move(tokens), testData);
+    checkTokens(*tokens, testData);
 }
 
 
 TEST_F(TestPreparserXML, Error_String_Not_Ended)
 {
-    auto tokens = createTokens(TEST_DATA_IMPROPER_XML, "notEnd.xml");
+    const auto tokens = testPreparser(TEST_DATA_IMPROPER_XML, "notEnd.xml");
     ASSERT_EQ(tokens, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PREPARSER_STRING_ERROR);

@@ -5,17 +5,19 @@
 
 #include <gtest/gtest.h>
 
-#include "reader/xml/validator.h"
+#include "src/reader/xml/validator.h"
 
 
 using namespace xml;
 
-class TestValidatorXML : public BaseTestXML {};
-
+namespace
+{
+    class TestValidatorXML : public BaseTestXML {};
+}
 
 TEST_F(TestValidatorXML, Declaration_not_start)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_not_start.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "declaration_not_start.xml");
     ASSERT_EQ(elems, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PARSER_TOKENS_QUESTION);
@@ -24,10 +26,9 @@ TEST_F(TestValidatorXML, Declaration_not_start)
 
 TEST_F(TestValidatorXML, MismatchedTag_1)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "mismatchedTag_1.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "mismatchedTag_1.xml");
     ASSERT_NE(elems, nullptr);
-    bool res = ValidateElems(*elems);
-    ASSERT_FALSE(res);
+    ASSERT_FALSE(ValidateElems(*elems));
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_VALIDATOR_MISMATCHED_TAG);
 }
@@ -35,10 +36,9 @@ TEST_F(TestValidatorXML, MismatchedTag_1)
 
 TEST_F(TestValidatorXML, MismatchedTag_2)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "mismatchedTag_2.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "mismatchedTag_2.xml");
     ASSERT_NE(elems, nullptr);
-    bool res = ValidateElems(*elems);
-    ASSERT_FALSE(res);
+    ASSERT_FALSE(ValidateElems(*elems));
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_VALIDATOR_MISMATCHED_TAG);
 }
@@ -46,10 +46,9 @@ TEST_F(TestValidatorXML, MismatchedTag_2)
 
 TEST_F(TestValidatorXML, MismatchedTag_3)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "mismatchedTag_3.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "mismatchedTag_3.xml");
     ASSERT_NE(elems, nullptr);
-    bool res = ValidateElems(*elems);
-    ASSERT_FALSE(res);
+    ASSERT_FALSE(ValidateElems(*elems));
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_VALIDATOR_MISMATCHED_TAG);
 }
@@ -57,10 +56,9 @@ TEST_F(TestValidatorXML, MismatchedTag_3)
 
 TEST_F(TestValidatorXML, MismatchedTag_4)
 {
-    auto elems = createElements(TEST_DATA_IMPROPER_XML, "mismatchedTag_4.xml");
+    const auto elems = createElements(TEST_DATA_IMPROPER_XML, "mismatchedTag_4.xml");
     ASSERT_NE(elems, nullptr);
-    bool res = ValidateElems(*elems);
-    ASSERT_FALSE(res);
+    ASSERT_FALSE(ValidateElems(*elems));
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_VALIDATOR_MISMATCHED_TAG);
 }
