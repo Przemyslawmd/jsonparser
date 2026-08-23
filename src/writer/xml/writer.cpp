@@ -11,7 +11,7 @@
 
 using namespace xml;
 
-std::string Writer::createXmlString(const std::vector<ElemWriter>& elems)
+std::string Writer::createXmlString(std::unique_ptr<std::vector<ElemWriter>> elems)
 {
     std::ostringstream stream;
 
@@ -31,8 +31,8 @@ std::string Writer::createXmlString(const std::vector<ElemWriter>& elems)
         stream << "?>\n";
     }
 
-    unsigned int numOfElems = elems.size();
-    for (const auto [idx, elem] : std::views::enumerate(elems))
+    unsigned int numOfElems = elems->size();
+    for (const auto [idx, elem] : std::views::enumerate(*elems))
     {
         switch(elem.type)
         {
@@ -48,7 +48,7 @@ std::string Writer::createXmlString(const std::vector<ElemWriter>& elems)
                 stream << ">\n";
                 break;;
             case ElemType::TAG_CLOSE:
-                if (elems.at(idx - 1).type != ElemType::CONTENT) {
+                if (elems->at(idx - 1).type != ElemType::CONTENT) {
                     std::fill_n(std::ostream_iterator<char>(stream), indentation, ' ');
                 }
                 stream << "</" << elem.name.value() << ">";

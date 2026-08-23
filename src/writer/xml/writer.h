@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "reader/xml/elem.h"
@@ -16,7 +17,7 @@ public:
                                                           indentation(indentation * -1),
                                                           indentationStep(indentation) {}
 
-    std::string createXmlString(const std::vector<ElemWriter>& elems);
+    std::string createXmlString(std::unique_ptr<std::vector<ElemWriter>> elems);
     void setIndent(int);
 
 private:

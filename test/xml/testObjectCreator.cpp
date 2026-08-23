@@ -15,13 +15,6 @@ namespace
     class TestObjectCreator : public BaseTestXML
     {
     protected:
-        std::unique_ptr<KeyMapper> keyMapper;
-
-        void SetUp() override
-        {
-            keyMapper = std::make_unique<KeyMapper>();
-        }
-
         void checkKeyMapping(const std::map<std::string, uint32_t>& mapExpected)
         {
             for (const auto& [strExpected, idExpected] : mapExpected) {
@@ -43,7 +36,7 @@ namespace
 
 TEST_F(TestObjectCreator, Test_3)
 {
-    auto root = createObjects(TEST_DATA_XML, "test_3.xml", *keyMapper);
+    auto root = createObjects(TEST_DATA_XML, "test_3.xml");
     ASSERT_NE(root, nullptr);
 
     std::map <std::string, uint32_t> keys
@@ -64,7 +57,7 @@ TEST_F(TestObjectCreator, Test_3)
 
 TEST_F(TestObjectCreator, Test_4)
 {
-    auto root = createObjects(TEST_DATA_XML, "test_4.xml", *keyMapper);
+    auto root = createObjects(TEST_DATA_XML, "test_4.xml");
     ASSERT_NE(root, nullptr);
 
     std::map <std::string, uint32_t> keys 
@@ -110,7 +103,7 @@ TEST_F(TestObjectCreator, Test_4)
 
 TEST_F(TestObjectCreator, Test_File_3_1_Attr)
 {
-    auto root = createObjects(TEST_DATA_XML, "test_3_attr_1.xml", *keyMapper);
+    auto root = createObjects(TEST_DATA_XML, "test_3_attr_1.xml");
     ASSERT_NE(root, nullptr);
 
     std::map <std::string, uint32_t> keys
@@ -141,7 +134,7 @@ TEST_F(TestObjectCreator, Test_File_3_1_Attr_Pretended_Key_Changed)
 {
     Settings::setPretendedKey("##text");
 
-    auto root = createObjects(TEST_DATA_XML, "test_3_attr_1.xml", *keyMapper);
+    auto root = createObjects(TEST_DATA_XML, "test_3_attr_1.xml");
     ASSERT_NE(root, nullptr);
 
     std::map <std::string, uint32_t> keys
@@ -166,7 +159,7 @@ TEST_F(TestObjectCreator, Test_File_3_1_Attr_Pretended_Key_Changed)
 
 TEST_F(TestObjectCreator, Test_File_3_2_Attr)
 {
-    auto root = createObjects(TEST_DATA_XML, "test_3_attr_2.xml", *keyMapper);
+    auto root = createObjects(TEST_DATA_XML, "test_3_attr_2.xml");
     ASSERT_NE(root, nullptr);
 
     std::map <std::string, uint32_t> keys
@@ -192,7 +185,7 @@ TEST_F(TestObjectCreator, Test_File_3_2_Attr)
 
 TEST_F(TestObjectCreator, Test_Number_Content)
 {
-    auto root = createObjects(TEST_DATA_XML, "test_content_number_value.xml", *keyMapper);
+    auto root = createObjects(TEST_DATA_XML, "test_content_number_value.xml");
     ASSERT_NE(root, nullptr);
 
     std::map <std::string, uint32_t> keys 
@@ -217,7 +210,7 @@ TEST_F(TestObjectCreator, Test_Number_Content)
 
 TEST_F(TestObjectCreator, Test_Array_1)
 {
-    const auto root = createObjects(TEST_DATA_XML, "test_array_1.xml", *keyMapper);
+    const auto root = createObjects(TEST_DATA_XML, "test_array_1.xml");
     ASSERT_TRUE(root);
 
     constexpr uint32_t idA = 0x00'01'00'01;
@@ -244,7 +237,7 @@ TEST_F(TestObjectCreator, Test_Array_1)
 
 TEST_F(TestObjectCreator, Test_Array_2)
 {
-    auto const root = createObjects(TEST_DATA_XML, "test_array_2.xml", *keyMapper);
+    auto const root = createObjects(TEST_DATA_XML, "test_array_2.xml");
     ASSERT_TRUE(root);
 
     constexpr uint32_t idRoot = 0x00'01'00'01;

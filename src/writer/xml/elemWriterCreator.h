@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <memory>
 #include <stack>
 #include <string>
 
@@ -20,7 +21,7 @@ public:
                                                             pretendedKey(Settings::getPretendedKey()),
                                                             xmlRootIfNeeded(Settings::getXmlRoot()) {}
 
-    std::vector<ElemWriter> createElems(const ObjectNode&);
+    std::unique_ptr<std::vector<ElemWriter>> createElems(const ObjectNode&);
 
 private:
     void processObjectNode(const ObjectNode&);
@@ -32,7 +33,7 @@ private:
     const std::string& pretendedKey;
     const bool xmlRootIfNeeded;
 
-    std::vector<ElemWriter> elems;
+    std::unique_ptr<std::vector<ElemWriter>> elems;
     std::string arrayKey;
     bool removeElem;
     std::stack<State> state;

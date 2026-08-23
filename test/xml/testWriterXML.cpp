@@ -1,13 +1,7 @@
 
 #include <chrono>
-#include <memory>
-#include <vector>
 
 #include <gtest/gtest.h>
-
-#include "keyMapper.h"
-#include "writer/xml/writer.h"
-#include "writer/xml/elemWriterCreator.h"
 
 #include "testBaseXML.h"
 #include "utilsTest.h"
@@ -22,20 +16,9 @@ namespace
     protected:
         void testWriter(const std::string& file, unsigned int indentation = 2)
         {
-            const auto keyMapper = std::make_unique<KeyMapper>();
-            const auto root = createObjects(TEST_DATA_XML, file, *keyMapper);
-            ElemWriterCreator elemWriter(*keyMapper);
-            const auto elems = elemWriter.createElems(*root);
-
-            const auto begin = std::chrono::high_resolution_clock::now();
-            Writer writer(*keyMapper, indentation);
-            const std::string xml = writer.createXmlString(elems);
-
-            const auto end = std::chrono::high_resolution_clock::now();
-            showDuration(begin, end);
+            const std::string xmlString = createString(file, indentation);
             const std::string xmlExpected = getContentFromFile(TEST_DATA_XML, file);
-            std::cout << xml << std::endl;
-            ASSERT_EQ(xml, xmlExpected);
+            ASSERT_EQ(xmlString, xmlExpected);
         }
     };
 }

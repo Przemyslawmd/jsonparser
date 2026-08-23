@@ -125,12 +125,12 @@ std::optional<std::string> Manager::objectToXmlString()
     }
     const auto elemsCreator = std::make_unique<ElemWriterCreator>(*keyMapper);
     auto elems = elemsCreator->createElems(*root);
-    if (elems.empty()) {
+    if (elems->empty()) {
         return std::nullopt;
     }
     auto indentation = Settings::getIndentation();
     const auto writer = std::make_unique<Writer>(*keyMapper, indentation);
-    return writer->createXmlString(elems);
+    return writer->createXmlString(std::move(elems));
 }
 
 
