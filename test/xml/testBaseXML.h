@@ -9,7 +9,6 @@
 #include "src/reader/xml/preparser.h"
 #include "src/reader/xml/parserTokens.h"
 #include "src/writer/xml/elemWriterCreator.h"
-#include "src/writer/xml/writer.h"
 
 #include "baseTest.h"
 #include "utilsTest.h"

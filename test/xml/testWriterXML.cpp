@@ -3,6 +3,8 @@
 
 #include <gtest/gtest.h>
 
+#include "src/writer/xml/writer.h"
+
 #include "testBaseXML.h"
 #include "utilsTest.h"
 
