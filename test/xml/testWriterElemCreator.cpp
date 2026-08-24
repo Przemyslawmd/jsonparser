@@ -30,6 +30,22 @@ namespace
     };
 }
 
+
+static void typeAndName(const ElemWriter& elem, const ElemType type, const std::string& name)
+{
+    ASSERT_EQ(elem.type, type);
+    ASSERT_EQ(elem.name, name);
+}
+
+
+template <typename T>
+static void typeAndValue(const ElemWriter& elem, const ElemType type, const T& value)
+{
+    ASSERT_EQ(elem.type, type);
+    ASSERT_EQ(std::get<T>(elem.value), value);
+}
+
+
 using enum ElemType;
 
 TEST_F(TestWriterElemCreator, No_Declaration_1)
@@ -37,20 +53,11 @@ TEST_F(TestWriterElemCreator, No_Declaration_1)
     const auto elems = testWriterElemCreator("test_no_declaration_1.xml");
     ASSERT_EQ(elems->size(), 5);
 
-    ASSERT_EQ(elems->at(0).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(0).name, "person");
-
-    ASSERT_EQ(elems->at(1).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(1).name, "name");
-
-    ASSERT_EQ(elems->at(2).type, CONTENT);
-    ASSERT_EQ(std::get<std::string>(elems->at(2).value), "Jan");
-
-    ASSERT_EQ(elems->at(3).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(3).name, "name");
-
-    ASSERT_EQ(elems->at(4).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(4).name, "person");
+    typeAndName(elems->at(0), TAG_OPEN, "person");
+    typeAndName(elems->at(1), TAG_OPEN, "name");
+    typeAndValue<std::string>(elems->at(2), CONTENT, "Jan");
+    typeAndName(elems->at(3), TAG_CLOSE, "name");
+    typeAndName(elems->at(4), TAG_CLOSE, "person");
 }
 
 
@@ -59,22 +66,13 @@ TEST_F(TestWriterElemCreator, Attr_1)
     const auto elems = testWriterElemCreator("test_3_attr_1.xml");
     ASSERT_EQ(elems->size(), 5);
 
-    ASSERT_EQ(elems->at(0).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(0).name, "person");
-
-    ASSERT_EQ(elems->at(1).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(1).name, "name");
+    typeAndName(elems->at(0), TAG_OPEN, "person");
+    typeAndName(elems->at(1), TAG_OPEN, "name");
     ASSERT_EQ(elems->at(1).attr.size(), 1);
     ASSERT_EQ(elems->at(1).attr.at("city"), "Paris");
-
-    ASSERT_EQ(elems->at(2).type, CONTENT);
-    ASSERT_EQ(std::get<std::string>(elems->at(2).value), "John");
-
-    ASSERT_EQ(elems->at(3).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(3).name, "name");
-
-    ASSERT_EQ(elems->at(4).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(4).name, "person");
+    typeAndValue<std::string>(elems->at(2), CONTENT, "John");
+    typeAndName(elems->at(3), TAG_CLOSE, "name");
+    typeAndName(elems->at(4), TAG_CLOSE, "person");
 }
 
 
@@ -83,22 +81,14 @@ TEST_F(TestWriterElemCreator, Attr_2)
     const auto elems = testWriterElemCreator("test_3_attr_2.xml");
     ASSERT_EQ(elems->size(), 5);
 
-    ASSERT_EQ(elems->at(0).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(0).name, "person");
+    typeAndName(elems->at(0), TAG_OPEN, "person");
     ASSERT_EQ(elems->at(0).attr.size(), 1);
     ASSERT_EQ(elems->at(0).attr.at("state"), "Spain");
-        
-    ASSERT_EQ(elems->at(1).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(1).name, "name");
+    typeAndName(elems->at(1), TAG_OPEN, "name");
+    typeAndValue<std::string>(elems->at(2), CONTENT, "John");
+    typeAndName(elems->at(3), TAG_CLOSE, "name");
+    typeAndName(elems->at(4), TAG_CLOSE, "person");
 
-    ASSERT_EQ(elems->at(2).type, CONTENT);
-    ASSERT_EQ(std::get<std::string>(elems->at(2).value), "John");
-
-    ASSERT_EQ(elems->at(3).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(3).name, "name");
-
-    ASSERT_EQ(elems->at(4).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(4).name, "person");
 }
 
 
@@ -107,29 +97,14 @@ TEST_F(TestWriterElemCreator, Number_Content)
     const auto elems = testWriterElemCreator("test_content_number_value.xml");
     ASSERT_EQ(elems->size(), 8);
 
-    ASSERT_EQ(elems->at(0).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(0).name, "person");
-
-    ASSERT_EQ(elems->at(1).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(1).name, "number");
-
-    ASSERT_EQ(elems->at(2).type, CONTENT);
-    ASSERT_EQ(std::get<int64_t>(elems->at(2).value), 34567);
-
-    ASSERT_EQ(elems->at(3).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(3).name, "number");
-
-    ASSERT_EQ(elems->at(4).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(4).name, "secondNumber");
-
-    ASSERT_EQ(elems->at(5).type, CONTENT);
-    ASSERT_EQ(std::get<double>(elems->at(5).value), 10.002);
-
-    ASSERT_EQ(elems->at(6).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(6).name, "secondNumber");
-
-    ASSERT_EQ(elems->at(7).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(7).name, "person");
+    typeAndName(elems->at(0), TAG_OPEN, "person");
+    typeAndName(elems->at(1), TAG_OPEN, "number");
+    typeAndValue<int64_t>(elems->at(2), CONTENT, 34567);
+    typeAndName(elems->at(3), TAG_CLOSE, "number");
+    typeAndName(elems->at(4), TAG_OPEN, "secondNumber");
+    typeAndValue<double>(elems->at(5), CONTENT, 10.002);
+    typeAndName(elems->at(6), TAG_CLOSE, "secondNumber");
+    typeAndName(elems->at(7), TAG_CLOSE, "person");
 }
 
 
@@ -138,28 +113,33 @@ TEST_F(TestWriterElemCreator, Array_1)
     const auto elems = testWriterElemCreator("test_array_1.xml");
     ASSERT_EQ(elems->size(), 8);
 
-    ASSERT_EQ(elems->at(0).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(0).name, "a");
+    typeAndName(elems->at(0), TAG_OPEN, "a");
+    typeAndName(elems->at(1), TAG_ARRAY_BEGIN, "b");
+    typeAndValue<std::string>(elems->at(2), CONTENT, "B");
+    typeAndName(elems->at(3), TAG_ARRAY_CLOSE, "b");
+    typeAndName(elems->at(4), TAG_ARRAY_OPEN, "b");
+    typeAndValue<std::string>(elems->at(5), CONTENT, "C");
+    typeAndName(elems->at(6), TAG_ARRAY_END, "b");
+    typeAndName(elems->at(7), TAG_CLOSE, "a");
+}
 
-    ASSERT_EQ(elems->at(1).type, TAG_ARRAY_BEGIN);
-    ASSERT_EQ(elems->at(1).name, "b");
 
-    ASSERT_EQ(elems->at(2).type, CONTENT);
-    ASSERT_EQ(std::get<std::string>(elems->at(2).value), "B");
+TEST_F(TestWriterElemCreator, Array_2)
+{
+    const auto elems = testWriterElemCreator("test_array_2.xml");
+    ASSERT_EQ(elems->size(), 12);
 
-    ASSERT_EQ(elems->at(3).type, TAG_ARRAY_CLOSE);
-    ASSERT_EQ(elems->at(3).name, "b");
-
-    ASSERT_EQ(elems->at(4).type, TAG_ARRAY_OPEN);
-    ASSERT_EQ(elems->at(4).name, "b");
-
-    ASSERT_EQ(elems->at(5).type, CONTENT);
-    ASSERT_EQ(std::get<std::string>(elems->at(5).value), "C");
-
-    ASSERT_EQ(elems->at(6).type, TAG_ARRAY_END);
-    ASSERT_EQ(elems->at(6).name, "b");
-
-    ASSERT_EQ(elems->at(7).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(7).name, "a");
+    typeAndName(elems->at(0), TAG_OPEN, "root");
+    typeAndName(elems->at(1), TAG_ARRAY_BEGIN, "employees");
+    typeAndName(elems->at(2), TAG_OPEN, "name");
+    typeAndValue<std::string>(elems->at(3), CONTENT, "Agata");
+    typeAndName(elems->at(4), TAG_CLOSE, "name");
+    typeAndName(elems->at(5), TAG_ARRAY_CLOSE, "employees");
+    typeAndName(elems->at(6), TAG_ARRAY_OPEN, "employees");
+    typeAndName(elems->at(7), TAG_OPEN, "name");
+    typeAndValue<std::string>(elems->at(8), CONTENT, "Anna");
+    typeAndName(elems->at(9), TAG_CLOSE, "name");
+    typeAndName(elems->at(10), TAG_ARRAY_END, "employees");
+    typeAndName(elems->at(11), TAG_CLOSE, "root");
 }
 
