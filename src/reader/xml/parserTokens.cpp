@@ -106,7 +106,7 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
             case DATA_STR_QUOTA:
                 if (state == STATE_ATTR_EQUAL) {
                     auto& tag = elems->back();
-                    tag.attrs.emplace(attrKey.value(), std::get<std::string>(token.data));
+                    tag.attr.emplace(attrKey.value(), std::get<std::string>(token.data));
                     state = STATE_ATTR_VALUE;
                     break;
                     }
@@ -164,7 +164,7 @@ std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Tok
         return std::nullopt;
     }
     auto& elem = elems->emplace_back(DECLARATION, XML);
-    elem.attrs.emplace(VER, verValue);
+    elem.attr.emplace(VER, verValue);
 
     index = 6;
     if (checkClosing(tokens, index)) {
@@ -174,7 +174,7 @@ std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Tok
     if (!checkPair(tokens, index, ENC)) {
         return std::nullopt;
     }
-    elem.attrs.emplace(ENC, std::get<std::string>(tokens.at(index + 2).data));
+    elem.attr.emplace(ENC, std::get<std::string>(tokens.at(index + 2).data));
 
     index = 9;
     if (checkClosing(tokens, index)) {
@@ -188,7 +188,7 @@ std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Tok
     if (staValue != "yes" && staValue != "no") {
         return std::nullopt;
     }
-    elem.attrs.emplace(STA, std::get<std::string>(tokens.at(index + 2).data));
+    elem.attr.emplace(STA, std::get<std::string>(tokens.at(index + 2).data));
 
     index = 12;
     if (checkClosing(tokens, index)) {

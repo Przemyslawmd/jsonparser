@@ -41,7 +41,7 @@ TEST_F(TestParserTokensXML, File_2)
     ASSERT_EQ(elems->at(idx).type, DECLARATION);
     ASSERT_EQ(elems->at(idx).name, "xml");
 
-    const auto& attrs = elems->at(idx).attrs;
+    const auto& attrs = elems->at(idx).attr;
     ASSERT_EQ(attrs.size(), 2);
     ASSERT_TRUE(attrs.contains("version"));
     ASSERT_EQ(attrs.at("version"), "1.0");
@@ -51,17 +51,17 @@ TEST_F(TestParserTokensXML, File_2)
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
     ASSERT_EQ(elems->at(idx).name, "person");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, CONTENT);
     ASSERT_EQ(std::get<std::string>(elems->at(idx).value), "John");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
     ASSERT_EQ(elems->at(idx).name, "person");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 }
 
 
@@ -75,42 +75,42 @@ TEST_F(TestParserTokensXML, Number_Content)
     unsigned int idx = 0;
     ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
     ASSERT_EQ(elems->at(idx).name, "person");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
     ASSERT_EQ(elems->at(idx).name, "number");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, CONTENT);
     ASSERT_EQ(std::get<int64_t>(elems->at(idx).value), 34567);
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
     ASSERT_EQ(elems->at(idx).name, "number");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
     ASSERT_EQ(elems->at(idx).name, "secondNumber");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, CONTENT);
     ASSERT_EQ(std::get<double>(elems->at(idx).value), 10.002);
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
     ASSERT_EQ(elems->at(idx).name, "secondNumber");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
     ASSERT_EQ(elems->at(idx).name, "person");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 }
 
 
@@ -124,27 +124,27 @@ TEST_F(TestParserTokensXML, No_Declaration_1)
     unsigned int idx = 0;
     ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
     ASSERT_EQ(elems->at(idx).name, "person");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
     ASSERT_EQ(elems->at(idx).name, "name");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, CONTENT);
     ASSERT_EQ(std::get<std::string>(elems->at(idx).value), "Jan");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
     ASSERT_EQ(elems->at(idx).name, "name");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
     ASSERT_EQ(elems->at(idx).name, "person");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 }
 
 
@@ -159,7 +159,7 @@ TEST_F(TestParserTokensXML, File_5_attrs)
     ASSERT_EQ(elems->at(idx).type, DECLARATION);
     ASSERT_EQ(elems->at(idx).name, "xml");
 
-    const auto& attrsDec = elems->at(idx).attrs;
+    const auto& attrsDec = elems->at(idx).attr;
     ASSERT_EQ(attrsDec.size(), 3);
     ASSERT_TRUE(attrsDec.contains("version"));
     ASSERT_EQ(attrsDec.at("version"), "1.0");
@@ -171,7 +171,7 @@ TEST_F(TestParserTokensXML, File_5_attrs)
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
     ASSERT_EQ(elems->at(idx).name, "city");
-    const auto& attrsCity = elems->at(idx).attrs;
+    const auto& attrsCity = elems->at(idx).attr;
     ASSERT_EQ(attrsCity.size(), 1);
     ASSERT_TRUE(attrsCity.contains("state"));
     ASSERT_EQ(attrsCity.at("state"), "Italy");
@@ -180,7 +180,7 @@ TEST_F(TestParserTokensXML, File_5_attrs)
     ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
     ASSERT_EQ(elems->at(idx).name, "name");
 
-    auto& attrsName = elems->at(idx).attrs;
+    auto& attrsName = elems->at(idx).attr;
     ASSERT_EQ(attrsName.size(), 2);
     ASSERT_TRUE(attrsName.contains("code"));
     ASSERT_EQ(attrsName.at("code"), "ML");
@@ -190,32 +190,32 @@ TEST_F(TestParserTokensXML, File_5_attrs)
     idx++;
     ASSERT_EQ(elems->at(idx).type, CONTENT);
     ASSERT_EQ(std::get<std::string>(elems->at(idx).value), "Milan");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
     ASSERT_EQ(elems->at(idx).name, "name");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
     ASSERT_EQ(elems->at(idx).name, "province");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, CONTENT);
     ASSERT_EQ(std::get<std::string>(elems->at(idx).value), "Lombardy");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
     ASSERT_EQ(elems->at(idx).name, "province");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
         
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
     ASSERT_EQ(elems->at(idx).name, "city");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 }
 
 
@@ -229,26 +229,26 @@ TEST_F(TestParserTokensXML, Content_Few_Words)
     unsigned int idx = 0;
     ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
     ASSERT_EQ(elems->at(idx).name, "person");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
     ASSERT_EQ(elems->at(idx).name, "name");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, CONTENT);
     ASSERT_EQ(std::get<std::string>(elems->at(idx).value), "John Wick Paris");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
     ASSERT_EQ(elems->at(idx).name, "name");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 
     idx++;
     ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
     ASSERT_EQ(elems->at(idx).name, "person");
-    ASSERT_TRUE(elems->at(idx).attrs.empty());
+    ASSERT_TRUE(elems->at(idx).attr.empty());
 }
 
