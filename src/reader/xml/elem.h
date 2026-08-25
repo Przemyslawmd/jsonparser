@@ -43,18 +43,12 @@ struct ElemReader
 };
 
 
-struct  ElemWriter
+struct  Elem
 {
-    ElemWriter(ElemType type, std::optional<std::string> name) : 
+    Elem(ElemType type, std::optional<std::string> name) :
                type(type), name(name), value(nullptr) {}
 
-    ElemWriter(ElemType type, std::optional<std::string> name, const std::string& value) : 
-               type(type), name(name), value(value) {}
-
-    ElemWriter(ElemType type, std::optional<std::string> name, int64_t value) :
-               type(type), name(name), value(value) {}
-
-    ElemWriter(ElemType type, std::optional<std::string> name, double value) :
+    Elem(ElemType type, std::optional<std::string> name, const TokenData& value) :
                type(type), name(name), value(value) {}
 
     ElemType type;

@@ -9,11 +9,11 @@
 using namespace xml;
 using enum ElemType;
 
-std::unique_ptr<std::vector<ElemWriter>> ElemWriterCreator::createElems(const ObjectNode& object)
+std::unique_ptr<std::vector<Elem>> ElemWriterCreator::createElems(const ObjectNode& object)
 {
     bool const addRoot = xmlRootIfNeeded && object.size() > 1;
     removeElem = false;
-    elems = std::make_unique<std::vector<ElemWriter>>();
+    elems = std::make_unique<std::vector<Elem>>();
 
     if (addRoot) {
         elems->emplace_back(TAG_OPEN, "root");

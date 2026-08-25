@@ -17,7 +17,7 @@ public:
                                                                   indent(0),
                                                                   indentStep(indentStep) {}
 
-    std::string createXmlString(std::unique_ptr<std::vector<ElemWriter>> elems);
+    std::string createXmlString(std::unique_ptr<std::vector<Elem>> elems);
     void setIndent(unsigned int);
 
 private:

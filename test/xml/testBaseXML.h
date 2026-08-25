@@ -54,7 +54,7 @@ protected:
         return node;
     }
 
-    std::unique_ptr<std::vector<ElemWriter>> createElemsWriter(const std::string& file)
+    std::unique_ptr<std::vector<Elem>> createElemsWriter(const std::string& file)
     {
         const auto root = createObjects(TEST_DATA_XML, file);
         const auto writer = std::make_unique<ElemWriterCreator>(*keyMapper);

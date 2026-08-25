@@ -11,7 +11,7 @@
 using namespace xml;
 using enum ElemType;
 
-std::string Writer::createXmlString(std::unique_ptr<std::vector<ElemWriter>> elems)
+std::string Writer::createXmlString(std::unique_ptr<std::vector<Elem>> elems)
 {
     std::ostringstream stream;
 

@@ -15,7 +15,7 @@ namespace
     class TestWriterElemCreator : public BaseTestXML
     {
     protected:
-        std::unique_ptr<std::vector<ElemWriter>> testWriterElemCreator(const std::string& file)
+        std::unique_ptr<std::vector<Elem>> testWriterElemCreator(const std::string& file)
         {
             const auto root = createObjects(TEST_DATA_XML, file);
             ElemWriterCreator elemWriter(*keyMapper);
@@ -31,7 +31,7 @@ namespace
 }
 
 
-static void typeAndName(const ElemWriter& elem, const ElemType type, const std::string& name)
+static void typeAndName(const Elem& elem, const ElemType type, const std::string& name)
 {
     ASSERT_EQ(elem.type, type);
     ASSERT_EQ(elem.name, name);
@@ -39,7 +39,7 @@ static void typeAndName(const ElemWriter& elem, const ElemType type, const std::
 
 
 template <typename T>
-static void typeAndValue(const ElemWriter& elem, const ElemType type, const T& value)
+static void typeAndValue(const Elem& elem, const ElemType type, const T& value)
 {
     ASSERT_EQ(elem.type, type);
     ASSERT_EQ(std::get<T>(elem.value), value);
