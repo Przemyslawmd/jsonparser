@@ -17,18 +17,18 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<ElemReader>& e
 
     auto document = std::make_unique<ObjectNode>();
     mapIDStack.push(0);
-    pushContext(document.get(), elems.at(firstTag).name, OBJECT_PARSING);
+    pushContext(document.get(), elems.at(firstTag).name.value(), OBJECT_PARSING);
     attrs = &elems.at(firstTag).attrs;
 
     using enum ElemType;
     for (auto& elem : elems | std::views::drop(firstTag + 1)) {
         switch (elem.type) {
             case TAG_OPEN:
-                processTagOpen(elem.name);
+                processTagOpen(elem.name.value());
                 attrs = &elem.attrs;
                 break;
             case TAG_ARRAY_OPEN:
-                processTagArrayOpen(elem.name);
+                processTagArrayOpen(elem.name.value());
                 attrs = &elem.attrs;
                 break;
             case TAG_CLOSE:

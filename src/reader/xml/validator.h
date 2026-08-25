@@ -24,7 +24,7 @@ static bool ValidateElems(const std::vector<ElemReader>& elems)
             return false;
         }
         if (elem.type == ElemType::TAG_OPEN) {
-            tags.push(elem.name);
+            tags.push(elem.name.value());
             continue;
         }
         if (elem.type == ElemType::TAG_CLOSE) {

@@ -34,33 +34,33 @@ struct ElemReader
                type(type), name(name), value(value), attrs({}) {}
 
     ElemReader(ElemType type, TokenData& value) : 
-               type(type), name({}), value(value), attrs({}) {}
+               type(type), name(std::nullopt), value(value), attrs({}) {}
 
     ElemType type;
-    std::string name;
-    std::map<std::string, std::string> attrs;
+    std::optional<std::string> name;
     TokenData value;
+    std::map<std::string, std::string> attrs;
 };
 
 
 struct  ElemWriter
 {
     ElemWriter(ElemType type, std::optional<std::string> name) : 
-               type(type), name(name), value(nullptr), attr({}) {}
+               type(type), name(name), value(nullptr) {}
 
     ElemWriter(ElemType type, std::optional<std::string> name, const std::string& value) : 
-               type(type), name(name), value(value), attr({}) {}
+               type(type), name(name), value(value) {}
 
     ElemWriter(ElemType type, int64_t value) : 
-               type(type), name(std::nullopt), value(value), attr({}) {}
+               type(type), name(std::nullopt), value(value) {}
 
     ElemWriter(ElemType type, double value) : 
-               type(type), name(std::nullopt), value(value), attr({}) {}
+               type(type), name(std::nullopt), value(value) {}
 
     ElemType type;
     std::optional<std::string> name;
-    std::map<std::string, std::string> attr;
     TokenData value;
+    std::map<std::string, std::string> attr;
 };
 }
 
