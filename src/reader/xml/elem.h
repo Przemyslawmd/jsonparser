@@ -33,13 +33,13 @@ struct ElemReader
     ElemReader(ElemType type, const std::string& name, TokenData& value) : 
                type(type), name(name), value(value) {}
 
-    ElemReader(ElemType type, TokenData& value) : 
-               type(type), name(std::nullopt), value(value) {}
+    ElemReader(ElemType type, std::optional<std::string> name, TokenData& value) :
+               type(type), name(name), value(value) {}
 
     ElemType type;
     std::optional<std::string> name;
     TokenData value;
-    std::map<std::string, std::string> attr;
+    std::map<std::string, std::string> attr ;
 };
 
 
@@ -51,11 +51,11 @@ struct  ElemWriter
     ElemWriter(ElemType type, std::optional<std::string> name, const std::string& value) : 
                type(type), name(name), value(value) {}
 
-    ElemWriter(ElemType type, int64_t value) : 
-               type(type), name(std::nullopt), value(value) {}
+    ElemWriter(ElemType type, std::optional<std::string> name, int64_t value) :
+               type(type), name(name), value(value) {}
 
-    ElemWriter(ElemType type, double value) : 
-               type(type), name(std::nullopt), value(value) {}
+    ElemWriter(ElemType type, std::optional<std::string> name, double value) :
+               type(type), name(name), value(value) {}
 
     ElemType type;
     std::optional<std::string> name;

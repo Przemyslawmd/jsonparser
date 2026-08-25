@@ -116,7 +116,7 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
             case DATA_DOUBLE:
                 if (state == STATE_TAG_COMPLETED) {
                     state = STATE_CONTENT;
-                    elems->emplace_back(CONTENT, token.data);
+                    elems->emplace_back(CONTENT, std::nullopt, token.data);
                 }
                 break;
             case EQUAL:

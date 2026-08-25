@@ -79,10 +79,10 @@ void ElemWriterCreator::parseData(const Node::Value& nodeVal)
         elems->emplace_back(CONTENT, std::nullopt, std::get<std::string>(nodeVal));
     }
     else if (std::holds_alternative<int64_t>(nodeVal)) {
-        elems->emplace_back(CONTENT, std::get<int64_t>(nodeVal));
+        elems->emplace_back(CONTENT, std::nullopt, std::get<int64_t>(nodeVal));
     }
     else if (std::holds_alternative<double>(nodeVal)) {
-        elems->emplace_back(CONTENT, std::get<double>(nodeVal));
+        elems->emplace_back(CONTENT, std::nullopt, std::get<double>(nodeVal));
     }
     else if (std::holds_alternative<ObjectNode>(nodeVal)) {
         processObjectNode(std::get<ObjectNode>(nodeVal));
