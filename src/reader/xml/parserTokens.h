@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "token.h"
-#include "elem.h"
+#include "../../headers/elem.h"
 
 
 namespace xml
@@ -35,10 +35,10 @@ class ParserTokens
 public:
     ParserTokens() = default;
 
-    std::unique_ptr<std::vector<ElemReader>> parseTokens(std::unique_ptr<std::vector<Token>> tokens);
+    std::unique_ptr<std::vector<Elem>> parseTokens(std::unique_ptr<std::vector<Token>> tokens);
 
 private:
-    std::unique_ptr<std::vector<ElemReader>> elems;
+    std::unique_ptr<std::vector<Elem>> elems;
 
     std::optional<unsigned int> parseDeclaration(const std::vector<Token>& tokens);
 };

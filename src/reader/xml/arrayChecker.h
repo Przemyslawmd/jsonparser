@@ -4,16 +4,16 @@
 #include <ranges>
 #include <vector>
 
-#include "elem.h"
+#include "../../headers/elem.h"
 
 
 namespace xml
 {
-static void checkArrays(std::vector<ElemReader>& elems)
+static void checkArrays(std::vector<Elem>& elems)
 {
     using enum ElemType;
 
-    auto findOpenElem = [](std::vector<ElemReader>& elems, unsigned int idx, const std::string& name)
+    auto findOpenElem = [](std::vector<Elem>& elems, unsigned int idx, const std::string& name)
     {
         unsigned int guard = 0;
         for (auto& elem : std::views::reverse(elems) | std::views::drop(idx)) {
@@ -30,7 +30,7 @@ static void checkArrays(std::vector<ElemReader>& elems)
         }
     };
 
-    auto findCloseElem = [](std::vector<ElemReader>& elems, unsigned int idx, const std::string& name)
+    auto findCloseElem = [](std::vector<Elem>& elems, unsigned int idx, const std::string& name)
     {
         unsigned int guard = 0;
         for (auto& elem : elems | std::views::drop(idx)) {

@@ -5,14 +5,14 @@
 #include <ranges>
 #include <stack>
 
-#include "elem.h"
+#include "../../headers/elem.h"
 #include "errorCode.h"
 #include "log/ErrorStorage.h"
 
 
 namespace xml
 {
-static bool ValidateElems(const std::vector<ElemReader>& elems)
+static bool ValidateElems(const std::vector<Elem>& elems)
 {
     unsigned int skipFirst = elems.front().type == ElemType::DECLARATION ? 1 : 0;
 

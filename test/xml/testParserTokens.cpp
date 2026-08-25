@@ -15,7 +15,7 @@ namespace
     class TestParserTokensXML : public BaseTestXML
     {
     protected:
-        std::unique_ptr<std::vector<ElemReader>> testParserTokens(const std::string& path, const std::string& file)
+        std::unique_ptr<std::vector<Elem>> testParserTokens(const std::string& path, const std::string& file)
         {
             auto tokens = createTokens(path, file);;
             const auto parser = std::make_unique<ParserTokens>();

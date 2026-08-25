@@ -25,24 +25,6 @@ enum class ElemType
 };
 
 
-struct ElemReader
-{
-    ElemReader(ElemType type, const std::string& name) : 
-               type(type), name(name), value(nullptr) {}
-
-    ElemReader(ElemType type, const std::string& name, TokenData& value) : 
-               type(type), name(name), value(value) {}
-
-    ElemReader(ElemType type, std::optional<std::string> name, TokenData& value) :
-               type(type), name(name), value(value) {}
-
-    ElemType type;
-    std::optional<std::string> name;
-    TokenData value;
-    std::map<std::string, std::string> attr ;
-};
-
-
 struct  Elem
 {
     Elem(ElemType type, std::optional<std::string> name) :

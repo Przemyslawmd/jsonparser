@@ -7,7 +7,7 @@
 using namespace xml;
 using enum State;
 
-std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<ElemReader>& elems)
+std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
 {
     unsigned int firstTag = 0;
     if (elems.front().type == ElemType::DECLARATION) {

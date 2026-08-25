@@ -24,7 +24,7 @@ const std::map<ParsingState, ParsingState> angleCloseTransision =
 };
 
 
-std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_ptr<std::vector<Token>> tokens)
+std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std::vector<Token>> tokens)
 {
     if (!tokens || tokens->empty()) {
         ErrorStorage::putError(XML_PARSER_TOKENS_NO_TOKENS);
@@ -39,7 +39,7 @@ std::unique_ptr<std::vector<ElemReader>> ParserTokens::parseTokens(std::unique_p
         return nullptr;
     }
 
-    elems = std::make_unique<std::vector<ElemReader>>();
+    elems = std::make_unique<std::vector<Elem>>();
     ParsingState state = STATE_NONE;
 
     auto declarationTokens = parseDeclaration(*tokens);

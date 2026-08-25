@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "keyMapper.h"
-#include "elem.h"
+#include "../../headers/elem.h"
 #include "node.h"
 #include "settings.h"
 #include "state.h"
@@ -27,7 +27,7 @@ public:
                                                    pretendedKey(Settings::getPretendedKey()),
                                                    maxMapId(0) {};
 
-    std::unique_ptr<ObjectNode> parseElems(std::vector<ElemReader>&);
+    std::unique_ptr<ObjectNode> parseElems(std::vector<Elem>&);
 
 private:
     KeyMapper& keyMapper;

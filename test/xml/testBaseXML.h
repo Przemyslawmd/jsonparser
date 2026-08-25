@@ -5,7 +5,7 @@
 
 #include "src/reader/xml/arrayChecker.h"
 #include "src/reader/xml/objectCreator.h"
-#include "src/reader/xml/elem.h"
+#include "../../src/headers/elem.h"
 #include "src/reader/xml/preparser.h"
 #include "src/reader/xml/parserTokens.h"
 #include "src/writer/xml/elemWriterCreator.h"
@@ -38,7 +38,7 @@ protected:
         return preparser->parseXML(xmlString);
     }
 
-    std::unique_ptr<std::vector<ElemReader>> createElements(const std::string& path, const std::string& file)
+    std::unique_ptr<std::vector<Elem>> createElements(const std::string& path, const std::string& file)
     {
         auto tokens = createTokens(path, file);;
         const auto parser = std::make_unique<ParserTokens>();
