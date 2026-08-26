@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+  <employees>
+    <name>Agata</name>
+  </employees>
+  <employees>
+    <name>Anna</name>
+  </employees>
+  <city state="Italy">
+    <name code="ML" post="_ML">Milan</name>
+    <province>Lombardy</province>
+  </city>
+  <abc>
+    <a>
+      <b>B</b>
+      <b>C</b>
+    </a>
+    <person>
+      <name code="ABC" num="--b dd" id="0 1234bv">John</name>
+      <age>39</age>
+      <country>Poland</country>
+      <values>
+        <ab>-12.67</ab>
+        <cd>43.001</cd>
+      </values>
+    </person>
+    <company>abc</company>
+    <city>Cracow</city>
+  </abc>
+</root>
