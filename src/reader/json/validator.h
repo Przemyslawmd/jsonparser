@@ -3,6 +3,7 @@
 
 #include <format>
 #include <map>
+#include <ranges>
 #include <set>
 #include <stack>
 #include <vector>
@@ -67,7 +68,7 @@ static bool checkTokensSequence(const std::vector<Token>& tokens)
         { OBJECT_PARSING, { DATA_STR }},
         { ARRAY_PARSING,  { CURLY_OPEN, SQUARE_OPEN }}
     };
-    afterComma.at(State::ARRAY_PARSING).insert(tokenData.begin(), tokenData.end());
+    afterComma.at(ARRAY_PARSING).insert(tokenData.begin(), tokenData.end());
 
     const std::set<TokenType> afterData
     {
@@ -76,18 +77,18 @@ static bool checkTokensSequence(const std::vector<Token>& tokens)
         SQUARE_CLOSE
     };
 
-    states.push(State::OBJECT_PARSING);
+    states.push(OBJECT_PARSING);
 
-    for (auto it = tokens.begin() + 1; it != tokens.end() - 1; it++) {
+    for (const auto& [idx, token] : std::views::enumerate(tokens) | std::views::take(tokens.size() - 1)) {
 
         State state = states.top();
-        TokenType type = it->type;
-        TokenType nextType = (it + 1)-> type;
+        TokenType type = token.type;
+        TokenType nextType = tokens[idx + 1].type;
 
         switch (type)
         {
             case CURLY_OPEN:
-                states.push(State::OBJECT_PARSING);
+                states.push(OBJECT_PARSING);
                 if (nextType == DATA_STR) {
                     continue;
                 }
@@ -182,7 +183,6 @@ static ErrorCode validateBrackets(const std::vector<Token>& tokens)
                 if (--squareCounter < 0) {
                     return JSON_VALIDATOR_BRACKET_SQUARE;
                 }
-                continue;
         }
     }
 
@@ -198,17 +198,19 @@ static ErrorCode validateBrackets(const std::vector<Token>& tokens)
 
 static bool validateTokens(const std::vector<Token>& tokens)
 {
-    if (tokens.front().type != TokenType::CURLY_OPEN) {
-        ErrorStorage::putError(ErrorCode::JSON_VALIDATOR_IMPROPER_BEGIN);
+    using enum ErrorCode;
+    using enum TokenType;
+
+    if (tokens.front().type != CURLY_OPEN) {
+        ErrorStorage::putError(JSON_VALIDATOR_IMPROPER_BEGIN);
         return false;
     }
-    if (tokens.back().type != TokenType::CURLY_CLOSE) {
-        ErrorStorage::putError(ErrorCode::JSON_VALIDATOR_IMPROPER_END);
+    if (tokens.back().type != CURLY_CLOSE) {
+        ErrorStorage::putError(JSON_VALIDATOR_IMPROPER_END);
         return false;
     }
 
-    ErrorCode error = validateBrackets(tokens);
-    if (error != ErrorCode::NO_ERROR) {
+    if  (const ErrorCode error = validateBrackets(tokens); error != NO_ERROR) {
         ErrorStorage::putError(error);
         return false;
     }
