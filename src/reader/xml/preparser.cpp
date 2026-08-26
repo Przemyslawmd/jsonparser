@@ -15,7 +15,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
     using enum TokenType;
 
     tokens = std::make_unique<std::vector<Token>>();
-    tokens->reserve(100);
+    tokens->reserve(500);
 
     for (size_t index = 0; index < xml.length(); index++)
     {
@@ -24,7 +24,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
             continue;
         }
         if (symbol == '\"') {
-            unsigned int shift = parseString(xml, index);
+            const unsigned int shift = parseString(xml, index);
             if (shift == 0) {
                 return nullptr;
             }
@@ -47,9 +47,8 @@ std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
             tokens->emplace_back(tokensMap.at(symbol), nullptr);
             continue;
         }
-        int shift = parseStringNoQuotation(xml, index);
+        const int shift = parseStringNoQuotation(xml, index);
         if (shift < 0) {
-            ErrorStorage::putError(ErrorCode::XML_PREPARSER_STRING_ERROR);
             return nullptr;
         }
         index += shift;
@@ -61,16 +60,17 @@ std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
-int Preparser::parseStringNoQuotation(const std::string& json, unsigned int index)
+int Preparser::parseStringNoQuotation(const std::string& xml, unsigned int index) const
 {
-    unsigned int shift = 0;
-    while (index + shift < json.length()) {
-        if (json[index + shift] == ' ' || tokensMap.contains(json[index + shift])) {
-            tokens->emplace_back(TokenType::DATA_STR, json.substr(index, shift));
+    int shift = 0;
+    while (index + shift < xml.length()) {
+        if (xml[index + shift] == ' ' || tokensMap.contains(xml[index + shift])) {
+            tokens->emplace_back(TokenType::DATA_STR, xml.substr(index, shift));
             return shift - 1;
         }
         shift += 1;
     }
+    ErrorStorage::putError(ErrorCode::XML_PREPARSER_STRING_ERROR);
     return -1;
 }
 

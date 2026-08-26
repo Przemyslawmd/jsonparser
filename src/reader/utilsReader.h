@@ -10,15 +10,12 @@
 
 static unsigned int parseString(const std::string& file, unsigned int index)
 {
-    unsigned int shift = 1;
-    while (index + shift < file.length()) {
-        if (file[index + shift] == '\"') {
-            return shift;
-        }
-        shift += 1;
+    const size_t pos = file.find('\"', index + 1);
+    if (pos == std::string::npos) {
+        ErrorStorage::putError(ErrorCode::PREPARSER_STRING_ERROR);
+        return 0;
     }
-    ErrorStorage::putError(ErrorCode::PREPARSER_STRING_ERROR);
-    return 0;
+    return pos - index;
 }
 
 
@@ -50,7 +47,7 @@ static std::tuple<size_t, std::variant<int64_t, double>> parseNumber(const std::
         index++;
         divider *= 10;
     }
-    double numberDouble = (double) number / divider;
+    double numberDouble = static_cast<double>(number) / divider;
     return std::make_tuple(index - 1, isMinus ? numberDouble * -1.0 : numberDouble);
 }
 
