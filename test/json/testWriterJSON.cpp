@@ -46,6 +46,20 @@ protected:
         std::string jsonExpected = getContentFromFile(TEST_DATA_JSON, file);
         ASSERT_EQ(json, jsonExpected);
     }
+
+    void testPerformance(const std::string& file)
+    {
+        const auto keyMapper = std::make_unique<KeyMapper>();
+        const auto root = writerParseJSON(file, *keyMapper);
+
+        Writer writer(*keyMapper, 2);
+        const auto begin = std::chrono::high_resolution_clock::now();
+        for (size_t i = 0; i < 100; i++) {
+            writer.createJsonString(*root);
+        }
+        const auto end = std::chrono::high_resolution_clock::now();
+        showDuration(begin, end);
+    }
 };
 
 
@@ -100,5 +114,11 @@ TEST_F(TestWriterJSON, Test_File_8)
 TEST_F(TestWriterJSON, Indentation_3)
 {
     testJsonString("test_indentation_3.json", 3);
+}
+
+
+TEST_F(TestWriterJSON, Performance)
+{
+    testPerformance("test_complex_8.json");
 }
 

@@ -23,7 +23,6 @@ protected:
     {
         ErrorStorage::clear();
         keyMapper = std::make_unique<KeyMapper>();
-        checkDuration = false;
     }
 
     void TearDown() override

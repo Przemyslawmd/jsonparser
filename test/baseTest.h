@@ -16,7 +16,7 @@
 class BaseTest : public testing::Test
 {
 protected:
-    BaseTest() : checkDuration(false) {}
+    BaseTest() = default;
 
     void SetUp() override
     {
@@ -50,8 +50,6 @@ protected:
         performance << std::left << std::setw(20) << testCase << std::setw(35) << testName << "time: " << elapsed.count() << std::endl;
         performance.close();
     }
-
-    bool checkDuration;
 
 private:
     std::ofstream performance;
