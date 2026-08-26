@@ -51,6 +51,7 @@ namespace
         {
             const std::string jsonString = getContentFromFile(TEST_DATA_JSON, jsonFile);
             const auto tokens = preparser->parseJSON(jsonString);
+            ASSERT_TRUE(tokens->size());
             createKeyTokens(*tokens);
             const auto parser = std::make_unique<Parser>(*keyMapper);
 
@@ -244,6 +245,6 @@ TEST_F(TestParserJSON, Test_File_7)
 
 TEST_F(TestParserJSON, Performance)
 {
-    testPerformance("test_complex_8.json");
+    testPerformance("test_8_complex.json");
 }
 

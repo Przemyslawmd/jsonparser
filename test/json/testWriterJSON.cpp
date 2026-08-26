@@ -26,7 +26,7 @@ static std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, 
 
     const auto preparser = std::make_unique<Preparser>();
     auto tokens = preparser->parseJSON(jsonString);
-    EXPECT_TRUE(tokens != nullptr);
+    EXPECT_TRUE(tokens->size());
     createKeyTokens(*tokens);
     const auto parser = std::make_unique<Parser>(keyMapper);
     return parser->parseTokens(*tokens);
@@ -38,9 +38,8 @@ class TestWriterJSON : public BaseTest
 protected:
     void testJsonString(const std::string& file, unsigned int indentation = 2)
     {
-        auto keyMapper = std::make_unique<KeyMapper>();
-        auto root = writerParseJSON(file, *keyMapper);
-
+        const auto keyMapper = std::make_unique<KeyMapper>();
+        const auto root = writerParseJSON(file, *keyMapper);
         Writer writer(*keyMapper, indentation);
         std::string json = writer.createJsonString(*root);
         std::string jsonExpected = getContentFromFile(TEST_DATA_JSON, file);
@@ -51,6 +50,7 @@ protected:
     {
         const auto keyMapper = std::make_unique<KeyMapper>();
         const auto root = writerParseJSON(file, *keyMapper);
+        ASSERT_TRUE(root);
 
         Writer writer(*keyMapper, 2);
         const auto begin = std::chrono::high_resolution_clock::now();
@@ -119,6 +119,6 @@ TEST_F(TestWriterJSON, Indentation_3)
 
 TEST_F(TestWriterJSON, Performance)
 {
-    testPerformance("test_complex_8.json");
+    testPerformance("test_8_complex.json");
 }
 
