@@ -315,7 +315,7 @@ TEST_F(TestPreparserXML, Error_String_Not_Ended)
 }
 
 
-TEST_F(TestPreparserXML, Performace)
+TEST_F(TestPreparserXML, Performance)
 {
     checkDuration = true;
     testPerfomance(TEST_DATA_XML, "bigger.xml");

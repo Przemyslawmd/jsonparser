@@ -37,7 +37,7 @@ static std::tuple<size_t, std::variant<int64_t, double>> parseNumber(const std::
         index++;
     }
     if (json[index] != '.') {
-        return std::make_tuple(index - 1, isMinus ? number * -1 : number);
+        return { index - 1, isMinus ? number * -1 : number };
     }
 
     index++;
@@ -48,6 +48,6 @@ static std::tuple<size_t, std::variant<int64_t, double>> parseNumber(const std::
         divider *= 10;
     }
     double numberDouble = static_cast<double>(number) / divider;
-    return std::make_tuple(index - 1, isMinus ? numberDouble * -1.0 : numberDouble);
+    return { index - 1, isMinus ? numberDouble * -1.0 : numberDouble };
 }
 

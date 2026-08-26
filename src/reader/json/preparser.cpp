@@ -15,10 +15,11 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
     using enum ErrorCode;
     using enum TokenType;
 
-    auto checkWord = [](const std::string& json, const std::string& soughtWord, size_t& index) -> bool
+    auto checkWord = [](const std::string& str, const std::string& word, size_t& index) -> bool
     {
-        if (json.length() - index > soughtWord.length() && (json.compare(index, soughtWord.length(), soughtWord) == 0)) {
-            index += (soughtWord.length() - 1);
+        const auto wordLen = word.length();
+        if (str.length() - index > wordLen && !str.compare(index, wordLen, word)) {
+            index += (wordLen - 1);
             return true;
         }
         ErrorStorage::putError(JSON_PREPARSER_UNKNOWN_SYMBOL, std::format("Position at index {}", index));
@@ -26,7 +27,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
     };
 
     tokens = std::make_unique<std::vector<Token>>();
-    tokens->reserve(100);
+    tokens->reserve(500);
 
     for (size_t index = 0; index < json.length(); index++)
     {
@@ -44,7 +45,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             continue;
         }
         if (isdigit(symbol) || symbol == '-') {
-            auto[newIndex, num] = parseNumber(json, index);
+            auto [newIndex, num] = parseNumber(json, index);
             if (std::holds_alternative<int64_t>(num)) {
                 tokens->emplace_back(DATA_INT, std::get<int64_t>(num));
             }
@@ -54,7 +55,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             index = newIndex;
             continue;
         }
-        if (tokensMap.count(symbol)) {
+        if (tokensMap.contains(symbol)) {
             tokens->emplace_back(tokensMap.at(symbol), nullptr);
             continue;
         }

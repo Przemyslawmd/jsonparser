@@ -25,24 +25,34 @@ protected:
     std::unique_ptr<std::vector<Token>> createTokens(const std::string& path, const std::string& file)
     {
         ErrorStorage::clear();
-        std::string jsonString = getContentFromFile(path, file);
+        const std::string jsonString = getContentFromFile(path, file);
 
-        const auto begin = std::chrono::high_resolution_clock::now();
-        auto preparser = std::make_unique<Preparser>();
+        const auto preparser = std::make_unique<Preparser>();
         auto tokens = preparser->parseJSON(jsonString);
         if (!tokens) {
             return nullptr;
         }
-
         createKeyTokens(*tokens);
+        return tokens;
+    }
+
+    void testPerformance(const std::string& path, const std::string& file)
+    {
+        const std::string jsonString = getContentFromFile(path, file);
+        const auto preparser = std::make_unique<Preparser>();
+
+        const auto begin = std::chrono::high_resolution_clock::now();
+        for (size_t i = 0; i < 100; i++) {
+            const auto tokens = preparser->parseJSON(jsonString);
+            createKeyTokens(*tokens);
+        }
         const auto end = std::chrono::high_resolution_clock::now();
         showDuration(begin, end);
-        return tokens;
     }
 };
 
 
-void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<Token>&& expected)
+static void checkTokens(std::unique_ptr<std::vector<Token>> tokens, std::vector<Token>&& expected)
 {
     ASSERT_EQ(tokens->size(), expected.size());
 
@@ -383,5 +393,12 @@ TEST_F(TestPreparserJSON, UnknownSymbol_3)
     ASSERT_EQ(tokens, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::JSON_PREPARSER_UNKNOWN_SYMBOL);
+}
+
+
+TEST_F(TestPreparserJSON, Performance)
+{
+    checkDuration = true;
+    testPerformance(TEST_DATA_JSON, "test_8_complex.json");
 }
 
