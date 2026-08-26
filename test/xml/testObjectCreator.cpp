@@ -20,12 +20,7 @@ namespace
             const auto elems = createElements(path, file);
             checkArrays(*elems);
             ObjectCreator objCreator(*keyMapper);
-
-            const auto begin = std::chrono::high_resolution_clock::now();
             auto node = objCreator.parseElems(*elems);
-            const auto end = std::chrono::high_resolution_clock::now();
-
-            showDuration(begin, end);
             return node;
         }
 

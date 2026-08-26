@@ -41,9 +41,6 @@ protected:
 
     void showDuration(const TIME_TYPE start, const TIME_TYPE end)
     {
-        if (!checkDuration) {
-            return;
-        }
         const char* testCase = ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name();
         const char* testName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
         const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);

@@ -43,12 +43,23 @@ namespace
             createKeyTokens(*tokens);
 
             const auto parser = std::make_unique<Parser>(*keyMapper);
-            const auto begin = std::chrono::high_resolution_clock::now();
             std::unique_ptr<ObjectNode> jsonObj = parser->parseTokens(*tokens);
+            return jsonObj;
+        }
+
+        void testPerformance(const std::string& jsonFile)
+        {
+            const std::string jsonString = getContentFromFile(TEST_DATA_JSON, jsonFile);
+            const auto tokens = preparser->parseJSON(jsonString);
+            createKeyTokens(*tokens);
+            const auto parser = std::make_unique<Parser>(*keyMapper);
+
+            const auto begin = std::chrono::high_resolution_clock::now();
+            for (size_t i = 0; i < 100; i++) {
+                parser->parseTokens(*tokens);
+            }
             const auto end = std::chrono::high_resolution_clock::now();
             showDuration(begin, end);
-
-            return jsonObj;
         }
 
         void checkKeyMapping(const std::map<uint32_t, std::string>& keyMapExpected)
@@ -228,5 +239,11 @@ TEST_F(TestParserJSON, Test_File_7)
     ASSERT_TRUE(dataAnna_2 != nullptr);
     ASSERT_TRUE(dataAnna_2->size() == 1);
     checkArrayValue<std::string>(dataAnna_2, 0, "c d e");
+}
+
+
+TEST_F(TestParserJSON, Performance)
+{
+    testPerformance("test_complex_8.json");
 }
 

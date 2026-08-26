@@ -70,7 +70,6 @@ TEST_F(ApiChangeNodeJSON, ChangeComplexJson)
 {
     auto api = prepareApiWithJson("test_8_complex.json");
 
-    const auto begin = high_resolution_clock::now();
     bool result = api->changeNodeInArray({ "employees", uint(0), "data", uint(1) }, 2, { 10 });
     ASSERT_TRUE(result);
 
@@ -81,9 +80,6 @@ TEST_F(ApiChangeNodeJSON, ChangeComplexJson)
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
-    const auto end = high_resolution_clock::now();
-    showDuration(begin, end);
-
     std::string jsonExpected = getContentFromFile(TEST_DATA_API, "changeComplexJson_8.json");
     ASSERT_EQ(json, jsonExpected);
 }

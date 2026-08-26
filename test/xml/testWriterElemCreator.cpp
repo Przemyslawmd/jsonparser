@@ -19,12 +19,7 @@ namespace
         {
             const auto root = createObjects(TEST_DATA_XML, file);
             ElemWriterCreator elemWriter(*keyMapper);
-
-            const auto begin = std::chrono::high_resolution_clock::now();
             auto elems = elemWriter.createElems(*root);
-            const auto end = std::chrono::high_resolution_clock::now();
-
-            showDuration(begin, end);
             return elems;
         }
     };

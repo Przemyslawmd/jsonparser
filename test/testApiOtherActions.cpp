@@ -27,7 +27,6 @@ TEST_F(ApiOtherActions, ClearApi)
     std::vector<NodeApi> arr3{ { true }, { false } };
     std::vector<NodeApi> newArray{ { arr1 }, { arr2 }, { arr3 } };
 
-    const auto begin = high_resolution_clock::now();
     bool result = api->addNodeIntoArray({ "employees", uint(1), "data" }, { newArray });
     ASSERT_TRUE(result);
 
@@ -66,8 +65,6 @@ TEST_F(ApiOtherActions, ClearApi)
     ASSERT_TRUE(result);
 
     json = api->objectToJsonString().value();
-    const auto end = high_resolution_clock::now();
-    showDuration(begin, end);
     jsonExpected = getContentFromFile(TEST_DATA_API, "clear_api_7_2.json");
     ASSERT_EQ(json, jsonExpected);
 }

@@ -41,12 +41,8 @@ protected:
         auto keyMapper = std::make_unique<KeyMapper>();
         auto root = writerParseJSON(file, *keyMapper);
 
-        auto begin = std::chrono::high_resolution_clock::now();
         Writer writer(*keyMapper, indentation);
         std::string json = writer.createJsonString(*root);
-        const auto end = std::chrono::high_resolution_clock::now();
-        showDuration(begin, end);
-
         std::string jsonExpected = getContentFromFile(TEST_DATA_JSON, file);
         ASSERT_EQ(json, jsonExpected);
     }

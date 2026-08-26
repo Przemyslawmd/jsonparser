@@ -19,12 +19,7 @@ namespace
         {
             auto tokens = createTokens(path, file);;
             const auto parser = std::make_unique<ParserTokens>();
-
-            const auto begin = std::chrono::high_resolution_clock::now();
             auto elems = parser->parseTokens(std::move(tokens));
-            const auto end = std::chrono::high_resolution_clock::now();
-
-            showDuration(begin, end);
             return elems;
         }
     };

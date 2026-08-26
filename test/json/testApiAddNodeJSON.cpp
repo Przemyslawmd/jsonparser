@@ -36,13 +36,10 @@ TEST_F(ApiAddNodeJSON, AddObjectToObject)
     newObject.emplace("a", 123);
     newObject.emplace("b", "AAA");
 
-    const auto begin = high_resolution_clock::now();
     bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
-    const auto end = high_resolution_clock::now();
-    showDuration(begin, end);
     std::string jsonExpected = getContentFromFile(TEST_DATA_API, "add_object_to_object_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -59,14 +56,10 @@ TEST_F(ApiAddNodeJSON, AddNestedObjectToObject)
     nestedObject.emplace("qwe", "AA AA");
     nestedObject.emplace("asd", 345353);
     newObject.emplace("internal", nestedObject);
-
-    const auto begin = high_resolution_clock::now();
     bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
-    const auto end = high_resolution_clock::now();
-    showDuration(begin, end);
     std::string jsonExpected = getContentFromFile(TEST_DATA_API, "add_nested_object_to_object_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -78,14 +71,10 @@ TEST_F(ApiAddNodeJSON, AddNestedObjectWithArrayToObject)
     std::map<std::string, NodeApi> newObject;
     newObject.emplace("b", true);
     newObject.emplace("a", std::vector<NodeApi>{{ 0 }, { 100 }, { 200 }});
-
-    const auto begin = std::chrono::high_resolution_clock::now();
     bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
-    const auto end = std::chrono::high_resolution_clock::now();
-    showDuration(begin, end);
     std::string jsonExpected = getContentFromFile(TEST_DATA_API, "add_nested_object_with_array_to_object_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
@@ -95,14 +84,10 @@ TEST_F(ApiAddNodeJSON, AddArrayToObject)
 {
     auto api = prepareApiWithJson("test_4.json");
     std::vector<NodeApi> newArray{{ 232 }, { 234234 }, { 0 }, { 100 }};
-
-    const auto begin = high_resolution_clock::now();
     bool result = api->addNodeIntoObject({ "person2", "address" }, "dataArrayNode", { newArray });
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
-    const auto end = high_resolution_clock::now();
-    showDuration(begin, end);
     std::string jsonExpected = getContentFromFile(TEST_DATA_API, "add_array_to_object_4.json");
     ASSERT_EQ(json, jsonExpected);
 }

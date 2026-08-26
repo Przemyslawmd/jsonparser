@@ -402,7 +402,6 @@ TEST_F(TestPreparserJSON, UnknownSymbol_3)
 
 TEST_F(TestPreparserJSON, Performance)
 {
-    checkDuration = true;
     testPerformance(TEST_DATA_JSON, "test_8_complex.json");
 }
 

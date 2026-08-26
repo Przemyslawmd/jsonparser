@@ -20,15 +20,9 @@ namespace
         {
             auto elems = createElemsWriter(file);
             Writer writer(*keyMapper, indent);
-
-            const auto begin = std::chrono::high_resolution_clock::now();
             const std::string xmlString = writer.createXmlString(std::move(elems));
-            const auto end = std::chrono::high_resolution_clock::now();
-
             const std::string xmlExpected = getContentFromFile(TEST_DATA_XML, file);
             ASSERT_EQ(xmlString, xmlExpected);
-
-            showDuration(begin, end);
         }
     };
 }
