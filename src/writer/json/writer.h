@@ -15,9 +15,9 @@ namespace json
 class Writer
 {
 public:
-    Writer(const KeyMapper& keyMapper, unsigned int indentationStep) : keyMapper(keyMapper), 
-                                                                       indentation(0), 
-                                                                       indentationStep(indentationStep) {}
+    Writer(const KeyMapper& keyMapper, unsigned int indentStep) : keyMapper(keyMapper),
+                                                                  indent(0),
+                                                                  indentStep(indentStep) {}
 
     std::string createJsonString(const ObjectNode&);
 
@@ -26,18 +26,16 @@ public:
 private:
     void processObjectNode(const ObjectNode&);
     void processArrayNode(const ArrayNode&);
-    void parseData(const Node&);
+    void parseData(const Node::Value&);
 
     void incIndent();
     void decIndent();
 
-    void deleteLastChars(std::ostringstream& stream);
-
     const KeyMapper& keyMapper;
 
     std::ostringstream stream;
-    unsigned int indentation;
-    unsigned int indentationStep;
+    unsigned int indent;
+    unsigned int indentStep;
 };
 }
 
