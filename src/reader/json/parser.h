@@ -30,26 +30,26 @@ namespace json
 class Parser
 {
     public:
-        Parser(KeyMapper& keyMapper) : keyMapper(keyMapper), maxMapId(0) {};
+        explicit Parser(KeyMapper& keyMapper) : keyMapper(keyMapper), maxMapId(0) {};
 
         std::unique_ptr<ObjectNode> parseTokens(const std::vector<Token>&);
 
     private:
+        KeyMapper& keyMapper;
+
         std::stack<std::variant<ObjectNode*, ArrayNode*>> nodeStack;
         std::stack<State> stateStack;
         std::stack<uint32_t> mapIDStack;
         uint32_t maxMapId;
 
-        KeyMapper& keyMapper;
-
-        void pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> nodeStack, State);
+        void pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> node, State);
         void popDataFromStack();
 
         template <typename T> requires ComplexNode<T>
-        bool pushComplexNodeOnStack(const std::string& key, State);
+        bool pushNodeOnStack(const std::string& key, State);
 
         template <typename T> requires SimpleNode<T>
-        bool processData(const std::string& key, const Token&);
+        bool processData(const std::string& key, const T& data);
 };
 }
 

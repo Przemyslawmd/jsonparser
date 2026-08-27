@@ -51,7 +51,7 @@ std::optional<uint32_t>
 KeyMapper::getKeyID(std::string_view keyString, uint32_t mapID) const
 {
     for (const auto& [keyID, keyStr] : keyMap) {
-        if (keyStr.compare(keyString) == 0 && ((keyID & MASK_MAP_ID) == (mapID & MASK_MAP_ID))) {
+        if (keyStr == keyString && ((keyID & MASK_MAP_ID) == (mapID & MASK_MAP_ID))) {
             return keyID;
         }
     }
