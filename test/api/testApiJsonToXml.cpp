@@ -4,9 +4,9 @@
 #include "jsonApi.h"
 #include "settings.h"
 
-#include "paths.h"
-#include "baseTest.h"
-#include "utilsTest.h"
+#include "../paths.h"
+#include "../baseTest.h"
+#include "../utilsTest.h"
 
 
 namespace

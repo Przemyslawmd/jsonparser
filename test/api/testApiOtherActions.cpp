@@ -6,9 +6,9 @@
 #include "log/ErrorStorage.h"
 #include "jsonApi.h"
 
-#include "baseTest.h"
-#include "paths.h"
-#include "utilsTest.h"
+#include "../baseTest.h"
+#include "../paths.h"
+#include "../utilsTest.h"
 #include "node.h"
 
 

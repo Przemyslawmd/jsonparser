@@ -1,9 +1,9 @@
 
 #include <gtest/gtest.h>
 
-#include "paths.h"
-#include "baseTest.h"
-#include "utilsTest.h"
+#include "../paths.h"
+#include "../baseTest.h"
+#include "../utilsTest.h"
 
 #include "src/jsonApi.h"
 

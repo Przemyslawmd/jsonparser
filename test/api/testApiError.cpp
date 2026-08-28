@@ -4,8 +4,8 @@
 #include "jsonApi.h"
 #include "log/ErrorStorage.h"
 
-#include "paths.h"
-#include "utilsTest.h"
+#include "../paths.h"
+#include "../utilsTest.h"
 
 
 namespace

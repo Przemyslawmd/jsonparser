@@ -3,8 +3,8 @@
 
 #include <gtest/gtest.h>
 
-#include "baseTest.h"
-#include "paths.h"
+#include "../baseTest.h"
+#include "../paths.h"
 
 #include "src/jsonApi.h"
 
