@@ -24,6 +24,20 @@ namespace
             return node;
         }
 
+        void testPerformance(const std::string& path, const std::string& file)
+        {
+            const auto elems = createElements(path, file);
+            checkArrays(*elems);
+            ObjectCreator objCreator(*keyMapper);
+
+            const auto begin = std::chrono::high_resolution_clock::now();
+            for (unsigned int i = 0; i < 100; i++) {
+                objCreator.parseElems(*elems);
+            }
+            const auto end = std::chrono::high_resolution_clock::now();
+            showDuration(begin, end);
+        }
+
         void checkKeyMapping(const std::map<uint32_t, std::string>& mapExpected)
         {
             for (const auto& [idExpected, strExpected] : mapExpected) {
@@ -290,5 +304,18 @@ TEST_F(TestObjectCreator, Test_Array_2)
     auto* nodeName2 = std::get_if<ObjectNode>(&arrayEmployees->at(1).value);
     ASSERT_TRUE(nodeName2);
     ASSERT_EQ(std::get<std::string>(nodeName2->at(idName2).value), "Anna");
+}
+
+
+TEST_F(TestObjectCreator, Bigger)
+{
+    auto const root = testObjectCreator(TEST_DATA_XML, "bigger.xml");
+    ASSERT_TRUE(root);
+}
+
+
+TEST_F(TestObjectCreator, Performance)
+{
+    testPerformance(TEST_DATA_XML, "bigger.xml");
 }
 
