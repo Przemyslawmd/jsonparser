@@ -22,6 +22,22 @@ namespace
             auto elems = parser->parseTokens(std::move(tokens));
             return elems;
         }
+
+        void testPerformance(const std::string& path, const std::string& file)
+        {
+            std::vector<std::unique_ptr<std::vector<Token>>> testTokens(100);
+            for (unsigned int i = 0; i < 100; i++) {
+                testTokens[i] = createTokens(path, file);
+            }
+            const auto parser = std::make_unique<ParserTokens>();
+
+            const auto begin = std::chrono::high_resolution_clock::now();
+            for (unsigned int i = 0; i < 100; i++) {
+                parser->parseTokens(std::move(testTokens[i]));
+            }
+            const auto end = std::chrono::high_resolution_clock::now();
+            showDuration(begin, end);
+        }
     };
 }
 
@@ -245,5 +261,19 @@ TEST_F(TestParserTokensXML, Content_Few_Words)
     ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
     ASSERT_EQ(elems->at(idx).name, "person");
     ASSERT_TRUE(elems->at(idx).attr.empty());
+}
+
+
+TEST_F(TestParserTokensXML, Bigger)
+{
+    const auto elems =  testParserTokens(TEST_DATA_XML, "bigger.xml");
+    ASSERT_NE(elems, nullptr);
+    ASSERT_EQ(elems->size(), 56);
+}
+
+
+TEST_F(TestParserTokensXML, Performance)
+{
+    testPerformance(TEST_DATA_XML, "bigger.xml");
 }
 

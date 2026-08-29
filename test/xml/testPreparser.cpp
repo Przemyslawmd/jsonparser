@@ -24,7 +24,7 @@ namespace
             return tokens;
         }
 
-        void testPerfomance(const std::string& path, const std::string& file)
+        void testPerformance(const std::string& path, const std::string& file)
         {
             const std::string xmlString = getContentFromFile(path, file);
             const auto preparser = std::make_unique<Preparser>();
@@ -317,7 +317,7 @@ TEST_F(TestPreparserXML, Error_String_Not_Ended)
 
 TEST_F(TestPreparserXML, Performance)
 {
-    testPerfomance(TEST_DATA_XML, "bigger.xml");
+    testPerformance(TEST_DATA_XML, "bigger.xml");
 }
 
 
