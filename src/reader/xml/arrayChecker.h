@@ -24,7 +24,7 @@ static void checkArrays(std::vector<Elem>& elems)
                 guard--;
             }
             else if (elem.name == name && elem.type == TAG_OPEN && guard == 0) {
-                elem.type = TAG_ARRAY_OPEN;
+                elem.type = TAG_ARRAY_BEGIN;
                 break;
             }
         }
@@ -41,7 +41,7 @@ static void checkArrays(std::vector<Elem>& elems)
                 guard--;
             }
             else if (elem.name == name && elem.type == TAG_CLOSE && guard == 0) {
-                elem.type = TAG_ARRAY_CLOSE;
+                elem.type = TAG_ARRAY_END;
                 break;
             }
         }
@@ -56,8 +56,8 @@ static void checkArrays(std::vector<Elem>& elems)
             continue;
         }
         if (elem.type == TAG_OPEN && tagName.has_value() && tagName.value() == elem.name) {
-            elem.type = TAG_NULL;
-            elems.at(idx - 1).type = TAG_NULL;
+            elem.type = TAG_ARRAY_OPEN;
+            elems.at(idx - 1).type = TAG_ARRAY_CLOSE;
             findOpenElem(elems, idx - 1, tagName.value());
             findCloseElem(elems, idx + 1, tagName.value());
         }

@@ -20,7 +20,6 @@ enum class ElemType
     TAG_ARRAY_END,
     TAG_ARRAY_OPEN,
     TAG_ARRAY_CLOSE,
-    TAG_NULL,
     CONTENT
 };
 

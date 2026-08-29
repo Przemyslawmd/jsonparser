@@ -36,12 +36,12 @@ TEST_F(TestArrayChecker, Test_Array_1)
     ASSERT_EQ(elems->size(), 8);
 
     typeAndName(elems->at(0), TAG_OPEN, "a");
-    typeAndName(elems->at(1), TAG_ARRAY_OPEN, "b");
+    typeAndName(elems->at(1), TAG_ARRAY_BEGIN, "b");
     typeAndValue<std::string>(elems->at(2), CONTENT, "B");
-    typeAndName(elems->at(3), TAG_NULL, "b");
-    typeAndName(elems->at(4), TAG_NULL, "b");
+    typeAndName(elems->at(3), TAG_ARRAY_CLOSE, "b");
+    typeAndName(elems->at(4), TAG_ARRAY_OPEN, "b");
     typeAndValue<std::string>(elems->at(5), CONTENT, "C");
-    typeAndName(elems->at(6), TAG_ARRAY_CLOSE, "b");
+    typeAndName(elems->at(6), TAG_ARRAY_END, "b");
     typeAndName(elems->at(7), TAG_CLOSE, "a");
 }
 
@@ -55,12 +55,12 @@ TEST_F(TestArrayChecker, Array_1_Declaration)
     ASSERT_EQ(elems->front().type, DECLARATION);
 
     typeAndName(elems->at(1), TAG_OPEN, "a");
-    typeAndName(elems->at(2), TAG_ARRAY_OPEN, "b");
+    typeAndName(elems->at(2), TAG_ARRAY_BEGIN, "b");
     typeAndValue<std::string>(elems->at(3), CONTENT, "B");
-    typeAndName(elems->at(4), TAG_NULL, "b");
-    typeAndName(elems->at(5), TAG_NULL, "b");
+    typeAndName(elems->at(4), TAG_ARRAY_CLOSE, "b");
+    typeAndName(elems->at(5), TAG_ARRAY_OPEN, "b");
     typeAndValue<std::string>(elems->at(6), CONTENT, "C");
-    typeAndName(elems->at(7), TAG_ARRAY_CLOSE, "b");
+    typeAndName(elems->at(7), TAG_ARRAY_END, "b");
     typeAndName(elems->at(8), TAG_CLOSE, "a");
 }
 
@@ -72,16 +72,16 @@ TEST_F(TestArrayChecker, Test_Array_2)
     ASSERT_EQ(elems->size(), 12);
 
     typeAndName(elems->at(0), TAG_OPEN, "root");
-    typeAndName(elems->at(1), TAG_ARRAY_OPEN, "employees");
+    typeAndName(elems->at(1), TAG_ARRAY_BEGIN, "employees");
     typeAndName(elems->at(2), TAG_OPEN, "name");
     typeAndValue<std::string>(elems->at(3), CONTENT, "Agata");
     typeAndName(elems->at(4), TAG_CLOSE, "name");
-    typeAndName(elems->at(5), TAG_NULL, "employees");
-    typeAndName(elems->at(6), TAG_NULL, "employees");
+    typeAndName(elems->at(5), TAG_ARRAY_CLOSE, "employees");
+    typeAndName(elems->at(6), TAG_ARRAY_OPEN, "employees");
     typeAndName(elems->at(7), TAG_OPEN, "name");
     typeAndValue<std::string>(elems->at(8), CONTENT, "Anna");
     typeAndName(elems->at(9), TAG_CLOSE, "name");
-    typeAndName(elems->at(10), TAG_ARRAY_CLOSE, "employees");
+    typeAndName(elems->at(10), TAG_ARRAY_END, "employees");
     typeAndName(elems->at(11), TAG_CLOSE, "root");
 }
 

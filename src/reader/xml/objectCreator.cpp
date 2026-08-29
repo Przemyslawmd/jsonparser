@@ -27,14 +27,14 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
                 processTagOpen(elem.name.value());
                 attrs = &elem.attr;
                 break;
-            case TAG_ARRAY_OPEN:
+            case TAG_ARRAY_BEGIN:
                 processTagArrayOpen(elem.name.value());
                 attrs = &elem.attr;
                 break;
             case TAG_CLOSE:
                 popContext();
                 break;
-            case TAG_ARRAY_CLOSE:
+            case TAG_ARRAY_END:
                 nodeStack.pop();
                 stateStack.pop();
                 keyStack.pop();
@@ -42,7 +42,8 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
             case CONTENT:
                 processContent(elem.value);
                 break;
-            case TAG_NULL:
+            case TAG_ARRAY_OPEN:
+            case TAG_ARRAY_CLOSE:
                 break;
         }
     }
