@@ -50,7 +50,7 @@ static void checkArrays(std::vector<Elem>& elems)
     auto firstToken = elems.front().type == DECLARATION ? 1 : 0;
     std::optional<std::string> tagName;
 
-    for (auto [idx, elem] : elems | std::views::drop(firstToken) | std::views::enumerate) {
+    for (auto [idx, elem] : elems | std::views::enumerate | std::views::drop(firstToken)) {
         if (elem.type == TAG_CLOSE) {
             tagName = elem.name;
             continue;
