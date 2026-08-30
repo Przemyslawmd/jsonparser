@@ -39,21 +39,6 @@ namespace
 }
 
 
-static void typeAndName(const Elem& elem, const ElemType type, const std::string& name)
-{
-    ASSERT_EQ(elem.type, type);
-    ASSERT_EQ(elem.name, name);
-}
-
-
-template <typename T>
-static void typeAndValue(const Elem& elem, const ElemType type, const T& value)
-{
-    ASSERT_EQ(elem.type, type);
-    ASSERT_EQ(std::get<T>(elem.value), value);
-}
-
-
 using enum ElemType;
 
 TEST_F(TestWriterElemCreator, No_Declaration_1)
