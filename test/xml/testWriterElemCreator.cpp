@@ -22,6 +22,19 @@ namespace
             auto elems = elemWriter.createElems(*root);
             return elems;
         }
+
+        void testPerformance(const std::string& file)
+        {
+            const auto root = createObjects(TEST_DATA_XML, file);
+            ElemWriterCreator elemWriter(*keyMapper);
+
+            const auto begin = std::chrono::high_resolution_clock::now();
+            for (unsigned int i = 0; i < 100; i++) {
+                elemWriter.createElems(*root);
+            }
+            const auto end = std::chrono::high_resolution_clock::now();
+            showDuration(begin, end);
+        }
     };
 }
 
@@ -136,5 +149,18 @@ TEST_F(TestWriterElemCreator, Array_2)
     typeAndName(elems->at(9), TAG_CLOSE, "name");
     typeAndName(elems->at(10), TAG_ARRAY_END, "employees");
     typeAndName(elems->at(11), TAG_CLOSE, "root");
+}
+
+
+TEST_F(TestWriterElemCreator, Bigger)
+{
+    const auto elems = testWriterElemCreator("bigger.xml");
+    ASSERT_EQ(elems->size(), 56);
+}
+
+
+TEST_F(TestWriterElemCreator, Performance)
+{
+    testPerformance("bigger.xml");
 }
 

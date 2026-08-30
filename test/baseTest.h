@@ -47,7 +47,7 @@ protected:
         std::cout << "\n############ " << testCase << " : " << testName << " : time: " << elapsed.count() << std::endl << std::endl;
         const auto fullPath = std::string(TEST_DATA) + "performance.txt";
         performance.open(fullPath, std::ios::app);
-        performance << std::left << std::setw(20) << testCase << std::setw(35) << testName << "time: " << elapsed.count() << std::endl;
+        performance << std::left << std::setw(24) << testCase << std::setw(25) << testName << "time: " << elapsed.count() << std::endl;
         performance.close();
     }
 
