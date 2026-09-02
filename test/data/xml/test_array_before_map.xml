@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+  <person>
+    <name>ab</name>
+  </person>
+  <person>
+    <name>cd</name>
+  </person>
+  <city>
+    <name>xy</name>
+  </city>
+</root>

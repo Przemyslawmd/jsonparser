@@ -71,3 +71,30 @@ TEST_F(TestArrayChecker, Test_Array_2)
     typeAndName(elems->at(11), TAG_CLOSE, "root");
 }
 
+
+TEST_F(TestArrayChecker, Array_Before_Map)
+{
+    const auto elems = createElements(TEST_DATA_XML, "test_array_before_map.xml");
+    checkArrays(*elems);
+    ASSERT_EQ(elems->size(), 18);
+
+    ASSERT_EQ(elems->front().type, DECLARATION);
+
+    typeAndName(elems->at(1), TAG_OPEN, "root");
+    typeAndName(elems->at(2), TAG_ARRAY_BEGIN, "person");
+    typeAndName(elems->at(3), TAG_OPEN, "name");
+    typeAndValue<std::string>(elems->at(4), CONTENT, "ab");
+    typeAndName(elems->at(5), TAG_CLOSE, "name");
+    typeAndName(elems->at(6), TAG_ARRAY_CLOSE, "person");
+    typeAndName(elems->at(7), TAG_ARRAY_OPEN, "person");
+    typeAndName(elems->at(8), TAG_OPEN, "name");
+    typeAndValue<std::string>(elems->at(9), CONTENT, "cd");
+    typeAndName(elems->at(10), TAG_CLOSE, "name");
+    typeAndName(elems->at(11), TAG_ARRAY_END, "person");
+    typeAndName(elems->at(12), TAG_OPEN, "city");
+    typeAndName(elems->at(13), TAG_OPEN, "name");
+    typeAndValue<std::string>(elems->at(14), CONTENT, "xy");
+    typeAndName(elems->at(15), TAG_CLOSE, "name");
+    typeAndName(elems->at(16), TAG_CLOSE, "city");
+    typeAndName(elems->at(17), TAG_CLOSE, "root");
+}
