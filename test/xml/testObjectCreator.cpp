@@ -307,9 +307,53 @@ TEST_F(TestObjectCreator, Test_Array_2)
 }
 
 
+TEST_F(TestObjectCreator, Array_Before_Map)
+{
+    auto const root = testObjectCreator(TEST_DATA_XML, "test_array_before_map.xml");
+    ASSERT_TRUE(root);
+
+    constexpr uint32_t idRoot = 0x00'01'00'01;
+    constexpr uint32_t idPerson = 0x00'02'00'01;
+    constexpr uint32_t idName1 = 0x00'03'00'01;
+    constexpr uint32_t idName2 = 0x00'04'00'01;
+    constexpr uint32_t idCity = 0x00'05'00'01;
+    constexpr uint32_t idName3 = 0x00'06'00'01;
+    const std::map <uint32_t, std::string> keys
+    {
+        { idRoot,   "root" },
+        { idPerson, "person" },
+        { idName1,  "name" },
+        { idName2,  "name" },
+        { idCity,   "city" },
+        { idName3,  "name" },
+    };
+    checkKeyMapping(keys);
+
+    ASSERT_TRUE(root->contains(idRoot));
+    const auto* nodeRoot = std::get_if<ObjectNode>(&root->at(idRoot).value);
+    ASSERT_EQ(nodeRoot->size(), 2);
+
+    const auto* arrayPerson = std::get_if<ArrayNode>(&nodeRoot->at(idPerson).value);
+    const auto* nodeCity = std::get_if<ObjectNode>(&nodeRoot->at(idCity).value);
+
+    ASSERT_EQ(arrayPerson->size(), 2);
+    const auto* nodeName1 = std::get_if<ObjectNode>(&arrayPerson->at(0).value);
+    const auto* nodeName2 = std::get_if<ObjectNode>(&arrayPerson->at(1).value);
+
+    ASSERT_EQ(nodeName1->size(), 1);
+    ASSERT_EQ(std::get<std::string>(nodeName1->at(idName1).value), "ab");
+    ASSERT_EQ(nodeName2->size(), 1);
+    ASSERT_EQ(std::get<std::string>(nodeName2->at(idName2).value), "cd");
+
+    ASSERT_EQ(nodeCity->size(), 1);
+    ASSERT_EQ(std::get<std::string>(nodeCity->at(idName3).value), "xy");
+}
+
+
 TEST_F(TestObjectCreator, Bigger)
 {
     auto const root = testObjectCreator(TEST_DATA_XML, "bigger.xml");
+    auto xxx = *root;
     ASSERT_TRUE(root);
 }
 

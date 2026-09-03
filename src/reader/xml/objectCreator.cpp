@@ -37,7 +37,7 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
             case TAG_ARRAY_END:
                 nodeStack.pop();
                 stateStack.pop();
-                keyStack.pop();
+                popContext();
                 break;
             case CONTENT:
                 processContent(elem.value);

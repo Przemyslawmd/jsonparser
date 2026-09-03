@@ -82,35 +82,15 @@ TEST_F(TestParserTokensXML, Number_Content)
 
 TEST_F(TestParserTokensXML, No_Declaration_1)
 {
-    auto elems =  testParserTokens(TEST_DATA_XML, "test_no_declaration_1.xml");
-
+    const auto elems =  testParserTokens(TEST_DATA_XML, "test_no_declaration_1.xml");
     ASSERT_NE(elems, nullptr);
     ASSERT_EQ(elems->size(), 5);
 
-    unsigned int idx = 0;
-    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(idx).name, "person");
-    ASSERT_TRUE(elems->at(idx).attr.empty());
-
-    idx++;
-    ASSERT_EQ(elems->at(idx).type, TAG_OPEN);
-    ASSERT_EQ(elems->at(idx).name, "name");
-    ASSERT_TRUE(elems->at(idx).attr.empty());
-
-    idx++;
-    ASSERT_EQ(elems->at(idx).type, CONTENT);
-    ASSERT_EQ(std::get<std::string>(elems->at(idx).value), "Jan");
-    ASSERT_TRUE(elems->at(idx).attr.empty());
-
-    idx++;
-    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(idx).name, "name");
-    ASSERT_TRUE(elems->at(idx).attr.empty());
-
-    idx++;
-    ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
-    ASSERT_EQ(elems->at(idx).name, "person");
-    ASSERT_TRUE(elems->at(idx).attr.empty());
+    typeAndName(elems->at(0), TAG_OPEN, "person");
+    typeAndName(elems->at(1), TAG_OPEN, "name");
+    typeAndValue<std::string>(elems->at(2), CONTENT, "Jan");
+    typeAndName(elems->at(3), TAG_CLOSE, "name");
+    typeAndName(elems->at(4), TAG_CLOSE, "person");
 }
 
 
@@ -216,6 +196,33 @@ TEST_F(TestParserTokensXML, Content_Few_Words)
     ASSERT_EQ(elems->at(idx).type, TAG_CLOSE);
     ASSERT_EQ(elems->at(idx).name, "person");
     ASSERT_TRUE(elems->at(idx).attr.empty());
+}
+
+
+TEST_F(TestParserTokensXML, Array_Before_Map)
+{
+    const auto elems =  testParserTokens(TEST_DATA_XML, "test_array_before_map.xml");
+    ASSERT_NE(elems, nullptr);
+
+    ASSERT_EQ(elems->at(0).type, DECLARATION);
+
+    typeAndName(elems->at(1), TAG_OPEN, "root");
+    typeAndName(elems->at(2), TAG_OPEN, "person");
+    typeAndName(elems->at(3), TAG_OPEN, "name");
+    typeAndValue<std::string>(elems->at(4), CONTENT, "ab");
+    typeAndName(elems->at(5), TAG_CLOSE, "name");
+    typeAndName(elems->at(6), TAG_CLOSE, "person");
+    typeAndName(elems->at(7), TAG_OPEN, "person");
+    typeAndName(elems->at(8), TAG_OPEN, "name");
+    typeAndValue<std::string>(elems->at(9), CONTENT, "cd");
+    typeAndName(elems->at(10), TAG_CLOSE, "name");
+    typeAndName(elems->at(11), TAG_CLOSE, "person");
+    typeAndName(elems->at(12), TAG_OPEN, "city");
+    typeAndName(elems->at(13), TAG_OPEN, "name");
+    typeAndValue<std::string>(elems->at(14), CONTENT, "xy");
+    typeAndName(elems->at(15), TAG_CLOSE, "name");
+    typeAndName(elems->at(16), TAG_CLOSE, "city");
+    typeAndName(elems->at(17), TAG_CLOSE, "root");
 }
 
 
