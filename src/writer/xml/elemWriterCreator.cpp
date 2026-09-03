@@ -47,8 +47,8 @@ void ElemWriterCreator::processObjectNode(const ObjectNode& obj)
         if (!removeElem) {
             elems->emplace_back(TAG_CLOSE, keyStr.value());
         }
+        removeElem = false;
     }
-    removeElem = false;
     state.pop();
 }
 

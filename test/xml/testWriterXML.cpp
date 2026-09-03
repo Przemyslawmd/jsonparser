@@ -8,7 +8,7 @@
 #include "testBaseXML.h"
 #include "utilsTest.h"
 
-
+#include <iostream>
 using namespace xml;
 
 namespace
@@ -21,6 +21,7 @@ namespace
             auto elems = createElemsWriter(file);
             Writer writer(*keyMapper, indent);
             const std::string xmlString = writer.createXmlString(std::move(elems));
+            std::cout << xmlString << std::endl;
             const std::string xmlExpected = getContentFromFile(TEST_DATA_XML, file);
             ASSERT_EQ(xmlString, xmlExpected);
         }
@@ -88,3 +89,8 @@ TEST_F(TestWriterXML, Array_2)
     testWriter("test_array_2.xml");
 }
 
+
+TEST_F(TestWriterXML, Array_Before_Map)
+{
+    testWriter("test_array_before_map.xml");
+}

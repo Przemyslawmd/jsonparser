@@ -137,10 +137,27 @@ TEST_F(TestWriterElemCreator, Array_2)
 }
 
 
-TEST_F(TestWriterElemCreator, Bigger)
+TEST_F(TestWriterElemCreator, Array_Before_Map)
 {
-    const auto elems = testWriterElemCreator("bigger.xml");
-    ASSERT_EQ(elems->size(), 56);
+    const auto elems = testWriterElemCreator("test_array_before_map.xml");
+    ASSERT_EQ(elems->size(), 17);
+    typeAndName(elems->at(0), TAG_OPEN, "root");
+    typeAndName(elems->at(1), TAG_ARRAY_BEGIN, "person");
+    typeAndName(elems->at(2), TAG_OPEN, "name");
+    typeAndValue<std::string>(elems->at(3), CONTENT, "ab");
+    typeAndName(elems->at(4), TAG_CLOSE, "name");
+    typeAndName(elems->at(5), TAG_ARRAY_CLOSE, "person");
+    typeAndName(elems->at(6), TAG_ARRAY_OPEN, "person");
+    typeAndName(elems->at(7), TAG_OPEN, "name");
+    typeAndValue<std::string>(elems->at(8), CONTENT, "cd");
+    typeAndName(elems->at(9), TAG_CLOSE, "name");
+    typeAndName(elems->at(10), TAG_ARRAY_END, "person");
+    typeAndName(elems->at(11), TAG_OPEN, "city");
+    typeAndName(elems->at(12), TAG_OPEN, "name");
+    typeAndValue<std::string>(elems->at(13), CONTENT, "xy");
+    typeAndName(elems->at(14), TAG_CLOSE, "name");
+    typeAndName(elems->at(15), TAG_CLOSE, "city");
+    typeAndName(elems->at(16), TAG_CLOSE, "root");
 }
 
 
