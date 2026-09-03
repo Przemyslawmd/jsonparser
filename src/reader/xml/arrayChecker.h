@@ -4,7 +4,7 @@
 #include <ranges>
 #include <vector>
 
-#include "../../headers/elem.h"
+#include "headers/elem.h"
 
 
 namespace xml
@@ -13,10 +13,10 @@ static void checkArrays(std::vector<Elem>& elems)
 {
     using enum ElemType;
 
-    auto findOpenElem = [](std::vector<Elem>& elems, unsigned int idx, const std::string& name)
+    auto findOpenElem = [](std::vector<Elem>& e, const unsigned int idx, const std::string& name)
     {
-        unsigned int guard = 0;
-        for (auto& elem : std::views::reverse(elems) | std::views::drop(idx)) {
+        int guard = 0;
+        for (auto& elem : std::views::reverse(e) | std::views::drop(e.size() - idx)) {
             if (elem.name == name && elem.type == TAG_CLOSE) {
                 guard++;
             }
@@ -30,10 +30,10 @@ static void checkArrays(std::vector<Elem>& elems)
         }
     };
 
-    auto findCloseElem = [](std::vector<Elem>& elems, unsigned int idx, const std::string& name)
+    auto findCloseElem = [](std::vector<Elem>& e, const unsigned int idx, const std::string& name)
     {
-        unsigned int guard = 0;
-        for (auto& elem : elems | std::views::drop(idx)) {
+        int guard = 0;
+        for (auto& elem : e | std::views::drop(idx)) {
             if (elem.name == name && elem.type == TAG_OPEN) {
                 guard++;
             }
@@ -58,7 +58,7 @@ static void checkArrays(std::vector<Elem>& elems)
         if (elem.type == TAG_OPEN && tagName.has_value() && tagName.value() == elem.name) {
             elem.type = TAG_ARRAY_OPEN;
             elems.at(idx - 1).type = TAG_ARRAY_CLOSE;
-            findOpenElem(elems, idx - 1, tagName.value());
+            findOpenElem(elems, idx, tagName.value());
             findCloseElem(elems, idx + 1, tagName.value());
         }
         tagName.reset();
