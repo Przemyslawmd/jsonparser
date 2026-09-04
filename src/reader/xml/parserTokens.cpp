@@ -50,8 +50,8 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
 
     std::optional<std::string> attrKey = std::nullopt;
 
-    for (auto token : *tokens | std::views::drop(declarationTokens.value())) {
-        switch (token.type)
+    for (const auto& [type, data] : *tokens | std::views::drop(declarationTokens.value())) {
+        switch (type)
         {
             case ANGLE_OPEN:
                 if (state == STATE_ANGLE_OPEN || state == STATE_TAG_OPEN_NAMED) {
@@ -80,23 +80,23 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
             case DATA_STR:
                 if (state == STATE_ANGLE_OPEN) {
                     state = STATE_TAG_OPEN_NAMED;
-                    elems->emplace_back(TAG_OPEN, std::get<std::string>(token.data));
+                    elems->emplace_back(TAG_OPEN, std::get<std::string>(data));
                 }
                 else if (state == STATE_TAG_CLOSE_PARSING) {
                     state = STATE_TAG_CLOSE_NAMED;
-                    elems->emplace_back(TAG_CLOSE, std::get<std::string>(token.data));
+                    elems->emplace_back(TAG_CLOSE, std::get<std::string>(data));
                 }
                 else if (state == STATE_TAG_COMPLETED) {
                     state = STATE_CONTENT;
-                    elems->emplace_back(CONTENT, std::get<std::string>(token.data), token.data);
+                    elems->emplace_back(CONTENT, std::get<std::string>(data), data);
                 }
                 else if (state == STATE_ATTR_VALUE || state == STATE_TAG_OPEN_NAMED) {
-                    attrKey = std::get<std::string>(token.data);
+                    attrKey = std::get<std::string>(data);
                     state = STATE_ATTR_KEY;
                 }
                 else if (state == STATE_CONTENT) {
                    auto& contentName = std::get<std::string>(elems->back().value);
-                   elems->back().value = contentName + " " + std::get<std::string>(token.data);
+                   elems->back().value = contentName + " " + std::get<std::string>(data);
                 }
                 else {
                     ErrorStorage::putError(XML_PARSER_TOKENS_DATA_STR);
@@ -106,7 +106,7 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
             case DATA_STR_QUOTA:
                 if (state == STATE_ATTR_EQUAL) {
                     auto& tag = elems->back();
-                    tag.attr.emplace(attrKey.value(), std::get<std::string>(token.data));
+                    tag.attr.emplace(attrKey.value(), std::get<std::string>(data));
                     state = STATE_ATTR_VALUE;
                     break;
                     }
@@ -116,7 +116,7 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
             case DATA_DOUBLE:
                 if (state == STATE_TAG_COMPLETED) {
                     state = STATE_CONTENT;
-                    elems->emplace_back(CONTENT, std::nullopt, token.data);
+                    elems->emplace_back(CONTENT, std::nullopt, data);
                 }
                 break;
             case EQUAL:
@@ -188,7 +188,7 @@ std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Tok
     if (staValue != "yes" && staValue != "no") {
         return std::nullopt;
     }
-    elem.attr.emplace(STA, std::get<std::string>(tokens.at(index + 2).data));
+    elem.attr.emplace(STA, staValue);
 
     index = 12;
     if (checkClosing(tokens, index)) {
