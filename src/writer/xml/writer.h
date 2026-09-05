@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 
-#include "../../headers/elem.h"
+#include "headers/elem.h"
 #include "keyMapper.h"
 
 
@@ -20,13 +20,9 @@ public:
     void setIndent(unsigned int);
 
 private:
-    void incIndent();
-    void decIndent();
-
     void deleteLastChars(std::ostringstream& stream, unsigned int noOfChars);
 
     const KeyMapper& keyMapper;
-    unsigned int indent;
     unsigned int indentStep;
 };
 }
