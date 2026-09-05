@@ -11,9 +11,11 @@
 using namespace xml;
 using enum ElemType;
 
+
 std::string Writer::createXmlString(std::unique_ptr<std::vector<Elem>> elems)
 {
     std::ostringstream stream;
+    indent = 0;
 
     if (const auto& attrsDesc = keyMapper.getAttrsDec(); !attrsDesc.empty()) {
         stream << "<?xml ";
@@ -86,7 +88,7 @@ std::string Writer::createXmlString(std::unique_ptr<std::vector<Elem>> elems)
                 break;
         }
     }
-    return stream.str();
+    return std::move(stream).str();
 }
 
 

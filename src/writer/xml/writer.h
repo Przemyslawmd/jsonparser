@@ -14,7 +14,6 @@ class Writer
 {
 public:
     Writer(const KeyMapper& keyMapper, unsigned int indentStep) : keyMapper(keyMapper),
-                                                                  indent(0),
                                                                   indentStep(indentStep) {}
 
     std::string createXmlString(std::unique_ptr<std::vector<Elem>> elems);
