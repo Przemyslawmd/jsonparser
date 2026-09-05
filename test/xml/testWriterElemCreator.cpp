@@ -29,7 +29,7 @@ namespace
             ElemWriterCreator elemWriter(*keyMapper);
 
             const auto begin = std::chrono::high_resolution_clock::now();
-            for (unsigned int i = 0; i < 100; i++) {
+            for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
                 elemWriter.createElems(*root);
             }
             const auto end = std::chrono::high_resolution_clock::now();

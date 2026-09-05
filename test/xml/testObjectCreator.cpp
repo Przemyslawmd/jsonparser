@@ -31,7 +31,7 @@ namespace
             ObjectCreator objCreator(*keyMapper);
 
             const auto begin = std::chrono::high_resolution_clock::now();
-            for (unsigned int i = 0; i < 100; i++) {
+            for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
                 objCreator.parseElems(*elems);
             }
             const auto end = std::chrono::high_resolution_clock::now();
@@ -353,7 +353,6 @@ TEST_F(TestObjectCreator, Array_Before_Map)
 TEST_F(TestObjectCreator, Bigger)
 {
     auto const root = testObjectCreator(TEST_DATA_XML, "bigger.xml");
-    auto xxx = *root;
     ASSERT_TRUE(root);
 }
 

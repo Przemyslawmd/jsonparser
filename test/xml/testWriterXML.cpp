@@ -15,13 +15,32 @@ namespace
     class TestWriterXML : public BaseTestXML
     {
     protected:
-        void testWriter(const std::string& file, unsigned int indent = 2)
+        void testWriter(const std::string& file, const unsigned int indent = 2)
         {
             auto elems = createElemsWriter(file);
             Writer writer(*keyMapper, indent);
             const std::string xmlString = writer.createXmlString(std::move(elems));
             const std::string xmlExpected = getContentFromFile(TEST_DATA_XML, file);
             ASSERT_EQ(xmlString, xmlExpected);
+        }
+
+        void testPerformance(const std::string& file)
+        {
+            const auto root = createObjects(TEST_DATA_XML, file);
+            const auto elemWriter = std::make_unique<ElemWriterCreator>(*keyMapper);
+
+            std::vector<std::unique_ptr<std::vector<Elem>>> elems(NUM_OF_TESTS);
+            for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
+                elems[i] = elemWriter->createElems(*root);
+            }
+            Writer writer(*keyMapper, 2);
+
+            const auto begin = std::chrono::high_resolution_clock::now();
+            for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
+                writer.createXmlString(std::move(elems[i]));
+            }
+            const auto end = std::chrono::high_resolution_clock::now();
+            showDuration(begin, end);
         }
     };
 }
@@ -92,5 +111,8 @@ TEST_F(TestWriterXML, Bigger)
     testWriter("bigger.xml");
 }
 
-
+TEST_F(TestWriterXML, Performance)
+{
+    testPerformance("bigger.xml");
+}
 

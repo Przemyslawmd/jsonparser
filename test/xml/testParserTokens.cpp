@@ -25,14 +25,14 @@ namespace
 
         void testPerformance(const std::string& path, const std::string& file)
         {
-            std::vector<std::unique_ptr<std::vector<Token>>> testTokens(100);
-            for (unsigned int i = 0; i < 100; i++) {
+            std::vector<std::unique_ptr<std::vector<Token>>> testTokens(NUM_OF_TESTS);
+            for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
                 testTokens[i] = createTokens(path, file);
             }
             const auto parser = std::make_unique<ParserTokens>();
 
             const auto begin = std::chrono::high_resolution_clock::now();
-            for (unsigned int i = 0; i < 100; i++) {
+            for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
                 parser->parseTokens(std::move(testTokens[i]));
             }
             const auto end = std::chrono::high_resolution_clock::now();

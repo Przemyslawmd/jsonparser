@@ -30,7 +30,7 @@ namespace
             const auto preparser = std::make_unique<Preparser>();
 
             const auto begin = std::chrono::high_resolution_clock::now();
-            for (unsigned int i = 0; i < 100; i++) {
+            for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
                 preparser->parseXML(xmlString);
             }
             const auto end = std::chrono::high_resolution_clock::now();

@@ -51,6 +51,8 @@ protected:
         performance.close();
     }
 
+    const unsigned int NUM_OF_TESTS = 100;
+
 private:
     std::ofstream performance;
 };
