@@ -33,7 +33,7 @@ private:
     KeyMapper& keyMapper;
 
     std::stack<NodePtr> nodeStack;
-    std::map<std::string, std::string>* attrs;
+    std::vector<std::tuple<std::string, std::string>>* attrs;
     const std::string& pretendedKey;
 
     std::stack<uint32_t> mapIDStack;
@@ -49,7 +49,7 @@ private:
     void processTagArrayOpen(const std::string& key);
     void processContent(TokenData& data);
 
-    void insertAttrs(ObjectNode& node, std::map<std::string, std::string>& attrs);
+    void insertAttrs(ObjectNode& node, std::vector<std::tuple<std::string, std::string>>& attrs);
 };
 }
 

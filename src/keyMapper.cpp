@@ -89,9 +89,11 @@ bool KeyMapper::isAttrKey(uint32_t keyID) const
 }
 
 
-void KeyMapper::storeAttrsDec(const std::map<std::string, std::string>&& attrsDec)
+void KeyMapper::storeAttrsDec(const std::vector<std::tuple<std::string, std::string>>&& attrsDec)
 {
-    attrsDeclaration = attrsDec;
+    for (const auto& attr : attrsDec) {
+        attrsDeclaration.emplace(std::get<0>(attr), std::get<1>(attr));
+    }
 }
 
 

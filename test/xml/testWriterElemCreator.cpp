@@ -61,8 +61,9 @@ TEST_F(TestWriterElemCreator, Attr_1)
 
     typeAndName(elems->at(0), TAG_OPEN, "person");
     typeAndName(elems->at(1), TAG_OPEN, "name");
-    ASSERT_EQ(elems->at(1).attr.size(), 1);
-    ASSERT_EQ(elems->at(1).attr.at("city"), "Paris");
+    ASSERT_EQ(elems->at(1).attrs.size(), 1);
+    ASSERT_EQ(std::get<0>(elems->at(1).attrs.at(0)), "city");
+    ASSERT_EQ(std::get<1>(elems->at(1).attrs.at(0)), "Paris");
     typeAndValue<std::string>(elems->at(2), CONTENT, "John");
     typeAndName(elems->at(3), TAG_CLOSE, "name");
     typeAndName(elems->at(4), TAG_CLOSE, "person");
@@ -75,8 +76,9 @@ TEST_F(TestWriterElemCreator, Attr_2)
     ASSERT_EQ(elems->size(), 5);
 
     typeAndName(elems->at(0), TAG_OPEN, "person");
-    ASSERT_EQ(elems->at(0).attr.size(), 1);
-    ASSERT_EQ(elems->at(0).attr.at("state"), "Spain");
+    ASSERT_EQ(elems->at(0).attrs.size(), 1);
+    ASSERT_EQ(std::get<0>(elems->at(0).attrs.at(0)), "state");
+    ASSERT_EQ(std::get<1>(elems->at(0).attrs.at(0)), "Spain");
     typeAndName(elems->at(1), TAG_OPEN, "name");
     typeAndValue<std::string>(elems->at(2), CONTENT, "John");
     typeAndName(elems->at(3), TAG_CLOSE, "name");

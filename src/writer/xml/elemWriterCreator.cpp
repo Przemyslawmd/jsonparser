@@ -34,7 +34,7 @@ void ElemWriterCreator::processObjectNode(const ObjectNode& obj)
     for (const auto& [idKey, val] : obj) {
         auto keyStr = keyMapper.getKeyStr(idKey);
         if (keyMapper.isAttrKey(idKey)) {
-            elems->back().attr.emplace(keyStr.value(), std::get<std::string>(val.value));
+            elems->back().attrs.emplace_back(keyStr.value(), std::get<std::string>(val.value));
             continue;
         }
         if (keyStr == pretendedKey) {

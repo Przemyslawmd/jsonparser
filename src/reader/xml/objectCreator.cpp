@@ -11,25 +11,25 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
 {
     unsigned int firstTag = 0;
     if (elems.front().type == ElemType::DECLARATION) {
-        keyMapper.storeAttrsDec(std::move(elems.front().attr));
+        keyMapper.storeAttrsDec(std::move(elems.front().attrs));
         firstTag = 1;
     }
 
     auto document = std::make_unique<ObjectNode>();
     mapIDStack.push(0);
     pushContext(document.get(), elems.at(firstTag).name.value(), OBJECT_PARSING);
-    attrs = &elems.at(firstTag).attr;
+    attrs = &elems.at(firstTag).attrs;
 
     using enum ElemType;
     for (auto& elem : elems | std::views::drop(firstTag + 1)) {
         switch (elem.type) {
             case TAG_OPEN:
                 processTagOpen(elem.name.value());
-                attrs = &elem.attr;
+                attrs = &elem.attrs;
                 break;
             case TAG_ARRAY_BEGIN:
                 processTagArrayOpen(elem.name.value());
-                attrs = &elem.attr;
+                attrs = &elem.attrs;
                 break;
             case TAG_CLOSE:
                 popContext();
@@ -108,7 +108,7 @@ void ObjectCreator::processContent(TokenData& data)
         uint32_t keyID = optKey.value();
         ObjectNode* objNode = std::get<ObjectNode*>(nodeStack.top());
 
-        if (attrs->empty()) {
+        if (attrs && attrs->empty()) {
             std::visit([objNode, keyID](auto&& val) { objNode->emplace(keyID, val); }, data);
             return;
         }
@@ -126,14 +126,13 @@ void ObjectCreator::processContent(TokenData& data)
 }
 
 
-void ObjectCreator::insertAttrs(ObjectNode& node, std::map<std::string, std::string>& attrs)
+void ObjectCreator::insertAttrs(ObjectNode& node, std::vector<std::tuple<std::string, std::string>>& attrs)
 {
-    for (const auto& [keyStr, value] : attrs) {
-        auto keyId = keyMapper.createKeyIDAttr(keyStr, mapIDStack.top());
-        node.emplace(keyId.value(), value);
+    for (const auto& attr : attrs) {
+        auto keyId = keyMapper.createKeyIDAttr(std::get<0>(attr), mapIDStack.top());
+        node.emplace(keyId.value(), std::get<1>(attr));
     }
 }
-
 
 void ObjectCreator::pushContext(NodePtr node, const std::string& keyStr, State state)
 {

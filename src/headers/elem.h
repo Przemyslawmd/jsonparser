@@ -1,9 +1,10 @@
 
 #pragma once
 
-#include <map>
 #include <string>
 #include <optional>
+#include <tuple>
+#include <vector>
 
 #include "token.h"
 
@@ -35,7 +36,7 @@ struct  Elem
     ElemType type;
     std::optional<std::string> name;
     TokenData value;
-    std::map<std::string, std::string> attr;
+    std::vector<std::tuple<std::string, std::string>> attrs;
 };
 }
 

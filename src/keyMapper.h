@@ -19,7 +19,7 @@ public:
     void removeKey(uint32_t keyID);
     bool isAttrKey(uint32_t keyID) const;
 
-    void storeAttrsDec(const std::map<std::string, std::string>&& attrsDec);
+    void storeAttrsDec(const std::vector<std::tuple<std::string, std::string>>&& attrsDec);
     const std::map<std::string, std::string>& getAttrsDec() const;
 
     std::optional<std::string> getKeyStr(uint32_t keyID) const;

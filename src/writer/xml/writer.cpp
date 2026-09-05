@@ -41,9 +41,9 @@ std::string Writer::createXmlString(std::unique_ptr<std::vector<Elem>> elems)
                 }
                 std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
                 stream << "<" << elem.name.value();
-                if (!elem.attr.empty()) {
-                    for (const auto& [key, val] : elem.attr) {
-                        stream << " " << key << "=\"" << val << "\"";
+                if (!elem.attrs.empty()) {
+                    for (const auto& attr : elem.attrs) {
+                        stream << " " << std::get<0>(attr) << "=\"" << std::get<1>(attr) << "\"";
                     }
                 }
                 stream << ">\n";

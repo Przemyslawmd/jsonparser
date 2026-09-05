@@ -1,6 +1,7 @@
 
 #include "parserTokens.h"
 
+#include <map>
 #include <ranges>
 
 #include "definesXML.h"
@@ -16,7 +17,7 @@ using enum ParsingState;
 using enum TokenType;
 
 
-const std::map<ParsingState, ParsingState> angleCloseTransision = 
+const std::map<ParsingState, ParsingState> angleCloseTransition =
 {
     { STATE_TAG_OPEN_NAMED,  STATE_TAG_COMPLETED },
     { STATE_TAG_CLOSE_NAMED, STATE_TAG_COMPLETED },
@@ -61,11 +62,11 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
                 state = STATE_ANGLE_OPEN;
                 break;
             case ANGLE_CLOSE:
-                if (!angleCloseTransision.contains(state)) {
+                if (!angleCloseTransition.contains(state)) {
                     ErrorStorage::putError(XML_PARSER_TOKENS_CLOSE_ANGLE);
                     return nullptr;
                 }
-                state = angleCloseTransision.at(state);
+                state = angleCloseTransition.at(state);
                 break;
             case SLASH:
                 if (state != STATE_ANGLE_OPEN && state != STATE_CONTENT) {
@@ -106,10 +107,10 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(std::unique_ptr<std
             case DATA_STR_QUOTA:
                 if (state == STATE_ATTR_EQUAL) {
                     auto& tag = elems->back();
-                    tag.attr.emplace(attrKey.value(), std::get<std::string>(data));
+                    tag.attrs.emplace_back(attrKey.value(), std::get<std::string>(data));
                     state = STATE_ATTR_VALUE;
                     break;
-                    }
+                }
                 ErrorStorage::putError(XML_PARSER_TOKENS_DATA_STR_QUOTA);
                 return nullptr;
             case DATA_INT:
@@ -164,7 +165,7 @@ std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Tok
         return std::nullopt;
     }
     auto& elem = elems->emplace_back(DECLARATION, XML);
-    elem.attr.emplace(VER, verValue);
+    elem.attrs.emplace_back(VER, verValue);
 
     index = 6;
     if (checkClosing(tokens, index)) {
@@ -174,7 +175,7 @@ std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Tok
     if (!checkPair(tokens, index, ENC)) {
         return std::nullopt;
     }
-    elem.attr.emplace(ENC, std::get<std::string>(tokens.at(index + 2).data));
+    elem.attrs.emplace_back(ENC, std::get<std::string>(tokens.at(index + 2).data));
 
     index = 9;
     if (checkClosing(tokens, index)) {
@@ -188,7 +189,7 @@ std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Tok
     if (staValue != "yes" && staValue != "no") {
         return std::nullopt;
     }
-    elem.attr.emplace(STA, staValue);
+    elem.attrs.emplace_back(STA, staValue);
 
     index = 12;
     if (checkClosing(tokens, index)) {
