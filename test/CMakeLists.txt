@@ -33,6 +33,7 @@ if (JSON_BUILD)
     list(APPEND TEST_FILES "api/testApiChangeNodeJSON.cpp")
     list(APPEND TEST_FILES "api/testApiRemoveNode.cpp")
     list(APPEND TEST_FILES "api/testApiError.cpp")
+    list(APPEND TEST_FILES "api/testApiPerformance.cpp")
 
     list(APPEND SRC_FILES "../src/manager.cpp")
     list(APPEND SRC_FILES "../src/reader/json/preparser.cpp")

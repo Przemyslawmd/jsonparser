@@ -56,7 +56,7 @@ namespace
             const auto parser = std::make_unique<Parser>(*keyMapper);
 
             const auto begin = std::chrono::high_resolution_clock::now();
-            for (size_t i = 0; i < 100; i++) {
+            for (size_t i = 0; i < NUM_OF_TESTS; i++) {
                 parser->parseTokens(*tokens);
             }
             const auto end = std::chrono::high_resolution_clock::now();

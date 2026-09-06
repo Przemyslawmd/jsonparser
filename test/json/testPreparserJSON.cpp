@@ -45,7 +45,7 @@ protected:
         const auto preparser = std::make_unique<Preparser>();
 
         const auto begin = std::chrono::high_resolution_clock::now();
-        for (size_t i = 0; i < 100; i++) {
+        for (size_t i = 0; i < NUM_OF_TESTS; i++) {
             const auto tokens = preparser->parseJSON(jsonString);
             createKeyTokens(*tokens);
         }

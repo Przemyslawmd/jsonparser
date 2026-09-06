@@ -54,7 +54,7 @@ protected:
 
         Writer writer(*keyMapper, 2);
         const auto begin = std::chrono::high_resolution_clock::now();
-        for (size_t i = 0; i < 100; i++) {
+        for (size_t i = 0; i < NUM_OF_TESTS; i++) {
             writer.createJsonString(*root);
         }
         const auto end = std::chrono::high_resolution_clock::now();
