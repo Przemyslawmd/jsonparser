@@ -14,130 +14,127 @@
 using std::chrono::high_resolution_clock;
 using uint = unsigned int;
 
-class ApiAddNodeJSON : public BaseTest {};
+namespace
+{
+    class ApiAddNodeJSON : public BaseTest {};
+}
 
 
 TEST_F(ApiAddNodeJSON, AddSimpleNodeToObject)
 {
-    auto api = prepareApiWithJson("test_4.json");
-    bool result = api->addNodeIntoObject({ "person2", "address" }, "post", { "Cracow" });
+    const auto api = prepareApiWithJson("test_4.json");
+    const bool result = api->addNodeIntoObject({ "person2", "address" }, "post", { "Cracow" });
     ASSERT_TRUE(result);
 
-    std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "add_simple_node_to_object_4.json");
+    const std::string json = api->objectToJsonString().value();
+    const std::string jsonExpected = getContentFromFile(TEST_DATA_API, "add_simple_node_to_object_4.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
 
 TEST_F(ApiAddNodeJSON, AddObjectToObject)
 {
-    auto api = prepareApiWithJson("test_5.json");
-    std::map<std::string, NodeApi> newObject;
-    newObject.emplace("a", 123);
-    newObject.emplace("b", "AAA");
+    const auto api = prepareApiWithJson("test_5.json");
+    std::map<std::string, NodeApi> newObject {{ "a", { 123 }}, { "b", { "AAA" }}};
+    //newObject.emplace("a", 123);
+    //newObject.emplace("b", "AAA");
 
-    bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
+    const bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
     ASSERT_TRUE(result);
 
-    std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "add_object_to_object_5.json");
+    const std::string json = api->objectToJsonString().value();
+    const std::string jsonExpected = getContentFromFile(TEST_DATA_API, "add_object_to_object_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
 
 TEST_F(ApiAddNodeJSON, AddNestedObjectToObject)
 {
-    auto api = prepareApiWithJson("test_5.json");
-    std::map<std::string, NodeApi> newObject;
-    newObject.emplace("b", true);
-    newObject.emplace("a", 12.45);
+    const auto api = prepareApiWithJson("test_5.json");
+    std::map<std::string, NodeApi> newObject {{ "b", { true }}, { "a", { 12.45 }}};
 
-    std::map<std::string, NodeApi> nestedObject;
-    nestedObject.emplace("qwe", "AA AA");
-    nestedObject.emplace("asd", 345353);
+    std::map<std::string, NodeApi> nestedObject {{ "qwe", { "AA AA" }}, { "asd", { 345353 }}};
     newObject.emplace("internal", nestedObject);
-    bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
+    const bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
     ASSERT_TRUE(result);
 
-    std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "add_nested_object_to_object_5.json");
+    const std::string json = api->objectToJsonString().value();
+    const std::string jsonExpected = getContentFromFile(TEST_DATA_API, "add_nested_object_to_object_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
 
 TEST_F(ApiAddNodeJSON, AddNestedObjectWithArrayToObject)
 {
-    auto api = prepareApiWithJson("test_5.json");
-    std::map<std::string, NodeApi> newObject;
-    newObject.emplace("b", true);
+    const auto api = prepareApiWithJson("test_5.json");
+    std::map<std::string, NodeApi> newObject {{ "b", { true }}};
     newObject.emplace("a", std::vector<NodeApi>{{ 0 }, { 100 }, { 200 }});
-    bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
+    const bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
     ASSERT_TRUE(result);
 
-    std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "add_nested_object_with_array_to_object_5.json");
+    const std::string json = api->objectToJsonString().value();
+    const std::string jsonExpected = getContentFromFile(TEST_DATA_API, "add_nested_object_with_array_to_object_5.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
 
 TEST_F(ApiAddNodeJSON, AddArrayToObject)
 {
-    auto api = prepareApiWithJson("test_4.json");
+    const auto api = prepareApiWithJson("test_4.json");
     std::vector<NodeApi> newArray{{ 232 }, { 234234 }, { 0 }, { 100 }};
-    bool result = api->addNodeIntoObject({ "person2", "address" }, "dataArrayNode", { newArray });
+    const bool result = api->addNodeIntoObject({ "person2", "address" }, "dataArrayNode", { newArray });
     ASSERT_TRUE(result);
 
-    std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "add_array_to_object_4.json");
+    const std::string json = api->objectToJsonString().value();
+    const std::string jsonExpected = getContentFromFile(TEST_DATA_API, "add_array_to_object_4.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
 
 TEST_F(ApiAddNodeJSON, AddSimpleNodeIntoArray)
 {
-    auto api = prepareApiWithJson("test_7.json");
+    const auto api = prepareApiWithJson("test_7.json");
 
-    bool result = api->addNodeIntoArray({ "employees", uint(0), "data", uint(0) }, { 4 });
+    bool result = api->addNodeIntoArray({ "employees", static_cast<uint>(0), "data", static_cast<uint>(0) }, { 4 });
     ASSERT_TRUE(result);
 
-    result = api->insertNodeIntoArray({ "employees", uint(1), "data", uint(0) }, 1, { "c c" });
+    result = api->insertNodeIntoArray({ "employees", static_cast<uint>(1), "data", static_cast<uint>(0) }, 1, { "c c" });
     ASSERT_TRUE(result);
 
-    std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "addSimpleNodeToArray_7.json");
+    const std::string json = api->objectToJsonString().value();
+    const std::string jsonExpected = getContentFromFile(TEST_DATA_API, "addSimpleNodeToArray_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
 
 TEST_F(ApiAddNodeJSON, AddObjectIntoArray)
 {
-    auto api = prepareApiWithJson("test_7.json");
-    std::map<std::string, NodeApi> newObjectNode;
-    newObjectNode.emplace("aa", "bb");
-    newObjectNode.emplace("cc", 12);
-
-    bool result = api->insertNodeIntoArray({ "employees" , uint(1), "data", uint(0) }, 1, { newObjectNode });
+    const auto api = prepareApiWithJson("test_7.json");
+    std::map<std::string, NodeApi> newObjectNode {{ "aa", { "bb" }}, { "cc", { 12 }}};
+    const bool result = api->insertNodeIntoArray({ "employees" , static_cast<uint>(1), "data", static_cast<uint>(0) },
+                                                    1,
+                                                    { newObjectNode });
     ASSERT_TRUE(result);
 
-    std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "addObjectToArray_7.json");
+    const std::string json = api->objectToJsonString().value();
+    const std::string jsonExpected = getContentFromFile(TEST_DATA_API, "addObjectToArray_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
 
 TEST_F(ApiAddNodeJSON, AddArrayIntoArray)
 {
-    auto api = prepareApiWithJson("test_7.json");
+    const auto api = prepareApiWithJson("test_7.json");
     std::vector<NodeApi> arr1{{ 1 }, { 2 }, { 3 }};
     std::vector<NodeApi> arr2{{ "aa" }, { "b" }};
     std::vector<NodeApi> arr3{{ true }, { false }};
     std::vector<NodeApi> newArrayNode{{ arr1 }, { arr2 }, { arr3 }};
 
-    bool result = api->addNodeIntoArray({ "employees", uint(1), "data" }, { newArrayNode });
+    const bool result = api->addNodeIntoArray({ "employees", static_cast<uint>(1), "data" }, { newArrayNode });
     ASSERT_TRUE(result);
 
-    std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "addArrayToArray_7.json");
+    const std::string json = api->objectToJsonString().value();
+    const std::string jsonExpected = getContentFromFile(TEST_DATA_API, "addArrayToArray_7.json");
     ASSERT_EQ(json, jsonExpected);
 }
 

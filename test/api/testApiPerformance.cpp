@@ -27,10 +27,9 @@ TEST_F(TestApiPerformance, RemoveAndAddNode)
                                       static_cast<uint>(0),
                                       "numbers" };
 
-    bool result;
     const auto begin = std::chrono::high_resolution_clock::now();
     for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
-        result = api->removeNodeFromArray(path, 1);
+        bool result = api->removeNodeFromArray(path, 1);
         ASSERT_TRUE(result);
         result = api->insertNodeIntoArray(path, 1, { 4 });
         ASSERT_TRUE(result);
