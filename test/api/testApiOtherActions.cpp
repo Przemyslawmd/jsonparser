@@ -15,7 +15,10 @@
 using std::chrono::high_resolution_clock;
 using uint = unsigned int;
 
-class ApiOtherActions : public BaseTest {};
+namespace
+{
+    class ApiOtherActions : public BaseTest {};
+}
 
 
 TEST_F(ApiOtherActions, ClearApi)
@@ -27,7 +30,7 @@ TEST_F(ApiOtherActions, ClearApi)
     std::vector<NodeApi> arr3{ { true }, { false } };
     std::vector<NodeApi> newArray{ { arr1 }, { arr2 }, { arr3 } };
 
-    bool result = api->addNodeIntoArray({ "employees", uint(1), "data" }, { newArray });
+    bool result = api->addNodeIntoArray({ "employees", static_cast<uint>(1), "data" }, { newArray });
     ASSERT_TRUE(result);
 
     std::string json = api->objectToJsonString().value();
@@ -39,11 +42,27 @@ TEST_F(ApiOtherActions, ClearApi)
     result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
 
-    result = api->changeNodeInArray({ "employees", uint(0), "data", uint(1) }, 2, { 10 });
+    result = api->changeNodeInArray({ "employees",
+                                    static_cast<uint>(0),
+                                    "data", static_cast<uint>(1) },
+                                    2,
+                                    { 10 });
     ASSERT_TRUE(result);
-    result = api->changeNodeInObject({ "employees", uint(1), "employees", uint(0) }, "name", { "Maria" });
+    result = api->changeNodeInObject({ "employees",
+                                     static_cast<uint>(1),
+                                     "employees",
+                                     static_cast<uint>(0) },
+                                     "name",
+                                     { "Maria" });
     ASSERT_TRUE(result);
-    result = api->changeNodeInArray({ "employees", uint(1), "data", uint(2), uint(0), "numbers" }, 0, { 0.12 });
+    result = api->changeNodeInArray({ "employees",
+                                    static_cast<uint>(1),
+                                    "data",
+                                    static_cast<uint>(2),
+                                    static_cast<uint>(0),
+                                    "numbers" },
+                                    0,
+                                    { 0.12 });
     ASSERT_TRUE(result);
 
     json = api->objectToJsonString().value();
@@ -55,13 +74,13 @@ TEST_F(ApiOtherActions, ClearApi)
     result = api->parseJsonString(jsonString);
     EXPECT_TRUE(result);
 
-    result = api->removeNodeFromArray({ "employees", uint(0), "data", uint(0) }, 1);
+    result = api->removeNodeFromArray({ "employees", static_cast<uint>(0), "data", static_cast<uint>(0) }, 1);
     ASSERT_TRUE(result);
-    result = api->removeNodeFromArray({ "employees", uint(0), "data", uint(1) }, 0);
+    result = api->removeNodeFromArray({ "employees", static_cast<uint>(0), "data", static_cast<uint>(1) }, 0);
     ASSERT_TRUE(result);
-    result = api->removeNodeFromArray({ "employees", uint(1), "data", uint(0) }, 1);
+    result = api->removeNodeFromArray({ "employees", static_cast<uint>(1), "data", static_cast<uint>(0) }, 1);
     ASSERT_TRUE(result);
-    result = api->removeNodeFromArray({ "employees", uint(1), "data" }, 1);
+    result = api->removeNodeFromArray({ "employees", static_cast<uint>(1), "data" }, 1);
     ASSERT_TRUE(result);
 
     json = api->objectToJsonString().value();
@@ -72,23 +91,21 @@ TEST_F(ApiOtherActions, ClearApi)
 
 TEST_F(ApiOtherActions, LoadJsonObject_1)
 {
-    std::map<std::string, NodeApi> internalObject;
-    internalObject.emplace("age", 39);
-    internalObject.emplace("country", "Poland");
-    internalObject.emplace("employed", true);
-    internalObject.emplace("name", "John");
-    internalObject.emplace("restricted", false);
-    internalObject.emplace("empty", nullptr);
-    internalObject.emplace("newValue", 23.1);
-
+    std::map<std::string, NodeApi> internalObject {{ "age", { 39 }},
+                                                   { "country", { "Poland" }},
+                                                   { "employed", { true }},
+                                                   { "name", { "John" }},
+                                                   { "restricted", { false }},
+                                                   { "empty", { nullptr }},
+                                                   { "newValue", { 23.1 }}};
     std::map<std::string, NodeApi> root;
     root.emplace("person", internalObject);
 
-    auto api = std::make_unique<JsonApi>();
+    const auto api = std::make_unique<JsonApi>();
     api->loadObject({ root });
 
-    std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "load_json_object_1.json");
+    const std::string json = api->objectToJsonString().value();
+    const std::string jsonExpected = getContentFromFile(TEST_DATA_API, "load_json_object_1.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -118,11 +135,11 @@ TEST_F(ApiOtherActions, LoadJsonObject_2)
     std::map<std::string, NodeApi> root;
     root.emplace("employees", mainArray);
 
-    auto api = std::make_unique<JsonApi>();
+    const auto api = std::make_unique<JsonApi>();
     api->loadObject({ root });
 
-    std::string json = api->objectToJsonString().value();
-    std::string jsonExpected = getContentFromFile(TEST_DATA_API, "load_json_object_2.json");
+    const std::string json = api->objectToJsonString().value();
+    const std::string jsonExpected = getContentFromFile(TEST_DATA_API, "load_json_object_2.json");
     ASSERT_EQ(json, jsonExpected);
 }
 
@@ -131,8 +148,8 @@ TEST_F(ApiOtherActions, LoadJsonObject_Error)
 {
     std::vector<NodeApi> arrayNode{{ 1 }, { 2 }, { 3 }};
 
-    auto api = std::make_unique<JsonApi>();
-    bool result = api->loadObject({ arrayNode });
+    const auto api = std::make_unique<JsonApi>();
+    const bool result = api->loadObject({ arrayNode });
     ASSERT_FALSE(result);
     ASSERT_FALSE(api->isObject());
 

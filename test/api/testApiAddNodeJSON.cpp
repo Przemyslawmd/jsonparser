@@ -36,8 +36,6 @@ TEST_F(ApiAddNodeJSON, AddObjectToObject)
 {
     const auto api = prepareApiWithJson("test_5.json");
     std::map<std::string, NodeApi> newObject {{ "a", { 123 }}, { "b", { "AAA" }}};
-    //newObject.emplace("a", 123);
-    //newObject.emplace("b", "AAA");
 
     const bool result = api->addNodeIntoObject({ "person" }, "newValues", { newObject });
     ASSERT_TRUE(result);
@@ -95,10 +93,13 @@ TEST_F(ApiAddNodeJSON, AddSimpleNodeIntoArray)
 {
     const auto api = prepareApiWithJson("test_7.json");
 
-    bool result = api->addNodeIntoArray({ "employees", static_cast<uint>(0), "data", static_cast<uint>(0) }, { 4 });
+    bool result = api->addNodeIntoArray({ "employees", static_cast<uint>(0), "data", static_cast<uint>(0) },
+                                        { 4 });
     ASSERT_TRUE(result);
 
-    result = api->insertNodeIntoArray({ "employees", static_cast<uint>(1), "data", static_cast<uint>(0) }, 1, { "c c" });
+    result = api->insertNodeIntoArray({ "employees", static_cast<uint>(1), "data", static_cast<uint>(0) },
+                                      1,
+                                      { "c c" });
     ASSERT_TRUE(result);
 
     const std::string json = api->objectToJsonString().value();
