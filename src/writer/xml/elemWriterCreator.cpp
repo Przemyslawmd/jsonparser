@@ -32,20 +32,20 @@ void ElemWriterCreator::processObjectNode(const ObjectNode& obj)
 {
     state.push(State::OBJECT_PARSING);
     for (const auto& [idKey, val] : obj) {
-        auto keyStr = keyMapper.getKeyStr(idKey);
+        auto key = keyMapper.getKey(idKey);
         if (keyMapper.isAttrKey(idKey)) {
-            elems->back().attrs.emplace_back(keyStr.value(), std::get<std::string>(val.value));
+            elems->back().attrs.emplace_back(key.value(), std::get<std::string>(val.value));
             continue;
         }
-        if (keyStr == pretendedKey) {
+        if (key == pretendedKey) {
             parseData(val.value);
             continue;
         }
 
-        elems->emplace_back(TAG_OPEN, keyStr.value());
+        elems->emplace_back(TAG_OPEN, key.value());
         parseData(val.value);
         if (!removeElem) {
-            elems->emplace_back(TAG_CLOSE, keyStr.value());
+            elems->emplace_back(TAG_CLOSE, key.value());
         }
         removeElem = false;
     }

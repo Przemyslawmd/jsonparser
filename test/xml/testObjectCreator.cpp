@@ -41,8 +41,8 @@ namespace
         void checkKeyMapping(const std::map<uint32_t, std::string>& mapExpected)
         {
             for (const auto& [idExpected, strExpected] : mapExpected) {
-                ASSERT_TRUE(keyMapper->getKeyStr(idExpected).has_value());
-                ASSERT_TRUE(keyMapper->getKeyStr(idExpected).value() == strExpected);
+                ASSERT_TRUE(keyMapper->getKey(idExpected).has_value());
+                ASSERT_TRUE(keyMapper->getKey(idExpected).value() == strExpected);
             }
         }
     };

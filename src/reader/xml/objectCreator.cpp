@@ -51,7 +51,7 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
 }
 
 
-void ObjectCreator::processTagOpen(const std::string& keyStr)
+void ObjectCreator::processTagOpen(const std::string& key)
 {
     if (stateStack.top() == OBJECT_PARSING)
     {
@@ -59,7 +59,7 @@ void ObjectCreator::processTagOpen(const std::string& keyStr)
         auto optPrevKey = keyMapper.getKeyID(keyStack.top(), mapIDStack.top());
         if (optPrevKey.has_value()) {
             ObjectNode* currNode = std::get_if<ObjectNode>(&objNode->at(optPrevKey.value()).value);
-            pushContext(currNode, keyStr, OBJECT_PARSING);
+            pushContext(currNode, key, OBJECT_PARSING);
             return;
         }
 
@@ -71,26 +71,26 @@ void ObjectCreator::processTagOpen(const std::string& keyStr)
         if (attrs && !attrs->empty()) {
             insertAttrs(*newNode, *attrs);
         }
-        pushContext(newNode, keyStr, OBJECT_PARSING);
+        pushContext(newNode, key, OBJECT_PARSING);
     }
     else {
         ArrayNode* arrNode = std::get<ArrayNode*>(nodeStack.top());
         Node& ref = arrNode->emplace_back(ObjectNode());
         ObjectNode* newNode = std::get_if<ObjectNode>(&ref.value);
-        pushContext(newNode, keyStr, OBJECT_PARSING);
+        pushContext(newNode, key, OBJECT_PARSING);
     }
 }
 
 
-void ObjectCreator::processTagArrayOpen(const std::string& keyStr)
+void ObjectCreator::processTagArrayOpen(const std::string& key)
 {
     ObjectNode* objNode = std::get<ObjectNode*>(nodeStack.top());
     auto prevKey = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
     objNode->emplace(prevKey.value(), ObjectNode());
     ObjectNode* currNode = std::get_if<ObjectNode>(&objNode->at(prevKey.value()).value);
-    pushContext(currNode, keyStr, OBJECT_PARSING);
+    pushContext(currNode, key, OBJECT_PARSING);
 
-    auto arrKey = keyMapper.createKeyID(keyStr, mapIDStack.top());
+    auto arrKey = keyMapper.createKeyID(key, mapIDStack.top());
     currNode->emplace(arrKey.value(), ArrayNode());
     ArrayNode* arrNode = std::get_if<ArrayNode>(&currNode->at(arrKey.value()).value);
     pushContext(arrNode, ARRAY_PARSING);
@@ -134,12 +134,12 @@ void ObjectCreator::insertAttrs(ObjectNode& node, std::vector<std::tuple<std::st
     }
 }
 
-void ObjectCreator::pushContext(NodePtr node, const std::string& keyStr, State state)
+void ObjectCreator::pushContext(NodePtr node, const std::string& key, State state)
 {
     nodeStack.push(node);
     maxMapId += (1 << 16);
     mapIDStack.push(maxMapId);
-    keyStack.push(keyStr);
+    keyStack.push(key);
     stateStack.push(state);
 }
 

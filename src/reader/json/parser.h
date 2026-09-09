@@ -30,7 +30,7 @@ namespace json
 class Parser
 {
     public:
-        explicit Parser(KeyMapper& keyMapper) : keyMapper(keyMapper), maxMapId(0) {};
+        explicit Parser(KeyMapper& keyMapper) : keyMapper(keyMapper), currMapId(0) {};
 
         std::unique_ptr<ObjectNode> parseTokens(const std::vector<Token>&);
 
@@ -40,7 +40,7 @@ class Parser
         std::stack<std::variant<ObjectNode*, ArrayNode*>> nodeStack;
         std::stack<State> stateStack;
         std::stack<uint32_t> mapIDStack;
-        uint32_t maxMapId;
+        uint32_t currMapId;
 
         void pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> node, State);
         void popDataFromStack();

@@ -158,7 +158,7 @@ bool Manager::isObject() const
 }
 
 
-bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string& keyStr, const NodeApi& newNode)
+bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string& key, const NodeApi& newNode)
 {
     if (isRootEmpty()) {
         return false;
@@ -170,7 +170,7 @@ bool Manager::addNodeIntoObject(const std::vector<Path>& path, const std::string
         return false;
     }
 
-    auto optKeyID = keyMapper->createKeyID(keyStr, obj->begin()->first);
+    auto optKeyID = keyMapper->createKeyID(key, obj->begin()->first);
     if (!optKeyID.has_value()) {
         return false;
     }
@@ -251,13 +251,13 @@ bool Manager::insertNodeIntoArray(const std::vector<Path>& path, size_t index, c
 }
 
 
-bool Manager::changeNodeInObject(const std::vector<Path>& path, const std::string& keyStr, const NodeApi& newNode)
+bool Manager::changeNodeInObject(const std::vector<Path>& path, const std::string& key, const NodeApi& newNode)
 {
     if (isRootEmpty()) {
         return false;
     }
 
-    auto [obj, keyID] = getObjectAndKeyIDFromPath(path, keyStr);
+    auto [obj, keyID] = getObjectAndKeyIDFromPath(path, key);
     if (!obj) {
         return false;
     }
@@ -312,13 +312,13 @@ bool Manager::changeNodeInArray(const std::vector<Path>& path, size_t index, con
 }
 
 
-bool Manager::removeNodeFromObject(const std::vector<Path>& path, const std::string& keyStr)
+bool Manager::removeNodeFromObject(const std::vector<Path>& path, const std::string& key)
 {
     if (isRootEmpty()) {
         return false;
     }
 
-    auto [obj, keyID] = getObjectAndKeyIDFromPath(path, keyStr);
+    auto [obj, keyID] = getObjectAndKeyIDFromPath(path, key);
     if (!obj) {
         return false;
     }
@@ -422,8 +422,8 @@ ComplexNodePtr Manager::getNodeFromPath(const std::vector<Path>& path)
 
     for (const auto& pathKey : path) {
         if (nodeType == OBJECT && std::holds_alternative<std::string>(pathKey)) {
-            const auto& keyStr = std::get<std::string>(pathKey);
-            std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
+            const auto& key = std::get<std::string>(pathKey);
+            std::optional<uint32_t> keyID = keyMapper->getKeyID(key, obj->begin()->first);
 
             if (!keyID.has_value()) {
                 ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
@@ -467,8 +467,8 @@ void Manager::addObjectInternally(ObjectNode& obj, const NodeApi& newNode)
 {
     uint32_t mapID = keyMapper->getNextMapID();
 
-    for (const auto& [keyStr, val] : std::get<ObjectNodeApi>(newNode.value)) {
-        auto optKeyID = keyMapper->createKeyID(keyStr, mapID);
+    for (const auto& [key, val] : std::get<ObjectNodeApi>(newNode.value)) {
+        auto optKeyID = keyMapper->createKeyID(key, mapID);
         uint32_t keyID = optKeyID.value();
 
         NodeType newNodeType = getNodeType<NodeApi, std::string>(val);
@@ -524,7 +524,7 @@ Manager::getArrayFromPath(const std::vector<Path>& path, size_t index)
 
 
 std::tuple<ObjectNode*, size_t> 
-Manager::getObjectAndKeyIDFromPath(const std::vector<Path>& path, const std::string& keyStr)
+Manager::getObjectAndKeyIDFromPath(const std::vector<Path>& path, const std::string& key)
 {
     ComplexNodePtr comNode = getNodeFromPath(path);
     ObjectNode* obj = checkComplexNode<ObjectNode*>(comNode);
@@ -532,7 +532,7 @@ Manager::getObjectAndKeyIDFromPath(const std::vector<Path>& path, const std::str
         return { nullptr, 0 };
     }
 
-    std::optional<uint32_t> keyID = keyMapper->getKeyID(keyStr, obj->begin()->first);
+    std::optional<uint32_t> keyID = keyMapper->getKeyID(key, obj->begin()->first);
     if (!keyID.has_value()) {
         ErrorStorage::putError(ErrorCode::MANAGER_NOT_KEY_IN_OBJECT);
         return { nullptr, 0 };

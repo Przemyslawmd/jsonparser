@@ -13,23 +13,23 @@ constexpr uint32_t MASK_ITEM_ID = 0x00'00'FF'FF;
 
 
 std::optional<uint32_t>
-KeyMapper::createKeyID(std::string_view keyStr, uint32_t mapID)
+KeyMapper::createKeyID(std::string_view key, uint32_t mapID)
 {
     mapID &= MASK_MAP_ID;
-    if (getKeyID(keyStr, mapID).has_value()) {
+    if (getKeyID(key, mapID).has_value()) {
         ErrorStorage::putError(ErrorCode::KEY_MAPPER_KEY_STR_REPEAT);
         return std::nullopt;
     }
     uint32_t newKeyID = mapID + getMaxItemID(mapID) + 1;
-    keyMap.emplace(newKeyID, keyStr);
+    keyMap.emplace(newKeyID, key);
     return newKeyID;
 }
 
 
 std::optional<uint32_t>
-KeyMapper::createKeyIDAttr(std::string_view keyStr, uint32_t mapID)
+KeyMapper::createKeyIDAttr(std::string_view key, uint32_t mapID)
 {
-    auto keyID = createKeyID(keyStr, mapID);
+    auto keyID = createKeyID(key, mapID);
     if (!keyID.has_value()) {
         return std::nullopt;
     }
@@ -38,7 +38,7 @@ KeyMapper::createKeyIDAttr(std::string_view keyStr, uint32_t mapID)
 }
 
 
-std::optional<std::string> KeyMapper::getKeyStr(uint32_t keyID) const
+std::optional<std::string> KeyMapper::getKey(uint32_t keyID) const
 {
     if (!keyMap.contains(keyID)) {
         return std::nullopt;
@@ -48,10 +48,10 @@ std::optional<std::string> KeyMapper::getKeyStr(uint32_t keyID) const
 
 
 std::optional<uint32_t> 
-KeyMapper::getKeyID(std::string_view keyString, uint32_t mapID) const
+KeyMapper::getKeyID(std::string_view key, uint32_t mapID) const
 {
     for (const auto& [keyID, keyStr] : keyMap) {
-        if (keyStr == keyString && ((keyID & MASK_MAP_ID) == (mapID & MASK_MAP_ID))) {
+        if (keyStr == key && ((keyID & MASK_MAP_ID) == (mapID & MASK_MAP_ID))) {
             return keyID;
         }
     }
@@ -67,7 +67,7 @@ uint32_t KeyMapper::getNextMapID() const
             maxMapID = keyID;
         }
     }
-    return (maxMapID & MASK_MAP_ID) + (uint32_t(1) << TWO_BYTES);
+    return (maxMapID & MASK_MAP_ID) + (0x00000001 << TWO_BYTES);
 }
 
 

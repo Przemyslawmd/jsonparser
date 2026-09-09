@@ -12,8 +12,8 @@
 class KeyMapper
 {
 public:
-    std::optional<uint32_t> createKeyID(std::string_view keyStr, uint32_t mapID);
-    std::optional<uint32_t> createKeyIDAttr(std::string_view keyStr, uint32_t mapID);
+    std::optional<uint32_t> createKeyID(std::string_view key, uint32_t mapID);
+    std::optional<uint32_t> createKeyIDAttr(std::string_view key, uint32_t mapID);
 
     void clear();
     void removeKey(uint32_t keyID);
@@ -22,8 +22,8 @@ public:
     void storeAttrsDec(const std::vector<std::tuple<std::string, std::string>>&& attrsDec);
     const std::map<std::string, std::string>& getAttrsDec() const;
 
-    std::optional<std::string> getKeyStr(uint32_t keyID) const;
-    std::optional<uint32_t> getKeyID(std::string_view keyStr, uint32_t mapID) const;
+    std::optional<std::string> getKey(uint32_t keyID) const;
+    std::optional<uint32_t> getKeyID(std::string_view key, uint32_t mapID) const;
 
     uint32_t getNextMapID() const;
 

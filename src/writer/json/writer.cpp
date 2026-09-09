@@ -41,7 +41,7 @@ void Writer::processObjectNode(const ObjectNode& obj)
 
     for (auto const& [keyID, node] : obj) {
         std::fill_n(std::ostream_iterator<char>(stream), indent, ' ');
-        auto key = keyMapper.getKeyStr(keyID);
+        auto key = keyMapper.getKey(keyID);
         stream << "\"" << key.value() << "\": ";
         parseData(node.value);
     }

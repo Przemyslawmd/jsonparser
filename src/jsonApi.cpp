@@ -42,9 +42,9 @@ void JsonApi::clear()
     manager->clear();
 }
 
-bool JsonApi::addNodeIntoObject(const std::vector<Path>& path, const std::string& keyStr, const NodeApi& node)
+bool JsonApi::addNodeIntoObject(const std::vector<Path>& path, const std::string& key, const NodeApi& node)
 {
-    return manager->addNodeIntoObject(path, keyStr, node);
+    return manager->addNodeIntoObject(path, key, node);
 }
 
 bool JsonApi::addNodeIntoArray(const std::vector<Path>& path, const NodeApi& node)
@@ -67,9 +67,9 @@ bool JsonApi::changeNodeInArray(const std::vector<Path>& path, size_t index, con
     return manager->changeNodeInArray(path, index, node);
 }
 
-bool JsonApi::removeNodeFromObject(const std::vector<Path>& path, const std::string& keyStr)
+bool JsonApi::removeNodeFromObject(const std::vector<Path>& path, const std::string& key)
 {
-    return manager->removeNodeFromObject(path, keyStr);
+    return manager->removeNodeFromObject(path, key);
 }
 
 bool JsonApi::removeNodeFromArray(const std::vector<Path>& path, size_t index)

@@ -26,14 +26,14 @@ public:
 
     void clear();
 
-    bool addNodeIntoObject(const std::vector<Path>&, const std::string& keyStr, const NodeApi&);
+    bool addNodeIntoObject(const std::vector<Path>&, const std::string& key, const NodeApi&);
     bool addNodeIntoArray(const std::vector<Path>&, const NodeApi&);
     bool insertNodeIntoArray(const std::vector<Path>&, size_t index, const NodeApi&);
 
-    bool changeNodeInObject(const std::vector<Path>&, const std::string& keyStr, const NodeApi&);
+    bool changeNodeInObject(const std::vector<Path>&, const std::string& key, const NodeApi&);
     bool changeNodeInArray(const std::vector<Path>&, size_t index, const NodeApi&);
 
-    bool removeNodeFromObject(const std::vector<Path>&, const std::string& keyStr);
+    bool removeNodeFromObject(const std::vector<Path>&, const std::string& key);
     bool removeNodeFromArray(const std::vector<Path>&, size_t index);
 
     const std::vector<Error>& getErrors();

@@ -101,8 +101,8 @@ void Parser::pushDataOnStack(std::variant<ObjectNode*, ArrayNode*> node, State s
     nodeStack.push(node);
     stateStack.push(state);
     if (state == OBJECT_PARSING) {
-        maxMapId += (1 << 16);
-        mapIDStack.push(maxMapId);
+        currMapId += (1 << 16);
+        mapIDStack.push(currMapId);
     }
 }
 

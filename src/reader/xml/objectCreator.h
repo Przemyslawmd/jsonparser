@@ -41,7 +41,7 @@ private:
     std::stack<State> stateStack;
     uint32_t maxMapId;
 
-    void pushContext(NodePtr node, const std::string& keyStr, State);
+    void pushContext(NodePtr node, const std::string& key, State);
     void pushContext(NodePtr node, State);
     void popContext();
 
