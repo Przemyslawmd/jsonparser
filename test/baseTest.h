@@ -23,17 +23,17 @@ protected:
         ErrorStorage::clear();
     }
 
-    static std::unique_ptr<JsonApi> prepareApiWithJson(const std::string& file)
+    static std::unique_ptr<JsonApi> prepareApiWithJson(const std::string& file, const std::string& path = TEST_DATA_JSON)
     {
-        const std::string jsonString = getContentFromFile(TEST_DATA_JSON, file);
+        const std::string jsonString = getContentFromFile(path, file);
         auto api = std::make_unique<JsonApi>();
         EXPECT_TRUE(api->parseJsonString(jsonString));
         return api;
     }
 
-    static std::unique_ptr<JsonApi> prepareApiWithXml(const std::string& file)
+    static std::unique_ptr<JsonApi> prepareApiWithXml(const std::string& file, const std::string& path = TEST_DATA_XML)
     {
-        const std::string xmlString = getContentFromFile(TEST_DATA_XML, file);
+        const std::string xmlString = getContentFromFile(path, file);
         auto api = std::make_unique<JsonApi>();
         EXPECT_TRUE(api->parseXmlString(xmlString));
         return api;

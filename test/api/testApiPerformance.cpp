@@ -38,3 +38,16 @@ TEST_F(TestApiPerformance, RemoveAndAddNode)
     showDuration(begin, end);
 }
 
+
+TEST_F(TestApiPerformance, XmlToJson)
+{
+    const auto api = prepareApiWithXml("bigger.xml");
+    const auto begin = std::chrono::high_resolution_clock::now();
+    for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
+        auto jsonString = api->objectToJsonString();
+        ASSERT_TRUE(jsonString.has_value());
+    }
+    const auto end = std::chrono::high_resolution_clock::now();
+    showDuration(begin, end);
+}
+

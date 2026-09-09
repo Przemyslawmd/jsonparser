@@ -1,0 +1,45 @@
+{
+  "root": {
+    "employees": [
+      {
+        "name": "Agata"
+      },
+      {
+        "name": "Anna"
+      }
+    ],
+    "city": {
+      "state": "Italy",
+      "name": {
+        "code": "ML",
+        "post": "_ML",
+        "__text": "Milan"
+      },
+      "province": "Lombardy"
+    },
+    "abc": {
+      "a": {
+        "b": [
+          "B",
+          "C"
+        ]
+      },
+      "person": {
+        "name": {
+          "code": "ABC",
+          "num": "--b dd",
+          "id": "0 1234bv",
+          "__text": "John"
+        },
+        "age": 39,
+        "country": "Poland",
+        "values": {
+          "ab": -12.67,
+          "cd": 43.001
+        }
+      },
+      "company": "abc",
+      "city": "Cracow"
+    }
+  }
+}

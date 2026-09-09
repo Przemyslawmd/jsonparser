@@ -40,3 +40,12 @@ TEST_F(ApiXmlToJsonTest, Test_Number_Content)
     ASSERT_EQ(jsonString.value(), jsonExpected);
 }
 
+TEST_F(ApiXmlToJsonTest, Bigger)
+{
+    const auto api = prepareApiWithXml("bigger.xml");
+    const auto jsonString = api->objectToJsonString();
+    ASSERT_TRUE(jsonString.has_value());
+    const std::string jsonExpected = getContentFromFile(TEST_DATA_API, "json_from_bigger_xml.json");
+    ASSERT_EQ(jsonString.value(), jsonExpected);
+}
+
