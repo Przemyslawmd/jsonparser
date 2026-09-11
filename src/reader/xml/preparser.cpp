@@ -10,7 +10,7 @@
 
 using namespace xml;
 
-std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
+std::unique_ptr<std::vector<Token>> Preparser::parseXML(std::string_view xml)
 {
     using enum TokenType;
 
@@ -28,7 +28,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
             if (shift == 0) {
                 return nullptr;
             }
-            tokens->emplace_back(DATA_STR_QUOTA, xml.substr(index + 1, shift - 1));
+            tokens->emplace_back(DATA_STR_QUOTA, std::string(xml.data() + index + 1, shift - 1));
             index += shift;
             continue;
         }
@@ -60,12 +60,12 @@ std::unique_ptr<std::vector<Token>> Preparser::parseXML(const std::string& xml)
 /*******************************************************************/
 /* PRIVATE *********************************************************/
 
-int Preparser::parseStringNoQuotation(const std::string& xml, unsigned int index) const
+int Preparser::parseStringNoQuotation(std::string_view xml, unsigned int index) const
 {
     int shift = 0;
     while (index + shift < xml.length()) {
         if (xml[index + shift] == ' ' || tokensMap.contains(xml[index + shift])) {
-            tokens->emplace_back(TokenType::DATA_STR, xml.substr(index, shift));
+            tokens->emplace_back(TokenType::DATA_STR, std::string(xml.data() +index, shift));
             return shift - 1;
         }
         shift += 1;

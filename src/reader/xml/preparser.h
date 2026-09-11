@@ -16,10 +16,10 @@ class Preparser
 public:
     Preparser() = default;
 
-    std::unique_ptr<std::vector<Token>> parseXML(const std::string& xml);
+    std::unique_ptr<std::vector<Token>> parseXML(std::string_view xml);
 
 private:
-    int parseStringNoQuotation(const std::string& xml, unsigned int index) const;
+    int parseStringNoQuotation(std::string_view xml, unsigned int index) const;
 
     std::unique_ptr<std::vector<Token>> tokens;
 
