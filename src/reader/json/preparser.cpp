@@ -10,12 +10,12 @@
 
 using namespace json;
 
-std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json)
+std::unique_ptr<std::vector<Token>> Preparser::parseJSON(std::string_view json)
 {
     using enum ErrorCode;
     using enum TokenType;
 
-    auto checkWord = [](const std::string& str, const std::string& word, size_t& index) -> bool
+    auto checkWord = [](const std::string_view str, const std::string_view word, size_t& index) -> bool
     {
         const auto wordLen = word.length();
         if (str.length() - index > wordLen && !str.compare(index, wordLen, word)) {
@@ -36,11 +36,11 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(const std::string& json
             continue;
         }
         if (symbol == '\"') {
-            size_t shift = parseString(json, index);
+            const size_t shift = parseString(json, index);
             if (shift == 0) {
                 return nullptr;
             }
-            tokens->emplace_back(DATA_STR, json.substr(index + 1, shift - 1));
+            tokens->emplace_back(DATA_STR, std::string(json.data() + index + 1, shift - 1));
             index += shift;
             continue;
         }

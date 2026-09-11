@@ -15,7 +15,7 @@ class Preparser
 public:
     Preparser() = default;
 
-    std::unique_ptr<std::vector<Token>> parseJSON(const std::string& json);
+    std::unique_ptr<std::vector<Token>> parseJSON(std::string_view json);
 
 private:
     std::unique_ptr<std::vector<Token>> tokens;

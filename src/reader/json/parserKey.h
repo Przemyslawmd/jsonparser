@@ -18,7 +18,7 @@ static void createKeyTokens(std::vector<Token>& tokens)
     using enum TokenType;
     using enum State;
 
-    for (const auto [idx, token] : std::views::enumerate(tokens))
+    for (const auto& [idx, token] : std::views::enumerate(tokens))
     {
         switch (token.type)
         {
@@ -33,7 +33,7 @@ static void createKeyTokens(std::vector<Token>& tokens)
                 states.pop();
                 break;
             case DATA_STR:
-                auto prevType = tokens.at(idx - 1).type;
+                const auto prevType = tokens.at(idx - 1).type;
                 if (states.top() == OBJECT_PARSING && (prevType == CURLY_OPEN || prevType == COMMA)) {
                     token.type = KEY;
                 }

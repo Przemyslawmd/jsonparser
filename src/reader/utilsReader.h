@@ -8,7 +8,7 @@
 #include "log/ErrorStorage.h"
 
 
-static unsigned int parseString(const std::string& file, unsigned int index)
+static unsigned int parseString(const std::string_view file, unsigned int index)
 {
     const size_t pos = file.find('\"', index + 1);
     if (pos == std::string::npos) {
@@ -19,7 +19,7 @@ static unsigned int parseString(const std::string& file, unsigned int index)
 }
 
 
-static std::tuple<size_t, std::variant<int64_t, double>> parseNumber(const std::string& json, unsigned int index)
+static std::tuple<size_t, std::variant<int64_t, double>> parseNumber(const std::string_view json, unsigned int index)
 {
     int64_t number = 0;
     bool isMinus = false;
