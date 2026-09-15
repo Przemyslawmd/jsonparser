@@ -41,7 +41,7 @@ protected:
     {
         auto tokens = createTokens(path, file);;
         const auto parser = std::make_unique<ParserTokens>();
-        return parser->parseTokens(std::move(tokens));
+        return parser->parseTokens(*tokens);
     }
 
     std::unique_ptr<ObjectNode> createObjects(const std::string& path, const std::string& file)

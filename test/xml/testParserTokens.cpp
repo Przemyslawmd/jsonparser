@@ -19,7 +19,7 @@ namespace
         {
             auto tokens = createTokens(path, file);;
             const auto parser = std::make_unique<ParserTokens>();
-            auto elems = parser->parseTokens(std::move(tokens));
+            auto elems = parser->parseTokens(*tokens);
             return elems;
         }
 
@@ -33,7 +33,7 @@ namespace
 
             const auto begin = TIME_TYPE::now();
             for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
-                parser->parseTokens(std::move(testTokens[i]));
+                parser->parseTokens(*testTokens[i]);
             }
             const auto end = TIME_TYPE::now();
             showDuration(begin, end);

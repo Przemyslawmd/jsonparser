@@ -35,7 +35,7 @@ class ParserTokens
 public:
     ParserTokens() = default;
 
-    std::unique_ptr<std::vector<Elem>> parseTokens(std::unique_ptr<std::vector<Token>> tokens);
+    std::unique_ptr<std::vector<Elem>> parseTokens(const std::vector<Token>& tokens);
 
 private:
     std::unique_ptr<std::vector<Elem>> elems;
