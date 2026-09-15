@@ -6,8 +6,6 @@
 #include <ranges>
 #include <sstream>
 
-#include "definesXML.h"
-
 using namespace xml;
 using enum ElemType;
 
@@ -19,14 +17,14 @@ std::string Writer::createXmlString(std::unique_ptr<std::vector<Elem>> elems)
 
     if (const auto& attrsDesc = keyMapper.getAttrsDec(); !attrsDesc.empty()) {
         stream << "<?xml ";
-        if (attrsDesc.contains(VER)) {
-            stream << VER << "=" << "\"" << attrsDesc.at(VER) << "\" ";
+        if (attrsDesc.contains("version")) {
+            stream << "version" << "=" << "\"" << attrsDesc.at("version") << "\" ";
         }
-        if (attrsDesc.contains(ENC)) {
-            stream << ENC << "=" << "\"" << attrsDesc.at(ENC) << "\" ";
+        if (attrsDesc.contains("encoding")) {
+            stream << "encoding" << "=" << "\"" << attrsDesc.at("encoding") << "\" ";
         }
-        if (attrsDesc.contains(STA)) {
-            stream << STA << "=" << "\"" << attrsDesc.at(STA) << "\" ";
+        if (attrsDesc.contains("standalone")) {
+            stream << "standalone" << "=" << "\"" << attrsDesc.at("standalone") << "\" ";
         }
         deleteLastChars(stream, 1);
         stream << "?>\n";

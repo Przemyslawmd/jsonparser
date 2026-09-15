@@ -4,7 +4,6 @@
 #include <map>
 #include <ranges>
 
-#include "definesXML.h"
 #include "errorCode.h"
 #include "log/ErrorStorage.h"
 
@@ -152,44 +151,44 @@ std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Tok
     if (tokens.at(index).type != QUESTION) {
         return 0;
     }
-    if (tokens.at(index + 1).type != DATA_STR || std::get<std::string>(tokens.at(index + 1).data) != XML) {
+    if (tokens.at(index + 1).type != DATA_STR || std::get<std::string>(tokens.at(index + 1).data) != "xml") {
         return std::nullopt;
     }
 
     index = 3;
-    if (!checkPair(tokens, index, VER)) {
+    if (!checkPair(tokens, index, "version")) {
         return std::nullopt;
     }
     const auto& verValue = std::get<std::string>(tokens.at(index + 2).data);
     if (verValue != "1.0" && verValue != "1.1") {
         return std::nullopt;
     }
-    auto& elem = elems->emplace_back(DECLARATION, XML);
-    elem.attrs.emplace_back(VER, verValue);
+    auto& elem = elems->emplace_back(DECLARATION, "xml");
+    elem.attrs.emplace_back("version", verValue);
 
     index = 6;
     if (checkClosing(tokens, index)) {
         return index + 2;
     }
 
-    if (!checkPair(tokens, index, ENC)) {
+    if (!checkPair(tokens, index, "encoding")) {
         return std::nullopt;
     }
-    elem.attrs.emplace_back(ENC, std::get<std::string>(tokens.at(index + 2).data));
+    elem.attrs.emplace_back("encoding", std::get<std::string>(tokens.at(index + 2).data));
 
     index = 9;
     if (checkClosing(tokens, index)) {
         return index + 2;
     }
 
-    if (!checkPair(tokens, index, STA)) {
+    if (!checkPair(tokens, index, "standalone")) {
         return std::nullopt;
     }
     const auto& staValue = std::get<std::string>(tokens.at(index + 2).data);
     if (staValue != "yes" && staValue != "no") {
         return std::nullopt;
     }
-    elem.attrs.emplace_back(STA, staValue);
+    elem.attrs.emplace_back("standalone", staValue);
 
     index = 12;
     if (checkClosing(tokens, index)) {
