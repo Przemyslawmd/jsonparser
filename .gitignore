@@ -5,6 +5,7 @@ build/*
 out/*
 config.h
 test/config.h
+test/paths.h
 test/timeType.h
 test/data/output.txt
 test/data/performance.txt

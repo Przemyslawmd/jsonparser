@@ -27,14 +27,14 @@ TEST_F(TestApiPerformance, RemoveAndAddNode)
                                       static_cast<uint>(0),
                                       "numbers" };
 
-    const auto begin = std::chrono::high_resolution_clock::now();
+    const auto begin = TIME_TYPE::now();
     for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
         bool result = api->removeNodeFromArray(path, 1);
         ASSERT_TRUE(result);
         result = api->insertNodeIntoArray(path, 1, { 4 });
         ASSERT_TRUE(result);
     }
-    const auto end = std::chrono::high_resolution_clock::now();
+    const auto end = TIME_TYPE::now();
     showDuration(begin, end);
 }
 
@@ -42,12 +42,12 @@ TEST_F(TestApiPerformance, RemoveAndAddNode)
 TEST_F(TestApiPerformance, XmlToJson)
 {
     const auto api = prepareApiWithXml("bigger.xml");
-    const auto begin = std::chrono::high_resolution_clock::now();
+    const auto begin = TIME_TYPE::now();
     for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
         auto jsonString = api->objectToJsonString();
         ASSERT_TRUE(jsonString.has_value());
     }
-    const auto end = std::chrono::high_resolution_clock::now();
+    const auto end = TIME_TYPE::now();
     showDuration(begin, end);
 }
 

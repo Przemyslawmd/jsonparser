@@ -55,11 +55,11 @@ namespace
             createKeyTokens(*tokens);
             const auto parser = std::make_unique<Parser>(*keyMapper);
 
-            const auto begin = std::chrono::high_resolution_clock::now();
+            const auto begin = TIME_TYPE::now();
             for (size_t i = 0; i < NUM_OF_TESTS; i++) {
                 parser->parseTokens(*tokens);
             }
-            const auto end = std::chrono::high_resolution_clock::now();
+            const auto end = TIME_TYPE::now();
             showDuration(begin, end);
         }
 

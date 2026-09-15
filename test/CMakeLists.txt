@@ -13,9 +13,9 @@ FetchContent_MakeAvailable(googletest)
 
 
 if(UNIX)
-    set(TIME_MEASUREMENT_TYPE std::chrono::system_clock::time_point)
+    set(TIME_MEASUREMENT_TYPE std::chrono::system_clock)
 elseif(WIN32)
-    set(TIME_MEASUREMENT_TYPE std::chrono::steady_clock::time_point)
+    set(TIME_MEASUREMENT_TYPE std::chrono::steady_clock)
 endif()
 
 

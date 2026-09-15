@@ -39,7 +39,7 @@ protected:
         return api;
     }
 
-    void showDuration(const TIME_TYPE start, const TIME_TYPE end)
+    void showDuration(const TIME_TYPE::time_point start, const TIME_TYPE::time_point end)
     {
         const char* testCase = ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name();
         const char* testName = ::testing::UnitTest::GetInstance()->current_test_info()->name();

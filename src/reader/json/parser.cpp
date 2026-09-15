@@ -38,7 +38,7 @@ std::unique_ptr<ObjectNode> Parser::parseTokens(const std::vector<Token>& tokens
                 result = processData(key, std::get<bool>(data));
                 break;
             case DATA_NULL:
-                result = processData(key, std::get<nullptr_t>(data));
+                result = processData(key, std::get<std::nullptr_t>(data));
                 break;
             case CURLY_OPEN:
                 result = pushNodeOnStack<ObjectNode>(key, OBJECT_PARSING);

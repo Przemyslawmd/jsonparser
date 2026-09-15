@@ -8,6 +8,7 @@
 #include "paths.h"
 #include "utilsTest.h"
 
+using uint = unsigned int;
 
 namespace
 {

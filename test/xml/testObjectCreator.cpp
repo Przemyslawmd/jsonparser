@@ -30,11 +30,11 @@ namespace
             checkArrays(*elems);
             ObjectCreator objCreator(*keyMapper);
 
-            const auto begin = std::chrono::high_resolution_clock::now();
+            const auto begin = TIME_TYPE::now();
             for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
                 objCreator.parseElems(*elems);
             }
-            const auto end = std::chrono::high_resolution_clock::now();
+            const auto end = TIME_TYPE::now();
             showDuration(begin, end);
         }
 

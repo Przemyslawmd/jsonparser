@@ -44,12 +44,12 @@ protected:
         const std::string jsonString = getContentFromFile(path, file);
         const auto preparser = std::make_unique<Preparser>();
 
-        const auto begin = std::chrono::high_resolution_clock::now();
+        const auto begin = TIME_TYPE::now();
         for (size_t i = 0; i < NUM_OF_TESTS; i++) {
             const auto tokens = preparser->parseJSON(jsonString);
             createKeyTokens(*tokens);
         }
-        const auto end = std::chrono::high_resolution_clock::now();
+        const auto end = TIME_TYPE::now();
         showDuration(begin, end);
     }
 };
