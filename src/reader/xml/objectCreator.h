@@ -15,7 +15,9 @@
 #include "token.h"
 
 
-using NodePtr = std::variant<ObjectNode*, ArrayNode*>;
+template <typename T>
+concept ComplexNodeObjectCreator = std::same_as<T, ObjectNode> || std::same_as<T, ArrayNode>;
+
 
 namespace xml
 {
@@ -32,7 +34,9 @@ public:
 private:
     KeyMapper& keyMapper;
 
-    std::stack<NodePtr> nodeStack;
+    std::stack<ObjectNode*> objStack;
+    std::stack<ArrayNode*> arrStack;
+
     std::vector<std::tuple<std::string, std::string>>* attrs;
     const std::string& pretendedKey;
 
@@ -41,8 +45,10 @@ private:
     std::stack<State> stateStack;
     uint32_t maxMapId;
 
-    void pushContext(NodePtr node, const std::string& key, State);
-    void pushContext(NodePtr node, State);
+    template <typename T> requires ComplexNodeObjectCreator<T>
+    void pushContext(T* node, const std::string& key, State);
+
+    void pushContext(ArrayNode*, State);
     void popContext();
 
     void processTagOpen(const std::string& key);

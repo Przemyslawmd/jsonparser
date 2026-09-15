@@ -37,6 +37,8 @@ class Parser
     private:
         KeyMapper& keyMapper;
 
+        std::stack<ObjectNode*> objStack;
+        std::stack<ArrayNode*> arrStack;
         std::stack<std::variant<ObjectNode*, ArrayNode*>> nodeStack;
         std::stack<State> stateStack;
         std::stack<uint32_t> mapIDStack;

@@ -7,6 +7,7 @@
 using namespace xml;
 using enum State;
 
+
 std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
 {
     unsigned int firstTag = 0;
@@ -35,7 +36,7 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
                 popContext();
                 break;
             case TAG_ARRAY_END:
-                nodeStack.pop();
+                arrStack.pop();
                 stateStack.pop();
                 popContext();
                 break;
@@ -55,7 +56,7 @@ void ObjectCreator::processTagOpen(const std::string& key)
 {
     if (stateStack.top() == OBJECT_PARSING)
     {
-        ObjectNode* objNode = std::get<ObjectNode*>(nodeStack.top());
+        ObjectNode* objNode = objStack.top();
         auto optPrevKey = keyMapper.getKeyID(keyStack.top(), mapIDStack.top());
         if (optPrevKey.has_value()) {
             ObjectNode* currNode = std::get_if<ObjectNode>(&objNode->at(optPrevKey.value()).value);
@@ -74,7 +75,7 @@ void ObjectCreator::processTagOpen(const std::string& key)
         pushContext(newNode, key, OBJECT_PARSING);
     }
     else {
-        ArrayNode* arrNode = std::get<ArrayNode*>(nodeStack.top());
+        ArrayNode* arrNode = arrStack.top();
         Node& ref = arrNode->emplace_back(ObjectNode());
         ObjectNode* newNode = std::get_if<ObjectNode>(&ref.value);
         pushContext(newNode, key, OBJECT_PARSING);
@@ -84,7 +85,7 @@ void ObjectCreator::processTagOpen(const std::string& key)
 
 void ObjectCreator::processTagArrayOpen(const std::string& key)
 {
-    ObjectNode* objNode = std::get<ObjectNode*>(nodeStack.top());
+    ObjectNode* objNode = objStack.top();
     auto prevKey = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
     objNode->emplace(prevKey.value(), ObjectNode());
     ObjectNode* currNode = std::get_if<ObjectNode>(&objNode->at(prevKey.value()).value);
@@ -106,7 +107,7 @@ void ObjectCreator::processContent(TokenData& data)
             return;
         }
         uint32_t keyID = optKey.value();
-        ObjectNode* objNode = std::get<ObjectNode*>(nodeStack.top());
+        ObjectNode* objNode = objStack.top();
 
         if (attrs && attrs->empty()) {
             std::visit([objNode, keyID](auto&& val) { objNode->emplace(keyID, val); }, data);
@@ -120,7 +121,7 @@ void ObjectCreator::processContent(TokenData& data)
         std::visit([currNode, newKeyID](auto&& val) { currNode->emplace(newKeyID.value(), val); }, data);
     } 
     else {
-        ArrayNode* arrNode  = std::get<ArrayNode*>(nodeStack.top());
+        ArrayNode* arrNode  = arrStack.top();
         std::visit([arrNode](auto&& val) { arrNode->emplace_back(val); }, data);
     }
 }
@@ -134,9 +135,16 @@ void ObjectCreator::insertAttrs(ObjectNode& node, std::vector<std::tuple<std::st
     }
 }
 
-void ObjectCreator::pushContext(NodePtr node, const std::string& key, State state)
+
+template <typename T> requires ComplexNodeObjectCreator<T>
+void ObjectCreator::pushContext(T* node, const std::string& key, State state)
 {
-    nodeStack.push(node);
+    if constexpr (std::same_as<T, ObjectNode>) {
+        objStack.push(node);
+    }
+    else {
+        arrStack.push(node);
+    }
     maxMapId += (1 << 16);
     mapIDStack.push(maxMapId);
     keyStack.push(key);
@@ -144,16 +152,21 @@ void ObjectCreator::pushContext(NodePtr node, const std::string& key, State stat
 }
 
 
-void ObjectCreator::pushContext(NodePtr node, State state)
+void ObjectCreator::pushContext(ArrayNode* node, State state)
 {
-    nodeStack.push(node);
+    arrStack.push(node);
     stateStack.push(state);
 }
 
 
 void ObjectCreator::popContext()
 {
-    nodeStack.pop();
+    if (stateStack.top() == OBJECT_PARSING) {
+        objStack.pop();
+    }
+    else {
+        arrStack.pop();
+    }
     keyStack.pop();
     mapIDStack.pop();
     stateStack.pop();
