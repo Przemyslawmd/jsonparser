@@ -39,9 +39,8 @@ protected:
 
     std::unique_ptr<std::vector<Elem>> createElements(const std::string& path, const std::string& file)
     {
-        auto tokens = createTokens(path, file);;
-        const auto parser = std::make_unique<ParserTokens>();
-        return parser->parseTokens(*tokens);
+        const auto tokens = createTokens(path, file);;
+        return parseTokens(*tokens);
     }
 
     std::unique_ptr<ObjectNode> createObjects(const std::string& path, const std::string& file)

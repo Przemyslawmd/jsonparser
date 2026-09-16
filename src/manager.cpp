@@ -100,8 +100,7 @@ bool Manager::parseXmlString(const std::string& xmlString)
     if (!tokens) {
         return false;
     }
-    const auto parserTokens = std::make_unique<ParserTokens>();
-    auto elems = parserTokens->parseTokens(*tokens);
+    auto elems = parseTokens(*tokens);
     if (!elems) {
         return false;
     }

@@ -8,23 +8,111 @@
 #include "log/ErrorStorage.h"
 
 
-using namespace xml;
+namespace
+{
+    enum class ParsingState
+    {
+        STATE_NONE,
+
+        STATE_ANGLE_OPEN,
+        STATE_TAG_OPEN_NAMED,
+
+        STATE_TAG_CLOSE_NAMED,
+        STATE_TAG_CLOSE_PARSING,
+        STATE_TAG_COMPLETED,
+
+        STATE_ATTR_KEY,
+        STATE_ATTR_EQUAL,
+        STATE_ATTR_VALUE,
+
+        STATE_CONTENT
+    };
+
+    const std::map<ParsingState, ParsingState> angleCloseTransition =
+    {
+        { ParsingState::STATE_TAG_OPEN_NAMED,  ParsingState::STATE_TAG_COMPLETED },
+        { ParsingState::STATE_TAG_CLOSE_NAMED, ParsingState::STATE_TAG_COMPLETED },
+        { ParsingState::STATE_ATTR_VALUE,      ParsingState::STATE_TAG_COMPLETED },
+    };
+}
+
+
+namespace xml
+{
 
 using enum ElemType;
 using enum ErrorCode;
-using enum ParsingState;
 using enum TokenType;
+using enum ParsingState;
 
 
-const std::map<ParsingState, ParsingState> angleCloseTransition =
+std::optional<unsigned int> parseDeclaration(const std::vector<Token>& tokens, std::vector<Elem>& elems)
 {
-    { STATE_TAG_OPEN_NAMED,  STATE_TAG_COMPLETED },
-    { STATE_TAG_CLOSE_NAMED, STATE_TAG_COMPLETED },
-    { STATE_ATTR_VALUE,      STATE_TAG_COMPLETED },
-};
+    auto checkPair = [&tokens](const unsigned int index, const std::string_view value)
+    {
+        return tokens.at(index).type == DATA_STR &&
+               std::get<std::string>(tokens.at(index).data) == value &&
+               tokens.at(index + 1).type == EQUAL &&
+               tokens.at(index + 2).type == DATA_STR_QUOTA;
+    };
+
+    auto checkClosing = [&tokens](const unsigned int index)
+    {
+        return tokens.at(index).type == QUESTION && tokens.at(index + 1).type == ANGLE_CLOSE;
+    };
+
+    unsigned int index = 1;
+    if (tokens.at(index).type != QUESTION) {
+        return 0;
+    }
+    if (tokens.at(index + 1).type != DATA_STR || std::get<std::string>(tokens.at(index + 1).data) != "xml") {
+        return std::nullopt;
+    }
+
+    index = 3;
+    if (!checkPair(index, "version")) {
+        return std::nullopt;
+    }
+    const auto& verValue = std::get<std::string>(tokens.at(index + 2).data);
+    if (verValue != "1.0" && verValue != "1.1") {
+        return std::nullopt;
+    }
+    auto& elemDec = elems.emplace_back(DECLARATION, "xml");
+    elemDec.attrs.emplace_back("version", verValue);
+
+    index = 6;
+    if (checkClosing(index)) {
+        return index + 2;
+    }
+
+    if (!checkPair(index, "encoding")) {
+        return std::nullopt;
+    }
+    elemDec.attrs.emplace_back("encoding", std::get<std::string>(tokens.at(index + 2).data));
+
+    index = 9;
+    if (checkClosing(index)) {
+        return index + 2;
+    }
+
+    if (!checkPair(index, "standalone")) {
+        return std::nullopt;
+    }
+    const auto& staValue = std::get<std::string>(tokens.at(index + 2).data);
+    if (staValue != "yes" && staValue != "no") {
+        return std::nullopt;
+    }
+    elemDec.attrs.emplace_back("standalone", staValue);
+
+    index = 12;
+    if (checkClosing(index)) {
+        return index + 2;
+    }
+    return std::nullopt;
+}
 
 
-std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(const std::vector<Token>& tokens)
+std::unique_ptr<std::vector<Elem>> parseTokens(const std::vector<Token>& tokens)
 {
     if (tokens.empty()) {
         ErrorStorage::putError(XML_PARSER_TOKENS_NO_TOKENS);
@@ -40,6 +128,7 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(const std::vector<T
     }
 
     auto elems = std::make_unique<std::vector<Elem>>();
+    elems->reserve(50);
     ParsingState state = STATE_NONE;
 
     auto declarationTokens = parseDeclaration(tokens, *elems);
@@ -128,74 +217,8 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(const std::vector<T
                 break;
         }
     }
-    return std::move(elems);
+    elems->shrink_to_fit();
+    return elems;
 }
-
-
-std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Token>& tokens, std::vector<Elem>& elems)
-{
-    auto checkPair = [](const std::vector<Token>& tokens, unsigned int index, const std::string& value)
-    {
-        return tokens.at(index).type == DATA_STR &&
-               std::get<std::string>(tokens.at(index).data) == value &&
-               tokens.at(index + 1).type == EQUAL &&
-               tokens.at(index + 2).type == DATA_STR_QUOTA;
-    };
-
-    auto checkClosing = [](const std::vector<Token>& tokens, unsigned int index)
-    {
-        return tokens.at(index).type == QUESTION && tokens.at(index + 1).type == ANGLE_CLOSE;
-    };
-
-    unsigned int index = 1;
-    if (tokens.at(index).type != QUESTION) {
-        return 0;
-    }
-    if (tokens.at(index + 1).type != DATA_STR || std::get<std::string>(tokens.at(index + 1).data) != "xml") {
-        return std::nullopt;
-    }
-
-    index = 3;
-    if (!checkPair(tokens, index, "version")) {
-        return std::nullopt;
-    }
-    const auto& verValue = std::get<std::string>(tokens.at(index + 2).data);
-    if (verValue != "1.0" && verValue != "1.1") {
-        return std::nullopt;
-    }
-    auto& elemDec = elems.emplace_back(DECLARATION, "xml");
-    elemDec.attrs.emplace_back("version", verValue);
-
-    index = 6;
-    if (checkClosing(tokens, index)) {
-        return index + 2;
-    }
-
-    if (!checkPair(tokens, index, "encoding")) {
-        return std::nullopt;
-    }
-    elemDec.attrs.emplace_back("encoding", std::get<std::string>(tokens.at(index + 2).data));
-
-    index = 9;
-    if (checkClosing(tokens, index)) {
-        return index + 2;
-    }
-
-    if (!checkPair(tokens, index, "standalone")) {
-        return std::nullopt;
-    }
-    const auto& staValue = std::get<std::string>(tokens.at(index + 2).data);
-    if (staValue != "yes" && staValue != "no") {
-        return std::nullopt;
-    }
-    elemDec.attrs.emplace_back("standalone", staValue);
-
-    index = 12;
-    if (checkClosing(tokens, index)) {
-        return index + 2;
-    }
-    return std::nullopt;
 }
-
-
 

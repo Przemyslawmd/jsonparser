@@ -18,19 +18,16 @@ namespace
         std::unique_ptr<std::vector<Elem>> testParserTokens(const std::string& path, const std::string& file)
         {
             const auto tokens = createTokens(path, file);;
-            const auto parser = std::make_unique<ParserTokens>();
-            auto elems = parser->parseTokens(*tokens);
+            auto elems = parseTokens(*tokens);
             return elems;
         }
 
         void testPerformance(const std::string& path, const std::string& file)
         {
             const auto tokens = createTokens(path, file);
-            const auto parser = std::make_unique<ParserTokens>();
-
             const auto begin = TIME_TYPE::now();
             for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
-                parser->parseTokens(*tokens);
+                parseTokens(*tokens);
             }
             const auto end = TIME_TYPE::now();
             showDuration(begin, end);
