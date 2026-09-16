@@ -39,10 +39,10 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(const std::vector<T
         return nullptr;
     }
 
-    elems = std::make_unique<std::vector<Elem>>();
+    auto elems = std::make_unique<std::vector<Elem>>();
     ParsingState state = STATE_NONE;
 
-    auto declarationTokens = parseDeclaration(tokens);
+    auto declarationTokens = parseDeclaration(tokens, *elems);
     if (!declarationTokens.has_value()) {
         ErrorStorage::putError(XML_PARSER_TOKENS_DECLARATION);
         return nullptr;
@@ -132,7 +132,7 @@ std::unique_ptr<std::vector<Elem>> ParserTokens::parseTokens(const std::vector<T
 }
 
 
-std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Token>& tokens)
+std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Token>& tokens, std::vector<Elem>& elems)
 {
     auto checkPair = [](const std::vector<Token>& tokens, unsigned int index, const std::string& value)
     {
@@ -163,8 +163,8 @@ std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Tok
     if (verValue != "1.0" && verValue != "1.1") {
         return std::nullopt;
     }
-    auto& elem = elems->emplace_back(DECLARATION, "xml");
-    elem.attrs.emplace_back("version", verValue);
+    auto& elemDec = elems.emplace_back(DECLARATION, "xml");
+    elemDec.attrs.emplace_back("version", verValue);
 
     index = 6;
     if (checkClosing(tokens, index)) {
@@ -174,7 +174,7 @@ std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Tok
     if (!checkPair(tokens, index, "encoding")) {
         return std::nullopt;
     }
-    elem.attrs.emplace_back("encoding", std::get<std::string>(tokens.at(index + 2).data));
+    elemDec.attrs.emplace_back("encoding", std::get<std::string>(tokens.at(index + 2).data));
 
     index = 9;
     if (checkClosing(tokens, index)) {
@@ -188,7 +188,7 @@ std::optional<unsigned int> ParserTokens::parseDeclaration(const std::vector<Tok
     if (staValue != "yes" && staValue != "no") {
         return std::nullopt;
     }
-    elem.attrs.emplace_back("standalone", staValue);
+    elemDec.attrs.emplace_back("standalone", staValue);
 
     index = 12;
     if (checkClosing(tokens, index)) {

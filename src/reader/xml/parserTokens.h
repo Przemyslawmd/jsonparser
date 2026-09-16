@@ -38,9 +38,7 @@ public:
     std::unique_ptr<std::vector<Elem>> parseTokens(const std::vector<Token>& tokens);
 
 private:
-    std::unique_ptr<std::vector<Elem>> elems;
-
-    std::optional<unsigned int> parseDeclaration(const std::vector<Token>& tokens);
+    std::optional<unsigned int> parseDeclaration(const std::vector<Token>& tokens, std::vector<Elem>& elems);
 };
 }
 
