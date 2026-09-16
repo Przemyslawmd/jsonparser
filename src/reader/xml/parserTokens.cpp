@@ -1,7 +1,6 @@
 
 #include "parserTokens.h"
 
-#include <map>
 #include <ranges>
 
 #include "errorCode.h"
@@ -26,13 +25,6 @@ namespace
         STATE_ATTR_VALUE,
 
         STATE_CONTENT
-    };
-
-    const std::map<ParsingState, ParsingState> angleCloseTransition =
-    {
-        { ParsingState::STATE_TAG_OPEN_NAMED,  ParsingState::STATE_TAG_COMPLETED },
-        { ParsingState::STATE_TAG_CLOSE_NAMED, ParsingState::STATE_TAG_COMPLETED },
-        { ParsingState::STATE_ATTR_VALUE,      ParsingState::STATE_TAG_COMPLETED },
     };
 }
 
@@ -150,11 +142,11 @@ std::unique_ptr<std::vector<Elem>> parseTokens(const std::vector<Token>& tokens)
                 state = STATE_ANGLE_OPEN;
                 break;
             case ANGLE_CLOSE:
-                if (!angleCloseTransition.contains(state)) {
+                if (state != STATE_TAG_OPEN_NAMED && state != STATE_TAG_CLOSE_NAMED && state != STATE_ATTR_VALUE) {
                     ErrorStorage::putError(XML_PARSER_TOKENS_CLOSE_ANGLE);
                     return nullptr;
                 }
-                state = angleCloseTransition.at(state);
+                state = STATE_TAG_COMPLETED;
                 break;
             case SLASH:
                 if (state != STATE_ANGLE_OPEN && state != STATE_CONTENT) {
