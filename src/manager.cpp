@@ -51,8 +51,7 @@ bool Manager::parseJsonString(const std::string& jsonString)
         return false;
     }
 
-    const auto preparser = std::make_unique<Preparser>();
-    auto tokens = preparser->parseJSON(jsonString);
+    const auto tokens = scanString(jsonString);
     if (!tokens) {
         return false;
     }

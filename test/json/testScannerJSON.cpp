@@ -22,7 +22,7 @@ using enum TokenType;
 
 namespace
 {
-class TestPreparserJSON : public BaseTest
+class TestScannerJSON : public BaseTest
 {
 protected:
     std::unique_ptr<std::vector<Token>> createTokens(const std::string& path, const std::string& file)
@@ -30,8 +30,7 @@ protected:
         ErrorStorage::clear();
         const std::string jsonString = getContentFromFile(path, file);
 
-        const auto preparser = std::make_unique<Preparser>();
-        auto tokens = preparser->parseJSON(jsonString);
+        auto tokens = scanString(jsonString);
         if (!tokens) {
             return nullptr;
         }
@@ -42,11 +41,9 @@ protected:
     void testPerformance(const std::string& path, const std::string& file)
     {
         const std::string jsonString = getContentFromFile(path, file);
-        const auto preparser = std::make_unique<Preparser>();
-
         const auto begin = TIME_TYPE::now();
         for (size_t i = 0; i < NUM_OF_TESTS; i++) {
-            const auto tokens = preparser->parseJSON(jsonString);
+            const auto tokens = scanString(jsonString);
             createKeyTokens(*tokens);
         }
         const auto end = TIME_TYPE::now();
@@ -91,7 +88,7 @@ static void checkTokens(const std::vector<Token>& tokens, const std::vector<Toke
 }
 
 
-TEST_F(TestPreparserJSON, Test_File_1)
+TEST_F(TestScannerJSON, Test_File_1)
 {
     auto tokens = createTokens(TEST_DATA_JSON, "test_1.json");
 
@@ -130,7 +127,7 @@ TEST_F(TestPreparserJSON, Test_File_1)
 }
 
 
-TEST_F(TestPreparserJSON, Test_File_2)
+TEST_F(TestScannerJSON, Test_File_2)
 {
     auto tokens = createTokens(TEST_DATA_JSON, "test_2.json");
 
@@ -234,7 +231,7 @@ TEST_F(TestPreparserJSON, Test_File_2)
 }
 
 
-TEST_F(TestPreparserJSON, Test_File_6)
+TEST_F(TestScannerJSON, Test_File_6)
 {
     auto tokens = createTokens(TEST_DATA_JSON, "test_6.json");
 
@@ -280,7 +277,7 @@ TEST_F(TestPreparserJSON, Test_File_6)
 }
 
 
-TEST_F(TestPreparserJSON, Test_File_7)
+TEST_F(TestScannerJSON, Test_File_7)
 {
     auto tokens = createTokens(TEST_DATA_JSON, "test_7.json");
 
@@ -343,14 +340,14 @@ TEST_F(TestPreparserJSON, Test_File_7)
 }
 
 
-TEST_F(TestPreparserJSON, Test_File_8)
+TEST_F(TestScannerJSON, Test_File_8)
 {
     auto tokens = createTokens(TEST_DATA, "test_8_complex.json");
     ASSERT_TRUE(tokens != nullptr);
 }
 
 
-TEST_F(TestPreparserJSON, FirstImproperDataTest)
+TEST_F(TestScannerJSON, FirstImproperDataTest)
 {
     auto tokens = createTokens(TEST_DATA_IMPROPER_JSON, "string_not_ended_1.json");
 
@@ -360,7 +357,7 @@ TEST_F(TestPreparserJSON, FirstImproperDataTest)
 }
 
 
-TEST_F(TestPreparserJSON, SecondImproperDataTest)
+TEST_F(TestScannerJSON, SecondImproperDataTest)
 {
     auto tokens = createTokens(TEST_DATA_IMPROPER_JSON, "string_not_ended_2.json");
 
@@ -370,7 +367,7 @@ TEST_F(TestPreparserJSON, SecondImproperDataTest)
 }
 
 
-TEST_F(TestPreparserJSON, UnknownSymbol_1)
+TEST_F(TestScannerJSON, UnknownSymbol_1)
 {
     auto tokens = createTokens(TEST_DATA_IMPROPER_JSON, "preparser_unknown_symbol_1.json");
 
@@ -380,7 +377,7 @@ TEST_F(TestPreparserJSON, UnknownSymbol_1)
 }
 
 
-TEST_F(TestPreparserJSON, UnknownSymbol_2)
+TEST_F(TestScannerJSON, UnknownSymbol_2)
 {
     auto tokens = createTokens(TEST_DATA_IMPROPER_JSON, "preparser_unknown_symbol_2.json");
 
@@ -390,7 +387,7 @@ TEST_F(TestPreparserJSON, UnknownSymbol_2)
 }
 
 
-TEST_F(TestPreparserJSON, UnknownSymbol_3)
+TEST_F(TestScannerJSON, UnknownSymbol_3)
 {
     auto tokens = createTokens(TEST_DATA_IMPROPER_JSON, "preparser_unknown_symbol_3.json");
 
@@ -400,7 +397,7 @@ TEST_F(TestPreparserJSON, UnknownSymbol_3)
 }
 
 
-TEST_F(TestPreparserJSON, Performance)
+TEST_F(TestScannerJSON, Performance)
 {
     testPerformance(TEST_DATA_JSON, "test_8_complex.json");
 }

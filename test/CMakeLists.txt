@@ -24,7 +24,7 @@ configure_file(${PROJECT_SOURCE_DIR}/paths.h.in ${PROJECT_SOURCE_DIR}/paths.h)
 
 
 if (JSON_BUILD)
-    list(APPEND TEST_FILES "json/testPreparserJSON.cpp")
+    list(APPEND TEST_FILES "json/testScannerJSON.cpp")
     list(APPEND TEST_FILES "json/testParserJSON.cpp")
     list(APPEND TEST_FILES "json/testValidatorJSON.cpp")
     list(APPEND TEST_FILES "json/testWriterJSON.cpp")
@@ -47,7 +47,7 @@ endif()
 
 if (XML_BUILD)
     list(APPEND TEST_FILES "xml/testArrayChecker.cpp")
-    list(APPEND TEST_FILES "xml/testScanner.cpp")
+    list(APPEND TEST_FILES "xml/testScannerXML.cpp")
     list(APPEND TEST_FILES "xml/testParserTokens.cpp")
     list(APPEND TEST_FILES "xml/testParserTokensError.cpp")
     list(APPEND TEST_FILES "xml/testValidator.cpp")

@@ -2,15 +2,28 @@
 #include "scanner.h"
 
 #include <format>
+#include <map>
 
 #include "errorCode.h"
 #include "log/ErrorStorage.h"
 #include "reader/utilsReader.h"
 
+namespace
+{
+    const std::map<char, json::TokenType> tokensMap {
+        { '{', json::TokenType::CURLY_OPEN },
+        { '}', json::TokenType::CURLY_CLOSE },
+        { '[', json::TokenType::SQUARE_OPEN },
+        { ']', json::TokenType::SQUARE_CLOSE },
+        { ':', json::TokenType::COLON },
+        { ',', json::TokenType::COMMA },
+    };
+}
 
-using namespace json;
 
-std::unique_ptr<std::vector<Token>> Preparser::parseJSON(std::string_view json)
+namespace json
+{
+std::unique_ptr<std::vector<Token>> scanString(std::string_view json)
 {
     using enum ErrorCode;
     using enum TokenType;
@@ -85,5 +98,6 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(std::string_view json)
     }
     tokens->shrink_to_fit();
     return tokens;
+}
 }
 

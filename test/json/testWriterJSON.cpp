@@ -24,8 +24,7 @@ static std::unique_ptr<ObjectNode> writerParseJSON(const std::string& jsonFile, 
 {
     std::string jsonString = getContentFromFile(TEST_DATA_JSON, jsonFile);
 
-    const auto preparser = std::make_unique<Preparser>();
-    auto tokens = preparser->parseJSON(jsonString);
+    const auto tokens = scanString(jsonString);
     EXPECT_TRUE(tokens->size());
     createKeyTokens(*tokens);
     const auto parser = std::make_unique<Parser>(keyMapper);

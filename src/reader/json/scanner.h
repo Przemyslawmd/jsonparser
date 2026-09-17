@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include <map>
 #include <memory>
 #include <vector>
 
@@ -10,22 +9,6 @@
 
 namespace json
 {
-class Preparser
-{
-public:
-    Preparser() = default;
-
-    std::unique_ptr<std::vector<Token>> parseJSON(std::string_view json);
-
-private:
-    const std::map<char, TokenType> tokensMap {
-        { '{', TokenType::CURLY_OPEN },
-        { '}', TokenType::CURLY_CLOSE },
-        { '[', TokenType::SQUARE_OPEN },
-        { ']', TokenType::SQUARE_CLOSE },
-        { ':', TokenType::COLON },
-        { ',', TokenType::COMMA },
-    };
-};
+    std::unique_ptr<std::vector<Token>> scanString(std::string_view json);
 }
 

@@ -26,19 +26,16 @@ namespace
     {
     protected:
         std::unique_ptr<KeyMapper> keyMapper;
-        std::unique_ptr<Preparser> preparser;
 
         void SetUp() override
         {
             keyMapper = std::make_unique<KeyMapper>();
-            preparser = std::make_unique<Preparser>();
         }
 
         std::unique_ptr<ObjectNode> testParseJSON(const std::string& jsonFile)
         {
             std::string jsonString = getContentFromFile(TEST_DATA_JSON, jsonFile);
-
-            const auto tokens = preparser->parseJSON(jsonString);
+            const auto tokens = scanString(jsonString);
             EXPECT_TRUE(tokens != nullptr);
             createKeyTokens(*tokens);
 
@@ -50,7 +47,7 @@ namespace
         void testPerformance(const std::string& jsonFile)
         {
             const std::string jsonString = getContentFromFile(TEST_DATA_JSON, jsonFile);
-            const auto tokens = preparser->parseJSON(jsonString);
+            const auto tokens = scanString(jsonString);
             ASSERT_TRUE(tokens->size());
             createKeyTokens(*tokens);
             const auto parser = std::make_unique<Parser>(*keyMapper);
