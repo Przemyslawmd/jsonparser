@@ -19,22 +19,18 @@ namespace
         std::unique_ptr<std::vector<Token>> testPreparser(const std::string& path, const std::string& file)
         {
             const std::string xmlString = getContentFromFile(path, file);
-            const auto preparser = std::make_unique<Preparser>();
-            auto tokens = preparser->parseXML(xmlString);
+            auto tokens = parseXML(xmlString);
             return tokens;
         }
 
         void testPerformance(const std::string& path, const std::string& file)
         {
             const std::string xmlString = getContentFromFile(path, file);
-            const auto preparser = std::make_unique<Preparser>();
-
             const auto begin = TIME_TYPE::now();
             for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
-                preparser->parseXML(xmlString);
+                parseXML(xmlString);
             }
             const auto end = TIME_TYPE::now();
-
             showDuration(begin, end);
         }
     };

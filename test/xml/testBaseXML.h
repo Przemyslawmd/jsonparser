@@ -33,8 +33,7 @@ protected:
     std::unique_ptr<std::vector<Token>> createTokens(const std::string& path, const std::string& file)
     {
         const std::string xmlString = getContentFromFile(path, file);
-        const auto preparser = std::make_unique<Preparser>();
-        return preparser->parseXML(xmlString);
+        return parseXML(xmlString);
     }
 
     std::unique_ptr<std::vector<Elem>> createElements(const std::string& path, const std::string& file)

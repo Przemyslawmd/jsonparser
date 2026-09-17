@@ -95,12 +95,11 @@ bool Manager::parseXmlString(const std::string& xmlString)
         return false;
     }
 
-    const auto preparser = std::make_unique<Preparser>();
-    auto tokens = preparser->parseXML(xmlString);
+    const auto tokens = parseXML(xmlString);
     if (!tokens) {
         return false;
     }
-    auto elems = parseTokens(*tokens);
+    const auto elems = parseTokens(*tokens);
     if (!elems) {
         return false;
     }

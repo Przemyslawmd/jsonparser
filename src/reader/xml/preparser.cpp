@@ -2,19 +2,47 @@
 #include "preparser.h"
 
 #include <format>
+#include <map>
 
 #include "errorCode.h"
 #include "log/ErrorStorage.h"
 #include "reader/utilsReader.h"
 
 
-using namespace xml;
+namespace
+{
+    const std::map<char, xml::TokenType> tokensMap
+    {
+        { '=', xml::TokenType::EQUAL },
+        { '?', xml::TokenType::QUESTION },
+        { '/', xml::TokenType::SLASH },
+        { '<', xml::TokenType::ANGLE_OPEN },
+        { '>', xml::TokenType::ANGLE_CLOSE },
+    };
 
-std::unique_ptr<std::vector<Token>> Preparser::parseXML(std::string_view xml)
+    int parseStringNoQuotation(const std::string_view xml, const unsigned int index)
+    {
+        int shift = 0;
+        while (index + shift < xml.length()) {
+            if (xml[index + shift] == ' ' || tokensMap.contains(xml[index + shift])) {
+                return shift - 1;
+            }
+            shift += 1;
+        }
+        ErrorStorage::putError(ErrorCode::XML_PREPARSER_STRING_ERROR);
+        return -1;
+    }
+}
+
+
+namespace xml
+{
+
+std::unique_ptr<std::vector<Token>> parseXML(const std::string_view xml)
 {
     using enum TokenType;
 
-    tokens = std::make_unique<std::vector<Token>>();
+    auto tokens = std::make_unique<std::vector<Token>>();
     tokens->reserve(500);
 
     for (size_t index = 0; index < xml.length(); index++)
@@ -51,26 +79,11 @@ std::unique_ptr<std::vector<Token>> Preparser::parseXML(std::string_view xml)
         if (shift < 0) {
             return nullptr;
         }
+        tokens->emplace_back(DATA_STR, std::string(xml.data() + index, shift + 1));
         index += shift;
     }
     tokens->shrink_to_fit();
     return std::move(tokens);
 }
-
-/*******************************************************************/
-/* PRIVATE *********************************************************/
-
-int Preparser::parseStringNoQuotation(std::string_view xml, unsigned int index) const
-{
-    int shift = 0;
-    while (index + shift < xml.length()) {
-        if (xml[index + shift] == ' ' || tokensMap.contains(xml[index + shift])) {
-            tokens->emplace_back(TokenType::DATA_STR, std::string(xml.data() +index, shift));
-            return shift - 1;
-        }
-        shift += 1;
-    }
-    ErrorStorage::putError(ErrorCode::XML_PREPARSER_STRING_ERROR);
-    return -1;
 }
 

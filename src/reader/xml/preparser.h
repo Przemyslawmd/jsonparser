@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include <map>
 #include <memory>
 #include <string>
 #include <vector>
@@ -11,26 +10,6 @@
 
 namespace xml
 {
-class Preparser
-{
-public:
-    Preparser() = default;
-
     std::unique_ptr<std::vector<Token>> parseXML(std::string_view xml);
-
-private:
-    int parseStringNoQuotation(std::string_view xml, unsigned int index) const;
-
-    std::unique_ptr<std::vector<Token>> tokens;
-
-    const std::map<char, TokenType> tokensMap 
-    {
-        { '=', TokenType::EQUAL },
-        { '?', TokenType::QUESTION },
-        { '/', TokenType::SLASH },
-        { '<', TokenType::ANGLE_OPEN },
-        { '>', TokenType::ANGLE_CLOSE },
-    };
-};
 }
 
