@@ -3,7 +3,7 @@
 
 #include "errorCode.h"
 #include "log/ErrorStorage.h"
-#include "reader/json/preparser.h"
+#include "reader/json/scanner.h"
 #include "reader/json/validator.h"
 
 #include "paths.h"

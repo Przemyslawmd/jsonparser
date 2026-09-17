@@ -3,12 +3,12 @@
 
 #include "reader/json/parser.h"
 #include "reader/json/parserKey.h"
-#include "reader/json/preparser.h"
+#include "reader/json/scanner.h"
 #include "reader/json/validator.h"
 
 #include "reader/xml/arrayChecker.h"
 #include "reader/xml/objectCreator.h"
-#include "reader/xml/preparser.h"
+#include "reader/xml/scanner.h"
 #include "reader/xml/parserTokens.h"
 #include "reader/xml/validator.h"
 
@@ -95,7 +95,7 @@ bool Manager::parseXmlString(const std::string& xmlString)
         return false;
     }
 
-    const auto tokens = parseXML(xmlString);
+    const auto tokens = scanString(xmlString);
     if (!tokens) {
         return false;
     }

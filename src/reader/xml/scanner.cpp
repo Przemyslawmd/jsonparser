@@ -1,5 +1,5 @@
 
-#include "preparser.h"
+#include "scanner.h"
 
 #include <format>
 #include <map>
@@ -38,7 +38,7 @@ namespace
 namespace xml
 {
 
-std::unique_ptr<std::vector<Token>> parseXML(const std::string_view xml)
+std::unique_ptr<std::vector<Token>> scanString(const std::string_view xml)
 {
     using enum TokenType;
 

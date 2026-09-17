@@ -9,7 +9,7 @@
 
 #include "log/ErrorStorage.h"
 #include "reader/json/parserKey.h"
-#include "reader/json/preparser.h"
+#include "reader/json/scanner.h"
 
 #include "baseTest.h"
 #include "paths.h"

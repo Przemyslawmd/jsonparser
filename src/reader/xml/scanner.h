@@ -10,6 +10,6 @@
 
 namespace xml
 {
-    std::unique_ptr<std::vector<Token>> parseXML(std::string_view xml);
+    std::unique_ptr<std::vector<Token>> scanString(std::string_view xml);
 }
 

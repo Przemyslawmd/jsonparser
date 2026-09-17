@@ -3,7 +3,7 @@ add_library(
     jsonParser
     SHARED
     "reader/json/parser.cpp"
-    "reader/json/preparser.cpp"
+    "reader/json/scanner.cpp"
     "writer/json/writer.cpp"
     "log/Error.cpp"
     "log/ErrorStorage.cpp"

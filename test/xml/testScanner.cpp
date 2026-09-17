@@ -13,13 +13,13 @@ using enum TokenType;
 
 namespace
 {
-    class TestPreparserXML : public BaseTestXML
+    class TestScannerXML : public BaseTestXML
     {
     protected:
-        std::unique_ptr<std::vector<Token>> testPreparser(const std::string& path, const std::string& file)
+        std::unique_ptr<std::vector<Token>> testScanner(const std::string& path, const std::string& file)
         {
             const std::string xmlString = getContentFromFile(path, file);
-            auto tokens = parseXML(xmlString);
+            auto tokens = scanString(xmlString);
             return tokens;
         }
 
@@ -28,7 +28,7 @@ namespace
             const std::string xmlString = getContentFromFile(path, file);
             const auto begin = TIME_TYPE::now();
             for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
-                parseXML(xmlString);
+                scanString(xmlString);
             }
             const auto end = TIME_TYPE::now();
             showDuration(begin, end);
@@ -56,9 +56,9 @@ static void checkTokens(const std::vector<Token>& tokens, const std::vector<Toke
 }
 
 
-TEST_F(TestPreparserXML, Test_File_1)
+TEST_F(TestScannerXML, Test_File_1)
 {
-    const auto tokens = testPreparser(TEST_DATA_XML, "test_1.xml");
+    const auto tokens = testScanner(TEST_DATA_XML, "test_1.xml");
     const std::vector<Token> testData =
     {
         { ANGLE_OPEN },
@@ -141,9 +141,9 @@ TEST_F(TestPreparserXML, Test_File_1)
 }
 
 
-TEST_F(TestPreparserXML, Test_One_Letter)
+TEST_F(TestScannerXML, Test_One_Letter)
 {
-    const auto tokens = testPreparser(TEST_DATA_XML, "test_one_letter.xml");
+    const auto tokens = testScanner(TEST_DATA_XML, "test_one_letter.xml");
     const std::vector<Token> testData =
     {
         { ANGLE_OPEN },
@@ -185,9 +185,9 @@ TEST_F(TestPreparserXML, Test_One_Letter)
 }
 
 
-TEST_F(TestPreparserXML, Bigger_XML)
+TEST_F(TestScannerXML, Bigger_XML)
 {
-    const auto tokens = testPreparser(TEST_DATA_XML, "bigger.xml");
+    const auto tokens = testScanner(TEST_DATA_XML, "bigger.xml");
     const std::vector<Token> testData =
     {
         { ANGLE_OPEN },
@@ -302,16 +302,16 @@ TEST_F(TestPreparserXML, Bigger_XML)
 }
 
 
-TEST_F(TestPreparserXML, Error_String_Not_Ended)
+TEST_F(TestScannerXML, Error_String_Not_Ended)
 {
-    const auto tokens = testPreparser(TEST_DATA_IMPROPER_XML, "notEnd.xml");
+    const auto tokens = testScanner(TEST_DATA_IMPROPER_XML, "notEnd.xml");
     ASSERT_EQ(tokens, nullptr);
     const auto& errors = ErrorStorage::getErrors();
     ASSERT_EQ(errors.at(0).getCode(), ErrorCode::XML_PREPARSER_STRING_ERROR);
 }
 
 
-TEST_F(TestPreparserXML, Performance)
+TEST_F(TestScannerXML, Performance)
 {
     testPerformance(TEST_DATA_XML, "bigger.xml");
 }

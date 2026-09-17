@@ -6,7 +6,7 @@
 #include "src/reader/xml/arrayChecker.h"
 #include "src/reader/xml/objectCreator.h"
 #include "../../src/headers/elem.h"
-#include "src/reader/xml/preparser.h"
+#include "src/reader/xml/scanner.h"
 #include "src/reader/xml/parserTokens.h"
 #include "src/writer/xml/elemWriterCreator.h"
 
@@ -33,7 +33,7 @@ protected:
     std::unique_ptr<std::vector<Token>> createTokens(const std::string& path, const std::string& file)
     {
         const std::string xmlString = getContentFromFile(path, file);
-        return parseXML(xmlString);
+        return scanString(xmlString);
     }
 
     std::unique_ptr<std::vector<Elem>> createElements(const std::string& path, const std::string& file)
