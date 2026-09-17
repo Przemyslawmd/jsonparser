@@ -51,3 +51,16 @@ TEST_F(TestApiPerformance, XmlToJson)
     showDuration(begin, end);
 }
 
+
+TEST_F(TestApiPerformance, JsonToXml)
+{
+    const auto api = prepareApiWithJson("json_from_bigger_xml.json", TEST_DATA_API);
+    const auto begin = TIME_TYPE::now();
+    for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
+        auto xmlString = api->objectToJsonString();
+        ASSERT_TRUE(xmlString.has_value());
+    }
+    const auto end = TIME_TYPE::now();
+    showDuration(begin, end);
+}
+
