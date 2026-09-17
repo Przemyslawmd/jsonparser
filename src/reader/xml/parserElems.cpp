@@ -1,5 +1,5 @@
 
-#include "objectCreator.h"
+#include "parserElems.h"
 
 #include <ranges>
 
@@ -8,7 +8,7 @@ using namespace xml;
 using enum State;
 
 
-std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
+std::unique_ptr<ObjectNode> ParserElems::parseElems(std::vector<Elem>& elems)
 {
     unsigned int firstTag = 0;
     if (elems.front().type == ElemType::DECLARATION) {
@@ -52,7 +52,7 @@ std::unique_ptr<ObjectNode> ObjectCreator::parseElems(std::vector<Elem>& elems)
 }
 
 
-void ObjectCreator::processTagOpen(const std::string& key)
+void ParserElems::processTagOpen(const std::string& key)
 {
     if (stateStack.top() == OBJECT_PARSING)
     {
@@ -83,7 +83,7 @@ void ObjectCreator::processTagOpen(const std::string& key)
 }
 
 
-void ObjectCreator::processTagArrayOpen(const std::string& key)
+void ParserElems::processTagArrayOpen(const std::string& key)
 {
     ObjectNode* objNode = objStack.top();
     auto prevKey = keyMapper.createKeyID(keyStack.top(), mapIDStack.top());
@@ -98,7 +98,7 @@ void ObjectCreator::processTagArrayOpen(const std::string& key)
 }
 
 
-void ObjectCreator::processContent(TokenData& data)
+void ParserElems::processContent(TokenData& data)
 {
     if (stateStack.top() == OBJECT_PARSING)
     {
@@ -127,7 +127,7 @@ void ObjectCreator::processContent(TokenData& data)
 }
 
 
-void ObjectCreator::insertAttrs(ObjectNode& node, std::vector<std::tuple<std::string, std::string>>& attrs)
+void ParserElems::insertAttrs(ObjectNode& node, std::vector<std::tuple<std::string, std::string>>& attrs)
 {
     for (const auto& attr : attrs) {
         auto keyId = keyMapper.createKeyIDAttr(std::get<0>(attr), mapIDStack.top());
@@ -137,7 +137,7 @@ void ObjectCreator::insertAttrs(ObjectNode& node, std::vector<std::tuple<std::st
 
 
 template <typename T> requires ComplexNodeObjectCreator<T>
-void ObjectCreator::pushContext(T* node, const std::string& key, State state)
+void ParserElems::pushContext(T* node, const std::string& key, State state)
 {
     if constexpr (std::same_as<T, ObjectNode>) {
         objStack.push(node);
@@ -152,14 +152,14 @@ void ObjectCreator::pushContext(T* node, const std::string& key, State state)
 }
 
 
-void ObjectCreator::pushContext(ArrayNode* node, State state)
+void ParserElems::pushContext(ArrayNode* node, State state)
 {
     arrStack.push(node);
     stateStack.push(state);
 }
 
 
-void ObjectCreator::popContext()
+void ParserElems::popContext()
 {
     if (stateStack.top() == OBJECT_PARSING) {
         objStack.pop();

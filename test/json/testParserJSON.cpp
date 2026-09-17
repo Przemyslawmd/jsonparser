@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 
 #include "src/reader/json/parser.h"
-#include "src/reader/json/parserKey.h"
+#include "src/reader/json/keyChecker.h"
 #include "src/reader/json/scanner.h"
 #include "src/reader/json/validator.h"
 #include "src/keyMapper.h"

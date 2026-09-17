@@ -12,14 +12,14 @@ using namespace xml;
 
 namespace
 {
-    class TestObjectCreator : public BaseTestXML
+    class TestParserElemsXML : public BaseTestXML
     {
     protected:
-        std::unique_ptr<ObjectNode> testObjectCreator(const std::string& path, const std::string& file)
+        std::unique_ptr<ObjectNode> testParserElems(const std::string& path, const std::string& file)
         {
             const auto elems = createElements(path, file);
             checkArrays(*elems);
-            ObjectCreator objCreator(*keyMapper);
+            ParserElems objCreator(*keyMapper);
             auto node = objCreator.parseElems(*elems);
             return node;
         }
@@ -28,7 +28,7 @@ namespace
         {
             const auto elems = createElements(path, file);
             checkArrays(*elems);
-            ObjectCreator objCreator(*keyMapper);
+            ParserElems objCreator(*keyMapper);
 
             const auto begin = TIME_TYPE::now();
             for (unsigned int i = 0; i < NUM_OF_TESTS; i++) {
@@ -49,9 +49,9 @@ namespace
 }
 
 
-TEST_F(TestObjectCreator, Test_3)
+TEST_F(TestParserElemsXML, Test_3)
 {
-    auto root = testObjectCreator(TEST_DATA_XML, "test_3.xml");
+    auto root = testParserElems(TEST_DATA_XML, "test_3.xml");
     ASSERT_TRUE(root);
 
     constexpr uint32_t person = 0x00'01'00'01;
@@ -72,9 +72,9 @@ TEST_F(TestObjectCreator, Test_3)
 }
 
 
-TEST_F(TestObjectCreator, Test_4)
+TEST_F(TestParserElemsXML, Test_4)
 {
-    auto root = testObjectCreator(TEST_DATA_XML, "test_4.xml");
+    auto root = testParserElems(TEST_DATA_XML, "test_4.xml");
     ASSERT_TRUE(root);
 
     constexpr uint32_t aa = 0x00'01'00'01;
@@ -123,9 +123,9 @@ TEST_F(TestObjectCreator, Test_4)
 }
 
 
-TEST_F(TestObjectCreator, Test_File_3_1_Attr)
+TEST_F(TestParserElemsXML, Test_File_3_1_Attr)
 {
-    auto root = testObjectCreator(TEST_DATA_XML, "test_3_attr_1.xml");
+    auto root = testParserElems(TEST_DATA_XML, "test_3_attr_1.xml");
     ASSERT_TRUE(root);
 
     constexpr uint32_t person = 0x00'01'00'01;
@@ -156,11 +156,11 @@ TEST_F(TestObjectCreator, Test_File_3_1_Attr)
 }
 
 
-TEST_F(TestObjectCreator, Test_File_3_1_Attr_Pretended_Key_Changed)
+TEST_F(TestParserElemsXML, Test_File_3_1_Attr_Pretended_Key_Changed)
 {
     Settings::setPretendedKey("##text");
 
-    auto root = testObjectCreator(TEST_DATA_XML, "test_3_attr_1.xml");
+    auto root = testParserElems(TEST_DATA_XML, "test_3_attr_1.xml");
     ASSERT_TRUE(root);
 
     constexpr uint32_t person = 0x00'01'00'01;
@@ -187,9 +187,9 @@ TEST_F(TestObjectCreator, Test_File_3_1_Attr_Pretended_Key_Changed)
 }
 
 
-TEST_F(TestObjectCreator, Test_File_3_2_Attr)
+TEST_F(TestParserElemsXML, Test_File_3_2_Attr)
 {
-    auto root = testObjectCreator(TEST_DATA_XML, "test_3_attr_2.xml");
+    auto root = testParserElems(TEST_DATA_XML, "test_3_attr_2.xml");
     ASSERT_TRUE(root);
 
     constexpr uint32_t person = 0x00'01'00'01;
@@ -216,9 +216,9 @@ TEST_F(TestObjectCreator, Test_File_3_2_Attr)
 }
 
 
-TEST_F(TestObjectCreator, Test_Number_Content)
+TEST_F(TestParserElemsXML, Test_Number_Content)
 {
-    auto root = testObjectCreator(TEST_DATA_XML, "test_content_number_value.xml");
+    auto root = testParserElems(TEST_DATA_XML, "test_content_number_value.xml");
     ASSERT_TRUE(root);
 
     constexpr uint32_t person = 0x00'01'00'01;
@@ -244,9 +244,9 @@ TEST_F(TestObjectCreator, Test_Number_Content)
 }
 
 
-TEST_F(TestObjectCreator, Test_Array_1)
+TEST_F(TestParserElemsXML, Test_Array_1)
 {
-    const auto root = testObjectCreator(TEST_DATA_XML, "test_array_1.xml");
+    const auto root = testParserElems(TEST_DATA_XML, "test_array_1.xml");
     ASSERT_TRUE(root);
 
     constexpr uint32_t idA = 0x00'01'00'01;
@@ -271,9 +271,9 @@ TEST_F(TestObjectCreator, Test_Array_1)
 }
 
 
-TEST_F(TestObjectCreator, Test_Array_2)
+TEST_F(TestParserElemsXML, Test_Array_2)
 {
-    auto const root = testObjectCreator(TEST_DATA_XML, "test_array_2.xml");
+    auto const root = testParserElems(TEST_DATA_XML, "test_array_2.xml");
     ASSERT_TRUE(root);
 
     constexpr uint32_t idRoot = 0x00'01'00'01;
@@ -307,9 +307,9 @@ TEST_F(TestObjectCreator, Test_Array_2)
 }
 
 
-TEST_F(TestObjectCreator, Array_Before_Map)
+TEST_F(TestParserElemsXML, Array_Before_Map)
 {
-    auto const root = testObjectCreator(TEST_DATA_XML, "test_array_before_map.xml");
+    auto const root = testParserElems(TEST_DATA_XML, "test_array_before_map.xml");
     ASSERT_TRUE(root);
 
     constexpr uint32_t idRoot = 0x00'01'00'01;
@@ -350,14 +350,14 @@ TEST_F(TestObjectCreator, Array_Before_Map)
 }
 
 
-TEST_F(TestObjectCreator, Bigger)
+TEST_F(TestParserElemsXML, Bigger)
 {
-    auto const root = testObjectCreator(TEST_DATA_XML, "bigger.xml");
+    auto const root = testParserElems(TEST_DATA_XML, "bigger.xml");
     ASSERT_TRUE(root);
 }
 
 
-TEST_F(TestObjectCreator, Performance)
+TEST_F(TestParserElemsXML, Performance)
 {
     testPerformance(TEST_DATA_XML, "bigger.xml");
 }

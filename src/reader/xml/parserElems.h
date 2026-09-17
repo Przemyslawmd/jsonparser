@@ -21,10 +21,10 @@ concept ComplexNodeObjectCreator = std::same_as<T, ObjectNode> || std::same_as<T
 
 namespace xml
 {
-class ObjectCreator
+class ParserElems
 {
 public:
-    explicit ObjectCreator(KeyMapper& keyMapper) : keyMapper(keyMapper),
+    explicit ParserElems(KeyMapper& keyMapper) : keyMapper(keyMapper),
                                                    attrs(nullptr),
                                                    pretendedKey(Settings::getPretendedKey()),
                                                    maxMapId(0) {};

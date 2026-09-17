@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 
 #include "src/reader/xml/arrayChecker.h"
-#include "src/reader/xml/objectCreator.h"
+#include "src/reader/xml/parserElems.h"
 #include "../../src/headers/elem.h"
 #include "src/reader/xml/scanner.h"
 #include "src/reader/xml/parserTokens.h"
@@ -46,7 +46,7 @@ protected:
     {
         const auto elems = createElements(path, file);
         checkArrays(*elems);
-        const auto objCreator = std::make_unique<ObjectCreator>(*keyMapper);
+        const auto objCreator = std::make_unique<ParserElems>(*keyMapper);
         auto node = objCreator->parseElems(*elems);
         return node;
     }
