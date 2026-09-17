@@ -18,8 +18,6 @@ public:
     std::unique_ptr<std::vector<Token>> parseJSON(std::string_view json);
 
 private:
-    std::unique_ptr<std::vector<Token>> tokens;
-
     const std::map<char, TokenType> tokensMap {
         { '{', TokenType::CURLY_OPEN },
         { '}', TokenType::CURLY_CLOSE },

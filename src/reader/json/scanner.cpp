@@ -26,7 +26,7 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(std::string_view json)
         return false;
     };
 
-    tokens = std::make_unique<std::vector<Token>>();
+    auto tokens = std::make_unique<std::vector<Token>>();
     tokens->reserve(500);
 
     for (size_t index = 0; index < json.length(); index++)
@@ -84,6 +84,6 @@ std::unique_ptr<std::vector<Token>> Preparser::parseJSON(std::string_view json)
         return nullptr;
     }
     tokens->shrink_to_fit();
-    return std::move(tokens);
+    return tokens;
 }
 

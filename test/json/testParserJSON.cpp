@@ -34,7 +34,7 @@ namespace
             preparser = std::make_unique<Preparser>();
         }
 
-        std::unique_ptr<ObjectNode> parseJSON(const std::string& jsonFile)
+        std::unique_ptr<ObjectNode> testParseJSON(const std::string& jsonFile)
         {
             std::string jsonString = getContentFromFile(TEST_DATA_JSON, jsonFile);
 
@@ -98,7 +98,7 @@ namespace
 
 TEST_F(TestParserJSON, Test_File_1)
 {
-    auto root = parseJSON("test_1.json");
+    auto root = testParseJSON("test_1.json");
 
     const std::map <uint32_t, std::string> keyMap {
         { 0x00'01'00'01, "person" },
@@ -123,7 +123,7 @@ TEST_F(TestParserJSON, Test_File_1)
 
 TEST_F(TestParserJSON, Test_File_3)
 {
-    auto root = parseJSON("test_3.json");
+    auto root = testParseJSON("test_3.json");
 
     const std::map<uint32_t, std::string> keyMap{
         { 0x00'01'00'01, "person" },
@@ -153,7 +153,7 @@ TEST_F(TestParserJSON, Test_File_3)
 
 TEST_F(TestParserJSON, Test_File_6)
 {
-    auto root = parseJSON("test_6.json");
+    auto root = testParseJSON("test_6.json");
 
     const std::map<uint32_t, std::string> keyMap{
         { 0x00'01'00'01, "employees" },
@@ -184,7 +184,7 @@ TEST_F(TestParserJSON, Test_File_6)
 
 TEST_F(TestParserJSON, Test_File_7)
 {
-    auto root = parseJSON("test_7.json");
+    auto root = testParseJSON("test_7.json");
 
     const std::map<uint32_t, std::string> keyMap{
         { 0x00'01'00'01, "employees" },
